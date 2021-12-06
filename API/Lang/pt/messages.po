@@ -1,0 +1,697 @@
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2021-11-17 02:11\n"
+"Project-Id-Version: b02f04a28aec0155df9503e3b78ae8cc\n"
+"POT-Creation-Date: \n"
+"Last-Translator: Wanderlei Hüttel <wanderlei.huttel@gmail.com>\n"
+"Language-Team: Portuguese, Brazilian\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: b02f04a28aec0155df9503e3b78ae8cc\n"
+"X-Crowdin-Project-ID: 1\n"
+"X-Crowdin-Language: pt-BR\n"
+"X-Crowdin-File: /Baculum API/messages.po\n"
+"X-Crowdin-File-ID: 51\n"
+
+msgid "Language:"
+msgstr "Idioma:"
+
+msgid "Language"
+msgstr "Idioma"
+
+msgid "select language"
+msgstr "selecione o idioma"
+
+msgid "Previous"
+msgstr "Voltar"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Next"
+msgstr "Avançar"
+
+msgid "Step 1 - select language"
+msgstr "Passo 1 - Selecionar o idioma"
+
+msgid "Catalog API"
+msgstr "Catálogo"
+
+msgid "Step 2 - share the Bacula Catalog Database"
+msgstr "Passo 2 - Compartilhar o banco de dados do catálogo do Bacula"
+
+msgid "Do you want to setup and to share the Bacula Catalog Database access for this API instance?"
+msgstr "Deseja configurar e compartilhar o acesso ao banco de dados do catálogo do Bacula para esta instância da API?"
+
+msgid "Yes"
+msgstr "Sim"
+
+msgid "No"
+msgstr "Não"
+
+msgid "Database type:"
+msgstr "Tipo do banco de dados:"
+
+msgid "select database"
+msgstr "Selecionar"
+
+msgid "Database name:"
+msgstr "Nome do banco de dados:"
+
+msgid "Please select database type."
+msgstr "Selecione o tipo de banco de dados."
+
+msgid "Please enter database name."
+msgstr "Digite o nome do banco de dados."
+
+msgid "Login:"
+msgstr "Usuário:"
+
+msgid "Please enter login."
+msgstr "Infomar"
+
+msgid "Password:"
+msgstr "Senha:"
+
+msgid "IP address (or hostname):"
+msgstr "Endereço IP (ou hostname):"
+
+msgid "Please enter IP address or hostname."
+msgstr "Informe o endereço IP ou o hostname."
+
+msgid "Port:"
+msgstr "Porta:"
+
+msgid "Please enter database port."
+msgstr "Informe a porta do banco de dados."
+
+msgid "SQLite database path:"
+msgstr "Caminho do banco de dados SQLite:"
+
+msgid "Please enter database path."
+msgstr "Informe o caminho do banco de dados."
+
+msgid "Connection test:"
+msgstr "Teste de conexão:"
+
+msgid "Loading..."
+msgstr "Carregando..."
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Connection error"
+msgstr "Erro de conexão"
+
+msgid "test"
+msgstr "testar"
+
+msgid "Do you want to setup and share the Bacula Bconsole interface to execute commands in this API instance?"
+msgstr "Deseja configurar e compartilhar o Bconsole para executar comandos nesta instância da API?"
+
+msgid "Bconsole binary file path:"
+msgstr "Caminho para o bconsole:"
+
+msgid "Please enter bconsole path."
+msgstr "Por favor digite o caminho do executável do bconsole."
+
+msgid "Please enter bconsole config file path."
+msgstr "Por favor digite o caminho do bconsole.conf."
+
+msgid "Use sudo:"
+msgstr "Utilizar sudo:"
+
+msgid "Bconsole connection test:"
+msgstr "Testar conexão com o bconsole::"
+
+msgid "Bconsole admin config file path:"
+msgstr "Caminho do bconsole.conf:"
+
+msgid "NOTE!"
+msgstr "NOTA!"
+
+msgid "Baculum needs access to bconsole by the web server."
+msgstr "O Baculum requer acesso ao bconsole pelo Servidor Web."
+
+msgid "Step 3 - share the Bacula Bconsole commands interface"
+msgstr "Passo 3 - Compartilhar a interface de comandos Bconsole"
+
+msgid "Console API"
+msgstr "Console"
+
+msgid "bdirjson binary file path:"
+msgstr "caminho do binário bdirjson:"
+
+msgid "bsdjson binary file path:"
+msgstr "caminho do binário bsdjson:"
+
+msgid "bfdjson binary file path:"
+msgstr "caminho do binário bfdjson:"
+
+msgid "bbconsjson binary file path:"
+msgstr "caminho do binário bbconsjson:"
+
+msgid "Main Director config file path (usually bacula-dir.conf):"
+msgstr "Caminho da configuração do Director (geralmente bacula-dir.conf):"
+
+msgid "Main Storage Daemon config file path (usually bacula-sd.conf):"
+msgstr "Caminho da configuração do Storage (geralmente bacula-sd.conf):"
+
+msgid "Main File Daemon config file path (usually bacula-fd.conf):"
+msgstr "Caminho da configuração do File Daemon (geralmente bacula-fd.conf):"
+
+msgid "Admin Bconsole config file path (usually bconsole.conf):"
+msgstr "Caminho de configuração do Bconsole (geralmente bconsole.conf):"
+
+msgid "Test configuration"
+msgstr "Testar configuração"
+
+msgid "General configuration"
+msgstr "Configuração Geral"
+
+msgid "Step 4 - share the Bacula configuration interface"
+msgstr "Passo 4 - Compartilhar a interface de configuração do Bacula"
+
+msgid "There is required to provide both binary file and config file paths."
+msgstr "É necessário informar o caminho dos binários e dos arquivos de configuração."
+
+msgid "Directory path field is required."
+msgstr "O caminho do diretório é necessário."
+
+msgid "Provided directory path is not writable by web server."
+msgstr "O caminho do diretório informado não possui permissão de escrita."
+
+msgid "Config API"
+msgstr "Configurar"
+
+msgid "Error"
+msgstr "Erro"
+
+msgid "Finish"
+msgstr "Finalizar"
+
+msgid "Do you want to setup and share the Bacula configuration interface to configure Bacula components via this API instance?"
+msgstr "Deseja configurar e compartilhar a interface de configuração do Bacula para configurar os recursos através desta instância da API?"
+
+msgid "Administration login:"
+msgstr "Usuário administrador:"
+
+msgid "Administration password:"
+msgstr "Senha administrador:"
+
+msgid "Please enter password."
+msgstr "Por favor digite uma senha."
+
+msgid "Password must be longer than 4 chars."
+msgstr "A senha deve conter mais do que 4 caracteres."
+
+msgid "Retype administration password:"
+msgstr "Confirmar a senha do administrador:"
+
+msgid "Please enter retype password."
+msgstr "Por favor digite a confirmação de senha."
+
+msgid "Passwords must be the same."
+msgstr "As senhas devem ser iguais."
+
+msgid "Use HTTP Basic authentication"
+msgstr "Usar autenticação básica HTTP"
+
+msgid "Use OAuth2 for authorization and authentication"
+msgstr "Usar autorização e autenticação OAuth2"
+
+msgid "Database port:"
+msgstr "Porta do banco de dados:"
+
+msgid "Database file path (SQLite only):"
+msgstr "Caminho para o banco de dados (SQLite somente):"
+
+msgid "Use sudo for bconsole requests:"
+msgstr "Utilizar sudo para executar bconsole:"
+
+msgid "Save"
+msgstr "Salvar"
+
+msgid "Step 6 - Finish"
+msgstr "Etapa 6 - Finalizar"
+
+msgid "Use sudo for Bacula JSON tools:"
+msgstr "Utilizar o sudo para os utilitários JSON:"
+
+msgid "Main Director config file path:"
+msgstr "Caminho da configuração do Director (geralmente bacula-dir.conf):\""
+
+msgid "Main Client config file path:"
+msgstr "Caminho da configuração do File Daemon (geralmente bacula-fd.conf):"
+
+msgid "Main Storage Daemon config file path:"
+msgstr "Caminho da configuração do Storage (geralmente bacula-sd.conf):"
+
+msgid "Main Bconsole config file path:"
+msgstr "Caminho de configuração do Bconsole (geralmente bconsole.conf):"
+
+msgid "Please select API endpoint"
+msgstr "Selecione a opção da API"
+
+msgid "Catalog access:"
+msgstr "Acesso ao Catálogo:"
+
+msgid "Console access:"
+msgstr "Acesso ao Bconsole:"
+
+msgid "Config access:"
+msgstr "Acesso às Configurações:"
+
+msgid "Disabled"
+msgstr "Desabilitado"
+
+msgid "Invalid Client ID value. Client ID may contain a-z A-Z 0-9 - _ characters."
+msgstr "Valor da ID do cliente inválida. A ID do cliente deve conter somente os caracteres a-z A-Z 0-9 - _."
+
+msgid "Please enter Client ID."
+msgstr "Informe a ID do cliente."
+
+msgid "OAuth2 Client ID:"
+msgstr "ID OAuth2 do cliente:"
+
+msgid "OAuth2 Client Secret:"
+msgstr "Senha OAuth2 do cliente:"
+
+msgid "Please enter Client Secret."
+msgstr "Por favor, informe a senha do cliente."
+
+msgid "Invalid Client Secret value. Client Secret may contain any character that is not a whitespace character."
+msgstr "Valor da senha do cliente inválida. A senha do cliente pode conter qualquer caractere que não seja espaço em branco."
+
+msgid "generate"
+msgstr "gerar"
+
+msgid "Dedicated Bconsole config file path:"
+msgstr "Caminho do arquivo de configuração do Bconsole dedicado:"
+
+msgid "Please enter Redirect URI."
+msgstr "Informe a URI de redirecionamento."
+
+msgid "OAuth2 Redirect URI (example: https://baculumgui:9095/web/redirect):"
+msgstr "URI de redirecionamento OAuth2 (exemplo: https://baculumgui:9095/web/redirect):"
+
+msgid "(optional)"
+msgstr "(opcional)"
+
+msgid "First client registration"
+msgstr "Primeiro registro do cliente"
+
+msgid "OAuth2 scopes (space separated):"
+msgstr "Escopo OAuth2: (separado por espaço):"
+
+msgid "Please enter OAuth2 scopes."
+msgstr "Informe os escopos OAuth2."
+
+msgid "Please do not forget to disable HTTP Basic auth in the API web server config. Othwerise OAuth2 will not work."
+msgstr "Não se esqueça de desativar a autenticação HTTP Basic na configuração do servidor web da API. Senão a autenticação OAuth2 não funcionará."
+
+msgid "Refresh token"
+msgstr "Atualizar token"
+
+msgid "New OAuth2 client"
+msgstr "Novo cliente OAuth2"
+
+msgid "Add"
+msgstr "Adicionar"
+
+msgid "API Login:"
+msgstr "Login da API:"
+
+msgid "API Password:"
+msgstr "Senha da API:"
+
+msgid "Retype password:"
+msgstr "Redigite a senha:"
+
+msgid "Please enter API login."
+msgstr "Por favor informe o login da API."
+
+msgid "Please enter API password."
+msgstr "Por favor infome a senha da API."
+
+msgid "User added successfully."
+msgstr "Usuário adicionado com sucesso."
+
+msgid "Problem during save to config file. Please check users config file permission."
+msgstr "Problema durante a gravação do arquivo de configuração. Verifique a permissão do arquivo de configuração do host."
+
+msgid "Given user already exists in config file."
+msgstr "O usuário já existe no arquivo de configuração."
+
+msgid "set all scopes"
+msgstr "definir todos os escopos"
+
+msgid "Welcome on the Baculum API default page"
+msgstr "Bem-vindo à página padrão do Baculum API"
+
+msgid "Baculum API Client"
+msgstr "API do Cliente Baculum"
+
+msgid "Here you can try one from API commands"
+msgstr "Aqui você pode utilizar alguns comandos da API"
+
+msgid "Starting..."
+msgstr "Iniciando..."
+
+msgid "Username"
+msgstr "Usuário"
+
+msgid "Delete"
+msgstr "Excluir"
+
+msgid "Client ID"
+msgstr "ID do Cliente"
+
+msgid "Redirect URI"
+msgstr "URI de redirecionamento"
+
+msgid "Scopes"
+msgstr "Escopos"
+
+msgid "Bconsole Path"
+msgstr "Caminho do Bconsole"
+
+msgid "Access token:"
+msgstr "Token de acesso:"
+
+msgid "Send request"
+msgstr "Enviar solicitação"
+
+msgid "Basic auth ready..."
+msgstr "Autenticação básica pronta..."
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "Short name:"
+msgstr "Apelido:"
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "Edit OAuth2 client parameters"
+msgstr "Editar parâmetros do cliente OAuth2"
+
+msgid "Select:"
+msgstr "Selecionar:"
+
+msgid "Baculum working directory for Bacula config:"
+msgstr "Diretório de trabalho do Baculum para a configuração do Bacula:"
+
+msgid "In this directory Baculum API saves temporarily Bacula configuration files (mainly for validation purposes) just before they are written as real Bacula configuration files."
+msgstr "Nesse diretório, a API do Baculum salva temporariamente os arquivos de configuração do Bacula (principalmente para fins de validação) antes de serem gravados como arquivos de configuração reais do Bacula."
+
+msgid "Version:"
+msgstr "Versão:"
+
+msgid "Authentication"
+msgstr "Autenticação"
+
+msgid "Authentication to Baculum REST API"
+msgstr "Autenticação REST API do Baculum"
+
+msgid "Authentication type:"
+msgstr "Tipo de autenticação:"
+
+msgid "Step 5 - authentication to API"
+msgstr "Etapa 5 - Autenticação para API"
+
+msgid "Actions"
+msgstr "Ações"
+
+msgid "Start"
+msgstr "Iniciar"
+
+msgid "Stop"
+msgstr "Parar"
+
+msgid "Restart"
+msgstr "Reiniciar"
+
+msgid "Director start command:"
+msgstr "Comando para iniciar Director:"
+
+msgid "Director stop command:"
+msgstr "Comando para parar Director:"
+
+msgid "Director restart command:"
+msgstr "Comando para reiniciar Director:"
+
+msgid "Storage Daemon start command:"
+msgstr "Comando para iniciar Storage daemon:"
+
+msgid "Storage Daemon stop command:"
+msgstr "Comando para parar Storage daemon:"
+
+msgid "Storage Daemon restart command:"
+msgstr "Comando para reiniciar Storage daemon:"
+
+msgid "File Daemon/Client start command:"
+msgstr "Comando para iniciar Client daemon:"
+
+msgid "File Daemon/Client stop command:"
+msgstr "Comando para parar Client daemon:"
+
+msgid "File Daemon/Client restart command:"
+msgstr "Comando para reiniciar Client daemon:"
+
+msgid "Do you want to setup start, stop and restart actions for Bacula components? If you define them, there will be possible to call these actions via API interface and by Baculum Web as well."
+msgstr "Deseja configurar ações de (iniciar, parar e reiniciar) para os componentes do Bacula? Se você defini-las, será possível chamar essas ações via interface da API e também pelo Baculum Web."
+
+msgid "Sudo configuration"
+msgstr "Configuração do Sudo"
+
+msgid "Example sudo configuration for Apache web server user (RHEL, CentOS and others):"
+msgstr "Exemplo de configuração do sudo para servidor web Apache (RHEL, CentOS e outros):"
+
+msgid "Example sudo configuration for Lighttpd web server user (RHEL, CentOS and others):"
+msgstr "Exemplo de configuração do sudo para servidor web Lighttpd (RHEL, CentOS e outros):"
+
+msgid "Example sudo configuration for Apache and Lighttpd web servers user (Debian, Ubuntu and others):"
+msgstr "Exemplo de configuração do sudo para servidores web Apache e Lighttpd (Debian, Ubuntu e outros):"
+
+msgid "Get sudo configuration"
+msgstr "Obter configuração do sudo"
+
+msgid "Please copy appropriate sudo configuration and put it to a new sudoers.d file for example /etc/sudoers.d/baculum-api"
+msgstr "Copie a configuração sudo apropriada e coloque-a em um novo arquivo sudoers.d, por exemplo /etc/sudoers.d/baculum-api"
+
+msgid "Step 5 - enable actions for components"
+msgstr "Passo 5 - Ativar ações para componentes"
+
+msgid "Directory path for new config files:"
+msgstr "Caminho do diretório para novos arquivos de configuração:"
+
+msgid "Use sudo for actions:"
+msgstr "Usar sudo para ações:"
+
+msgid "Actions setting:"
+msgstr "Configuração de ações:"
+
+msgid "Note"
+msgstr "Nota"
+
+msgid "Please use visudo to add this configuration, otherwise please do remember to add empty line at the end of file."
+msgstr "Por favor, use o visudo para adicionar essa configuração, caso contrário, lembre-se de adicionar uma linha vazia no final do arquivo."
+
+msgid "Dashboard"
+msgstr "Painel de controle"
+
+msgid "Basic users"
+msgstr "Usuários básicos"
+
+msgid "OAuth2 clients"
+msgstr "Clientes OAuth2"
+
+msgid "Settings"
+msgstr "Configurações"
+
+msgid "Configuration wizard"
+msgstr "Assistente de configuração"
+
+msgid "Welcome"
+msgstr "Seja bem vindo"
+
+msgid "Add user"
+msgstr "Adicionar usuário"
+
+msgid "Edit user"
+msgstr "Editar usuário"
+
+msgid "Add OAuth2 client"
+msgstr "Adicionar conta de cliente OAuth2"
+
+msgid "Are you sure?"
+msgstr "Você tem certeza?"
+
+msgid "API settings"
+msgstr "Configurações de API"
+
+msgid "General"
+msgstr "Geral"
+
+msgid "Catalog"
+msgstr "Catálogo"
+
+msgid "Console"
+msgstr "Console"
+
+msgid "Config"
+msgstr "Configuração"
+
+msgid "Enabled:"
+msgstr "Habilitar:"
+
+msgid "Debug:"
+msgstr "Debug:"
+
+msgid "Add client"
+msgstr "Adicionar cliente"
+
+msgid "Edit client"
+msgstr "Editar cliente"
+
+msgid "Invalid user. User may contain a-z A-Z 0-9 characters."
+msgstr "Usuário inválido. O usuário pode conter apenas os seguintes caracteres a-z A-Z 0-9."
+
+msgid "Show/hide"
+msgstr "Mostrar/ocultar"
+
+msgid "Copy to clipboard"
+msgstr "Copiar para área de transferência"
+
+msgid "Logout"
+msgstr "Sair"
+
+msgid "Devices"
+msgstr "Dispositivos"
+
+msgid "Autochangers"
+msgstr "Autochangers"
+
+msgid "Add autochanger"
+msgstr "Adicionar autochanger"
+
+msgid "Device"
+msgstr "Device"
+
+msgid "Name:"
+msgstr "Nome:"
+
+msgid "Changer device:"
+msgstr "Dispositivo trocador:"
+
+msgid "Changer command:"
+msgstr "Comando trocador:"
+
+msgid "Drive index:"
+msgstr "Drive index:"
+
+msgid "Drive index"
+msgstr "Drive index"
+
+msgid "Devices:"
+msgstr "Dispositivos:"
+
+msgid "Add device"
+msgstr "Adicionar device"
+
+msgid "Field cannot be empty."
+msgstr "O campo não pode estar vazio."
+
+msgid "Invalid value."
+msgstr "Valor inválido."
+
+msgid "Device with the given name already exists."
+msgstr "Dispositivo com esse nome já existe."
+
+msgid "Edit device"
+msgstr "Editar dispositivo"
+
+msgid "Use CTRL + left-click to multiple item selection"
+msgstr "Use CTRL + botão esquerdo do mouse para seleção múltipla"
+
+msgid "Device path:"
+msgstr "Caminho do dispositivo:"
+
+msgid "Edit autochanger"
+msgstr "Editar autochanger"
+
+msgid "Autochanger"
+msgstr "Autochanger"
+
+msgid "Unable to delete device. Please unassign it from autochanger '%s' first."
+msgstr "Não é possível excluir o dispositivo. Por favor, desvincule do autochanger '%s' primeiro."
+
+msgid "Autochanger with the given name already exists."
+msgstr "O Autochanger com este nome já existe."
+
+msgid "Copy from Bacula SD config:"
+msgstr "Copiar da configuração do Bacula SD:"
+
+msgid "Changer command test:"
+msgstr "Teste de comando do trocador:"
+
+msgid "Changer command error"
+msgstr "Erro de comando do trocador"
+
+msgid "Copy"
+msgstr "Copiar"
+
+msgid "Column visibility"
+msgstr "Visibilidade da coluna"
+
+msgid "1 row selected"
+msgstr "1 linha selecionada"
+
+msgid "%d rows selected"
+msgstr "%d linhas selecionadas"
+
+msgid "Show _MENU_ entries"
+msgstr "Exibir entradas _MENU_"
+
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr "Exibindo _START_ a _END_ de _TOTAL_ registros"
+
+msgid "First"
+msgstr "Primeiro"
+
+msgid "Last"
+msgstr "Último"
+
+msgid "No matching records found"
+msgstr "Nenhum registro correspondente encontrado"
+
+msgid "filtered from _MAX_ total entries"
+msgstr "filtrado do total de _MAX_ registros"
+
+msgid "No data available in table"
+msgstr "Não há dados disponíveis na tabela"
+
+msgid "Search:"
+msgstr "Procurar:"
+
+msgid "Get pre-defined paths:"
+msgstr "Obter caminhos pré-definidos:"
+
+msgid "Select paths"
+msgstr "Selecionar caminhos"
+
+msgid "Binaries:"
+msgstr "Binários:"
+
+msgid "Configs:"
+msgstr "Configurações:"
+
+msgid "Dedicated Bconsole config"
+msgstr "Configuração do Bconsole dedicado"
+

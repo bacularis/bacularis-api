@@ -1,0 +1,1370 @@
+<%@ MasterClass="Application.API.Layouts.Main" Theme="Baculum-v2"%>
+<com:TContent ID="Main">
+	<header class="w3-container w3-block">
+		<h5>
+			<i class="fas fa-wrench"></i> <%[ API settings ]%>
+		</h5>
+	</header>
+	<div class="w3-bar w3-green w3-margin-bottom">
+		<button type="button" id="btn_settings_general" class="w3-bar-item w3-button tab_btn w3-grey" onclick="W3Tabs.open(this.id, 'settings_general');"><%[ General ]%></button>
+		<button type="button" id="btn_settings_catalog" class="w3-bar-item w3-button tab_btn" onclick="W3Tabs.open(this.id, 'settings_catalog');"><%[ Catalog ]%></button>
+		<button type="button" id="btn_settings_console" class="w3-bar-item w3-button tab_btn" onclick="W3Tabs.open(this.id, 'settings_console');"><%[ Console ]%></button>
+		<button type="button" id="btn_settings_config" class="w3-bar-item w3-button tab_btn" onclick="W3Tabs.open(this.id, 'settings_config');"><%[ Config ]%></button>
+		<button type="button" id="btn_settings_actions" class="w3-bar-item w3-button tab_btn" onclick="W3Tabs.open(this.id, 'settings_actions');"><%[ Actions ]%></button>
+		<button type="button" id="btn_settings_authentication" class="w3-bar-item w3-button tab_btn" onclick="W3Tabs.open(this.id, 'settings_authentication');"><%[ Authentication ]%></button>
+	</div>
+	<div class="w3-container tab_item" id="settings_general">
+		<div class="w3-row w3-section">
+			<div class="w3-col w3-quarter"><com:TLabel ForControl="GeneralLang" Text="<%[ Language: ]%>" /></div>
+			<div class="w3-col w3-threequarter">
+				<com:TActiveDropDownList
+					ID="GeneralLang"
+					CssClass="w3-select w3-border"
+					Width="150px"
+					CausesValidation="false"
+					AutoPostBack="false"
+				>
+					<com:TListItem Value="en" Text="English" />
+					<com:TListItem Value="pl" Text="Polish" />
+					<com:TListItem Value="pt" Text="Portuguese" />
+					<com:TListItem Value="ru" Text="Russian" />
+				</com:TActiveDropDownList>
+			</div>
+		</div>
+		<div class="w3-row w3-section">
+			<div class="w3-col w3-quarter"><com:TLabel ForControl="GeneralDebug" Text="<%[ Debug: ]%>" /></div>
+			<div class="w3-col w3-threequarter">
+				<com:TActiveCheckBox
+					ID="GeneralDebug"
+					CssClass="w3-check"
+				/>
+			</div>
+		</div>
+		<div class="w3-row w3-section">
+			<div class="w3-col w3-center">
+				<com:TActiveLinkButton
+					ID="GeneralSave"
+					CssClass="w3-button w3-green"
+					OnCallback="saveGeneral"
+				>
+					<i class="fas fa-save"></i> &nbsp;<%[ Save ]%>
+				</com:TActiveLinkButton>
+			</div>
+		</div>
+	</div>
+	<div class="w3-container tab_item" id="settings_catalog" style="display: none">
+		<div class="w3-row w3-section">
+			<div class="w3-col w3-quarter"><com:TLabel ForControl="DBEnabled" Text="<%[ Enabled: ]%>" /></div>
+			<div class="w3-col w3-threequarter">
+				<com:TActiveCheckBox
+					ID="DBEnabled"
+					CssClass="w3-check"
+					Attributes.onclick="$('#db_container').slideToggle('fast')"
+				/>
+			</div>
+		</div>
+		<div id="db_container" style="display: <%=$this->DBEnabled->Checked ? 'block' : 'none'%>">
+			<div class="w3-row w3-section">
+				<div class="w3-col w3-quarter"><com:TLabel ForControl="DBType" Text="<%[ Database type: ]%>" /></div>
+				<div class="w3-col w3-threequarter">
+					<com:TActiveDropDownList
+						ID="DBType"
+						CssClass="w3-select w3-border"
+						Width="170px"
+						OnTextChanged="setDBType"
+						CausesValidation="false"
+					>
+						<com:TListItem Value="none" Text="<%[ select database ]%>" />
+						<com:TListItem Value="pgsql" Text="PostgreSQL" />
+						<com:TListItem Value="mysql" Text="MySQL" />
+						<com:TListItem Value="sqlite" Text="SQLite" />
+					</com:TActiveDropDownList>
+					<com:TCompareValidator
+						Display="Dynamic"
+						ControlToValidate="DBType"
+						DataType="String"
+						ValueToCompare="none"
+						Operator="NotEqual"
+						ValidationGroup="DbGroup"
+						Text="<%[ Please select database type. ]%>"
+					/>
+				</div>
+			</div>
+			<div class="w3-row w3-section">
+				<div class="w3-col w3-quarter"><com:TLabel ForControl="DBName" Text="<%[ Database name: ]%>" /></div>
+				<div class="w3-col w3-threequarter">
+					<com:TTextBox
+						ID="DBName"
+						CssClass="w3-input w3-border"
+						Width="370px"
+					/>
+					<com:TRequiredFieldValidator
+						Display="Dynamic"
+						ControlToValidate="DBName"
+						ValidationGroup="DbGroup"
+						Text="<%[ Please enter database name. ]%>"
+					/>
+				</div>
+			</div>
+			<div class="w3-row w3-section">
+				<div class="w3-col w3-quarter"><com:TLabel ForControl="DBLogin" Text="<%[ Login: ]%>" /></div>
+				<div class="w3-col w3-threequarter">
+					<com:TActiveTextBox
+						ID="DBLogin"
+						CssClass="w3-input w3-border"
+						Width="370px"
+					/>
+					<com:TRequiredFieldValidator
+						ID="LoginValidator"
+						Display="Dynamic"
+						ControlToValidate="DBLogin"
+						ValidationGroup="DbGroup"
+						Text="<%[ Please enter login. ]%>"
+					/>
+				</div>
+			</div>
+			<div class="w3-row w3-section">
+				<div class="w3-col w3-quarter"><com:TLabel ForControl="DBPassword" Text="<%[ Password: ]%>" /></div>
+				<div class="w3-col w3-threequarter"><com:TActiveTextBox
+					ID="DBPassword"
+					CssClass="w3-input w3-border"
+					TextMode="Password"
+					PersistPassword="true"
+					Width="370px"
+				 /></div>
+			</div>
+			<div class="w3-row w3-section">
+				<div class="w3-col w3-quarter"><com:TLabel ForControl="DBAddress" Text="<%[ IP address (or hostname): ]%>" /></div>
+				<div class="w3-col w3-threequarter">
+					<com:TActiveTextBox
+						ID="DBAddress"
+						CssClass="w3-input w3-border"
+						Width="370px"
+					/>
+					<com:TRequiredFieldValidator
+						ID="IPValidator"
+						Display="Dynamic"
+						ControlToValidate="DBAddress"
+						ValidationGroup="DbGroup"
+						Text="<%[ Please enter IP address or hostname. ]%>"
+					/>
+				</div>
+			</div>
+			<div class="w3-row w3-section">
+				<div class="w3-col w3-quarter"><com:TLabel ForControl="DBPort" Text="<%[ Port: ]%>" /></div>
+				<div class="w3-col w3-threequarter">
+					<com:TActiveTextBox
+						ID="DBPort"
+						CssClass="w3-input w3-border"
+						Width="100px"
+						MaxLength="5"
+						Enabled="false"
+					/>
+					<com:TRequiredFieldValidator
+						ID="PortValidator"
+						Display="Dynamic"
+						ControlToValidate="DBPort"
+						ValidationGroup="DbGroup"
+						Text="<%[ Please enter database port. ]%>"
+					/>
+				</div>
+			</div>
+			<com:TActivePanel
+				ID="DBPathField"
+				CssClass="w3-row w3-section"
+				Display="<%=!$this->IsCallBack && $this->getPage()->config['db']['type'] == 'sqlite' ? 'Fixed' : $this->DBPathField->Display%>">
+				<div class="w3-col w3-quarter"><com:TLabel ForControl="DBPath" Text="<%[ SQLite database path: ]%>" /></div>
+				<div class="w3-col w3-threequarter">
+					<com:TActiveTextBox
+						ID="DBPath"
+						CssClass="w3-input w3-border"
+						Enabled="false"
+						Width="370px"
+					/>
+					<com:TRequiredFieldValidator
+						ID="DBPathValidator"
+						Display="Dynamic"
+						ControlToValidate="DBPath"
+						ValidationGroup="DbGroup"
+						Text="<%[ Please enter database path. ]%>"
+					/>
+				</div>
+			</com:TActivePanel>
+			<div class="w3-row w3-section">
+				<div class="w3-col w3-quarter" style="vertical-align: top"><com:TLabel ForControl="ConnectionTest" Text="<%[ Connection test: ]%>" CssClass="test_label" /></div>
+				<div class="w3-col w3-threequarter">
+					<table>
+						<tr>
+							<td align="center" valign="middle">
+								<com:TActiveLinkButton
+									ID="ConnectionTest"
+									CssClass="w3-button w3-green"
+									CausesValidation="false"
+									OnCallback="connectionDBTest"
+								>
+									<prop:ClientSide.OnLoading>
+										$('#db_test_result_ok').hide();
+										$('#db_test_result_err').hide();
+										$('#<%=$this->DbTestResultErr->ClientID%>').hide();
+										$('#db_test_loader').show();
+									</prop:ClientSide.OnLoading>
+									<prop:ClientSide.OnComplete>
+										$('#db_test_loader').hide();
+									</prop:ClientSide.OnComplete>
+									<i class="fas fa-play"></i> &nbsp;<%[ test ]%>
+								</com:TActiveLinkButton>
+							</td>
+							<td style="padding-left: 10px">
+								<span id="db_test_loader" style="display: none">
+									<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+								</span>
+								<span id="db_test_result_ok" class="w3-text-green" style="display: none">
+									<i class="fas fa-check"></i> &nbsp;<%[ OK ]%>
+								</span>
+								<span id="db_test_result_err" class="w3-text-red" style="display: none">
+									<i class="fas fa-exclamation-circle"></i> &nbsp;
+								</span>
+								<com:TActiveLabel ID="DbTestResultErr" CssClass="w3-text-red" Display="None"><%[ Connection error ]%></com:TActiveLabel>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="w3-row w3-section">
+			<div class="w3-col w3-center">
+				<com:TActiveLinkButton
+					ID="CatalogSave"
+					CssClass="w3-button w3-green"
+					OnCallback="saveCatalog"
+					ValidationGroup="DbGroup"
+					CausesValidation="true"
+				>
+					<i class="fas fa-save"></i> &nbsp;<%[ Save ]%>
+				</com:TActiveLinkButton>
+			</div>
+		</div>
+	</div>
+	<div class="w3-container tab_item" id="settings_console" style="display: none">
+		<div class="w3-row w3-section">
+			<div class="w3-col w3-quarter"><com:TLabel ForControl="BconsoleEnabled" Text="<%[ Enabled: ]%>" /></div>
+			<div class="w3-col w3-threequarter">
+				<com:TActiveCheckBox
+					ID="BconsoleEnabled"
+					CssClass="w3-check"
+					Attributes.onclick="$('#bconsole_container').slideToggle('fast')"
+				/>
+			</div>
+		</div>
+		<div id="bconsole_container" style="display: <%=$this->BconsoleEnabled->Checked ? 'block' : 'none'%>">
+			<div class="w3-row w3-section">
+				<div class="w3-col w3-quarter">
+					<com:TLabel
+						ForControl="BconsolePath"
+						Text="<%[ Bconsole binary file path: ]%>"
+					/>
+				</div>
+				<div class="w3-col w3-threequarter">
+					<com:TTextBox
+						ID="BconsolePath"
+						CssClass="w3-input w3-border"
+						CausesValidation="false"
+						ValidationGroup="BconsoleGroup"
+						Width="370px"
+					/>
+					<com:TRequiredFieldValidator
+						Display="Dynamic"
+						ControlToValidate="BconsolePath"
+						Text="<%[ Please enter bconsole path. ]%>"
+					/>
+				</div>
+			</div>
+			<div class="w3-row w3-section">
+				<div class="w3-col w3-quarter">
+					<com:TLabel
+						ForControl="BconsoleConfigPath"
+						Text="<%[ Bconsole admin config file path: ]%>"
+					/>
+				</div>
+				<div class="w3-col w3-threequarter">
+					<com:TTextBox
+						ID="BconsoleConfigPath"
+						CssClass="w3-input w3-border"
+						CausesValidation="false"
+						ValidationGroup="BconsoleGroup"
+						Width="370px"
+					/>
+					<com:TRequiredFieldValidator
+						Display="Dynamic"
+						ControlToValidate="BconsoleConfigPath"
+						Text="<%[ Please enter bconsole config file path. ]%>"
+					/>
+				</div>
+			</div>
+			<div class="w3-row w3-section">
+				<div class="w3-col w3-quarter">
+					<com:TLabel
+						ForControl="BconsoleUseSudo"
+						Text="<%[ Use sudo: ]%>"
+					/>
+				</div>
+				<div class="w3-col w3-threequarter">
+					<com:TCheckBox
+						ID="BconsoleUseSudo"
+						CssClass="w3-check"
+					/> &nbsp;<a href="javascript:void(0)" onclick="oSudoConfig.get_config('bconsole');"><%[ Get sudo configuration ]%></a>
+				</div>
+			</div>
+			<div class="w3-row w3-section">
+				<div class="w3-col w3-quarter">
+					<com:TLabel
+						ForControl="BconsoleConnectionTest"
+						Text="<%[ Bconsole connection test: ]%>"
+					/></div>
+				<div class="w3-col w3-threequarter">
+					<table>
+						<tr>
+							<td>
+								<com:TActiveLinkButton
+									ID="BconsoleConnectionTest"
+									CssClass="w3-button w3-green"
+									CausesValidation="false"
+									OnCallback="connectionBconsoleTest"
+								>
+									<prop:ClientSide.OnLoading>
+										$('#bconsole_test_result_ok').hide();
+										$('#bconsole_test_result_err').hide();
+										$('#<%=$this->BconsoleTestResultErr->ClientID%>').hide();
+										$('#bconsole_test_loader').show();
+									</prop:ClientSide.OnLoading>
+									<prop:ClientSide.OnComplete>
+										$('#bconsole_test_loader').hide();
+									</prop:ClientSide.OnComplete>
+									<i class="fas fa-play"></i> &nbsp;<%[ test ]%>
+								</com:TActiveLinkButton>
+							</td>
+							<td style="padding-left: 10px">
+								<span id="bconsole_test_loader" style="display: none">
+									<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+								</span>
+								<span id="bconsole_test_result_ok" class="w3-text-green" style="display: none">
+									<i class="fas fa-check"></i> &nbsp;<%[ OK ]%>
+								</span>
+								<span id="bconsole_test_result_err" class="w3-text-red" style="display: none">
+									<i class="fas fa-exclamation-circle"></i> &nbsp;
+								</span>
+								<com:TActiveLabel ID="BconsoleTestResultErr" CssClass="w3-text-red" Display="None"><%[ Connection error ]%></com:TActiveLabel>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="w3-row w3-section">
+			<div class="w3-col w3-center">
+				<com:TActiveLinkButton
+					ID="BconsoleSave"
+					CssClass="w3-button w3-green"
+					OnCallback="saveBconsole"
+					ValidationGroup="BconsoleGroup"
+					CausesValidation="true"
+				>
+					<i class="fas fa-save"></i> &nbsp;<%[ Save ]%>
+				</com:TActiveLinkButton>
+			</div>
+		</div>
+	</div>
+	<div class="w3-container tab_item" id="settings_config" style="display: none">
+		<div class="w3-row w3-section">
+			<div class="w3-col w3-quarter"><com:TLabel ForControl="ConfigEnabled" Text="<%[ Enabled: ]%>" /></div>
+			<div class="w3-col w3-threequarter">
+				<com:TActiveCheckBox
+					ID="ConfigEnabled"
+					CssClass="w3-check"
+					Attributes.onclick="$('#config_container').slideToggle('fast')"
+				/>
+			</div>
+		</div>
+		<div id="config_container" style="display: <%=$this->ConfigEnabled->Checked ? 'block' : 'none'%>">
+			<fieldset>
+				<legend><%[ General configuration ]%></legend>
+				<div class="w3-row w3-section" title="<%[ In this directory Baculum API saves temporarily Bacula configuration files (mainly for validation purposes) just before they are written as real Bacula configuration files. ]%>">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="BConfigDir"
+							Text="<%[ Baculum working directory for Bacula config: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TTextBox
+							ID="BConfigDir"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/> &nbsp;
+						<span class="config_test_loader" style="display: none">
+							<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+						</span>
+						<com:TActiveLabel
+							ID="BConfigDirTestOk"
+							Display="None"
+							CssClass="w3-text-green"
+							EnableViewState="false"
+						>
+							<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
+						</com:TActiveLabel>
+						<com:TActiveLabel
+							ID="BConfigDirTestErr"
+							Display="None"
+							CssClass="w3-text-red"
+							EnableViewState="false"
+						>
+							<!--i class="fas fa-exclamation-circle" title="<%[ Error ]%>"></i--> &nbsp;<%[ Error ]%>
+						</com:TActiveLabel>
+						<com:TRequiredFieldValidator
+							ValidationGroup="ConfigGroup"
+							ControlToValidate="BConfigDir"
+							Display="Dynamic"
+							Text="<%[ Directory path field is required. ]%>"
+						/>
+						<com:TActiveCustomValidator
+							ID="BConfigDirWritableTest"
+							ValidationGroup="ConfigGroup"
+							ControlToValidate="BConfigDir"
+							Text="<%[ Provided directory path is not writable by web server. ]%>"
+							Display="Dynamic"
+							OnServerValidate="testConfigDir"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="BJSONUseSudo"
+							Text="<%[ Use sudo: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TCheckBox
+							ID="BJSONUseSudo"
+							CssClass="w3-check"
+						/> &nbsp;<a href="javascript:void(0)" onclick="oSudoConfig.get_config('config');"><%[ Get sudo configuration ]%></a>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend>Director</legend>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="BDirJSONPath"
+							Text="<%[ bdirjson binary file path: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TTextBox
+							ID="BDirJSONPath"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/> &nbsp;
+						<span class="config_test_loader" style="display: none">
+							<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+						</span>
+						<com:TActiveLabel
+							ID="BDirJSONPathTestOk"
+							Display="None"
+							CssClass="w3-text-green"
+							EnableViewState="false"
+						>
+							<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
+						</com:TActiveLabel>
+						<com:TCustomValidator
+							ValidationGroup="ConfigGroup"
+							ControlToValidate="BDirJSONPath"
+							ClientValidationFunction="bjsontools_validator"
+							Display="Dynamic"
+							Text="<%[ There is required to provide both binary file and config file paths. ]%>"
+						/>
+						<com:TActiveLabel
+							ID="BDirJSONPathTestErr"
+							Display="None"
+							CssClass="w3-text-red"
+							EnableViewState="false"
+						>
+							<i class="fas fa-exclamation-circle" title="<%[ Error ]%>"></i> &nbsp;<%[ Connection error ]%>
+						</com:TActiveLabel>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="DirCfgPath"
+							Text="<%[ Main Director config file path (usually bacula-dir.conf): ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TTextBox
+							ID="DirCfgPath"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+						<com:TCustomValidator
+							ValidationGroup="ConfigGroup"
+							ControlToValidate="DirCfgPath"
+							ClientValidationFunction="bjsontools_validator"
+							Display="Dynamic"
+							Text="<%[ There is required to provide both binary file and config file paths. ]%>"
+						/>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend>Storage Daemon</legend>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="BSdJSONPath"
+							Text="<%[ bsdjson binary file path: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TTextBox
+							ID="BSdJSONPath"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/> &nbsp;
+						<span class="config_test_loader" style="display: none">
+							<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+						</span>
+						<com:TCustomValidator
+							ValidationGroup="ConfigGroup"
+							ControlToValidate="BSdJSONPath"
+							ClientValidationFunction="bjsontools_validator"
+							Display="Dynamic"
+							Text="<%[ There is required to provide both binary file and config file paths. ]%>"
+						/>
+						<com:TActiveLabel
+							ID="BSdJSONPathTestOk"
+							Display="None"
+							CssClass="w3-text-green"
+							EnableViewState="false"
+						>
+							<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
+						</com:TActiveLabel>
+						<com:TActiveLabel
+							ID="BSdJSONPathTestErr"
+							Display="None"
+							CssClass="w3-text-red"
+							EnableViewState="false"
+						>
+							<i class="fas fa-exclamation-circle" title="<%[ Error ]%>"></i> &nbsp;<%[ Connection error ]%>
+						</com:TActiveLabel>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="SdCfgPath"
+							Text="<%[ Main Storage Daemon config file path (usually bacula-sd.conf): ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TTextBox
+							ID="SdCfgPath"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+						<com:TCustomValidator
+							ValidationGroup="ConfigGroup"
+							ControlToValidate="SdCfgPath"
+							ClientValidationFunction="bjsontools_validator"
+							Display="Dynamic"
+							Text="<%[ There is required to provide both binary file and config file paths. ]%>"
+						/>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend>File Daemon/Client</legend>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="BFdJSONPath"
+							Text="<%[ bfdjson binary file path: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TTextBox
+							ID="BFdJSONPath"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/> &nbsp;
+						<com:TCustomValidator
+							ValidationGroup="ConfigGroup"
+							ControlToValidate="BFdJSONPath"
+							ClientValidationFunction="bjsontools_validator"
+							Display="Dynamic"
+							Text="<%[ There is required to provide both binary file and config file paths. ]%>"
+						/>
+						<span class="config_test_loader" style="display: none">
+							<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+						</span>
+						<com:TActiveLabel
+							ID="BFdJSONPathTestOk"
+							Display="None"
+							CssClass="w3-text-green"
+							EnableViewState="false"
+						>
+							<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
+						</com:TActiveLabel>
+						<com:TActiveLabel
+							ID="BFdJSONPathTestErr"
+							Display="None"
+							CssClass="w3-text-red"
+							EnableViewState="false"
+						>
+							<i class="fas fa-exclamation-circle" title="<%[ Error ]%>"></i> &nbsp;<%[ Connection error ]%>
+						</com:TActiveLabel>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="FdCfgPath"
+							Text="<%[ Main File Daemon config file path (usually bacula-fd.conf): ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TTextBox
+							ID="FdCfgPath"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+						<com:TCustomValidator
+							ValidationGroup="ConfigGroup"
+							ControlToValidate="FdCfgPath"
+							ClientValidationFunction="bjsontools_validator"
+							Display="Dynamic"
+							Text="<%[ There is required to provide both binary file and config file paths. ]%>"
+						/>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend>Bconsole</legend>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="BBconsJSONPath"
+							Text="<%[ bbconsjson binary file path: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TCustomValidator
+							ValidationGroup="ConfigGroup"
+							ControlToValidate="BBconsJSONPath"
+							ClientValidationFunction="bjsontools_validator"
+							Display="Dynamic"
+							Text="<%[ There is required to provide both binary file and config file paths. ]%>"
+						/>
+						<com:TTextBox
+							ID="BBconsJSONPath"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/> &nbsp;
+						<span class="config_test_loader" style="display: none">
+							<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+						</span>
+						<com:TActiveLabel
+							ID="BBconsJSONPathTestOk"
+							Display="None"
+							CssClass="w3-text-green"
+							EnableViewState="false"
+						>
+							<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
+						</com:TActiveLabel>
+						<com:TActiveLabel
+							ID="BBconsJSONPathTestErr"
+							Display="None"
+							CssClass="w3-text-red"
+							EnableViewState="false"
+						>
+							<i class="fas fa-exclamation-circle" title="<%[ Error ]%>"></i> &nbsp;<%[ Connection error ]%>
+						</com:TActiveLabel>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="BconsCfgPath"
+							Text="<%[ Admin Bconsole config file path (usually bconsole.conf): ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TTextBox
+							ID="BconsCfgPath"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+						<com:TCustomValidator
+							ValidationGroup="ConfigGroup"
+							ControlToValidate="BconsCfgPath"
+							ClientValidationFunction="bjsontools_validator"
+							Display="Dynamic"
+							Text="<%[ There is required to provide both binary file and config file paths. ]%>"
+						/>
+					</div>
+				</div>
+			</fieldset>
+			<div class="w3-center w3-margin-top">
+				<com:TActiveLinkButton
+					ID="TestJSONToolsConfig"
+					ValidationGroup="ConfigGroup"
+					OnClick="testJSONToolsCfg"
+					CssClass="w3-button w3-green"
+				>
+					<prop:ClientSide.OnLoading>
+						bjsontools_hide_test_results();
+						$('.config_test_loader').show();
+					</prop:ClientSide.OnLoading>
+					<prop:ClientSide.OnComplete>
+						$('.config_test_loader').hide();
+					</prop:ClientSide.OnComplete>
+					<i class="fas fa-play"></i> &nbsp;<%[ Test configuration ]%>
+				</com:TActiveLinkButton>
+			</div>
+		</div>
+		<div class="w3-row w3-section">
+			<div class="w3-col w3-center">
+				<com:TActiveLinkButton
+					ID="ConfigSave"
+					CssClass="w3-button w3-green"
+					OnCallback="saveConfig"
+					ValidationGroup="ConfigGroup"
+					CausesValidation="true"
+				>
+					<i class="fas fa-save"></i> &nbsp;<%[ Save ]%>
+				</com:TActiveLinkButton>
+			</div>
+		</div>
+	</div>
+	<div class="w3-container tab_item" id="settings_actions" style="display: none">
+		<div class="w3-row w3-section">
+			<div class="w3-col w3-quarter"><com:TLabel ForControl="ActionsEnabled" Text="<%[ Enabled: ]%>" /></div>
+			<div class="w3-col w3-threequarter">
+				<com:TActiveCheckBox
+					ID="ActionsEnabled"
+					CssClass="w3-check"
+					Attributes.onclick="$('#actions_container').slideToggle('fast')"
+				/>
+			</div>
+		</div>
+		<div id="actions_container" style="display: <%=$this->ActionsEnabled->Checked ? 'block' : 'none'%>">
+			<fieldset>
+				<legend><%[ General configuration ]%></legend>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="ActionsUseSudo"
+							Text="<%[ Use sudo: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TCheckBox
+							ID="ActionsUseSudo"
+							CssClass="w3-check"
+						/> &nbsp;<a href="javascript:void(0)" onclick="oSudoConfig.get_config('actions');"><%[ Get sudo configuration ]%></a>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend>Director</legend>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="DirStartAction"
+							Text="<%[ Director start command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TTextBox
+							ID="DirStartAction"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+						<com:TActiveLinkButton
+							ID="TestDirStartActionCommand"
+							ValidationGroup="ActionsGroup"
+							Text=""
+							OnCommand="testExecActionCommand"
+							CommandParameter="dir_start"
+							CssClass="w3-button w3-green"
+							Width="105px"
+						>
+							<prop:ClientSide.OnLoading>
+								actions_hide_test_results('<%=$this->TestDirStartActionCommand->CommandParameter%>');
+								$('#actions_test_result_dir_start .action_test_loader').show();
+							</prop:ClientSide.OnLoading>
+							<prop:ClientSide.OnComplete>
+								$('#actions_test_result_dir_start .action_test_loader').hide();
+							</prop:ClientSide.OnComplete>
+							<i class="fas fa-play"></i> &nbsp;<%[ Start ]%>
+						</com:TActiveLinkButton>
+						<span id="actions_test_result_dir_start">
+							<span class="action_test_loader" style="display: none">
+								<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+							</span>
+							<span class="action_success w3-text-green" style="display: none">
+								<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
+							</span>
+							<span class="action_error w3-text-red" style="display: none">
+								<i class="fas fa-exclamation-circle" title="<%[ Error ]%>"></i> &nbsp;<%[ Error ]%>
+							</span>
+							<span class="action_result w3-text-red"></span>
+						</span>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="DirStopAction"
+							Text="<%[ Director stop command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TTextBox
+							ID="DirStopAction"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+						<com:TActiveLinkButton
+							ID="TestDirStopActionCommand"
+							ValidationGroup="ActionsGroup"
+							OnCommand="testExecActionCommand"
+							CommandParameter="dir_stop"
+							CssClass="w3-button w3-green"
+							Width="105px"
+						>
+							<prop:ClientSide.OnLoading>
+								actions_hide_test_results('<%=$this->TestDirStopActionCommand->CommandParameter%>');
+								$('#actions_test_result_dir_stop .action_test_loader').show();
+							</prop:ClientSide.OnLoading>
+							<prop:ClientSide.OnComplete>
+								$('#actions_test_result_dir_stop .action_test_loader').hide();
+							</prop:ClientSide.OnComplete>
+							<i class="fas fa-stop"></i> &nbsp;<%[ Stop ]%>
+						</com:TActiveLinkButton>
+						<span id="actions_test_result_dir_stop">
+							<span class="action_test_loader" style="display: none">
+								<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+							</span>
+							<span class="action_success w3-text-green" style="display: none">
+								<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
+							</span>
+							<span class="action_error w3-text-red" style="display: none">
+								<i class="fas fa-exclamation-circle" title="<%[ Error ]%>"></i> &nbsp;<%[ Error ]%>
+							</span>
+							<span class="action_result w3-text-red"></span>
+						</span>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="DirRestartAction"
+							Text="<%[ Director restart command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TTextBox
+							ID="DirRestartAction"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+						<com:TActiveLinkButton
+							ID="TestDirRestartActionCommand"
+							ValidationGroup="ActionsGroup"
+							OnCommand="testExecActionCommand"
+							CommandParameter="dir_restart"
+							CssClass="w3-button w3-green"
+							Width="105px"
+						>
+							<prop:ClientSide.OnLoading>
+								actions_hide_test_results('<%=$this->TestDirRestartActionCommand->CommandParameter%>');
+								$('#actions_test_result_dir_restart .action_test_loader').show();
+							</prop:ClientSide.OnLoading>
+							<prop:ClientSide.OnComplete>
+								$('#actions_test_result_dir_restart .action_test_loader').hide();
+							</prop:ClientSide.OnComplete>
+							<i class="fas fa-sync"></i> &nbsp;<%[ Restart ]%>
+						</com:TActiveLinkButton>
+						<span id="actions_test_result_dir_restart">
+							<span class="action_test_loader" style="display: none">
+								<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+							</span>
+							<span class="action_success w3-text-green" style="display: none">
+								<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
+							</span>
+							<span class="action_error w3-text-red" style="display: none">
+								<i class="fas fa-exclamation-circle" title="<%[ Error ]%>"></i> &nbsp;<%[ Error ]%>
+							</span>
+							<span class="action_result w3-text-red"></span>
+						</span>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend>Storage Daemon</legend>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="SdStartAction"
+							Text="<%[ Storage Daemon start command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TTextBox
+							ID="SdStartAction"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+						<com:TActiveLinkButton
+							ID="TestSdStartActionCommand"
+							ValidationGroup="ActionsGroup"
+							OnCommand="testExecActionCommand"
+							CommandParameter="sd_start"
+							CssClass="w3-button w3-green"
+							Width="105px"
+						>
+							<prop:ClientSide.OnLoading>
+								actions_hide_test_results('<%=$this->TestSdStartActionCommand->CommandParameter%>');
+								$('#actions_test_result_sd_start .action_test_loader').show();
+							</prop:ClientSide.OnLoading>
+							<prop:ClientSide.OnComplete>
+								$('#actions_test_result_sd_start .action_test_loader').hide();
+							</prop:ClientSide.OnComplete>
+							<i class="fas fa-play"></i> &nbsp;<%[ Start ]%>
+						</com:TActiveLinkButton>
+						<span id="actions_test_result_sd_start">
+							<span class="action_test_loader" style="display: none">
+								<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+							</span>
+							<span class="action_success w3-text-green" style="display: none">
+								<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
+							</span>
+							<span class="action_error w3-text-red" style="display: none">
+								<i class="fas fa-exclamation-circle" title="<%[ Error ]%>"></i> &nbsp;<%[ Error ]%>
+							</span>
+							<span class="action_result w3-text-red"></span>
+						</span>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="SdStopAction"
+							Text="<%[ Storage Daemon stop command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TTextBox
+							ID="SdStopAction"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+						<com:TActiveLinkButton
+							ID="TestSdStopActionCommand"
+							ValidationGroup="ActionsGroup"
+							OnCommand="testExecActionCommand"
+							CommandParameter="sd_stop"
+							CssClass="w3-button w3-green"
+							Width="105px"
+						>
+							<prop:ClientSide.OnLoading>
+								actions_hide_test_results('<%=$this->TestSdStopActionCommand->CommandParameter%>');
+								$('#actions_test_result_sd_stop .action_test_loader').show();
+							</prop:ClientSide.OnLoading>
+							<prop:ClientSide.OnComplete>
+								$('#actions_test_result_sd_stop .action_test_loader').hide();
+							</prop:ClientSide.OnComplete>
+							<i class="fas fa-stop"></i> &nbsp;<%[ Stop ]%>
+						</com:TActiveLinkButton>
+						<span id="actions_test_result_sd_stop">
+							<span class="action_test_loader" style="display: none">
+								<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+							</span>
+							<span class="action_success w3-text-green" style="display: none">
+								<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
+							</span>
+							<span class="action_error w3-text-red" style="display: none">
+								<i class="fas fa-exclamation-circle" title="<%[ Error ]%>"></i> &nbsp;<%[ Error ]%>
+							</span>
+							<span class="action_result w3-text-red"></span>
+						</span>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="SdRestartAction"
+							Text="<%[ Storage Daemon restart command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TTextBox
+							ID="SdRestartAction"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+						<com:TActiveLinkButton
+							ID="TestSdRestartActionCommand"
+							ValidationGroup="ActionsGroup"
+							OnCommand="testExecActionCommand"
+							CommandParameter="sd_restart"
+							CssClass="w3-button w3-green"
+							Width="105px"
+						>
+							<prop:ClientSide.OnLoading>
+								actions_hide_test_results('<%=$this->TestSdRestartActionCommand->CommandParameter%>');
+								$('#actions_test_result_sd_restart .action_test_loader').show();
+							</prop:ClientSide.OnLoading>
+							<prop:ClientSide.OnComplete>
+								$('#actions_test_result_sd_restart .action_test_loader').hide();
+							</prop:ClientSide.OnComplete>
+							<i class="fas fa-sync"></i> &nbsp;<%[ Restart ]%>
+						</com:TActiveLinkButton>
+						<span id="actions_test_result_sd_restart">
+							<span class="action_test_loader" style="display: none">
+								<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+							</span>
+							<span class="action_success w3-text-green" style="display: none">
+								<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
+							</span>
+							<span class="action_error w3-text-red" style="display: none">
+								<i class="fas fa-exclamation-circle" title="<%[ Error ]%>"></i> &nbsp;<%[ Error ]%>
+							</span>
+							<span class="action_result w3-text-red"></span>
+						</span>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend>File Daemon/Client</legend>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="FdStartAction"
+							Text="<%[ File Daemon/Client start command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TTextBox
+							ID="FdStartAction"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+						<com:TActiveLinkButton
+							ID="TestFdStartActionCommand"
+							ValidationGroup="ActionsGroup"
+							OnCommand="testExecActionCommand"
+							CommandParameter="fd_start"
+							CssClass="w3-button w3-green"
+							Width="105px"
+						>
+							<prop:ClientSide.OnLoading>
+								actions_hide_test_results('<%=$this->TestFdStartActionCommand->CommandParameter%>');
+								$('#actions_test_result_fd_start .action_test_loader').show();
+							</prop:ClientSide.OnLoading>
+							<prop:ClientSide.OnComplete>
+								$('#actions_test_result_fd_start .action_test_loader').hide();
+							</prop:ClientSide.OnComplete>
+							<i class="fas fa-play"></i> &nbsp;<%[ Start ]%>
+						</com:TActiveLinkButton>
+						<span id="actions_test_result_fd_start">
+							<span class="action_test_loader" style="display: none">
+								<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+							</span>
+							<span class="action_success w3-text-green" style="display: none">
+								<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
+							</span>
+							<span class="action_error w3-text-red" style="display: none">
+								<i class="fas fa-exclamation-circle" title="<%[ Error ]%>"></i> &nbsp;<%[ Error ]%>
+							</span>
+							<span class="action_result w3-text-red"></span>
+						</span>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="FdStopAction"
+							Text="<%[ File Daemon/Client stop command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TTextBox
+							ID="FdStopAction"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+						<com:TActiveLinkButton
+							ID="TestFdStopActionCommand"
+							ValidationGroup="ActionsGroup"
+							OnCommand="testExecActionCommand"
+							CommandParameter="fd_stop"
+							CssClass="w3-button w3-green"
+							Width="105px"
+						>
+							<prop:ClientSide.OnLoading>
+								actions_hide_test_results('<%=$this->TestFdStopActionCommand->CommandParameter%>');
+								$('#actions_test_result_fd_stop .action_test_loader').show();
+							</prop:ClientSide.OnLoading>
+							<prop:ClientSide.OnComplete>
+								$('#actions_test_result_fd_stop .action_test_loader').hide();
+							</prop:ClientSide.OnComplete>
+							<i class="fas fa-stop"></i> &nbsp;<%[ Stop ]%>
+						</com:TActiveLinkButton>
+						<span id="actions_test_result_fd_stop">
+							<span class="action_test_loader" style="display: none">
+								<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+							</span>
+							<span class="action_success w3-text-green" style="display: none">
+								<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
+							</span>
+							<span class="action_error w3-text-red" style="display: none">
+								<i class="fas fa-exclamation-circle" title="<%[ Error ]%>"></i> &nbsp;<%[ Error ]%>
+							</span>
+							<span class="action_result w3-text-red"></span>
+						</span>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="FdRestartAction"
+							Text="<%[ File Daemon/Client restart command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TTextBox
+							ID="FdRestartAction"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+						<com:TActiveLinkButton
+							ID="TestFdRestartActionCommand"
+							ValidationGroup="ActionsGroup"
+							OnCommand="testExecActionCommand"
+							CommandParameter="fd_restart"
+							CssClass="w3-button w3-green"
+							Width="105px"
+						>
+							<prop:ClientSide.OnLoading>
+								actions_hide_test_results('<%=$this->TestFdRestartActionCommand->CommandParameter%>');
+								$('#actions_test_result_fd_restart .action_test_loader').show();
+							</prop:ClientSide.OnLoading>
+							<prop:ClientSide.OnComplete>
+								$('#actions_test_result_fd_restart .action_test_loader').hide();
+							</prop:ClientSide.OnComplete>
+							<i class="fas fa-sync"></i> &nbsp;<%[ Restart ]%>
+						</com:TActiveLinkButton>
+						<span id="actions_test_result_fd_restart">
+							<span class="action_test_loader" style="display: none">
+								<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+							</span>
+							<span class="action_success w3-text-green" style="display: none">
+								<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
+							</span>
+							<span class="action_error w3-text-red" style="display: none">
+								<i class="fas fa-exclamation-circle" title="<%[ Error ]%>"></i> &nbsp;<%[ Error ]%>
+							</span>
+							<span class="action_result w3-text-red"></span>
+						</span>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+		<div class="w3-row w3-section">
+			<div class="w3-col w3-center">
+				<com:TActiveLinkButton
+					ID="ActionsSave"
+					CssClass="w3-button w3-green"
+					OnCallback="saveActions"
+					ValidationGroup="ActionsGroup"
+					CausesValidation="true"
+				>
+					<i class="fas fa-save"></i> &nbsp;<%[ Save ]%>
+				</com:TActiveLinkButton>
+			</div>
+		</div>
+	</div>
+	<div class="w3-container tab_item" id="settings_authentication" style="display: none">
+		<div class="w3-container">
+			<com:TActiveRadioButton
+				ID="AuthOAuth2"
+				GroupName="SelectAuth"
+				CssClass="w3-radio"
+			/>
+			<com:TLabel
+				ForControl="AuthOAuth2"
+				Text="<%[ Use OAuth2 for authorization and authentication ]%>"
+			/>
+		</div>
+		<div class="w3-container">
+			<com:TActiveRadioButton
+				ID="AuthBasic"
+				GroupName="SelectAuth"
+				CssClass="w3-radio"
+			/>
+			<com:TLabel
+				ForControl="AuthBasic"
+				Text="<%[ Use HTTP Basic authentication ]%>"
+			/>
+		</div>
+		<div class="w3-row w3-section">
+			<div class="w3-col w3-center">
+				<com:TActiveLinkButton
+					ID="AuthSave"
+					CssClass="w3-button w3-green"
+					OnCallback="saveAuth"
+				>
+					<i class="fas fa-save"></i> &nbsp;<%[ Save ]%>
+				</com:TActiveLinkButton>
+			</div>
+		</div>
+	</div>
+	<com:Application.API.Portlets.SudoConfig ID="SudoConfig" />
+<script>
+var bin_fields = {
+	bconsole: [
+		'<%=$this->BconsolePath->ClientID%>'
+	],
+	config: [
+		'<%=$this->BDirJSONPath->ClientID%>',
+		'<%=$this->BSdJSONPath->ClientID%>',
+		'<%=$this->BFdJSONPath->ClientID%>',
+		'<%=$this->BBconsJSONPath->ClientID%>',
+	],
+	actions: [
+		'<%=$this->DirStartAction->ClientID%>',
+		'<%=$this->DirStopAction->ClientID%>',
+		'<%=$this->DirRestartAction->ClientID%>',
+		'<%=$this->SdStartAction->ClientID%>',
+		'<%=$this->SdStopAction->ClientID%>',
+		'<%=$this->SdRestartAction->ClientID%>',
+		'<%=$this->FdStartAction->ClientID%>',
+		'<%=$this->FdStopAction->ClientID%>',
+		'<%=$this->FdRestartAction->ClientID%>'
+	]
+};
+oSudoConfig.set_bin_fields(bin_fields);
+
+var bjsontools_fields = {
+	General: {
+		data: [],
+		test: [$('#<%=$this->BConfigDirTestOk->ClientID%>'), $('#<%=$this->BConfigDirTestErr->ClientID%>')]
+	},
+	Dir: {
+		data: [$('#<%=$this->BDirJSONPath->ClientID%>'), $('#<%=$this->DirCfgPath->ClientID%>')],
+		test: [$('#<%=$this->BDirJSONPathTestOk->ClientID%>'), $('#<%=$this->BDirJSONPathTestErr->ClientID%>')]
+	},
+	Sd: {
+		data: [$('#<%=$this->BSdJSONPath->ClientID%>'), $('#<%=$this->SdCfgPath->ClientID%>')],
+		test: [$('#<%=$this->BSdJSONPathTestOk->ClientID%>'), $('#<%=$this->BSdJSONPathTestErr->ClientID%>')]
+	},
+	Fd: {
+		data: [$('#<%=$this->BFdJSONPath->ClientID%>'), $('#<%=$this->FdCfgPath->ClientID%>')],
+		test: [$('#<%=$this->BFdJSONPathTestOk->ClientID%>'), $('#<%=$this->BFdJSONPathTestErr->ClientID%>')]
+	},
+	Bcons: {
+		data: [$('#<%=$this->BBconsJSONPath->ClientID%>'), $('#<%=$this->BconsCfgPath->ClientID%>')],
+		test: [$('#<%=$this->BBconsJSONPathTestOk->ClientID%>'), $('#<%=$this->BBconsJSONPathTestErr->ClientID%>')]
+	}
+};
+var bjsontools_get_field_type = function(field_id) {
+	var field_types = Object.keys(bjsontools_fields);
+	var type, field_type;
+	for (var i = 0; i < field_types.length; i++) {
+		type = field_types[i];
+		for (var j = 0; j < bjsontools_fields[type].data.length; j++) {
+			if (bjsontools_fields[type].data[j][0].id === field_id) {
+				field_type = type;
+				break;
+			}
+		}
+		if (field_type) {
+			break;
+		}
+	}
+	return field_type;
+};
+var bjsontools_validator = function(sender, parameter) {
+	var validation_css = 'validation-error';
+	var id_validating_field = sender.control.id;
+	var type = bjsontools_get_field_type(id_validating_field);
+	var invalid_fields = [];
+	for (var i = 0; i < bjsontools_fields[type].data.length; i++) {
+		bjsontools_fields[type].data[i].removeClass(validation_css);
+		if (!bjsontools_fields[type].data[i][0].value) {
+			invalid_fields.push(bjsontools_fields[type].data[i]);
+		}
+	}
+	var valid = (invalid_fields.length === 0 || invalid_fields.length === bjsontools_fields[type].data.length);
+	var is_validating_field_valid = true;
+	if (!valid) {
+		for (var i = 0; i < invalid_fields.length; i++) {
+			invalid_fields[i].addClass(validation_css);
+			if (invalid_fields[i][0].id === id_validating_field) {
+				is_validating_field_valid = false;
+			}
+		}
+		bjsontools_hide_test_results(type);
+	}
+	if (is_validating_field_valid === true) {
+		valid = true;
+	}
+
+	return valid;
+};
+
+// if field_type not given then all test results become hidden
+var bjsontools_hide_test_results = function(field_type) {
+	var field_types = Object.keys(bjsontools_fields);
+	var type;
+	for (var i = 0; i < field_types.length; i++) {
+		type = field_types[i];
+		for (var j = 0; j < bjsontools_fields[type].test.length; j++) {
+			if (!field_type || field_type === type) {
+				bjsontools_fields[type].test[j].hide();
+			}
+		}
+	}
+};
+var set_action_command_output = function(action, result) {
+	var result_el = document.querySelector('#actions_test_result_' + action + ' .action_result');
+	if (result.error === 0) {
+		var success = document.querySelector('#actions_test_result_' + action + ' .action_success');
+		success.style.display = '';
+		result_el.textContent = '';
+	} else {
+		var error = document.querySelector('#actions_test_result_' + action + ' .action_error');
+		error.style.display = '';
+		result_el.innerHTML = '<br />' + result.output.join('<br />');
+	}
+};
+
+var actions_hide_test_results = function(action) {
+	var loader = document.querySelector('#actions_test_result_' + action + ' .action_test_loader');
+	var success = document.querySelector('#actions_test_result_' + action + ' .action_success');
+	var error = document.querySelector('#actions_test_result_' + action + ' .action_error');
+	var result = document.querySelector('#actions_test_result_' + action + ' .action_result');
+	loader.style.display = 'none';
+	success.style.display = 'none'
+	error.style.display = 'none';
+	result.textContent = '';
+};
+
+function reload_page_cb() {
+	window.location.reload();
+}
+</script>
+</com:TContent>

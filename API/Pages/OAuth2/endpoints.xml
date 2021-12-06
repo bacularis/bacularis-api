@@ -1,0 +1,5 @@
+<urls>
+	<!-- OAuth2 -->
+	<url ServiceParameter="Authorize" pattern="oauth/authorize/" />
+	<url ServiceParameter="RequestToken" pattern="oauth/token/" />
+</urls>

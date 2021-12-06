@@ -1,0 +1,697 @@
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2021-11-15 02:59\n"
+"Project-Id-Version: b02f04a28aec0155df9503e3b78ae8cc\n"
+"POT-Creation-Date: \n"
+"Last-Translator: Sergey Zhidkov <zhsv@bk.ru>\n"
+"Language-Team: Russian\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
+"X-Crowdin-Project: b02f04a28aec0155df9503e3b78ae8cc\n"
+"X-Crowdin-Project-ID: 1\n"
+"X-Crowdin-Language: ru\n"
+"X-Crowdin-File: /Baculum API/messages.po\n"
+"X-Crowdin-File-ID: 51\n"
+
+msgid "Language:"
+msgstr "Язык:"
+
+msgid "Language"
+msgstr "Язык"
+
+msgid "select language"
+msgstr "выберите язык"
+
+msgid "Previous"
+msgstr "Назад"
+
+msgid "Cancel"
+msgstr "Отмена"
+
+msgid "Next"
+msgstr "Вперёд"
+
+msgid "Step 1 - select language"
+msgstr "Шаг 1 - выбор языка"
+
+msgid "Catalog API"
+msgstr "Каталог API"
+
+msgid "Step 2 - share the Bacula Catalog Database"
+msgstr "Шаг 2 - Совместное использование базы данных каталога Bacula"
+
+msgid "Do you want to setup and to share the Bacula Catalog Database access for this API instance?"
+msgstr "Вы хотите установить и предоставить доступ к базе данных Bacula для этого экземпляра API?"
+
+msgid "Yes"
+msgstr "Да"
+
+msgid "No"
+msgstr "Нет"
+
+msgid "Database type:"
+msgstr "Тип базы данных:"
+
+msgid "select database"
+msgstr "выбрать базу данных"
+
+msgid "Database name:"
+msgstr "Имя базы данных:"
+
+msgid "Please select database type."
+msgstr "Пожалуйста, выберите тип базы данных."
+
+msgid "Please enter database name."
+msgstr "Пожалуйста, введите имя базы данных."
+
+msgid "Login:"
+msgstr "Логин:"
+
+msgid "Please enter login."
+msgstr "Пожалуйста, введите логин."
+
+msgid "Password:"
+msgstr "Пароль:"
+
+msgid "IP address (or hostname):"
+msgstr "IP адрес (или имя хоста):"
+
+msgid "Please enter IP address or hostname."
+msgstr "Пожалуйста, введите IP-адрес или имя хоста."
+
+msgid "Port:"
+msgstr "Порт:"
+
+msgid "Please enter database port."
+msgstr "Пожалуйста, введите порт базы данных."
+
+msgid "SQLite database path:"
+msgstr "Путь к базе данных SQLite:"
+
+msgid "Please enter database path."
+msgstr "Пожалуйста, введите путь к базе данных."
+
+msgid "Connection test:"
+msgstr "Проверка соединения:"
+
+msgid "Loading..."
+msgstr "Загрузка..."
+
+msgid "OK"
+msgstr "ОК"
+
+msgid "Connection error"
+msgstr "Ошибка подключения"
+
+msgid "test"
+msgstr "тест"
+
+msgid "Do you want to setup and share the Bacula Bconsole interface to execute commands in this API instance?"
+msgstr "Вы хотите установить и поделиться интерфейсом Bacula Bconsole для выполнения команд в этом экземпляре API?"
+
+msgid "Bconsole binary file path:"
+msgstr "Путь к бинарному файлу Bconsole:"
+
+msgid "Please enter bconsole path."
+msgstr "Пожалуйста, введите путь bconsole."
+
+msgid "Please enter bconsole config file path."
+msgstr "Пожалуйста, введите путь к файлу конфигурации bconsole."
+
+msgid "Use sudo:"
+msgstr "Использовать sudo:"
+
+msgid "Bconsole connection test:"
+msgstr "Проверка соединения с Bconsole:"
+
+msgid "Bconsole admin config file path:"
+msgstr "Путь к файлу конфигурации Bconsole:"
+
+msgid "NOTE!"
+msgstr "ПРИМЕЧАНИЕ!"
+
+msgid "Baculum needs access to bconsole by the web server."
+msgstr "Baculum необходим доступ к bconsole через веб-сервер."
+
+msgid "Step 3 - share the Bacula Bconsole commands interface"
+msgstr "Шаг 3 - Поделиться интерфейсом Bacula Bconsole"
+
+msgid "Console API"
+msgstr "Консоль API"
+
+msgid "bdirjson binary file path:"
+msgstr "путь к файлу bdirjson:"
+
+msgid "bsdjson binary file path:"
+msgstr "путь к файлу bsdjson:"
+
+msgid "bfdjson binary file path:"
+msgstr "путь к файлу bfdjson:"
+
+msgid "bbconsjson binary file path:"
+msgstr "Путь к файлу bbconsjson:"
+
+msgid "Main Director config file path (usually bacula-dir.conf):"
+msgstr "Путь к файлу конфигурации Director (обычно bacula-dir.conf):"
+
+msgid "Main Storage Daemon config file path (usually bacula-sd.conf):"
+msgstr "Путь к файлу конфигурации Storage (обычно bacula-sd.conf):"
+
+msgid "Main File Daemon config file path (usually bacula-fd.conf):"
+msgstr "Путь к файлу конфигурации File Daemon (обычно bacula-fd.conf):"
+
+msgid "Admin Bconsole config file path (usually bconsole.conf):"
+msgstr "Путь к файлу конфигурации Bconsole (обычно bconsole.conf):"
+
+msgid "Test configuration"
+msgstr "Тест конфигурации"
+
+msgid "General configuration"
+msgstr "Основная конфигурация"
+
+msgid "Step 4 - share the Bacula configuration interface"
+msgstr "Шаг 4 - поделиться интерфейсом конфигурации Bacula"
+
+msgid "There is required to provide both binary file and config file paths."
+msgstr "Необходимо указать как двоичный файл, так и пути к конфигурации."
+
+msgid "Directory path field is required."
+msgstr "Введите путь к каталогу."
+
+msgid "Provided directory path is not writable by web server."
+msgstr "Указанный путь к каталогу не доступен для записи веб-сервером."
+
+msgid "Config API"
+msgstr "Конфигурация API"
+
+msgid "Error"
+msgstr "Ошибка"
+
+msgid "Finish"
+msgstr "Закончить"
+
+msgid "Do you want to setup and share the Bacula configuration interface to configure Bacula components via this API instance?"
+msgstr "Вы хотите установить и поделиться интерфейсом конфигурации Bacula для настройки компонентов Bacula через этот экземпляр API?"
+
+msgid "Administration login:"
+msgstr "Логин администратора:"
+
+msgid "Administration password:"
+msgstr "Пароль администратора:"
+
+msgid "Please enter password."
+msgstr "Пожалуйста, введите пароль."
+
+msgid "Password must be longer than 4 chars."
+msgstr "Пароль должен быть длиннее 4 символов."
+
+msgid "Retype administration password:"
+msgstr "Повторите пароль администрирования:"
+
+msgid "Please enter retype password."
+msgstr "Пожалуйста, введите пароль."
+
+msgid "Passwords must be the same."
+msgstr "Пароли должны совпадать."
+
+msgid "Use HTTP Basic authentication"
+msgstr "Использовать базовую проверку подлинности HTTP"
+
+msgid "Use OAuth2 for authorization and authentication"
+msgstr "Использовать OAuth2 для авторизации и аутентификации"
+
+msgid "Database port:"
+msgstr "Порт базы данных:"
+
+msgid "Database file path (SQLite only):"
+msgstr "Путь к файлу базы данных (только SQLite):"
+
+msgid "Use sudo for bconsole requests:"
+msgstr "Использовать sudo для запросов bconsole:"
+
+msgid "Save"
+msgstr "Сохранить"
+
+msgid "Step 6 - Finish"
+msgstr "Шаг 6 - Завершение"
+
+msgid "Use sudo for Bacula JSON tools:"
+msgstr "Использовать sudo для инструментов Bacula JSON:"
+
+msgid "Main Director config file path:"
+msgstr "Путь к файлу конфигурации Director:"
+
+msgid "Main Client config file path:"
+msgstr "Путь к главному клиентскому файлу:"
+
+msgid "Main Storage Daemon config file path:"
+msgstr "Путь к файлу конфигурации Storage Daemon:"
+
+msgid "Main Bconsole config file path:"
+msgstr "Путь к файлу конфигурации Bconsol:"
+
+msgid "Please select API endpoint"
+msgstr "Пожалуйста, выберите конечную точку API"
+
+msgid "Catalog access:"
+msgstr "Доступ к каталогу:"
+
+msgid "Console access:"
+msgstr "Доступ к консоли:"
+
+msgid "Config access:"
+msgstr "Доступ к конфигурации:"
+
+msgid "Disabled"
+msgstr "Отключено"
+
+msgid "Invalid Client ID value. Client ID may contain a-z A-Z 0-9 - _ characters."
+msgstr "Неверное значение ID клиента. ID клиента может содержать символы a-z A-Z 0-9 - _."
+
+msgid "Please enter Client ID."
+msgstr "Пожалуйста, введите ID клиента."
+
+msgid "OAuth2 Client ID:"
+msgstr "ID клиента OAuth2:"
+
+msgid "OAuth2 Client Secret:"
+msgstr "OAuth2 Клиентский секрет:"
+
+msgid "Please enter Client Secret."
+msgstr "Пожалуйста, введите секретный ключ клиента."
+
+msgid "Invalid Client Secret value. Client Secret may contain any character that is not a whitespace character."
+msgstr "Недопустимое клиентское Секретное значение. Клиентский Секрет может содержать любой символ, который не является пробелом."
+
+msgid "generate"
+msgstr "генерировать"
+
+msgid "Dedicated Bconsole config file path:"
+msgstr "Путь к файлу конфигурации выделенного Bconsole:"
+
+msgid "Please enter Redirect URI."
+msgstr "Пожалуйста, введите редирект URI."
+
+msgid "OAuth2 Redirect URI (example: https://baculumgui:9095/web/redirect):"
+msgstr "OAuth2 Redirect URI (пример: https://baculumgui:9095/web/redirect):"
+
+msgid "(optional)"
+msgstr "(опционально)"
+
+msgid "First client registration"
+msgstr "Первая регистрация клиента"
+
+msgid "OAuth2 scopes (space separated):"
+msgstr "OAuth2 области (разделенные пробелом):"
+
+msgid "Please enter OAuth2 scopes."
+msgstr "Пожалуйста, введите область OAuth2."
+
+msgid "Please do not forget to disable HTTP Basic auth in the API web server config. Othwerise OAuth2 will not work."
+msgstr "Не забудьте отключить базовую аутентификацию HTTP в конфигурации веб-сервера API. Othwerise OAuth2 не будет работать."
+
+msgid "Refresh token"
+msgstr "Обновить токен"
+
+msgid "New OAuth2 client"
+msgstr "Новый OAuth2 клиент"
+
+msgid "Add"
+msgstr "Добавить"
+
+msgid "API Login:"
+msgstr "Логин API:"
+
+msgid "API Password:"
+msgstr "Пароль API:"
+
+msgid "Retype password:"
+msgstr "Повторите пароль:"
+
+msgid "Please enter API login."
+msgstr "Пожалуйста, введите логин API."
+
+msgid "Please enter API password."
+msgstr "Пожалуйста, введите пароль API."
+
+msgid "User added successfully."
+msgstr "Пользователь успешно добавлен."
+
+msgid "Problem during save to config file. Please check users config file permission."
+msgstr "Возникла проблема при сохранении конфигурационного файла. Пожалуйста, проверьте права доступа пользователей к файлу."
+
+msgid "Given user already exists in config file."
+msgstr "Данный пользователь уже существует в файле конфигурации."
+
+msgid "set all scopes"
+msgstr "установить все области"
+
+msgid "Welcome on the Baculum API default page"
+msgstr "Добро пожаловать. Страница по умолчанию Baculum API."
+
+msgid "Baculum API Client"
+msgstr "Baculum API клиент"
+
+msgid "Here you can try one from API commands"
+msgstr "Здесь вы можете попробовать одну из команд API"
+
+msgid "Starting..."
+msgstr "Запускается..."
+
+msgid "Username"
+msgstr "Имя пользователя"
+
+msgid "Delete"
+msgstr "Удалить"
+
+msgid "Client ID"
+msgstr "ID клиента"
+
+msgid "Redirect URI"
+msgstr "URI перенаправления"
+
+msgid "Scopes"
+msgstr "Области"
+
+msgid "Bconsole Path"
+msgstr "Путь Bconsole"
+
+msgid "Access token:"
+msgstr "Маркер доступа:"
+
+msgid "Send request"
+msgstr "Отправить запрос"
+
+msgid "Basic auth ready..."
+msgstr "Базовая авторизация..."
+
+msgid "Name"
+msgstr "Имя"
+
+msgid "Short name:"
+msgstr "Короткое имя:"
+
+msgid "Edit"
+msgstr "Редактирование"
+
+msgid "Edit OAuth2 client parameters"
+msgstr "Изменить параметры клиента OAuth2"
+
+msgid "Select:"
+msgstr "Выбрать:"
+
+msgid "Baculum working directory for Bacula config:"
+msgstr "Рабочий каталог Baculum для конфигурации Bacula:"
+
+msgid "In this directory Baculum API saves temporarily Bacula configuration files (mainly for validation purposes) just before they are written as real Bacula configuration files."
+msgstr "В этом каталоге Baculum API временно сохраняет конфигурационные файлы Bacula (в основном для целей проверки), перед тем как они записываются как реальные файлы конфигурации Bacula."
+
+msgid "Version:"
+msgstr "Версия:"
+
+msgid "Authentication"
+msgstr "Проверка подлинности"
+
+msgid "Authentication to Baculum REST API"
+msgstr "Аутентификация в Baculum REST API"
+
+msgid "Authentication type:"
+msgstr "Тип аутентификации:"
+
+msgid "Step 5 - authentication to API"
+msgstr "Шаг 5 - аутентификация в API"
+
+msgid "Actions"
+msgstr "Действия"
+
+msgid "Start"
+msgstr "Старт"
+
+msgid "Stop"
+msgstr "Стоп"
+
+msgid "Restart"
+msgstr "Перезапустить"
+
+msgid "Director start command:"
+msgstr "Команда Director start:"
+
+msgid "Director stop command:"
+msgstr "Команда Director stop:"
+
+msgid "Director restart command:"
+msgstr "Команда Director restart:"
+
+msgid "Storage Daemon start command:"
+msgstr "Команда Storage Daemon start:"
+
+msgid "Storage Daemon stop command:"
+msgstr "Команда Storage Daemon stop:"
+
+msgid "Storage Daemon restart command:"
+msgstr "Команда Storage Daemon restart:"
+
+msgid "File Daemon/Client start command:"
+msgstr "Команда File Daemon/Client start:"
+
+msgid "File Daemon/Client stop command:"
+msgstr "Команда File Daemon/Client stop:"
+
+msgid "File Daemon/Client restart command:"
+msgstr "Команда File Daemon/Client restart:"
+
+msgid "Do you want to setup start, stop and restart actions for Bacula components? If you define them, there will be possible to call these actions via API interface and by Baculum Web as well."
+msgstr "Вы хотите запускать, останавливать и перезапускать компоненты Bacula? Если вы определите их, то можно будет вызвать эти действия через API интерфейс и через Baculum Web."
+
+msgid "Sudo configuration"
+msgstr "Конфигурация Sudo"
+
+msgid "Example sudo configuration for Apache web server user (RHEL, CentOS and others):"
+msgstr "Пример конфигурации sudo для пользователя веб-сервера Apache (RHEL, CentOS и другие):"
+
+msgid "Example sudo configuration for Lighttpd web server user (RHEL, CentOS and others):"
+msgstr "Пример конфигурации sudo для пользователя Lighttpd веб-сервера (RHEL, CentOS и другие):"
+
+msgid "Example sudo configuration for Apache and Lighttpd web servers user (Debian, Ubuntu and others):"
+msgstr "Пример конфигурации sudo для пользователя веб-серверов Apache и Lighttpd (Debian, Ubuntu и другие):"
+
+msgid "Get sudo configuration"
+msgstr "Как настроить sudo"
+
+msgid "Please copy appropriate sudo configuration and put it to a new sudoers.d file for example /etc/sudoers.d/baculum-api"
+msgstr "Пожалуйста, скопируйте соответствующую конфигурацию sudo и поместите ее в новый файл sudoers.d, например /etc/sudoers.d/baculum-api"
+
+msgid "Step 5 - enable actions for components"
+msgstr "Шаг 5 - включение действий для компонентов"
+
+msgid "Directory path for new config files:"
+msgstr "Путь к каталогу новых конфигурационных файлов:"
+
+msgid "Use sudo for actions:"
+msgstr "Используйте sudo для действий:"
+
+msgid "Actions setting:"
+msgstr "Настройки действий:"
+
+msgid "Note"
+msgstr "Примечание"
+
+msgid "Please use visudo to add this configuration, otherwise please do remember to add empty line at the end of file."
+msgstr "Пожалуйста, используйте visudo для добавления этой конфигурации, в противном случае не забудьте добавить пустую строку в конце файла."
+
+msgid "Dashboard"
+msgstr "Панель управления"
+
+msgid "Basic users"
+msgstr "Основные пользователи"
+
+msgid "OAuth2 clients"
+msgstr "Клиенты OAuth2"
+
+msgid "Settings"
+msgstr "Настройки"
+
+msgid "Configuration wizard"
+msgstr "Мастер настройки"
+
+msgid "Welcome"
+msgstr "Добро пожаловать"
+
+msgid "Add user"
+msgstr "Добавить пользователя"
+
+msgid "Edit user"
+msgstr "Изменить пользователя"
+
+msgid "Add OAuth2 client"
+msgstr "Добавить нового OAuth2 клиента"
+
+msgid "Are you sure?"
+msgstr "Вы уверены?"
+
+msgid "API settings"
+msgstr "Настройки API"
+
+msgid "General"
+msgstr "Основное"
+
+msgid "Catalog"
+msgstr "Каталог"
+
+msgid "Console"
+msgstr "Консоль"
+
+msgid "Config"
+msgstr "Настройка"
+
+msgid "Enabled:"
+msgstr "Включено:"
+
+msgid "Debug:"
+msgstr "Отладка:"
+
+msgid "Add client"
+msgstr "Добавить клиента"
+
+msgid "Edit client"
+msgstr "Изменить клиента"
+
+msgid "Invalid user. User may contain a-z A-Z 0-9 characters."
+msgstr "Недопустимый пользователь. Пользователь может содержать символы a-z A-Z 0-9."
+
+msgid "Show/hide"
+msgstr "Показать/скрыть"
+
+msgid "Copy to clipboard"
+msgstr "Копировать в буфер обмена"
+
+msgid "Logout"
+msgstr "Выйти"
+
+msgid "Devices"
+msgstr "Устройства"
+
+msgid "Autochangers"
+msgstr "Авточейнджер"
+
+msgid "Add autochanger"
+msgstr "Добавить авточейнджер"
+
+msgid "Device"
+msgstr "Устройство"
+
+msgid "Name:"
+msgstr "Имя:"
+
+msgid "Changer device:"
+msgstr "Устройство для смены:"
+
+msgid "Changer command:"
+msgstr "Команда смены:"
+
+msgid "Drive index:"
+msgstr "Индекс диска:"
+
+msgid "Drive index"
+msgstr "Индекс диска"
+
+msgid "Devices:"
+msgstr "Устройства:"
+
+msgid "Add device"
+msgstr "Добавить устройство"
+
+msgid "Field cannot be empty."
+msgstr "Поле не может быть пустым."
+
+msgid "Invalid value."
+msgstr "Неверное значение."
+
+msgid "Device with the given name already exists."
+msgstr "Устройство с таким именем уже существует."
+
+msgid "Edit device"
+msgstr "Изменить устройство"
+
+msgid "Use CTRL + left-click to multiple item selection"
+msgstr "Использовать CTRL + левый клик для выбора нескольких пунктов"
+
+msgid "Device path:"
+msgstr "Путь к устройству:"
+
+msgid "Edit autochanger"
+msgstr "Изменить авточейнджер"
+
+msgid "Autochanger"
+msgstr "Авточейнджер"
+
+msgid "Unable to delete device. Please unassign it from autochanger '%s' first."
+msgstr "Не удается удалить устройство. Пожалуйста, удалите его из autochanger '%s' '."
+
+msgid "Autochanger with the given name already exists."
+msgstr "Авточейнджер с таким именем уже существует."
+
+msgid "Copy from Bacula SD config:"
+msgstr "Копировать из конфига Bacula SD:"
+
+msgid "Changer command test:"
+msgstr "Тест команды чейнджера:"
+
+msgid "Changer command error"
+msgstr "Чейнджер ошибка команды"
+
+msgid "Copy"
+msgstr "Копировать"
+
+msgid "Column visibility"
+msgstr "Настройка столбцов"
+
+msgid "1 row selected"
+msgstr "выбрана 1 строка"
+
+msgid "%d rows selected"
+msgstr "Выбрано %d строк"
+
+msgid "Show _MENU_ entries"
+msgstr "Показать _MENU_ записей"
+
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr "Показаны _START_ по _END_ из _TOTAL_ записей"
+
+msgid "First"
+msgstr "Первая"
+
+msgid "Last"
+msgstr "Последняя"
+
+msgid "No matching records found"
+msgstr "Не найдено ни одной записи"
+
+msgid "filtered from _MAX_ total entries"
+msgstr "отфильтровано из _MAX_ всего записей"
+
+msgid "No data available in table"
+msgstr "Нет данных в таблице"
+
+msgid "Search:"
+msgstr "Поиск:"
+
+msgid "Get pre-defined paths:"
+msgstr "Получить заранее определенные пути:"
+
+msgid "Select paths"
+msgstr "Выберите пути"
+
+msgid "Binaries:"
+msgstr "Двоичные файлы:"
+
+msgid "Configs:"
+msgstr "Настройка:"
+
+msgid "Dedicated Bconsole config"
+msgstr "Выделенная Bconsole"
+

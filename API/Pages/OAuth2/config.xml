@@ -1,0 +1,14 @@
+<configuration>
+	<paths>
+		<using namespace="Application.API.Class.BaculumAPIServer" />
+	</paths>
+	<modules>
+		<!-- auth modules -->
+		<module id="oauth2" class="Application.API.Class.OAuth2.BaculumOAuth2" />
+		<module id="oauth2_config" class="Application.API.Class.OAuth2.OAuth2Config" />
+		<module id="oauth2_authid" class="Application.API.Class.OAuth2.AuthIdManager" />
+		<module id="oauth2_token" class="Application.API.Class.OAuth2.TokenManager" />
+		<!-- config modules -->
+		<module id="api_config" class="Application.API.Class.APIConfig" />
+	</modules>
+</configuration>

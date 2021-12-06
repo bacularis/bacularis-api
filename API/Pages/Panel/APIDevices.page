@@ -1,0 +1,866 @@
+<%@ MasterClass="Application.API.Layouts.Main" Theme="Baculum-v2"%>
+<com:TContent ID="Main">
+	<header class="w3-container w3-block">
+		<h5>
+			<i class="fas fa-user-shield"></i> <%[ Devices ]%>
+		</h5>
+	</header>
+	<div class="w3-bar w3-green w3-margin-bottom">
+		<button type="button" id="btn_devices_autochanger" class="w3-bar-item w3-button tab_btn w3-grey" onclick="W3Tabs.open(this.id, 'devices_autochanger');"><%[ Autochangers ]%></button>
+		<button type="button" id="btn_devices_device" class="w3-bar-item w3-button tab_btn" onclick="W3Tabs.open(this.id, 'devices_device'); oDeviceList.table.responsive.recalc();"><%[ Devices ]%></button>
+	</div>
+	<div class="w3-container tab_item" id="devices_autochanger">
+		<a href="javascript:void(0)" class="w3-button w3-green w3-margin-bottom" onclick="oAPIAutochangers.add_autochanger();">
+			<i class="fas fa-plus"></i> &nbsp;<%[ Add autochanger ]%>
+		</a>
+		<table id="autochanger_list" class="w3-table w3-striped w3-hoverable w3-white w3-margin-bottom" style="width: 100%">
+			<thead>
+				<tr>
+					<th></th>
+					<th><%[ Name ]%></th>
+					<th><%[ Device ]%></th>
+					<th><%[ Actions ]%></th>
+				</tr>
+			</thead>
+			<tbody id="autochanger_list_body"></tbody>
+			<tfoot>
+				<tr>
+					<th></th>
+					<th><%[ Name ]%></th>
+					<th><%[ Device ]%></th>
+					<th><%[ Actions ]%></th>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+	<com:Application.API.Portlets.SudoConfig ID="SudoConfig" />
+<script>
+var oAutochangerList = {
+	ids: {
+		autochanger_list: 'autochanger_list',
+		autochanger_list_body: 'autochanger_list_body'
+	},
+	table: null,
+	data: [],
+	init: function() {
+		if (!this.table) {
+			this.set_table();
+		} else {
+			var page = this.table.page();
+			this.table.clear().rows.add(this.data).draw();
+			this.table.page(page).draw(false);
+		}
+	},
+	set_table: function() {
+		this.table = $('#' + this.ids.autochanger_list).DataTable({
+			data: this.data,
+			deferRender: true,
+			dom: 'lBfrtip',
+			stateSave: true,
+			buttons: [
+				'copy', 'csv', 'colvis'
+			],
+			columns: [
+				{
+					className: 'details-control',
+					orderable: false,
+					data: null,
+					defaultContent: '<button type="button" class="w3-button w3-blue"><i class="fa fa-angle-down"></i></button>'
+				},
+				{data: 'name'},
+				{data: 'device'},
+				{
+					data: 'name',
+					render: function(data, type, row) {
+						var span = document.createElement('SPAN');
+						span.className = 'w3-right';
+
+						var chpwd_btn = document.createElement('BUTTON');
+						chpwd_btn.className = 'w3-button w3-green';
+						chpwd_btn.type = 'button';
+						var i = document.createElement('I');
+						i.className = 'fas fa-edit';
+						var label = document.createTextNode(' <%[ Edit ]%>');
+						chpwd_btn.appendChild(i);
+						chpwd_btn.innerHTML += '&nbsp';
+						chpwd_btn.appendChild(label);
+						chpwd_btn.setAttribute('onclick', 'oAPIAutochangers.edit_autochanger("' + data + '")');
+
+						var del_btn = document.createElement('BUTTON');
+						del_btn.className = 'w3-button w3-red w3-margin-left';
+						del_btn.type = 'button';
+						var i = document.createElement('I');
+						i.className = 'fas fa-trash-alt';
+						var label = document.createTextNode(' <%[ Delete ]%>');
+						del_btn.appendChild(i);
+						del_btn.innerHTML += '&nbsp';
+						del_btn.appendChild(label);
+						del_btn.setAttribute('onclick', 'oAPIAutochangers.delete_autochanger("' + data + '")');
+
+						span.appendChild(chpwd_btn);
+						span.appendChild(del_btn);
+
+						return span.outerHTML;
+					}
+				}
+			],
+			responsive: {
+				details: {
+					type: 'column'
+				}
+			},
+			columnDefs: [{
+				className: 'control',
+				orderable: false,
+				targets: 0
+			},
+			{
+				className: "dt-center",
+				targets: [ 3 ]
+			}],
+			order: [1, 'asc'],
+		});
+	}
+};
+var bin_fields = {
+	changer_command: [
+		'<%=$this->ChangerCommand->ClientID%>'
+	]
+};
+var bin_opts = {
+	changer_command: {
+		base_path: true
+	}
+};
+oSudoConfig.set_bin_fields(bin_fields);
+oSudoConfig.set_bin_opts(bin_opts);
+</script>
+	<div id="autochanger_window" class="w3-modal">
+		<div class="w3-modal-content w3-animate-top w3-card-4">
+			<header class="w3-container w3-teal">
+				<span onclick="document.getElementById('autochanger_window').style.display = 'none';" class="w3-button w3-display-topright">&times;</span>
+				<h2 id="autochanger_window_title_add" style="display: none"><%[ Add autochanger ]%></h2>
+				<h2 id="autochanger_window_title_edit" style="display: none"><%[ Edit autochanger ]%></h2>
+			</header>
+			<div class="w3-container w3-margin-left w3-margin-right w3-text-teal">
+				<span id="autochanger_exists" class="error" style="display: none"><ul><li><%[ Autochanger with the given name already exists. ]%></li></ul></span>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-third"><label for="autochanger_config"><%[ Copy from Bacula SD config: ]%></label></div>
+					<div class="w3-half">
+						<select id="autochanger_config" class="w3-select w3-border"></select>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-third"><com:TLabel ForControl="AutochangerName" Text="<%[ Name: ]%>" /></div>
+					<div class="w3-half">
+						<com:TActiveTextBox
+							ID="AutochangerName"
+							AutoPostBack="false"
+							MaxLength="100"
+							CssClass="w3-input w3-border"
+							Attributes.placeholder="My Autochanger 123"
+						/>
+						<com:TRequiredFieldValidator
+							ValidationGroup="AutchangerGroup"
+							ControlToValidate="AutochangerName"
+							ErrorMessage="<%[ Field cannot be empty. ]%>"
+							ControlCssClass="field_invalid"
+							Display="Dynamic"
+						/>
+						<com:TRegularExpressionValidator
+							ValidationGroup="AutchangerGroup"
+							RegularExpression="<%=DeviceConfig::DEVICE_PATH_PATTERN%>"
+							ControlToValidate="AutochangerName"
+							ErrorMessage="<%[ Invalid value. ]%>"
+							ControlCssClass="field_invalid"
+							Display="Dynamic"
+						/>
+					</div> &nbsp;<i id="device_required" class="fa fa-asterisk w3-text-red opt_req" style="display none"></i>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-third"><com:TLabel ForControl="ChangerDevice" Text="<%[ Changer device: ]%>" /></div>
+					<div class="w3-half">
+						<com:TActiveTextBox
+							ID="ChangerDevice"
+							AutoPostBack="false"
+							MaxLength="100"
+							CssClass="w3-input w3-border"
+							Attributes.placeholder="/dev/sg4"
+						/>
+						<com:TRequiredFieldValidator
+							ValidationGroup="AutchangerGroup"
+							ControlToValidate="ChangerDevice"
+							ErrorMessage="<%[ Field cannot be empty. ]%>"
+							ControlCssClass="field_invalid"
+							Display="Dynamic"
+						/>
+					</div> &nbsp;<i id="device_required" class="fa fa-asterisk w3-text-red opt_req" style="display none"></i>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-third"><com:TLabel ForControl="ChangerCommand" Text="<%[ Changer command: ]%>" /></div>
+					<div class="w3-half">
+						<com:TActiveTextBox
+							ID="ChangerCommand"
+							AutoPostBack="false"
+							MaxLength="100"
+							CssClass="w3-input w3-border"
+							Attributes.placeholder="/some/path/mtx-changer %c %o %S %a %d"
+						/>
+						<com:TRequiredFieldValidator
+							ValidationGroup="AutchangerGroup"
+							ControlToValidate="ChangerCommand"
+							ErrorMessage="<%[ Field cannot be empty. ]%>"
+							ControlCssClass="field_invalid"
+							Display="Dynamic"
+						/>
+					</div> &nbsp;<i id="device_required" class="fa fa-asterisk w3-text-red opt_req" style="display none"></i>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-third">
+						<com:TLabel
+							ForControl="ChangerCommandUseSudo"
+							Text="<%[ Use sudo: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-half">
+						<com:TActiveCheckBox
+							ID="ChangerCommandUseSudo"
+							CssClass="w3-check"
+						/> &nbsp;<a href="javascript:void(0)" onclick="oSudoConfig.get_config('changer_command');"><%[ Get sudo configuration ]%></a>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-third">
+						<com:TLabel
+							ForControl="ChangerCommandTest"
+							Text="<%[ Changer command test: ]%>"
+						/></div>
+					<div class="w3-col w3-half">
+						<table>
+							<tr>
+								<td>
+									<com:TActiveLinkButton
+										ID="ChangerCommandTest"
+										CssClass="w3-button w3-green"
+										CausesValidation="false"
+										OnCallback="testChangerCommand"
+									>
+										<prop:ClientSide.OnLoading>
+											$('#changer_command_test_result_ok').hide();
+											$('#changer_command_test_result_err').hide();
+											$('#<%=$this->ChangerCommandTestResultErr->ClientID%>').hide();
+											$('#changer_command_test_loader').show();
+										</prop:ClientSide.OnLoading>
+										<prop:ClientSide.OnComplete>
+											$('#changer_command_test_loader').hide();
+										</prop:ClientSide.OnComplete>
+										<i class="fas fa-play"></i> &nbsp;<%[ test ]%>
+									</com:TActiveLinkButton>
+								</td>
+								<td style="padding-left: 10px">
+									<span id="changer_command_test_loader" style="display: none">
+										<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+									</span>
+									<span id="changer_command_test_result_ok" class="w3-text-green" style="display: none">
+										<i class="fas fa-check"></i> &nbsp;<%[ OK ]%>
+									</span>
+									<span id="changer_command_test_result_err" class="w3-text-red" style="display: none">
+										<i class="fas fa-exclamation-circle"></i> &nbsp;
+									</span>
+									<com:TActiveLabel ID="ChangerCommandTestResultErr" CssClass="w3-text-red" Display="None"><%[ Changer command error ]%></com:TActiveLabel>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-third"><com:TLabel ForControl="ChangerCommand" Text="<%[ Devices: ]%>" /></div>
+					<div class="w3-half">
+						<com:TActiveListBox
+							ID="ChangerDevices"
+							SelectionMode="Multiple"
+							CssClass="w3-input w3-border"
+							AutoPostBack="false"
+						/>
+						<com:TRequiredFieldValidator
+							ValidationGroup="AutchangerGroup"
+							ControlToValidate="ChangerDevices"
+							ErrorMessage="<%[ Field cannot be empty. ]%>"
+							ControlCssClass="field_invalid"
+							Display="Dynamic"
+						/>
+						<p class="w3-text-black" style="margin-top: 8px;"><%[ Use CTRL + left-click to multiple item selection ]%></p>
+					</div> &nbsp;<i id="device_required" class="fa fa-asterisk w3-text-red opt_req" style="display none"></i>
+				</div>
+				<footer class="w3-container w3-center">
+					<button type="button" class="w3-button w3-red" onclick="document.getElementById('autochanger_window').style.display = 'none';"><i class="fas fa-times"></i> &nbsp;<%[ Cancel ]%></button>
+					<com:TActiveLinkButton
+						ID="AutochangerSave"
+						ValidationGroup="AutchangerGroup"
+						CausesValidation="true"
+						OnCallback="saveAutochanger"
+						CssClass="w3-button w3-section w3-teal w3-padding"
+					>
+						<i class="fa fa-save"></i> &nbsp;<%[ Save ]%>
+					</com:TActiveLinkButton>
+				</footer>
+				<com:TActiveHiddenField ID="AutochangerWindowType" />
+			</div>
+		</div>
+	</div>
+<com:TCallback ID="AutochangerList" OnCallback="setAutochangerList" />
+<com:TCallback ID="LoadAutochanger" OnCallback="loadAutochanger" />
+<com:TCallback ID="AddAutochanger" OnCallback="addAutochanger" />
+<com:TCallback ID="DeleteAutochanger" OnCallback="deleteAutochanger" />
+<script>
+var oAPIAutochangers = {
+	ids: {
+		autochanger_window: 'autochanger_window',
+		autochanger_name: '<%=$this->AutochangerName->ClientID%>',
+		autochanger_device: '<%=$this->ChangerDevice->ClientID%>',
+		autochanger_command: '<%=$this->ChangerCommand->ClientID%>',
+		autochanger_devices: '<%=$this->ChangerDevices->ClientID%>',
+		title_add: 'autochanger_window_title_add',
+		title_edit: 'autochanger_window_title_edit',
+		window_type: '<%=$this->AutochangerWindowType->ClientID%>',
+		autochanger_exists: 'autochanger_exists',
+		autochanger_config: 'autochanger_config'
+	},
+	achs_config: {},
+	init: function() {
+		this.set_events();
+		this.load_autochanger_list();
+	},
+	set_events: function() {
+		var send_form = function(e) {
+			var kc = e.which || e.keyCode;
+			if (kc == 13) {
+				$('#<%=$this->AutochangerSave->ClientID%>').click();
+			}
+		};
+		[
+			this.ids.autochanger_name,
+			this.ids.autochanger_device,
+			this.ids.autochanger_command,
+			this.ids.autochanger_devices
+		].forEach(function(id) {
+			document.getElementById(id).addEventListener('keypress', send_form);
+		});
+		var ach_conf = document.getElementById(this.ids.autochanger_config);
+		ach_conf.addEventListener('change', function(e) {
+			var name = document.getElementById(this.ids.autochanger_name);
+			var device = document.getElementById(this.ids.autochanger_device);
+			var command = document.getElementById(this.ids.autochanger_command);
+			if (ach_conf.value) {
+				name.value = this.achs_config[ach_conf.value].Name;
+				device.value = this.achs_config[ach_conf.value].ChangerDevice;
+				command.value = this.achs_config[ach_conf.value].ChangerCommand;
+			} else {
+				name.value = device.value = command.value = '';
+			}
+		}.bind(this));
+	},
+	show_autochanger_window: function(show, name) {
+		oAPIAutochangers.hide_errors();
+		oAPIAutochangers.clear_fields();
+		var win = document.getElementById(oAPIAutochangers.ids.autochanger_window);
+		if (show) {
+			win.style.display = 'block';
+		} else {
+			win.style.display = 'none';
+		}
+		var title_add = document.getElementById(oAPIAutochangers.ids.title_add);
+		var title_edit = document.getElementById(oAPIAutochangers.ids.title_edit);
+		var window_type = document.getElementById(oAPIAutochangers.ids.window_type);
+		var autochanger_name = document.getElementById(oAPIAutochangers.ids.autochanger_name);
+		if (name) {
+			// edit autochanger
+			this.load_autochanger_window(name);
+			title_add.style.display = 'none';
+			title_edit.style.display = '';
+			window_type.value = '<%=APIDevices::WINDOW_TYPE_EDIT%>';
+			autochanger_name.setAttribute('readonly', true);
+		} else {
+			// add new autochanger
+			title_edit.style.display = 'none';
+			title_add.style.display = '';
+			window_type.value = '<%=APIDevices::WINDOW_TYPE_ADD%>';
+			autochanger_name.removeAttribute('readonly');
+			autochanger_name.focus();
+		}
+	},
+	load_autochanger_window: function(name) {
+		var cb = <%=$this->LoadAutochanger->ActiveControl->Javascript%>;
+		cb.setCallbackParameter(name);
+		cb.dispatch();
+	},
+	load_autochanger_list: function() {
+		var cb = <%=$this->AutochangerList->ActiveControl->Javascript%>;
+		cb.dispatch();
+	},
+	load_autochanger_list_cb: function(autochangers) {
+		oAutochangerList.data = autochangers;
+		oAutochangerList.init();
+	},
+	add_autochanger: function() {
+		var cb = <%=$this->AddAutochanger->ActiveControl->Javascript%>;
+		cb.dispatch();
+		this.show_autochanger_window(true);
+	},
+	edit_autochanger: function(name) {
+		this.show_autochanger_window(true, name);
+	},
+	delete_autochanger: function(name) {
+		if (!confirm('<%[ Are you sure? ]%>')) {
+			return false;
+		}
+		var cb = <%=$this->DeleteAutochanger->ActiveControl->Javascript%>;
+		cb.setCallbackParameter(name);
+		cb.dispatch();
+	},
+	set_disabled_drives: function(indices) {
+		oAPIAutochangers.clear_disabled_drives();
+		var devices = document.getElementById(oAPIAutochangers.ids.autochanger_devices);
+		for (var i = 0; i < indices.length; i++) {
+			devices.options[indices[i]].setAttribute('disabled', 'disabled');
+		}
+	},
+	clear_disabled_drives: function() {
+		var devices = document.getElementById(oAPIAutochangers.ids.autochanger_devices);
+		for (var i = 0; i < devices.options.length; i++) {
+			if (devices.options[i].hasAttribute('disabled')) {
+				devices.options[i].removeAttribute('disabled');
+			}
+		}
+	},
+	hide_errors: function() {
+		document.getElementById(this.ids.autochanger_exists).style.display = 'none';
+		// changer command test result
+		$('#changer_command_test_result_ok').hide();
+		$('#changer_command_test_result_err').hide();
+		$('#<%=$this->ChangerCommandTestResultErr->ClientID%>').hide();
+	},
+	clear_fields: function() {
+		[
+			this.ids.autochanger_name,
+			this.ids.autochanger_device,
+			this.ids.autochanger_command,
+			this.ids.autochanger_devices
+		].forEach(function(id) {
+			document.getElementById(id).value = '';
+		});
+	},
+	set_config_autochangers: function(achs) {
+		if (achs.exitcode !== 0) {
+			return false;
+		}
+
+		var combo = document.getElementById(oAPIAutochangers.ids.autochanger_config);
+		var opt = document.createElement('OPTION');
+		opt.value = '';
+		var label = document.createTextNode('');
+		opt.appendChild(label);
+		combo.appendChild(opt);
+
+		for (var i = 0; i < achs.output.length; i++) {
+			opt = document.createElement('OPTION');
+			opt.value = achs.output[i].Autochanger.Name;
+			label = document.createTextNode(achs.output[i].Autochanger.Name);
+			opt.appendChild(label);
+			combo.appendChild(opt);
+			oAPIAutochangers.achs_config[achs.output[i].Autochanger.Name] = achs.output[i].Autochanger;
+		}
+	}
+};
+$(function() {
+	oAPIAutochangers.init();
+});
+</script>
+	<div class="w3-container tab_item" id="devices_device" style="display: none">
+		<a href="javascript:void(0)" class="w3-button w3-green w3-margin-bottom" onclick="oAPIDevices.show_device_window(true);">
+			<i class="fas fa-plus"></i> &nbsp;<%[ Add device ]%>
+		</a>
+		<table id="device_list" class="w3-table w3-striped w3-hoverable w3-white w3-margin-bottom" style="width: 100%">
+			<thead>
+				<tr>
+					<th></th>
+					<th><%[ Name ]%></th>
+					<th><%[ Device ]%></th>
+					<th><%[ Drive index ]%></th>
+					<th><%[ Autochanger ]%></th>
+					<th><%[ Actions ]%></th>
+				</tr>
+			</thead>
+			<tbody id="device_list_body"></tbody>
+			<tfoot>
+				<tr>
+					<th></th>
+					<th><%[ Name ]%></th>
+					<th><%[ Device ]%></th>
+					<th><%[ Drive index ]%></th>
+					<th><%[ Autochanger ]%></th>
+					<th><%[ Actions ]%></th>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+<script>
+var oDeviceList = {
+	ids: {
+		device_list: 'device_list',
+		device_list_body: 'device_list_body'
+	},
+	table: null,
+	data: [],
+	init: function() {
+		if (!this.table) {
+			this.set_table();
+		} else {
+			var page = this.table.page();
+			this.table.clear().rows.add(this.data).draw();
+			this.table.page(page).draw(false);
+		}
+	},
+	set_table: function() {
+		this.table = $('#' + this.ids.device_list).DataTable({
+			data: this.data,
+			deferRender: true,
+			dom: 'lBfrtip',
+			stateSave: true,
+			buttons: [
+				'copy', 'csv', 'colvis'
+			],
+			columns: [
+				{
+					className: 'details-control',
+					orderable: false,
+					data: null,
+					defaultContent: '<button type="button" class="w3-button w3-blue"><i class="fa fa-angle-down"></i></button>'
+				},
+				{data: 'name'},
+				{data: 'device'},
+				{data: 'index'},
+				{data: 'autochanger'},
+				{
+					data: 'name',
+					render: function(data, type, row) {
+						var span = document.createElement('SPAN');
+						span.className = 'w3-right';
+
+						var chpwd_btn = document.createElement('BUTTON');
+						chpwd_btn.className = 'w3-button w3-green';
+						chpwd_btn.type = 'button';
+						var i = document.createElement('I');
+						i.className = 'fas fa-edit';
+						var label = document.createTextNode(' <%[ Edit ]%>');
+						chpwd_btn.appendChild(i);
+						chpwd_btn.innerHTML += '&nbsp';
+						chpwd_btn.appendChild(label);
+						chpwd_btn.setAttribute('onclick', 'oAPIDevices.edit_device("' + data + '")');
+
+						var del_btn = document.createElement('BUTTON');
+						del_btn.className = 'w3-button w3-red w3-margin-left';
+						del_btn.type = 'button';
+						var i = document.createElement('I');
+						i.className = 'fas fa-trash-alt';
+						var label = document.createTextNode(' <%[ Delete ]%>');
+						del_btn.appendChild(i);
+						del_btn.innerHTML += '&nbsp';
+						del_btn.appendChild(label);
+						del_btn.setAttribute('onclick', 'oAPIDevices.delete_device("' + data + '", "' + row.autochanger + '")');
+
+						span.appendChild(chpwd_btn);
+						span.appendChild(del_btn);
+
+						return span.outerHTML;
+					}
+				}
+			],
+			responsive: {
+				details: {
+					type: 'column'
+				}
+			},
+			columnDefs: [{
+				className: 'control',
+				orderable: false,
+				targets: 0
+			},
+			{
+				className: "dt-center",
+				targets: [ 3, 5 ]
+			}],
+			order: [1, 'asc'],
+			initComplete: function () {
+				oDeviceList.set_filters(this.api());
+			}
+		});
+	},
+	set_filters: function(api) {
+		api.columns([2, 3, 4]).every(function () {
+			var column = this;
+			var select = $('<select><option value=""></option></select>')
+			.appendTo($(column.footer()).empty())
+			.on('change', function () {
+				var val = dtEscapeRegex(
+					$(this).val()
+				);
+				column
+				.search(val ? '^' + val + '$' : '', true, false)
+				.draw();
+			});
+			column.data().unique().sort().each(function (d, j) {
+				if (column.search() == '^' + dtEscapeRegex(d) + '$') {
+					select.append('<option value="' + d + '" title="' + d + '" selected>' + d + '</option>');
+				} else if (d) {
+					select.append('<option value="' + d + '" title="' + d + '">' + d + '</option>');
+				}
+			});
+		});
+	},
+};
+</script>
+	<div id="device_window" class="w3-modal">
+		<div class="w3-modal-content w3-animate-top w3-card-4">
+			<header class="w3-container w3-teal">
+				<span onclick="document.getElementById('device_window').style.display = 'none';" class="w3-button w3-display-topright">&times;</span>
+				<h2 id="device_window_title_add" style="display: none"><%[ Add device ]%></h2>
+				<h2 id="device_window_title_edit" style="display: none"><%[ Edit device ]%></h2>
+			</header>
+			<div class="w3-container w3-margin-left w3-margin-right w3-text-teal">
+				<span id="device_exists" class="error" style="display: none"><ul><li><%[ Device with the given name already exists. ]%></li></ul></span>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-third"><label for="device_config"><%[ Copy from Bacula SD config: ]%></label></div>
+					<div class="w3-half">
+						<select id="device_config" class="w3-select w3-border"></select>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-third"><com:TLabel ForControl="DeviceName" Text="<%[ Name: ]%>" /></div>
+					<div class="w3-half">
+						<com:TActiveTextBox
+							ID="DeviceName"
+							AutoPostBack="false"
+							MaxLength="100"
+							CssClass="w3-input w3-border"
+							Attributes.placeholder="My Device 123"
+						/>
+						<com:TRequiredFieldValidator
+							ValidationGroup="DeviceGroup"
+							ControlToValidate="DeviceName"
+							ErrorMessage="<%[ Field cannot be empty. ]%>"
+							ControlCssClass="field_invalid"
+							Display="Dynamic"
+						/>
+						<com:TRegularExpressionValidator
+							ValidationGroup="DeviceGroup"
+							RegularExpression="<%=DeviceConfig::DEVICE_PATH_PATTERN%>"
+							ControlToValidate="DeviceName"
+							ErrorMessage="<%[ Invalid value. ]%>"
+							ControlCssClass="field_invalid"
+							Display="Dynamic"
+						/>
+					</div> &nbsp;<i id="device_required" class="fa fa-asterisk w3-text-red opt_req" style="display none"></i>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-third"><com:TLabel ForControl="ChangerDevice" Text="<%[ Device path: ]%>" /></div>
+					<div class="w3-half">
+						<com:TActiveTextBox
+							ID="DeviceDevice"
+							AutoPostBack="false"
+							MaxLength="100"
+							CssClass="w3-input w3-border"
+							Attributes.placeholder="/dev/nst1"
+						/>
+						<com:TRequiredFieldValidator
+							ValidationGroup="DeviceGroup"
+							ControlToValidate="DeviceDevice"
+							ErrorMessage="<%[ Field cannot be empty. ]%>"
+							ControlCssClass="field_invalid"
+							Display="Dynamic"
+						/>
+					</div> &nbsp;<i id="device_required" class="fa fa-asterisk w3-text-red opt_req" style="display none"></i>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-third"><com:TLabel ForControl="ChangerCommand" Text="<%[ Drive index: ]%>" /></div>
+					<div class="w3-half">
+						<com:TActiveTextBox
+							ID="DeviceIndex"
+							AutoPostBack="false"
+							MaxLength="4"
+							Style.Width="100px"
+							CssClass="w3-input w3-border"
+							Attributes.placeholder="0"
+						/>
+						<com:TRequiredFieldValidator
+							ValidationGroup="DeviceGroup"
+							ControlToValidate="DeviceIndex"
+							ErrorMessage="<%[ Field cannot be empty. ]%>"
+							ControlCssClass="field_invalid"
+							Display="Dynamic"
+						/>
+					</div> &nbsp;<i id="device_required" class="fa fa-asterisk w3-text-red opt_req" style="display none"></i>
+				</div>
+				<footer class="w3-container w3-center">
+					<button type="button" class="w3-button w3-red" onclick="document.getElementById('device_window').style.display = 'none';"><i class="fas fa-times"></i> &nbsp;<%[ Cancel ]%></button>
+					<com:TActiveLinkButton
+						ID="DeviceSave"
+						ValidationGroup="DeviceGroup"
+						CausesValidation="true"
+						OnCallback="saveDevice"
+						CssClass="w3-button w3-section w3-teal w3-padding"
+					>
+						<i class="fa fa-save"></i> &nbsp;<%[ Save ]%>
+					</com:TActiveLinkButton>
+				</footer>
+				<com:TActiveHiddenField ID="DeviceWindowType" />
+			</div>
+		</div>
+	</div>
+<com:TCallback ID="DeviceList" OnCallback="setDeviceList" />
+<com:TCallback ID="LoadDevice" OnCallback="loadDevice" />
+<com:TCallback ID="DeleteDevice" OnCallback="deleteDevice" />
+<script>
+var oAPIDevices = {
+	ids: {
+		device_window: 'device_window',
+		device_name: '<%=$this->DeviceName->ClientID%>',
+		device_device: '<%=$this->DeviceDevice->ClientID%>',
+		device_index: '<%=$this->DeviceIndex->ClientID%>',
+		title_add: 'device_window_title_add',
+		title_edit: 'device_window_title_edit',
+		window_type: '<%=$this->DeviceWindowType->ClientID%>',
+		device_exists: 'device_exists',
+		device_config: 'device_config'
+	},
+	devs_config: {},
+	init: function() {
+		this.set_events();
+		this.load_device_list();
+	},
+	set_events: function() {
+		var send_form = function(e) {
+			var kc = e.which || e.keyCode;
+			if (kc == 13) {
+				$('#<%=$this->DeviceSave->ClientID%>').click();
+			}
+		};
+		[
+			this.ids.device_name,
+			this.ids.device_device,
+			this.ids.device_index
+		].forEach(function(id) {
+			document.getElementById(id).addEventListener('keypress', send_form);
+		});
+		var dev_conf = document.getElementById(this.ids.device_config);
+		dev_conf.addEventListener('change', function(e) {
+			var name = document.getElementById(this.ids.device_name);
+			var device = document.getElementById(this.ids.device_device);
+			var index = document.getElementById(this.ids.device_index);
+			if (dev_conf.value) {
+				name.value = this.devs_config[dev_conf.value].Name;
+				device.value = this.devs_config[dev_conf.value].ArchiveDevice;
+				index.value = this.devs_config[dev_conf.value].DriveIndex;
+			} else {
+				name.value = device.value = index.value = '';
+			}
+		}.bind(this));
+	},
+	show_device_window: function(show, name) {
+		oAPIDevices.hide_errors();
+		oAPIDevices.clear_fields();
+		var win = document.getElementById(oAPIDevices.ids.device_window);
+		if (show) {
+			win.style.display = 'block';
+		} else {
+			win.style.display = 'none';
+		}
+		var title_add = document.getElementById(oAPIDevices.ids.title_add);
+		var title_edit = document.getElementById(oAPIDevices.ids.title_edit)
+		var window_type = document.getElementById(oAPIDevices.ids.window_type);
+		var device_name = document.getElementById(oAPIDevices.ids.device_name);
+		if (name) {
+			// edit device
+			oAPIDevices.load_device_window(name);
+			window_type.value = '<%=APIDevices::WINDOW_TYPE_EDIT%>';
+			title_add.style.display = 'none';
+			title_edit.style.display = '';
+			device_name.setAttribute('readonly', true);
+		} else {
+			// add new device
+			window_type.value = '<%=APIDevices::WINDOW_TYPE_ADD%>';
+			title_edit.style.display = 'none';
+			title_add.style.display = '';
+			device_name.removeAttribute('readonly');
+			device_name.focus();
+		}
+	},
+	load_device_window: function(name) {
+		var cb = <%=$this->LoadDevice->ActiveControl->Javascript%>;
+		cb.setCallbackParameter(name);
+		cb.dispatch();
+	},
+	load_device_list: function() {
+		var cb = <%=$this->DeviceList->ActiveControl->Javascript%>;
+		cb.dispatch();
+	},
+	load_device_list_cb: function(devices) {
+		oDeviceList.data = devices;
+		oDeviceList.init();
+	},
+	edit_device: function(name) {
+		this.show_device_window(true, name);
+	},
+	delete_device: function(name, autochanger) {
+		if (autochanger) {
+			var emsg = "<%[ Unable to delete device. Please unassign it from autochanger '%s' first. ]%>";
+			emsg = emsg.replace('%s', autochanger);
+			alert(emsg);
+			return false;
+		}
+		if (!confirm('<%[ Are you sure? ]%>')) {
+			return false;
+		}
+		var cb = <%=$this->DeleteDevice->ActiveControl->Javascript%>;
+		cb.setCallbackParameter(name);
+		cb.dispatch();
+	},
+	hide_errors: function() {
+		document.getElementById(this.ids.device_exists).style.display = 'none';
+	},
+	clear_fields: function() {
+		[
+			this.ids.device_name,
+			this.ids.device_device,
+			this.ids.device_index
+		].forEach(function(id) {
+			document.getElementById(id).value = '';
+		});
+	},
+	set_config_devices: function(devs) {
+		if (devs.exitcode !== 0) {
+			return false;
+		}
+
+		var combo = document.getElementById(oAPIDevices.ids.device_config);
+		var opt = document.createElement('OPTION');
+		opt.value = '';
+		var label = document.createTextNode('');
+		opt.appendChild(label);
+		combo.appendChild(opt);
+
+		for (var i = 0; i < devs.output.length; i++) {
+			opt = document.createElement('OPTION');
+			opt.value = devs.output[i].Device.Name;
+			label = document.createTextNode(devs.output[i].Device.Name);
+			opt.appendChild(label);
+			combo.appendChild(opt);
+			oAPIDevices.devs_config[devs.output[i].Device.Name] = devs.output[i].Device;
+		}
+	}
+};
+$(function() {
+	oAPIDevices.init();
+});
+</script>
+</com:TContent>

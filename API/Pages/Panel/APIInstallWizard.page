@@ -1,0 +1,1442 @@
+<%@ MasterClass="Application.API.Layouts.Wizard" Theme="Baculum-v2"%>
+<com:TContent ID="Wizard">
+	<com:TWizard ID="InstallWizard"
+		CssClass="wizard"
+		StepStyle.CssClass="w3-container"
+		HeaderStyle.CssClass="w3-container"
+		NavigationStyle.CssClass="w3-container"
+		UseDefaultLayout="false"
+		ShowSideBar="false"
+		OnCancelButtonClick="wizardStop"
+		OnCompleteButtonClick="wizardCompleted"
+		>
+		<prop:HeaderTemplate>
+			<div class="w3-half">
+				<div class="w3-third w3-padding-16">
+					<div class="step w3-padding w3-text-white w3-margin-right <%=($this->Parent->ActiveStepIndex === 0 ? 'w3-light-green' : 'w3-green')%>">
+						<div class="w3-left"><i class="fa fa-language w3-xxxlarge"></i></div>
+						<div class="w3-clear"></div>
+						<h4><com:TTranslate Text="Language" /></h4>
+					</div>
+				</div>
+				<div class="w3-third w3-padding-16">
+					<div class="step w3-padding w3-text-white w3-margin-right <%=($this->Parent->ActiveStepIndex === 1 ? 'w3-light-green' : 'w3-green')%>">
+						<div class="w3-left"><i class="fa fa-database w3-xxxlarge"></i></div>
+						<div class="w3-clear"></div>
+						<h4><com:TTranslate Text="Catalog" /></h4>
+					</div>
+				</div>
+				<div class="w3-third w3-padding-16">
+					<div class="step w3-padding w3-text-white w3-margin-right <%=($this->Parent->ActiveStepIndex === 2 ? 'w3-light-green' : 'w3-green')%>">
+						<div class="w3-left"><i class="fa fa-terminal w3-xxxlarge"></i></div>
+						<div class="w3-clear"></div>
+						<h4><com:TTranslate Text="Console" /></h4>
+					</div>
+				</div>
+			</div>
+			<div class="w3-half">
+				<div class="w3-third w3-padding-16">
+					<div class="step w3-padding w3-text-white w3-margin-right <%=($this->Parent->ActiveStepIndex === 3 ? 'w3-light-green' : 'w3-green')%>">
+						<div class="w3-left"><i class="fa fa-cog w3-xxxlarge"></i></div>
+						<div class="w3-clear"></div>
+						<h4><com:TTranslate Text="Config" /></h4>
+					</div>
+				</div>
+				<div class="w3-third w3-padding-16">
+					<div class="step w3-padding w3-text-white w3-margin-right <%=($this->Parent->ActiveStepIndex === 4 ? 'w3-light-green' : 'w3-green')%>">
+						<div class="w3-left"><i class="fa fa-key w3-xxxlarge"></i></div>
+						<div class="w3-clear"></div>
+						<h4><com:TTranslate Text="Authentication" /></h4>
+					</div>
+				</div>
+				<div class="w3-third w3-padding-16">
+					<div class="step w3-padding w3-text-white w3-margin-right <%=($this->Parent->ActiveStepIndex === 5 ? 'w3-light-green' : 'w3-green')%>">
+						<div class="w3-left"><i class="fa fa-check-square w3-xxxlarge"></i></div>
+						<div class="w3-clear"></div>
+						<h4><com:TTranslate Text="Finish" /></h4>
+					</div>
+				</div>
+			</div>
+			<div class="w3-clear"></div>
+			<div class="w3-green w3-margin-right w3-margin-bottom w3-padding-small">
+				<h3><%=$this->Parent->ActiveStep->Title%></h3>
+			</div>
+		</prop:HeaderTemplate>
+		<prop:StartNavigationTemplate>
+			<div class="w3-center w3-section">
+				<com:TLinkButton
+					CommandName="Cancel"
+					CssClass="w3-button w3-red"
+					Visible="<%=$this->getPage()->first_run === false%>"
+				>
+					<i class="fa fa-times"></i> &nbsp;<%[ Cancel ]%>
+				</com:TLinkButton>
+				<com:TLinkButton
+					CommandName="NextStep"
+					CssClass="w3-button w3-green"
+				>
+					<%[ Next ]%>&nbsp; <i class="fa fa-angle-right"></i>
+				</com:TLinkButton>
+			</div>
+		</prop:StartNavigationTemplate>
+
+		<prop:StepNavigationTemplate>
+			<div class="w3-center w3-section">
+				<com:TLinkButton
+					CommandName="Cancel"
+					CssClass="w3-button w3-red"
+					Visible="<%=$this->getPage()->first_run === false%>"
+				>
+					<i class="fa fa-times"></i> &nbsp;<%[ Cancel ]%>
+				</com:TLinkButton>
+				<com:TLinkButton
+					ID="PreviousStepBtn"
+					CommandName="PreviousStep"
+					CausesValidation="false"
+					CssClass="w3-button w3-green"
+				>
+					<i class="fa fa-angle-left"></i> &nbsp;<%[ Previous ]%>
+				</com:TLinkButton>
+				<com:TLinkButton
+					ID="NextStepBtn"
+					CommandName="NextStep"
+					CssClass="w3-button w3-green"
+					Attributes.onclick="return (typeof(wizard_validation) == 'function') ? wizard_validation() : true;"
+				>
+					<%[ Next ]%>&nbsp; <i class="fa fa-angle-right"></i>
+				</com:TLinkButton>
+			</div>
+		</prop:StepNavigationTemplate>
+
+		<prop:FinishNavigationTemplate>
+			<div class="w3-center w3-section">
+				<com:TLinkButton
+					CommandName="Cancel"
+					CssClass="w3-button w3-red"
+					Visible="<%=$this->getPage()->first_run === false%>"
+				>
+					<i class="fa fa-times"></i> &nbsp;<%[ Cancel ]%>
+				</com:TLinkButton>
+				<com:TLinkButton
+					CommandName="PreviousStep"
+					CausesValidation="false"
+					CssClass="w3-button w3-green"
+				>
+					<i class="fa fa-angle-left"></i> &nbsp;<%[ Previous ]%>
+				</com:TLinkButton>
+				<com:TLinkButton
+					CommandName="Complete"
+					CssClass="w3-button w3-green"
+				>
+					<i class="fa fa-save"></i> &nbsp;<%[ Save ]%>
+				</com:TLinkButton>
+			</div>
+		</prop:FinishNavigationTemplate>
+		<com:TWizardStep ID="Step1" Title="<%[ Step 1 - select language ]%>" StepType="Auto">
+			<div class="w3-container">
+				<div class="w3-third"><com:TLabel ForControl="Lang" Text="<%[ Language: ]%>" /></div>
+				<div class="w3-third">
+					<com:TActiveDropDownList
+						ID="Lang"
+						CssClass="w3-select w3-border"
+						Width="150px"
+						OnTextChanged="setLang"
+						CausesValidation="false"
+						ClientSide.OnComplete="location.reload();"
+					>
+						<com:TListItem Value="en" Text="English" />
+						<com:TListItem Value="pl" Text="Polish" />
+						<com:TListItem Value="pt" Text="Portuguese" />
+						<com:TListItem Value="ru" Text="Russian" />
+					</com:TActiveDropDownList>
+					<com:TCompareValidator CssClass="validator-block" Display="Dynamic" ControlToValidate="Lang" DataType="String" ValueToCompare="none" Operator="NotEqual" Text="<%[ Please select language. ]%>" />
+				</div>
+			</div>
+		</com:TWizardStep>
+		<com:TWizardStep ID="Step2" Title="<%[ Step 2 - share the Bacula Catalog Database ]%>" StepType="Auto">
+			<p><%[ Do you want to setup and to share the Bacula Catalog Database access for this API instance? ]%></p>
+			<div class="w3-container w3-section">
+				<com:TRadioButton
+					ID="DatabaseNo"
+					CssClass="w3-radio"
+					GroupName="SelectDatabase"
+					Attributes.onclick="$('#configure_database').hide();"
+				/> <com:TLabel ForControl="DatabaseNo" Text="<%[ No ]%>" />
+			</div>
+			<div class="w3-container w3-section">
+				<com:TRadioButton
+					ID="DatabaseYes"
+					CssClass="w3-radio"
+					GroupName="SelectDatabase"
+					Attributes.onclick="$('#configure_database').show();"
+				/> <com:TLabel ForControl="DatabaseYes" Text="<%[ Yes ]%>" />
+			</div>
+			<div id="configure_database" style="display: <%=($this->DatabaseYes->Checked === true) ? '' : 'none';%>">
+				<com:TActivePanel ID="Step2Content">
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><com:TLabel ForControl="DBType" Text="<%[ Database type: ]%>" /></div>
+						<div class="w3-col w3-third">
+							<com:TActiveDropDownList
+								ID="DBType"
+								CssClass="w3-select w3-border"
+								Width="170px"
+								OnLoad="setDBType"
+								OnTextChanged="setDBType"
+								CausesValidation="false"
+								OnCallback="renderPanel"
+							>
+								<com:TListItem Value="none" Text="<%[ select database ]%>" />
+								<com:TListItem Value="pgsql" Text="PostgreSQL" />
+								<com:TListItem Value="mysql" Text="MySQL" />
+								<com:TListItem Value="sqlite" Text="SQLite" />
+							</com:TActiveDropDownList>
+							<com:TCompareValidator
+								Display="Dynamic"
+								ControlToValidate="DBType"
+								DataType="String"
+								ValueToCompare="none"
+								Operator="NotEqual"
+								ValidationGroup="DbGroup"
+								Text="<%[ Please select database type. ]%>"
+							/>
+						</div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><com:TLabel ForControl="DBName" Text="<%[ Database name: ]%>" /></div>
+						<div class="w3-col w3-third">
+							<com:TTextBox ID="DBName" CssClass="w3-input w3-border" />
+							<com:TRequiredFieldValidator
+								Display="Dynamic"
+								ControlCssClass="invalidate"
+								ControlToValidate="DBName"
+								ValidationGroup="DbGroup"
+								Text="<%[ Please enter database name. ]%>"
+							/>
+						</div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><com:TLabel ForControl="Login" Text="<%[ Login: ]%>" /></div>
+						<div class="w3-col w3-third">
+							<com:TActiveTextBox ID="Login" CssClass="w3-input w3-border" />
+							<com:TRequiredFieldValidator
+								ID="LoginValidator"
+								Display="Dynamic"
+								ControlCssClass="invalidate"
+								ControlToValidate="Login"
+								ValidationGroup="DbGroup"
+								Text="<%[ Please enter login. ]%>"
+							/>
+						</div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><com:TLabel ForControl="Password" Text="<%[ Password: ]%>" /></div>
+						<div class="w3-col w3-third"><com:TActiveTextBox
+							ID="Password"
+							CssClass="w3-input w3-border"
+							TextMode="Password"
+							PersistPassword="true"
+						 /></div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><com:TLabel ForControl="IP" Text="<%[ IP address (or hostname): ]%>" /></div>
+						<div class="w3-col w3-third">
+							<com:TActiveTextBox ID="IP" CssClass="w3-input w3-border" />
+							<com:TRequiredFieldValidator
+								ID="IPValidator"
+								Display="Dynamic"
+								ControlToValidate="IP"
+								ValidationGroup="DbGroup"
+								Text="<%[ Please enter IP address or hostname. ]%>"
+							/>
+						</div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><com:TLabel ForControl="Port" Text="<%[ Port: ]%>" /></div>
+						<div class="w3-col w3-third">
+							<com:TActiveTextBox ID="Port" CssClass="w3-input w3-border" Width="55px" MaxLength="5" Enabled="false" />
+							<com:TRequiredFieldValidator
+								ID="PortValidator"
+								Display="Dynamic"
+								ControlToValidate="Port"
+								ValidationGroup="DbGroup"
+								Text="<%[ Please enter database port. ]%>"
+							/>
+						</div>
+					</div>
+					<com:TActivePanel
+						ID="DBPathField"
+						CssClass="w3-row w3-section"
+						Display="<%=$this->getPage()->first_run === false && !$this->IsCallBack && $this->getPage()->config['db']['type'] == 'sqlite' ? 'Fixed' : $this->DBPathField->Display%>">
+						<div class="w3-col w3-third"><com:TLabel ForControl="DBPath" Text="<%[ SQLite database path: ]%>" /></div>
+						<div class="w3-col w3-third">
+							<com:TActiveTextBox ID="DBPath" CssClass="w3-input w3-border" Enabled="false" />
+							<com:TRequiredFieldValidator
+								ID="DBPathValidator"
+								Display="Dynamic"
+								ControlToValidate="DBPath"
+								ValidationGroup="DbGroup"
+								Text="<%[ Please enter database path. ]%>"
+							/>
+						</div>
+					</com:TActivePanel>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third" style="vertical-align: top"><com:TLabel ForControl="ConnectionTest" Text="<%[ Connection test: ]%>" CssClass="test_label" /></div>
+						<div class="w3-col w3-third">
+							<table>
+								<tr>
+									<td align="center" valign="middle">
+										<com:TActiveLinkButton
+											ID="ConnectionTest"
+											CssClass="w3-button w3-green"
+											CausesValidation="false"
+											OnCallback="connectionDBTest"
+										>
+											<prop:ClientSide.OnLoading>
+												$('#db_test_result_ok').hide();
+												$('#db_test_result_err').hide();
+												$('#<%=$this->DbTestResultErr->ClientID%>').hide();
+												$('#db_test_loader').show();
+											</prop:ClientSide.OnLoading>
+											<prop:ClientSide.OnComplete>
+												$('#db_test_loader').hide();
+											</prop:ClientSide.OnComplete>
+											<i class="fas fa-play"></i> &nbsp;<%[ test ]%>
+										</com:TActiveLinkButton>
+									</td>
+									<td style="padding-left: 10px">
+										<span id="db_test_loader" style="display: none">
+											<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+										</span>
+										<span id="db_test_result_ok" class="w3-text-green" style="display: none">
+											<i class="fas fa-check"></i> &nbsp;<%[ OK ]%>
+										</span>
+										<span id="db_test_result_err" class="w3-text-red" style="display: none">
+											<i class="fas fa-exclamation-circle"></i> &nbsp;
+										</span>
+										<com:TActiveLabel ID="DbTestResultErr" CssClass="w3-text-red" Display="None"><%[ Connection error ]%></com:TActiveLabel>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</com:TActivePanel>
+			</div>
+			<script type="text/javascript">
+				var wizard_validation = function() {
+					var result = true;
+					var db = document.getElementById('<%=$this->DatabaseYes->ClientID%>');
+					if (db.checked) {
+						result = Prado.Validation.validate(Prado.Validation.getForm(), 'DbGroup');
+					}
+					return result;
+				}
+			</script>
+		</com:TWizardStep>
+		<com:TWizardStep ID="Step3" Title="<%[ Step 3 - share the Bacula Bconsole commands interface ]%>" StepType="Auto">
+			<p><%[ Do you want to setup and share the Bacula Bconsole interface to execute commands in this API instance? ]%></p>
+			<div class="w3-container w3-section">
+				<com:TRadioButton
+					ID="ConsoleNo"
+					GroupName="SelectConsole"
+					CssClass="w3-radio"
+					Attributes.onclick="$('#configure_console').hide();"
+				/> <com:TLabel ForControl="ConsoleNo" Text="<%[ No ]%>" />
+			</div>
+			<div class="w3-container w3-section">
+				<com:TRadioButton
+					ID="ConsoleYes"
+					GroupName="SelectConsole"
+					CssClass="w3-radio"
+					Attributes.onclick="$('#configure_console').show();"
+				/> <com:TLabel ForControl="ConsoleYes" Text="<%[ Yes ]%>" />
+			</div>
+			<div id="configure_console" style="display: <%=($this->ConsoleYes->Checked === true) ? '' : 'none';%>">
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-third">
+						<com:TLabel
+							ForControl="BconsolePath"
+							Text="<%[ Bconsole binary file path: ]%>" />
+					</div>
+					<div class="w3-col w3-third">
+						<com:TTextBox
+							ID="BconsolePath"
+							CssClass="w3-input w3-border"
+							CausesValidation="false"
+						/>
+						<com:TRequiredFieldValidator
+							Display="Dynamic"
+							ControlToValidate="BconsolePath"
+							Text="<%[ Please enter bconsole path. ]%>"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-third">
+						<com:TLabel
+							ForControl="BconsoleConfigPath"
+							Text="<%[ Bconsole admin config file path: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-third">
+						<com:TTextBox
+							ID="BconsoleConfigPath"
+							CssClass="w3-input w3-border"
+							CausesValidation="false"
+						/>
+						<com:TRequiredFieldValidator
+							Display="Dynamic"
+							ControlToValidate="BconsoleConfigPath"
+							Text="<%[ Please enter bconsole config file path. ]%>"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-third">
+						<com:TLabel
+							ForControl="UseSudo"
+							Text="<%[ Use sudo: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-third">
+						<com:TCheckBox
+							ID="UseSudo"
+							CssClass="w3-check"
+						/> &nbsp;<a href="javascript:void(0)" onclick="oSudoConfig.get_config('bconsole');"><%[ Get sudo configuration ]%></a>
+
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-third">
+						<com:TLabel
+							ForControl="BconsoleConnectionTest"
+							Text="<%[ Bconsole connection test: ]%>"
+						/></div>
+					<div class="w3-col w3-third">
+						<table>
+							<tr>
+								<td>
+									<com:TActiveLinkButton
+										ID="BconsoleConnectionTest"
+										CssClass="w3-button w3-green"
+										CausesValidation="false"
+										OnCallback="connectionBconsoleTest"
+									>
+										<prop:ClientSide.OnLoading>
+											$('#bconsole_test_result_ok').hide();
+											$('#bconsole_test_result_err').hide();
+											$('#<%=$this->BconsoleTestResultErr->ClientID%>').hide();
+											$('#bconsole_test_loader').show();
+										</prop:ClientSide.OnLoading>
+										<prop:ClientSide.OnComplete>
+											$('#bconsole_test_loader').hide();
+										</prop:ClientSide.OnComplete>
+										<i class="fas fa-play"></i> &nbsp;<%[ test ]%>
+									</com:TActiveLinkButton>
+								</td>
+								<td style="padding-left: 10px">
+									<span id="bconsole_test_loader" style="display: none">
+										<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+									</span>
+									<span id="bconsole_test_result_ok" class="w3-text-green" style="display: none">
+										<i class="fas fa-check"></i> &nbsp;<%[ OK ]%>
+									</span>
+									<span id="bconsole_test_result_err" class="w3-text-red" style="display: none">
+										<i class="fas fa-exclamation-circle"></i> &nbsp;
+									</span>
+									<com:TActiveLabel ID="BconsoleTestResultErr" CssClass="w3-text-red" Display="None"><%[ Connection error ]%></com:TActiveLabel>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="line left">
+					<span><b><%[ NOTE! ]%></b><br /><em><%[ Baculum needs access to bconsole by the web server. ]%></em></span>
+				</div>
+			</div>
+		</com:TWizardStep>
+		<com:TWizardStep ID="Step4" Title="<%[ Step 4 - share the Bacula configuration interface ]%>" StepType="Auto">
+			<p><%[ Do you want to setup and share the Bacula configuration interface to configure Bacula components via this API instance? ]%></p>
+			<div class="w3-container w3-section">
+				<com:TRadioButton
+					ID="ConfigNo"
+					GroupName="SelectConfig"
+					CssClass="w3-radio"
+					Attributes.onclick="$('#configure_config').hide();"
+				/> <com:TLabel ForControl="ConfigNo" Text="<%[ No ]%>" />
+			</div>
+			<div class="w3-container w3-section">
+				<com:TRadioButton
+					ID="ConfigYes"
+					GroupName="SelectConfig"
+					CssClass="w3-radio"
+					Attributes.onclick="$('#configure_config').show();"
+				/> <com:TLabel ForControl="ConfigYes" Text="<%[ Yes ]%>" />
+			</div>
+			<div id="configure_config" style="display: <%=($this->ConfigYes->Checked === true) ? 'block' : 'none';%>">
+				<div class="w3-right-align">
+					<span><%[ Get pre-defined paths: ]%></span>
+					<select id="pre_defined_paths" onchange="oConfigWizardStep4.set_paths();" class="w3-input w3-border" style="width: 400px; display: inline;">
+						<option value=""><%[ Select paths ]%></option>
+						<option value="system"><%[ Binaries: ]%> /usr/sbin, <%[ Configs: ]%> /etc/bacula</option>
+						<option value="bacula.org"><%[ Binaries: ]%> /opt/bacula/bin, <%[ Configs: ]%> /opt/bacula/etc</option>
+					</select>
+				</div>
+				<fieldset>
+					<legend><%[ General configuration ]%></legend>
+					<div class="w3-row w3-section" title="<%[ In this directory Baculum API saves temporarily Bacula configuration files (mainly for validation purposes) just before they are written as real Bacula configuration files. ]%>">
+						<div class="w3-col w3-third">
+							<com:TLabel
+								ForControl="BConfigDir"
+								Text="<%[ Baculum working directory for Bacula config: ]%>"
+							/>
+						</div>
+						<div class="w3-col w3-twothird">
+							<com:TTextBox
+								ID="BConfigDir"
+								CssClass="w3-input w3-border w3-show-inline-block"
+								Width="370px"
+								Attributes.placeholder="ex. /etc/baculum/Config-api-apache"
+							/> &nbsp;
+							<span class="config_test_loader" style="display: none">
+								<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+							</span>
+							<com:TActiveLabel
+								ID="BConfigDirTestOk"
+								Display="None"
+								CssClass="w3-text-green"
+								EnableViewState="false"
+							>
+								<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
+							</com:TActiveLabel>
+							<com:TActiveLabel
+								ID="BConfigDirTestErr"
+								Display="None"
+								CssClass="w3-text-red"
+								EnableViewState="false"
+							>
+								<!--i class="fas fa-exclamation-circle" title="<%[ Error ]%>"></i--> &nbsp;<%[ Error ]%>
+							</com:TActiveLabel>
+							<com:TRequiredFieldValidator
+								ValidationGroup="ConfigGroup"
+								ControlToValidate="BConfigDir"
+								Display="Dynamic"
+								Text="<%[ Directory path field is required. ]%>"
+							/>
+							<com:TActiveCustomValidator
+								ID="BConfigDirWritableTest"
+								ValidationGroup="ConfigGroup"
+								ControlToValidate="BConfigDir"
+								Text="<%[ Provided directory path is not writable by web server. ]%>"
+								Display="Dynamic"
+								OnServerValidate="testConfigDir"
+							/>
+						</div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third">
+							<com:TLabel
+								ForControl="BJSONUseSudo"
+								Text="<%[ Use sudo: ]%>"
+							/>
+						</div>
+						<div class="w3-col w3-twothird">
+							<com:TCheckBox
+								ID="BJSONUseSudo"
+								CssClass="w3-check"
+							/> &nbsp;<a href="javascript:void(0)" onclick="oSudoConfig.get_config('config');"><%[ Get sudo configuration ]%></a>
+						</div>
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend>Director</legend>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third">
+							<com:TLabel
+								ForControl="BDirJSONPath"
+								Text="<%[ bdirjson binary file path: ]%>"
+							/>
+						</div>
+						<div class="w3-col w3-twothird">
+							<com:TTextBox
+								ID="BDirJSONPath"
+								CssClass="w3-input w3-border w3-show-inline-block"
+								Width="370px"
+							/> &nbsp;
+							<span class="config_test_loader" style="display: none">
+								<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+							</span>
+							<com:TActiveLabel
+								ID="BDirJSONPathTestOk"
+								Display="None"
+								CssClass="w3-text-green"
+								EnableViewState="false"
+							>
+								<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
+							</com:TActiveLabel>
+							<com:TCustomValidator
+								ValidationGroup="ConfigGroup"
+								ControlToValidate="BDirJSONPath"
+								ClientValidationFunction="bjsontools_validator"
+								Display="Dynamic"
+								Text="<%[ There is required to provide both binary file and config file paths. ]%>"
+							/>
+							<com:TActiveLabel
+								ID="BDirJSONPathTestErr"
+								Display="None"
+								CssClass="w3-text-red"
+								EnableViewState="false"
+							>
+								<i class="fas fa-exclamation-circle" title="<%[ Error ]%>"></i> &nbsp;<%[ Connection error ]%>
+							</com:TActiveLabel>
+						</div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third">
+							<com:TLabel
+								ForControl="DirCfgPath"
+								Text="<%[ Main Director config file path (usually bacula-dir.conf): ]%>"
+							/>
+						</div>
+						<div class="w3-col w3-twothird">
+							<com:TTextBox
+								ID="DirCfgPath"
+								CssClass="w3-input w3-border w3-show-inline-block"
+								Width="370px"
+							/>
+							<com:TCustomValidator
+								ValidationGroup="ConfigGroup"
+								ControlToValidate="DirCfgPath"
+								ClientValidationFunction="bjsontools_validator"
+								Display="Dynamic"
+								Text="<%[ There is required to provide both binary file and config file paths. ]%>"
+							/>
+						</div>
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend>Storage Daemon</legend>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third">
+							<com:TLabel
+								ForControl="BSdJSONPath"
+								Text="<%[ bsdjson binary file path: ]%>"
+							/>
+						</div>
+						<div class="w3-col w3-twothird">
+							<com:TTextBox
+								ID="BSdJSONPath"
+								CssClass="w3-input w3-border w3-show-inline-block"
+								Width="370px"
+							/> &nbsp;
+							<span class="config_test_loader" style="display: none">
+								<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+							</span>
+							<com:TCustomValidator
+								ValidationGroup="ConfigGroup"
+								ControlToValidate="BSdJSONPath"
+								ClientValidationFunction="bjsontools_validator"
+								Display="Dynamic"
+								Text="<%[ There is required to provide both binary file and config file paths. ]%>"
+							/>
+							<com:TActiveLabel
+								ID="BSdJSONPathTestOk"
+								Display="None"
+								CssClass="w3-text-green"
+								EnableViewState="false"
+							>
+								<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
+							</com:TActiveLabel>
+							<com:TActiveLabel
+								ID="BSdJSONPathTestErr"
+								Display="None"
+								CssClass="w3-text-red"
+								EnableViewState="false"
+							>
+								<i class="fas fa-exclamation-circle" title="<%[ Error ]%>"></i> &nbsp;<%[ Connection error ]%>
+							</com:TActiveLabel>
+						</div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third">
+							<com:TLabel
+								ForControl="SdCfgPath"
+								Text="<%[ Main Storage Daemon config file path (usually bacula-sd.conf): ]%>"
+							/>
+						</div>
+						<div class="w3-col w3-twothird">
+							<com:TTextBox
+								ID="SdCfgPath"
+								CssClass="w3-input w3-border w3-show-inline-block"
+								Width="370px"
+							/>
+							<com:TCustomValidator
+								ValidationGroup="ConfigGroup"
+								ControlToValidate="SdCfgPath"
+								ClientValidationFunction="bjsontools_validator"
+								Display="Dynamic"
+								Text="<%[ There is required to provide both binary file and config file paths. ]%>"
+							/>
+						</div>
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend>File Daemon/Client</legend>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third">
+							<com:TLabel
+								ForControl="BFdJSONPath"
+								Text="<%[ bfdjson binary file path: ]%>"
+							/>
+						</div>
+						<div class="w3-col w3-twothird">
+							<com:TTextBox
+								ID="BFdJSONPath"
+								CssClass="w3-input w3-border w3-show-inline-block"
+								Width="370px"
+							/> &nbsp;
+							<com:TCustomValidator
+								ValidationGroup="ConfigGroup"
+								ControlToValidate="BFdJSONPath"
+								ClientValidationFunction="bjsontools_validator"
+								Display="Dynamic"
+								Text="<%[ There is required to provide both binary file and config file paths. ]%>"
+							/>
+							<span class="config_test_loader" style="display: none">
+								<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+							</span>
+							<com:TActiveLabel
+								ID="BFdJSONPathTestOk"
+								Display="None"
+								CssClass="w3-text-green"
+								EnableViewState="false"
+							>
+								<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
+							</com:TActiveLabel>
+							<com:TActiveLabel
+								ID="BFdJSONPathTestErr"
+								Display="None"
+								CssClass="w3-text-red"
+								EnableViewState="false"
+							>
+								<i class="fas fa-exclamation-circle" title="<%[ Error ]%>"></i> &nbsp;<%[ Connection error ]%>
+							</com:TActiveLabel>
+						</div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third">
+							<com:TLabel
+								ForControl="FdCfgPath"
+								Text="<%[ Main File Daemon config file path (usually bacula-fd.conf): ]%>"
+							/>
+						</div>
+						<div class="w3-col w3-twothird">
+							<com:TTextBox
+								ID="FdCfgPath"
+								CssClass="w3-input w3-border w3-show-inline-block"
+								Width="370px"
+							/>
+							<com:TCustomValidator
+								ValidationGroup="ConfigGroup"
+								ControlToValidate="FdCfgPath"
+								ClientValidationFunction="bjsontools_validator"
+								Display="Dynamic"
+								Text="<%[ There is required to provide both binary file and config file paths. ]%>"
+							/>
+						</div>
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend>Bconsole</legend>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third">
+							<com:TLabel
+								ForControl="BBconsJSONPath"
+								Text="<%[ bbconsjson binary file path: ]%>"
+							/>
+						</div>
+						<div class="w3-col w3-twothird">
+							<com:TCustomValidator
+								ValidationGroup="ConfigGroup"
+								ControlToValidate="BBconsJSONPath"
+								ClientValidationFunction="bjsontools_validator"
+								Display="Dynamic"
+								Text="<%[ There is required to provide both binary file and config file paths. ]%>"
+							/>
+							<com:TTextBox
+								ID="BBconsJSONPath"
+								CssClass="w3-input w3-border w3-show-inline-block"
+								Width="370px"
+							/> &nbsp;
+							<span class="config_test_loader" style="display: none">
+								<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
+							</span>
+							<com:TActiveLabel
+								ID="BBconsJSONPathTestOk"
+								Display="None"
+								CssClass="w3-text-green"
+								EnableViewState="false"
+							>
+								<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
+							</com:TActiveLabel>
+							<com:TActiveLabel
+								ID="BBconsJSONPathTestErr"
+								Display="None"
+								CssClass="w3-text-red"
+								EnableViewState="false"
+							>
+								<i class="fas fa-exclamation-circle" title="<%[ Error ]%>"></i> &nbsp;<%[ Connection error ]%>
+							</com:TActiveLabel>
+						</div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third">
+							<com:TLabel
+								ForControl="BconsCfgPath"
+								Text="<%[ Admin Bconsole config file path (usually bconsole.conf): ]%>"
+							/>
+						</div>
+						<div class="w3-col w3-twothird">
+							<com:TTextBox
+								ID="BconsCfgPath"
+								CssClass="w3-input w3-border w3-show-inline-block"
+								Width="370px"
+							/>
+							<com:TCustomValidator
+								ValidationGroup="ConfigGroup"
+								ControlToValidate="BconsCfgPath"
+								ClientValidationFunction="bjsontools_validator"
+								Display="Dynamic"
+								Text="<%[ There is required to provide both binary file and config file paths. ]%>"
+							/>
+						</div>
+					</div>
+				</fieldset>
+				<div class="w3-center w3-margin-top">
+					<com:TActiveLinkButton
+						ID="TestJSONToolsConfig"
+						ValidationGroup="ConfigGroup"
+						OnClick="testJSONToolsCfg"
+						CssClass="w3-button w3-green"
+					>
+						<prop:ClientSide.OnLoading>
+							bjsontools_hide_test_results();
+							$('.config_test_loader').show();
+						</prop:ClientSide.OnLoading>
+						<prop:ClientSide.OnComplete>
+							$('.config_test_loader').hide();
+						</prop:ClientSide.OnComplete>
+						<i class="fas fa-play"></i> &nbsp;<%[ Test configuration ]%>
+					</com:TActiveLinkButton>
+				</div>
+			</div>
+<script>
+var oConfigWizardStep4 = {
+	paths: {
+		'system': {
+			configs: '/etc/bacula/',
+			binaries: '/usr/sbin/'
+		},
+		'bacula.org': {
+			configs: '/opt/bacula/etc/',
+			binaries: '/opt/bacula/bin/'
+		}
+	},
+	ids: {
+		pre_defined_paths: 'pre_defined_paths',
+		jsontools: {
+			bdirjson: {
+				binary: '<%=$this->BDirJSONPath->ClientID%>',
+				config: '<%=$this->DirCfgPath->ClientID%>'
+			},
+			bsdjson: {
+				binary: '<%=$this->BSdJSONPath->ClientID%>',
+				config: '<%=$this->SdCfgPath->ClientID%>'
+			},
+			bfdjson: {
+				binary: '<%=$this->BFdJSONPath->ClientID%>',
+				config: '<%=$this->FdCfgPath->ClientID%>'
+			},
+			bbconsjson: {
+				binary: '<%=$this->BBconsJSONPath->ClientID%>',
+				config: '<%=$this->BconsCfgPath->ClientID%>'
+			}
+		}
+	},
+	configs: {
+		bdirjson: {
+			config: 'bacula-dir.conf'
+		},
+		bsdjson: {
+			config: 'bacula-sd.conf'
+		},
+		bfdjson: {
+			config: 'bacula-fd.conf'
+		},
+		bbconsjson: {
+			config: 'bconsole.conf'
+		}
+	},
+	set_paths: function() {
+		var paths = document.getElementById(this.ids.pre_defined_paths);
+		if (paths.value) {
+			var bin, conf;
+			for (var binary in this.ids.jsontools) {
+				bin = document.getElementById(this.ids.jsontools[binary].binary);
+				conf = document.getElementById(this.ids.jsontools[binary].config);
+				bin.value = this.paths[paths.value].binaries + binary;
+				conf.value = this.paths[paths.value].configs + this.configs[binary].config;
+			}
+		}
+	}
+};
+</script>
+		</com:TWizardStep>
+		<com:TWizardStep ID="Step5" Title="<%[ Step 5 - authentication to API ]%>" StepType="Auto">
+			<div class="w3-container w3-section">
+				<com:TActiveRadioButton
+					ID="AuthOAuth2"
+					GroupName="SelectAuth"
+					CssClass="w3-radio"
+					Attributes.onclick="$('#configure_basic_auth').hide();$('#configure_oauth2_auth').show();"
+				/>
+				<com:TLabel
+					ForControl="AuthOAuth2"
+					Text="<%[ Use OAuth2 for authorization and authentication ]%>"
+				/>
+			</div>
+			<div class="w3-container w3-section">
+				<com:TActiveRadioButton
+					ID="AuthBasic"
+					GroupName="SelectAuth"
+					CssClass="w3-radio"
+					Checked="true"
+					Attributes.onclick="$('#configure_oauth2_auth').hide();$('#configure_basic_auth').show();"
+				/>
+				<com:TLabel
+					ForControl="AuthBasic"
+					Text="<%[ Use HTTP Basic authentication ]%>"
+				/>
+			</div>
+			<div id="configure_basic_auth" style="display: <%=($this->AuthBasic->Checked === true) ? '' : 'none';%>">
+				<com:TPanel Visible="<%=$this->first_run%>">
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><com:TLabel ForControl="APILogin" Text="<%[ Administration login: ]%>" /></div>
+						<div class="w3-col w3-twothird">
+							<com:TTextBox
+								ID="APILogin"
+								CssClass="w3-input w3-border w3-show-inline-block"
+								CausesValidation="false"
+								Width="370px"
+							/>
+							<com:TRequiredFieldValidator
+								Display="Dynamic"
+								ControlToValidate="APILogin"
+								ValidationGroup="Basic"
+								Text="<%[ Please enter login. ]%>"
+							/>
+							<com:TRegularExpressionValidator
+								Display="Dynamic"
+								ControlToValidate="APILogin"
+								ValidationGroup="Basic"
+								RegularExpression="<%=BasicAPIUserConfig::USER_PATTERN%>"
+								Text="<%[ Invalid login value. Login may contain a-z A-Z 0-9 characters. ]%>"
+							/>
+						</div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><com:TLabel ForControl="APIPassword" Text="<%[ Administration password: ]%>" /></div>
+						<div class="w3-col w3-twothird">
+							<com:TTextBox
+								ID="APIPassword"
+								CssClass="w3-input w3-border w3-show-inline-block"
+								TextMode="Password"
+								MaxLength="60"
+								PersistPassword="true"
+								Width="370px"
+							/>
+							<com:TRequiredFieldValidator
+								Display="Dynamic"
+								ControlToValidate="APIPassword"
+								ValidationGroup="Basic"
+								Text="<%[ Please enter password. ]%>"
+							/>
+							<com:TRegularExpressionValidator
+								Display="Dynamic"
+								ControlToValidate="APIPassword"
+								RegularExpression="[\S\s]{5,60}"
+								ValidationGroup="Basic"
+								Text="<%[ Password must be longer than 4 chars. ]%>"
+							/>
+						</div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><com:TLabel ForControl="RetypeAPIPassword" Text="<%[ Retype administration password: ]%>" /></div>
+						<div class="w3-col w3-twothird">
+							<com:TTextBox
+								ID="RetypeAPIPassword"
+								CssClass="w3-input w3-border w3-show-inline-block"
+								TextMode="Password"
+								MaxLength="60"
+								PersistPassword="true"
+								Width="370px"
+							/>
+							<com:TRequiredFieldValidator
+								ID="RetypePasswordRequireValidator"
+								Display="Dynamic"
+								ControlToValidate="RetypeAPIPassword"
+								ValidationGroup="Basic"
+								Text="<%[ Please enter retype password. ]%>"
+							/>
+							<com:TRegularExpressionValidator
+								ID="RetypePasswordRegexpValidator"
+								Display="Dynamic"
+								ControlToValidate="RetypeAPIPassword"
+								RegularExpression="[\S\s]{5,60}"
+								ValidationGroup="Basic"
+								Text="<%[ Password must be longer than 4 chars. ]%>"
+							/>
+							<com:TCompareValidator
+								ID="RetypePasswordCustomValidator"
+								Display="Dynamic"
+								ControlToValidate="RetypeAPIPassword"
+								ControlToCompare="APIPassword"
+								ValidationGroup="Basic"
+								Text="<%[ Passwords must be the same. ]%>"
+							/>
+						</div>
+					</div>
+				</com:TPanel>
+			</div>
+			<div id="configure_oauth2_auth" style="display: <%=$this->AuthOAuth2->Checked ? '' : 'none';%>">
+				<com:TPanel Visible="<%=($this->first_run || $this->add_auth_params)%>">
+					<h3><%[ First client registration ]%></h3>
+					<h4><%[ Please do not forget to disable HTTP Basic auth in the API web server config. Othwerise OAuth2 will not work. ]%></h4>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><com:TLabel ForControl="APIOAuth2ClientId" Text="<%[ OAuth2 Client ID: ]%>" /></div>
+						<div class="w3-col w3-twothird">
+							<com:TTextBox
+								ID="APIOAuth2ClientId"
+								CssClass="w3-input w3-border w3-show-inline-block"
+								CausesValidation="false"
+								MaxLength="32"
+								Width="370px"
+							/>
+							<com:TRequiredFieldValidator
+								CssClass="validator-block"
+								Display="Dynamic"
+								ControlCssClass="invalidate"
+								ControlToValidate="APIOAuth2ClientId"
+								ValidationGroup="OAuth2"
+								Text="<%[ Please enter Client ID. ]%>"
+							/>
+							<com:TRegularExpressionValidator
+								CssClass="validator-block"
+								Display="Dynamic"
+								ControlCssClass="invalidate"
+								ControlToValidate="APIOAuth2ClientId"
+								RegularExpression="<%=OAuth2::CLIENT_ID_PATTERN%>"
+								ValidationGroup="OAuth2"
+								Text="<%[ Invalid Client ID value. Client ID may contain a-z A-Z 0-9 - _ characters. ]%>"
+								/>
+							<a href="javascript:void(0)" onclick="document.getElementById('<%=$this->APIOAuth2ClientId->ClientID%>').value = get_random_string('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_', 32); return false;"><%[ generate ]%></a>
+						</div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><com:TLabel ForControl="APIOAuth2ClientSecret" Text="<%[ OAuth2 Client Secret: ]%>" /></div>
+						<div class="w3-col w3-twothird">
+							<com:TTextBox
+								ID="APIOAuth2ClientSecret"
+								CssClass="w3-input w3-border w3-show-inline-block"
+								CausesValidation="false"
+								MaxLength="50"
+								Width="370px"
+							/>
+							<com:TRequiredFieldValidator
+								CssClass="validator-block"
+								Display="Dynamic"
+								ControlCssClass="invalidate"
+								ControlToValidate="APIOAuth2ClientSecret"
+								ValidationGroup="OAuth2"
+								Text="<%[ Please enter Client Secret. ]%>"
+							/>
+							<com:TRegularExpressionValidator
+								CssClass="validator-block"
+								Display="Dynamic"
+								ControlCssClass="invalidate"
+								ControlToValidate="APIOAuth2ClientSecret"
+								RegularExpression="<%=OAuth2::CLIENT_SECRET_PATTERN%>"
+								ValidationGroup="OAuth2"
+								Text="<%[ Invalid Client Secret value. Client Secret may contain any character that is not a whitespace character. ]%>"
+							/>
+							<a href="javascript:void(0)" onclick="document.getElementById('<%=$this->APIOAuth2ClientSecret->ClientID%>').value = get_random_string('ABCDEFabcdef0123456789', 40); return false;"><%[ generate ]%></a>
+						</div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><com:TLabel ForControl="APIOAuth2RedirectURI" Text="<%[ OAuth2 Redirect URI (example: https://baculumgui:9095/web/redirect): ]%>" /></div>
+						<div class="w3-col w3-twothird">
+							<com:TTextBox
+								ID="APIOAuth2RedirectURI"
+								CssClass="w3-input w3-border w3-show-inline-block"
+								CausesValidation="false"
+								Width="370px"
+							/>
+							<com:TRequiredFieldValidator
+								CssClass="validator-block"
+								Display="Dynamic"
+								ControlCssClass="invalidate"
+								ControlToValidate="APIOAuth2RedirectURI"
+								ValidationGroup="OAuth2"
+								Text="<%[ Please enter Redirect URI. ]%>"
+							/>
+						</div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><com:TLabel ForControl="APIOAuth2Scope" Text="<%[ OAuth2 scopes (space separated): ]%>" /></div>
+						<div class="w3-col w3-twothird">
+							<com:TTextBox
+								ID="APIOAuth2Scope"
+								CssClass="w3-input w3-border w3-show-inline-block"
+								CausesValidation="false"
+								TextMode="MultiLine"
+								Width="370px"
+							/>
+							<a href="javascript:void(0)" onclick="set_scopes('<%=$this->APIOAuth2Scope->ClientID%>'); return false;" style="vertical-align: top"><%[ set all scopes ]%></a>
+							<com:TRequiredFieldValidator
+								CssClass="validator-block"
+								Display="Dynamic"
+								ControlCssClass="invalidate"
+								ControlToValidate="APIOAuth2Scope"
+								ValidationGroup="OAuth2"
+								Text="<%[ Please enter OAuth2 scopes. ]%>"
+							/>
+						</div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><com:TLabel ForControl="APIOAuth2BconsoleCfgPath" Text="<%[ Dedicated Bconsole config file path: ]%>" /></div>
+						<div class="w3-col w3-twothird">
+							<com:TTextBox
+								ID="APIOAuth2BconsoleCfgPath"
+								CssClass="w3-input w3-border w3-show-inline-block"
+								CausesValidation="false"
+								ValidationGroup="OAuth2"
+								Width="370px"
+							/> <%[ (optional) ]%>
+						</div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><com:TLabel ForControl="APIOAuth2Name" Text="<%[ Short name: ]%>" /></div>
+						<div class="w3-col w3-twothird">
+							<com:TTextBox
+								ID="APIOAuth2Name"
+								CssClass="w3-input w3-border w3-show-inline-block"
+								CausesValidation="false"
+								Width="370px"
+							/> <%[ (optional) ]%>
+						</div>
+					</div>
+				</com:TPanel>
+			</div>
+			<script type="text/javascript">
+				var wizard_validation = function() {
+					var basic = document.getElementById('<%=$this->AuthBasic->ClientID%>');
+					var oauth2 = document.getElementById('<%=$this->AuthOAuth2->ClientID%>');
+					var validation_group;
+					if (basic.checked === true) {
+						validation_group = 'Basic';
+					} else if (oauth2.checked === true) {
+						validation_group = 'OAuth2';
+					}
+					var ret = true;
+					if (Prado.Validation) {
+						ret = Prado.Validation.validate(Prado.Validation.getForm(), validation_group);
+					}
+					return ret;
+				}
+			</script>
+		</com:TWizardStep>
+		<com:TWizardStep ID="Step7" Title="<%[ Step 6 - Finish ]%>" StepType="Finish">
+			<fieldset>
+				<legend><%[ Catalog API ]%></legend>
+				<div style="display: <%=($this->DatabaseYes->Checked ? 'block' : 'none')%>">
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><%[ Database type: ]%></div>
+						<div class="w3-col w3-third"><strong><%=$this->getDbNameByType($this->DBType->SelectedValue)%></strong></div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><%[ Database name: ]%></div>
+						<div class="w3-col w3-third"><strong><%=$this->DBName->Text%></strong></div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><%[ Login: ]%></div>
+						<div class="w3-col w3-third"><strong><%=$this->isSQLiteType($this->DBType->SelectedValue) === false ? $this->Login->Text : '-'%></strong></div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><%[ Password: ]%></div>
+						<div class="w3-col w3-third"><strong><%=$this->isSQLiteType($this->DBType->SelectedValue) === false ? preg_replace('/.{1}/', '*', $this->Password->Text) : '-'%></strong></div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><%[ IP address (or hostname): ]%></div>
+						<div class="w3-col w3-third"><strong><%=$this->isSQLiteType($this->DBType->SelectedValue) === false ? $this->IP->Text : '-'%></strong></div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><%[ Database port: ]%></div>
+						<div class="w3-col w3-third"><strong><%=$this->isSQLiteType($this->DBType->SelectedValue) === false ? $this->Port->Text : '-'%></strong></div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><%[ Database file path (SQLite only): ]%></div>
+						<div class="w3-col w3-third"><strong><%=$this->isSQLiteType($this->DBType->SelectedValue) === true ? $this->DBPath->Text : '-'%></strong></div>
+					</div>
+				</div>
+				<div style="display: <%=($this->DatabaseNo->Checked ? 'block' : 'none')%>">
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><%[ Catalog access: ]%></div>
+						<div class="w3-col w3-third"><strong><%[ Disabled ]%></strong></div>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend><%[ Console API ]%></legend>
+				<div style="display: <%=($this->ConsoleYes->Checked ? 'block' : 'none')%>">
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><%[ Bconsole binary file path: ]%></div>
+						<div class="w3-col w3-third"><strong><%=$this->BconsolePath->Text%></strong></div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><%[ Bconsole admin config file path: ]%></div>
+						<div class="w3-col w3-third"><strong><%=$this->BconsoleConfigPath->Text%></strong></div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><%[ Use sudo for bconsole requests: ]%></div>
+						<div class="w3-col w3-third"><strong><%=($this->UseSudo->Checked === true) ? 'yes' : 'no'%></strong></div>
+					</div>
+				</div>
+				<div style="display: <%=($this->ConsoleNo->Checked ? 'block' : 'none')%>">
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><%[ Console access: ]%></div>
+						<div class="w3-col w3-third"><strong><%[ Disabled ]%></strong></div>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend><%[ Config API ]%></legend>
+				<div style="display: <%=($this->ConfigYes->Checked ? 'block' : 'none')%>">
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><%[ Directory path for new config files: ]%></div>
+						<div class="w3-col w3-third"><strong><%=$this->BConfigDir->Text%></strong></div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><%[ Use sudo for Bacula JSON tools: ]%></div>
+						<div class="w3-col w3-third"><strong><%=($this->BJSONUseSudo->Checked === true) ? 'yes' : 'no'%></strong></div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><%[ bdirjson binary file path: ]%></div>
+						<div class="w3-col w3-third"><strong><%=$this->BDirJSONPath->Text%></strong></div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><%[ Main Director config file path: ]%></div>
+						<div class="w3-col w3-third"><strong><%=$this->DirCfgPath->Text%></strong></div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><%[ bsdjson binary file path: ]%></div>
+						<div class="w3-col w3-third"><strong><%=$this->BSdJSONPath->Text%></strong></div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><%[ Main Storage Daemon config file path: ]%></div>
+						<div class="w3-col w3-third"><strong><%=$this->SdCfgPath->Text%></strong></div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><%[ bfdjson binary file path: ]%></div>
+						<div class="w3-col w3-third"><strong><%=$this->BFdJSONPath->Text%></strong></div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><%[ Main Client config file path: ]%></div>
+						<div class="w3-col w3-third"><strong><%=$this->FdCfgPath->Text%></strong></div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><%[ bbconsjson binary file path: ]%></div>
+						<div class="w3-col w3-third"><strong><%=$this->BBconsJSONPath->Text%></strong></div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><%[ Main Bconsole config file path: ]%></div>
+						<div class="w3-col w3-third"><strong><%=$this->BconsCfgPath->Text%></strong></div>
+					</div>
+				</div>
+				<div style="display: <%=($this->ConfigNo->Checked ? 'block' : 'none')%>">
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-third"><%[ Config access: ]%></div>
+						<div class="w3-col w3-third"><strong><%[ Disabled ]%></strong></div>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend><%[ Authentication to Baculum REST API ]%></legend>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-third"><%[ Authentication type: ]%></div>
+					<div class="w3-col w3-third">
+						<strong>
+							<%=$this->AuthBasic->Checked ? 'HTTP Basic' : ''%>
+							<%=$this->AuthOAuth2->Checked ? 'OAuth2' : ''%>
+						</strong>
+					</div>
+				</div>
+				<com:TPanel Visible="<%=$this->first_run%>">
+					<div style="display: <%=$this->AuthBasic->Checked ? 'block' : 'none'%>">
+						<div class="w3-row w3-section">
+							<div class="w3-col w3-third"><%[ Administration login: ]%></div>
+							<div class="w3-col w3-third"><strong><%=$this->APILogin->Text%></strong></div>
+						</div>
+						<div class="w3-row w3-section">
+							<div class="w3-col w3-third"><%[ Administration password: ]%></div>
+							<div class="w3-col w3-third"><strong><%=preg_replace('/.{1}/', '*', $this->APIPassword->Text)%></strong></div>
+						</div>
+					</div>
+				</com:TPanel>
+				<com:TPanel Visible="<%=($this->first_run || $this->add_auth_params)%>">
+					<div style="display: <%=$this->AuthOAuth2->Checked ? 'block' : 'none'%>">
+						<div class="w3-row w3-section">
+							<div class="w3-col w3-third">Client ID:</div>
+							<div class="w3-col w3-third"><strong><%=$this->APIOAuth2ClientId->Text%></strong></div>
+						</div>
+						<div class="w3-row w3-section">
+							<div class="w3-col w3-third">Client Secret:</div>
+							<div class="w3-col w3-third"><strong><%=preg_replace('/.{1}/', '*', $this->APIOAuth2ClientSecret->Text)%></strong></div>
+						</div>
+						<div class="w3-row w3-section">
+							<div class="w3-col w3-third">Redirect URI:</div>
+							<div class="w3-col w3-third"><strong><%=$this->APIOAuth2RedirectURI->Text%></strong></div>
+						</div>
+						<div class="w3-row w3-section">
+							<div class="w3-col w3-third">Scope:</div>
+							<div class="w3-col w3-third"><strong><%=$this->APIOAuth2Scope->Text%></strong></div>
+						</div>
+						<div class="w3-row w3-section">
+							<div class="w3-col w3-third"><%[ Dedicated Bconsole config file path: ]%></div>
+							<div class="w3-col w3-third"><strong><%=!empty($this->APIOAuth2BconsoleCfgPath->Text) ? $this->APIOAuth2BconsoleCfgPath->Text : '-'%></strong></div>
+						</div>
+					</div>
+				</com:TPanel>
+			</fieldset>
+		</com:TWizardStep>
+	</com:TWizard>
+	<com:Application.API.Portlets.SudoConfig ID="SudoConfig" />
+<script type="text/javascript">
+var bjsontools_fields = {
+	General: {
+		data: [],
+		test: [$('#<%=$this->BConfigDirTestOk->ClientID%>'), $('#<%=$this->BConfigDirTestErr->ClientID%>')]
+	},
+	Dir: {
+		data: [$('#<%=$this->BDirJSONPath->ClientID%>'), $('#<%=$this->DirCfgPath->ClientID%>')],
+		test: [$('#<%=$this->BDirJSONPathTestOk->ClientID%>'), $('#<%=$this->BDirJSONPathTestErr->ClientID%>')]
+	},
+	Sd: {
+		data: [$('#<%=$this->BSdJSONPath->ClientID%>'), $('#<%=$this->SdCfgPath->ClientID%>')],
+		test: [$('#<%=$this->BSdJSONPathTestOk->ClientID%>'), $('#<%=$this->BSdJSONPathTestErr->ClientID%>')]
+	},
+	Fd: {
+		data: [$('#<%=$this->BFdJSONPath->ClientID%>'), $('#<%=$this->FdCfgPath->ClientID%>')],
+		test: [$('#<%=$this->BFdJSONPathTestOk->ClientID%>'), $('#<%=$this->BFdJSONPathTestErr->ClientID%>')]
+	},
+	Bcons: {
+		data: [$('#<%=$this->BBconsJSONPath->ClientID%>'), $('#<%=$this->BconsCfgPath->ClientID%>')],
+		test: [$('#<%=$this->BBconsJSONPathTestOk->ClientID%>'), $('#<%=$this->BBconsJSONPathTestErr->ClientID%>')]
+	}
+};
+var bjsontools_get_field_type = function(field_id) {
+	var field_types = Object.keys(bjsontools_fields);
+	var type, field_type;
+	for (var i = 0; i < field_types.length; i++) {
+		type = field_types[i];
+		for (var j = 0; j < bjsontools_fields[type].data.length; j++) {
+			if (bjsontools_fields[type].data[j][0].id === field_id) {
+				field_type = type;
+				break;
+			}
+		}
+		if (field_type) {
+			break;
+		}
+	}
+	return field_type;
+};
+var bjsontools_validator = function(sender, parameter) {
+	var validation_css = 'validation-error';
+	var id_validating_field = sender.control.id;
+	var type = bjsontools_get_field_type(id_validating_field);
+	var invalid_fields = [];
+	for (var i = 0; i < bjsontools_fields[type].data.length; i++) {
+		bjsontools_fields[type].data[i].removeClass(validation_css);
+		if (!bjsontools_fields[type].data[i][0].value) {
+			invalid_fields.push(bjsontools_fields[type].data[i]);
+		}
+	}
+	var valid = (invalid_fields.length === 0 || invalid_fields.length === bjsontools_fields[type].data.length);
+	var is_validating_field_valid = true;
+	if (!valid) {
+		for (var i = 0; i < invalid_fields.length; i++) {
+			invalid_fields[i].addClass(validation_css);
+			if (invalid_fields[i][0].id === id_validating_field) {
+				is_validating_field_valid = false;
+			}
+		}
+		bjsontools_hide_test_results(type);
+	}
+	if (is_validating_field_valid === true) {
+		valid = true;
+	}
+
+	return valid;
+};
+
+// if field_type not given then all test results become hidden
+var bjsontools_hide_test_results = function(field_type) {
+	var field_types = Object.keys(bjsontools_fields);
+	var type;
+	for (var i = 0; i < field_types.length; i++) {
+		type = field_types[i];
+		for (var j = 0; j < bjsontools_fields[type].test.length; j++) {
+			if (!field_type || field_type === type) {
+				bjsontools_fields[type].test[j].hide();
+			}
+		}
+	}
+};
+
+var set_action_command_output = function(action, result) {
+	var result_el = document.querySelector('#actions_test_result_' + action + ' .action_result');
+	if (result.error === 0) {
+		var success = document.querySelector('#actions_test_result_' + action + ' .action_success');
+		success.style.display = '';
+		result_el.textContent = '';
+	} else {
+		var error = document.querySelector('#actions_test_result_' + action + ' .action_error');
+		error.style.display = '';
+		result_el.innerHTML = '<br />' + result.output.join('<br />');
+	}
+};
+
+var actions_hide_test_results = function(action) {
+	var loader = document.querySelector('#actions_test_result_' + action + ' .action_test_loader');
+	var success = document.querySelector('#actions_test_result_' + action + ' .action_success');
+	var error = document.querySelector('#actions_test_result_' + action + ' .action_error');
+	var result = document.querySelector('#actions_test_result_' + action + ' .action_result');
+	loader.style.display = 'none';
+	success.style.display = 'none'
+	error.style.display = 'none';
+	result.textContent = '';
+};
+
+var bin_fields = {
+	bconsole: [
+		'<%=$this->BconsolePath->ClientID%>'
+	],
+	config: [
+		'<%=$this->BDirJSONPath->ClientID%>',
+		'<%=$this->BSdJSONPath->ClientID%>',
+		'<%=$this->BFdJSONPath->ClientID%>',
+		'<%=$this->BBconsJSONPath->ClientID%>',
+	]
+};
+oSudoConfig.set_bin_fields(bin_fields);
+</script>
+</com:TContent>

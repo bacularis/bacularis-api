@@ -1,0 +1,238 @@
+<%@ MasterClass="Application.API.Layouts.Main" Theme="Baculum-v2"%>
+<com:TContent ID="Main">
+	<div class="w3-container">
+		<h3><%[ Welcome on the Baculum API default page ]%></h3>
+		<header class="w3-container w3-white">
+			<h5>
+				<i class="fas fa-user-lock"></i> <%[ Baculum API Client ]%>
+			</h5>
+		</header>
+		<div class="w3-container w3-white">
+			<p><%[ Here you can try one from API commands ]%></p>
+			<div>
+				<com:TJuiProgressbar ID="Progress" Options.Max="3" Options.Value="false" Width="700px" CssClass="w3-center w3-margin-bottom" Style="float: left; position: relative">
+					<span id="progress_label"><%[ Starting... ]%></span>
+				</com:TJuiProgressbar>
+				<span  id="api_refresh" style="cursor: pointer">
+					<i class="w3-padding w3-large fas fa-sync-alt" title="<%[ Refresh token ]%>" onclick="oAPIHome.init_oauth2_client();"></i>
+					<i class="w3-padding-right w3-large fas fa-eye fa-fw" title="<%[ Show/hide ]%>" onclick="oAPIHome.show_hide_token(this);"></i>
+					<i class="w3-padding w3-large fas fa-copy" title="<%[ Copy to clipboard ]%>" onclick="copy_to_clipboard(oAPIHome.token);"></i>
+				</span>
+
+			</div>
+			<div class="w3-row w3-section" id="auth_params_combo_container" style="margin-top: 10px; width: 700px; display: none">
+				<div class="w3-quarter w3-center"><com:TLabel ForControl="AuthParamsCombo" Text="<%[ Select: ]%>" /></div>
+				<div class="w3-rest">
+					<com:TActiveDropDownList
+						ID="AuthParamsCombo"
+						AutoPostBack="false"
+						CssClass="w3-select w3-border"
+					/>
+				</div>
+			</div>
+			<div class="w3-row w3-section w3-margin-top">
+				<select id="section" class="w3-select w3-border w3-left" style="width: 200px;">
+					<option value="none"><%[ Please select API endpoint ]%></option>
+					<option value="storages">storages</option>
+					<option value="clients">clients</option>
+					<option value="volumes">volumes</option>
+					<option value="jobs">jobs</option>
+					<option value="joblog">joblog</option>
+					<option value="bvfs">bvfs</option>
+				</select>
+				<input id="api_command" class="w3-input w3-border w3-left" name="command" onkeydown="if (event.keyCode == 13) { oAPIHome.send_request(); }" style="width: 600px;" /> <a class="w3-button w3-green" type="button" name="apply" onclick="oAPIHome.send_request();"><i class="fas fa-paper-plane"></i> &nbsp;<%[ Send request ]%></a>
+			</div>
+			<div id="api_output">
+				<pre id="api_result"></pre>
+			</div>
+		</div>
+	</div>
+	<com:TActiveHiddenField ID="AuthParamsInput" />
+	<com:TCallback ID="AuthParamsCallback" OnCallback="setAuthParams">
+		<prop:ClientSide.OnComplete>
+			oAPIHome.set_auth_params();
+			oAPIHome.init_auth();
+		</prop:ClientSide.OnComplete>
+	</com:TCallback>
+	<com:TClientScript>
+		var oAPIHome = {
+			ids: {
+				section: 'section',
+				command: 'api_command',
+				output: 'api_output',
+				result: 'api_result',
+				progress_bar: '<%=$this->Progress->ClientID%>',
+				progress_label: 'progress_label',
+				progress_content: 'progress_content',
+				refresh_token: 'api_refresh',
+				auth_params_combo_container: 'auth_params_combo_container',
+				auth_params_combo: '<%=$this->AuthParamsCombo->ClientID%>',
+				auth_params_input: '<%=$this->AuthParamsInput->ClientID%>'
+			},
+			default_commands: {
+				storages: '/api/v2/storages/',
+				clients: '/api/v2/clients?limit=5',
+				volumes: '/api/v2/volumes?limit=4',
+				jobs: '/api/v2/jobs?limit=10',
+				joblog: '/api/v2/joblog/1/',
+				bvfs: '/api/v2/bvfs/lsdirs?jobids=1&path=&limit=8'
+			},
+			token: null,
+			auth_params_cb: <%=$this->AuthParamsCallback->ActiveControl->Javascript%>,
+			init: function() {
+				this.set_events();
+				this.set_auth_params();
+				this.init_auth();
+				this.change_auth_params();
+			},
+			init_auth: function() {
+				if (typeof(this.baculum_auth) == 'object') {
+					if (this.baculum_auth.auth_type == 'oauth2') {
+						document.getElementById(this.ids.auth_params_combo_container).style.display = '';
+						this.init_oauth2_client();
+					} else if (this.baculum_auth.auth_type == 'basic') {
+						this.init_basic();
+					}
+				}
+			},
+			set_auth_params: function() {
+				var params = document.getElementById(this.ids.auth_params_input).value;
+				this.baculum_auth = JSON.parse(params);
+			},
+			set_progress: function(value, content) {
+				$('#' + this.ids.progress_bar).progressbar('value', value);
+				$('#' + this.ids.progress_label).html(content);
+			},
+			init_basic: function() {
+				this.set_progress(3, '<%[ Basic auth ready... ]%>');
+				document.getElementById(this.ids.refresh_token).style.display = 'none';
+			},
+			init_oauth2_client: function() {
+				if (this.baculum_auth && !this.baculum_auth.hasOwnProperty('client_id')) {
+					// no client id, no client initialization
+					// Posibly case when first (default) API client is not able to get token
+					return;
+				}
+				this.set_progress(1, 'Sending auth code request...');
+				var authorization_uri = document.location.origin + '/oauth/authorize';
+				var auth_params = {
+					response_type: 'code',
+					client_id: this.baculum_auth.client_id,
+					redirect_uri: this.baculum_auth.redirect_uri,
+					scope: this.baculum_auth.scope.join(' ')
+				};
+				var uri = authorization_uri + '?' + $.param(auth_params);
+				var xhr = new XMLHttpRequest();
+				xhr.open('GET', uri, true);
+				xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4 && xhr.status == 200) {
+						var code_regex = /code=([\w]+)$/;
+						result = xhr.responseURL.match(code_regex);
+						if (result) {
+							this.send_token_request(result[1])
+						}
+					}
+				}.bind(this);
+				xhr.send();
+			},
+			send_token_request: function(code) {
+				this.set_progress(2, 'Sending token request...');
+				var uri = document.location.origin + '/oauth/token';
+				var auth_params = {
+					grant_type: 'authorization_code',
+					code: code,
+					client_id: this.baculum_auth.client_id,
+					client_secret: this.baculum_auth.client_secret,
+					redirect_uri: this.baculum_auth.redirect_uri
+				};
+				var request = $.ajax({
+					url: uri,
+					type: 'POST',
+					data: auth_params,
+					dataType: 'json'
+				});
+				request.done(function(data) {
+					if (typeof(data) == 'object' && data.hasOwnProperty('access_token')) {
+						this.token = data.access_token;
+						var text = document.createTextNode('<%[ Access token: ]%> ');
+						var span_out = document.createElement('SPAN');
+						var span_in = document.createElement('SPAN');
+						span_in.id = this.ids.progress_content;
+						span_in.textContent = this.get_masked_token();
+						span_out.appendChild(text);
+						span_out.appendChild(span_in);
+						this.set_progress(3, span_out.outerHTML);
+					}
+				}.bind(this));
+			},
+			set_events: function() {
+				document.getElementById(this.ids.section).addEventListener('change', function(e) {
+					var el = e.srcElement || e.target;
+					this.set_default_command(el.value);
+				}.bind(this));
+				var auth_params_combo = document.getElementById(this.ids.auth_params_combo);
+				auth_params_combo.addEventListener('change', this.change_auth_params.bind(this));
+			},
+			change_auth_params: function(e) {
+				var auth_params_combo = document.getElementById(this.ids.auth_params_combo);
+				this.auth_params_cb.setCallbackParameter(auth_params_combo.value)
+				this.auth_params_cb.dispatch();
+			},
+			set_default_command: function(section) {
+				if (this.default_commands.hasOwnProperty(section)) {
+					document.getElementById(this.ids.command).value = this.default_commands[section];
+				}
+			},
+			send_request: function() {
+				var url = document.getElementById(this.ids.command).value;
+				if (!url) {
+					return;
+				}
+				var headers = {};
+				if (this.baculum_auth.auth_type == 'oauth2' && this.token) {
+					headers = {'Authorization': 'Bearer ' + this.token};
+				} else if (this.baculum_auth.auth_type == 'basic') {
+					// Password is not known so don't send auth header (it should be inherited automatically)
+					// headers = {'Authorization': 'Basic ' + btoa(this.baculum_auth.login + ":" + this.baculum_auth.password)};
+				}
+				this.clear_result();
+				var request = $.ajax({
+					url: url,
+					type: 'GET',
+					dataType: 'json',
+					headers: headers
+				});
+				request.done(function(data) {
+					this.show_result(data);
+				}.bind(this));
+			},
+			show_result: function(data) {
+				document.getElementById(this.ids.output).className = 'w3-code';
+				document.getElementById(this.ids.result).textContent = JSON.stringify(data, null, 2);
+			},
+			clear_result: function() {
+				document.getElementById(this.ids.output).className = '';
+				document.getElementById(this.ids.result).textContent = '';
+			},
+			show_hide_token: function(el) {
+				var span = document.getElementById(this.ids.progress_content);
+				if (el.classList.contains('fa-eye')) {
+					span.textContent = this.token;
+					el.classList.remove('fa-eye');
+					el.classList.add('fa-eye-slash');
+				} else {
+					span.textContent = this.get_masked_token();
+					el.classList.remove('fa-eye-slash');
+					el.classList.add('fa-eye');
+				}
+			},
+			get_masked_token: function(token) {
+				return this.token.substr(0, 7) + this.token.substr(8).replace(/./g, '*');
+			}
+		};
+		$(function() {
+			oAPIHome.init();
+		})
+	</com:TClientScript>
+</com:TContent>

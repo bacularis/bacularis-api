@@ -1,0 +1,690 @@
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2016-11-12 05:44:34\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"Last-Translator: Marcin Haba <marcin.haba@bacula.pl>\n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+
+msgid "Language:"
+msgstr "Language:"
+
+msgid "Language"
+msgstr "Language"
+
+msgid "select language"
+msgstr "select language"
+
+msgid "Previous"
+msgstr "Previous"
+
+msgid "Cancel"
+msgstr "Cancel"
+
+msgid "Next"
+msgstr "Next"
+
+msgid "Step 1 - select language"
+msgstr "Step 1 - select language"
+
+msgid "Catalog API"
+msgstr "Catalog API"
+
+msgid "Step 2 - share the Bacula Catalog Database"
+msgstr "Step 2 - share the Bacula Catalog Database"
+
+msgid "Do you want to setup and to share the Bacula Catalog Database access for this API instance?"
+msgstr "Do you want to setup and to share the Bacula Catalog Database access for this API instance?"
+
+msgid "Yes"
+msgstr "Yes"
+
+msgid "No"
+msgstr "No"
+
+msgid "Database type:"
+msgstr "Database type:"
+
+msgid "select database"
+msgstr "select database"
+
+msgid "Database name:"
+msgstr "Database name:"
+
+msgid "Please select database type."
+msgstr "Please select database type."
+
+msgid "Please enter database name."
+msgstr "Please enter database name."
+
+msgid "Login:"
+msgstr "Login:"
+
+msgid "Please enter login."
+msgstr "Please enter login."
+
+msgid "Password:"
+msgstr "Password:"
+
+msgid "IP address (or hostname):"
+msgstr "IP address (or hostname):"
+
+msgid "Please enter IP address or hostname."
+msgstr "Please enter IP address or hostname."
+
+msgid "Port:"
+msgstr "Port:"
+
+msgid "Please enter database port."
+msgstr "Please enter database port."
+
+msgid "SQLite database path:"
+msgstr "SQLite database path:"
+
+msgid "Please enter database path."
+msgstr "Please enter database path."
+
+msgid "Connection test:"
+msgstr "Connection test:"
+
+msgid "Loading..."
+msgstr "Loading..."
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Connection error"
+msgstr "Connection error"
+
+msgid "test"
+msgstr "test"
+
+msgid "Do you want to setup and share the Bacula Bconsole interface to execute commands in this API instance?"
+msgstr "Do you want to setup and share the Bacula Bconsole interface to execute commands in this API instance?"
+
+msgid "Bconsole binary file path:"
+msgstr "Bconsole binary file path:"
+
+msgid "Please enter bconsole path."
+msgstr "Please enter bconsole path."
+
+msgid "Please enter bconsole config file path."
+msgstr "Please enter bconsole config file path."
+
+msgid "Use sudo:"
+msgstr "Use sudo:"
+
+msgid "Bconsole connection test:"
+msgstr "Bconsole connection test:"
+
+msgid "Bconsole admin config file path:"
+msgstr "Bconsole admin config file path:"
+
+msgid "NOTE!"
+msgstr "NOTE!"
+
+msgid "Baculum needs access to bconsole by the web server."
+msgstr "Baculum needs access to bconsole by the web server."
+
+msgid "Step 3 - share the Bacula Bconsole commands interface"
+msgstr "Step 3 - share the Bacula Bconsole commands interface"
+
+msgid "Console API"
+msgstr "Console API"
+
+msgid "bdirjson binary file path:"
+msgstr "bdirjson binary file path:"
+
+msgid "bsdjson binary file path:"
+msgstr "bsdjson binary file path:"
+
+msgid "bfdjson binary file path:"
+msgstr "bfdjson binary file path:"
+
+msgid "bbconsjson binary file path:"
+msgstr "bbconsjson binary file path:"
+
+msgid "Main Director config file path (usually bacula-dir.conf):"
+msgstr "Main Director config file path (usually bacula-dir.conf):"
+
+msgid "Main Storage Daemon config file path (usually bacula-sd.conf):"
+msgstr "Main Storage Daemon config file path (usually bacula-sd.conf):"
+
+msgid "Main File Daemon config file path (usually bacula-fd.conf):"
+msgstr "Main File Daemon config file path (usually bacula-fd.conf):"
+
+msgid "Admin Bconsole config file path (usually bconsole.conf):"
+msgstr "Admin Bconsole config file path (usually bconsole.conf):"
+
+msgid "Test configuration"
+msgstr "Test configuration"
+
+msgid "General configuration"
+msgstr "General configuration"
+
+msgid "Step 4 - share the Bacula configuration interface"
+msgstr "Step 4 - share the Bacula configuration interface"
+
+msgid "There is required to provide both binary file and config file paths."
+msgstr "There is required to provide both binary file and config file paths."
+
+msgid "Directory path field is required."
+msgstr "Directory path field is required."
+
+msgid "Provided directory path is not writable by web server."
+msgstr "Provided directory path is not writable by web server."
+
+msgid "Config API"
+msgstr "Config API"
+
+msgid "Error"
+msgstr "Error"
+
+msgid "Finish"
+msgstr "Finish"
+
+msgid "Do you want to setup and share the Bacula configuration interface to configure Bacula components via this API instance?"
+msgstr "Do you want to setup and share the Bacula configuration interface to configure Bacula components via this API instance?"
+
+msgid "Administration login:"
+msgstr "Administration login:"
+
+msgid "Administration password:"
+msgstr "Administration password:"
+
+msgid "Please enter password."
+msgstr "Please enter password."
+
+msgid "Password must be longer than 4 chars."
+msgstr "Password must be longer than 4 chars."
+
+msgid "Retype administration password:"
+msgstr "Retype administration password:"
+
+msgid "Please enter retype password."
+msgstr "Please enter retype password."
+
+msgid "Passwords must be the same."
+msgstr "Passwords must be the same."
+
+msgid "Use HTTP Basic authentication"
+msgstr "Use HTTP Basic authentication"
+
+msgid "Use OAuth2 for authorization and authentication"
+msgstr "Use OAuth2 for authorization and authentication"
+
+msgid "Database port:"
+msgstr "Database port:"
+
+msgid "Database file path (SQLite only):"
+msgstr "Database file path (SQLite only):"
+
+msgid "Use sudo for bconsole requests:"
+msgstr "Use sudo for bconsole requests:"
+
+msgid "Save"
+msgstr "Save"
+
+msgid "Step 6 - Finish"
+msgstr "Step 6 - Finish"
+
+msgid "Use sudo for Bacula JSON tools:"
+msgstr "Use sudo for Bacula JSON tools:"
+
+msgid "Main Director config file path:"
+msgstr "Main Director config file path:"
+
+msgid "Main Client config file path:"
+msgstr "Main Client config file path:"
+
+msgid "Main Storage Daemon config file path:"
+msgstr "Main Storage Daemon config file path:"
+
+msgid "Main Bconsole config file path:"
+msgstr "Main Bconsole config file path:"
+
+msgid "Please select API endpoint"
+msgstr "Please select API endpoint"
+
+msgid "Catalog access:"
+msgstr "Catalog access:"
+
+msgid "Console access:"
+msgstr "Console access:"
+
+msgid "Config access:"
+msgstr "Config access:"
+
+msgid "Disabled"
+msgstr "Disabled"
+
+msgid "Invalid Client ID value. Client ID may contain a-z A-Z 0-9 - _ characters."
+msgstr "Invalid Client ID value. Client ID may contain a-z A-Z 0-9 - _ characters."
+
+msgid "Please enter Client ID."
+msgstr "Please enter Client ID."
+
+msgid "OAuth2 Client ID:"
+msgstr "OAuth2 Client ID:"
+
+msgid "OAuth2 Client Secret:"
+msgstr "OAuth2 Client Secret:"
+
+msgid "Please enter Client Secret."
+msgstr "Please enter Client Secret."
+
+msgid "Invalid Client Secret value. Client Secret may contain any character that is not a whitespace character."
+msgstr "Invalid Client Secret value. Client Secret may contain any character that is not a whitespace character."
+
+msgid "generate"
+msgstr "generate"
+
+msgid "Dedicated Bconsole config file path:"
+msgstr "Dedicated Bconsole config file path:"
+
+msgid "Please enter Redirect URI."
+msgstr "Please enter Redirect URI."
+
+msgid "OAuth2 Redirect URI (example: https://baculumgui:9095/web/redirect):"
+msgstr "OAuth2 Redirect URI (example: https://baculumgui:9095/web/redirect):"
+
+msgid "(optional)"
+msgstr "(optional)"
+
+msgid "First client registration"
+msgstr "First client registration"
+
+msgid "OAuth2 scopes (space separated):"
+msgstr "OAuth2 scopes (space separated):"
+
+msgid "Please enter OAuth2 scopes."
+msgstr "Please enter OAuth2 scopes."
+
+msgid "Please do not forget to disable HTTP Basic auth in the API web server config. Othwerise OAuth2 will not work."
+msgstr "Please do not forget to disable HTTP Basic auth in the API web server config. Othwerise OAuth2 will not work."
+
+msgid "Refresh token"
+msgstr "Refresh token"
+
+msgid "New OAuth2 client"
+msgstr "New OAuth2 client"
+
+msgid "Add"
+msgstr "Add"
+
+msgid "API Login:"
+msgstr "API Login:"
+
+msgid "API Password:"
+msgstr "API Password:"
+
+msgid "Retype password:"
+msgstr "Retype password:"
+
+msgid "Please enter API login."
+msgstr "Please enter API login."
+
+msgid "Please enter API password."
+msgstr "Please enter API password."
+
+msgid "User added successfully."
+msgstr "User added successfully."
+
+msgid "Problem during save to config file. Please check users config file permission."
+msgstr "Problem during save to config file. Please check users config file permission."
+
+msgid "Given user already exists in config file."
+msgstr "Given user already exists in config file."
+
+msgid "set all scopes"
+msgstr "set all scopes"
+
+msgid "Welcome on the Baculum API default page"
+msgstr "Welcome on the Baculum API default page"
+
+msgid "Baculum API Client"
+msgstr "Baculum API Client"
+
+msgid "Here you can try one from API commands"
+msgstr "Here you can try one from API commands"
+
+msgid "Starting..."
+msgstr "Starting..."
+
+msgid "Username"
+msgstr "Username"
+
+msgid "Delete"
+msgstr "Delete"
+
+msgid "Client ID"
+msgstr "Client ID"
+
+msgid "Redirect URI"
+msgstr "Redirect URI"
+
+msgid "Scopes"
+msgstr "Scopes"
+
+msgid "Bconsole Path"
+msgstr "Bconsole Path"
+
+msgid "Access token:"
+msgstr "Access token:"
+
+msgid "Send request"
+msgstr "Send request"
+
+msgid "Basic auth ready..."
+msgstr "Basic auth ready..."
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Short name:"
+msgstr "Short name:"
+
+msgid "Edit"
+msgstr "Edit"
+
+msgid "Edit OAuth2 client parameters"
+msgstr "Edit OAuth2 client parameters"
+
+msgid "Select:"
+msgstr "Select:"
+
+msgid "Baculum working directory for Bacula config:"
+msgstr "Baculum working directory for Bacula config:"
+
+msgid "In this directory Baculum API saves temporarily Bacula configuration files (mainly for validation purposes) just before they are written as real Bacula configuration files."
+msgstr "In this directory Baculum API saves temporarily Bacula configuration files (mainly for validation purposes) just before they are written as real Bacula configuration files."
+
+msgid "Version:"
+msgstr "Version:"
+
+msgid "Authentication"
+msgstr "Authentication"
+
+msgid "Authentication to Baculum REST API"
+msgstr "Authentication to Baculum REST API"
+
+msgid "Authentication type:"
+msgstr "Authentication type:"
+
+msgid "Step 5 - authentication to API"
+msgstr "Step 5 - authentication to API"
+
+msgid "Actions"
+msgstr "Actions"
+
+msgid "Start"
+msgstr "Start"
+
+msgid "Stop"
+msgstr "Stop"
+
+msgid "Restart"
+msgstr "Restart"
+
+msgid "Director start command:"
+msgstr "Director start command:"
+
+msgid "Director stop command:"
+msgstr "Director stop command:"
+
+msgid "Director restart command:"
+msgstr "Director restart command:"
+
+msgid "Storage Daemon start command:"
+msgstr "Storage Daemon start command:"
+
+msgid "Storage Daemon stop command:"
+msgstr "Storage Daemon stop command:"
+
+msgid "Storage Daemon restart command:"
+msgstr "Storage Daemon restart command:"
+
+msgid "File Daemon/Client start command:"
+msgstr "File Daemon/Client start command:"
+
+msgid "File Daemon/Client stop command:"
+msgstr "File Daemon/Client stop command:"
+
+msgid "File Daemon/Client restart command:"
+msgstr "File Daemon/Client restart command:"
+
+msgid "Do you want to setup start, stop and restart actions for Bacula components? If you define them, there will be possible to call these actions via API interface and by Baculum Web as well."
+msgstr "Do you want to setup start, stop and restart actions for Bacula components? If you define them, there will be possible to call these actions via API interface and by Baculum Web as well."
+
+msgid "Sudo configuration"
+msgstr "Sudo configuration"
+
+msgid "Example sudo configuration for Apache web server user (RHEL, CentOS and others):"
+msgstr "Example sudo configuration for Apache web server user (RHEL, CentOS and others):"
+
+msgid "Example sudo configuration for Lighttpd web server user (RHEL, CentOS and others):"
+msgstr "Example sudo configuration for Lighttpd web server user (RHEL, CentOS and others):"
+
+msgid "Example sudo configuration for Apache and Lighttpd web servers user (Debian, Ubuntu and others):"
+msgstr "Example sudo configuration for Apache and Lighttpd web servers user (Debian, Ubuntu and others):"
+
+msgid "Get sudo configuration"
+msgstr "Get sudo configuration"
+
+msgid "Please copy appropriate sudo configuration and put it to a new sudoers.d file for example /etc/sudoers.d/baculum-api"
+msgstr "Please copy appropriate sudo configuration and put it to a new sudoers.d file for example /etc/sudoers.d/baculum-api"
+
+msgid "Step 5 - enable actions for components"
+msgstr "Step 5 - enable actions for components"
+
+msgid "Directory path for new config files:"
+msgstr "Directory path for new config files:"
+
+msgid "Use sudo for actions:"
+msgstr "Use sudo for actions:"
+
+msgid "Actions setting:"
+msgstr "Actions setting:"
+
+msgid "Note"
+msgstr "Note"
+
+msgid "Please use visudo to add this configuration, otherwise please do remember to add empty line at the end of file."
+msgstr "Please use visudo to add this configuration, otherwise please do remember to add empty line at the end of file."
+
+msgid "Dashboard"
+msgstr "Dashboard"
+
+msgid "Basic users"
+msgstr "Basic users"
+
+msgid "OAuth2 clients"
+msgstr "OAuth2 clients"
+
+msgid "Settings"
+msgstr "Settings"
+
+msgid "Configuration wizard"
+msgstr "Configuration wizard"
+
+msgid "Welcome"
+msgstr "Welcome"
+
+msgid "Add user"
+msgstr "Add user"
+
+msgid "Edit user"
+msgstr "Edit user"
+
+msgid "Add OAuth2 client"
+msgstr "Add OAuth2 client"
+
+msgid "Are you sure?"
+msgstr "Are you sure?"
+
+msgid "API settings"
+msgstr "API settings"
+
+msgid "General"
+msgstr "General"
+
+msgid "Catalog"
+msgstr "Catalog"
+
+msgid "Console"
+msgstr "Console"
+
+msgid "Config"
+msgstr "Config"
+
+msgid "Enabled:"
+msgstr "Enabled:"
+
+msgid "Debug:"
+msgstr "Debug:"
+
+msgid "Add client"
+msgstr "Add client"
+
+msgid "Edit client"
+msgstr "Edit client"
+
+msgid "Invalid user. User may contain a-z A-Z 0-9 characters."
+msgstr "Invalid user. User may contain a-z A-Z 0-9 characters."
+
+msgid "Show/hide"
+msgstr "Show/hide"
+
+msgid "Copy to clipboard"
+msgstr "Copy to clipboard"
+
+msgid "Logout"
+msgstr "Logout"
+
+msgid "Devices"
+msgstr "Devices"
+
+msgid "Autochangers"
+msgstr "Autochangers"
+
+msgid "Add autochanger"
+msgstr "Add autochanger"
+
+msgid "Device"
+msgstr "Device"
+
+msgid "Name:"
+msgstr "Name:"
+
+msgid "Changer device:"
+msgstr "Changer device:"
+
+msgid "Changer command:"
+msgstr "Changer command:"
+
+msgid "Drive index:"
+msgstr "Drive index:"
+
+msgid "Drive index"
+msgstr "Drive index"
+
+msgid "Devices:"
+msgstr "Devices:"
+
+msgid "Add device"
+msgstr "Add device"
+
+msgid "Field cannot be empty."
+msgstr "Field cannot be empty."
+
+msgid "Invalid value."
+msgstr "Invalid value."
+
+msgid "Device with the given name already exists."
+msgstr "Device with the given name already exists."
+
+msgid "Edit device"
+msgstr "Edit device"
+
+msgid "Use CTRL + left-click to multiple item selection"
+msgstr "Use CTRL + left-click to multiple item selection"
+
+msgid "Device path:"
+msgstr "Device path:"
+
+msgid "Edit autochanger"
+msgstr "Edit autochanger"
+
+msgid "Autochanger"
+msgstr "Autochanger"
+
+msgid "Unable to delete device. Please unassign it from autochanger '%s' first."
+msgstr "Unable to delete device. Please unassign it from autochanger '%s' first."
+
+msgid "Autochanger with the given name already exists."
+msgstr "Autochanger with the given name already exists."
+
+msgid "Copy from Bacula SD config:"
+msgstr "Copy from Bacula SD config:"
+
+msgid "Changer command test:"
+msgstr "Changer command test:"
+
+msgid "Changer command error"
+msgstr "Changer command error"
+
+msgid "Copy"
+msgstr "Copy"
+
+msgid "Column visibility"
+msgstr "Column visibility"
+
+msgid "1 row selected"
+msgstr "1 row selected"
+
+msgid "%d rows selected"
+msgstr "%d rows selected"
+
+msgid "Show _MENU_ entries"
+msgstr "Show _MENU_ entries"
+
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr "Showing _START_ to _END_ of _TOTAL_ entries"
+
+msgid "First"
+msgstr "First"
+
+msgid "Last"
+msgstr "Last"
+
+msgid "No matching records found"
+msgstr "No matching records found"
+
+msgid "filtered from _MAX_ total entries"
+msgstr "filtered from _MAX_ total entries"
+
+msgid "No data available in table"
+msgstr "No data available in table"
+
+msgid "Search:"
+msgstr "Search:"
+
+msgid "Get pre-defined paths:"
+msgstr "Get pre-defined paths:"
+
+msgid "Select paths"
+msgstr "Select paths"
+
+msgid "Binaries:"
+msgstr "Binaries:"
+
+msgid "Configs:"
+msgstr "Configs:"
+
+msgid "Dedicated Bconsole config"
+msgstr "Dedicated Bconsole config"
