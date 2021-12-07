@@ -1,4 +1,4 @@
-<%@ MasterClass="Application.API.Layouts.Wizard" Theme="Baculum-v2"%>
+<%@ MasterClass="Bacularis\API\Layouts\Wizard" Theme="Baculum-v2"%>
 <com:TContent ID="Wizard">
 	<com:TWizard ID="InstallWizard"
 		CssClass="wizard"
@@ -1318,7 +1318,7 @@ var oConfigWizardStep4 = {
 			</fieldset>
 		</com:TWizardStep>
 	</com:TWizard>
-	<com:Application.API.Portlets.SudoConfig ID="SudoConfig" />
+	<com:Bacularis.API.Portlets.SudoConfig ID="SudoConfig" />
 <script type="text/javascript">
 var bjsontools_fields = {
 	General: {

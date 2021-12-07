@@ -1,17 +1,18 @@
 <configuration>
 	<paths>
 		<using namespace="System.I18N.*" />
+		<using namespace="Bacularis\API\Modules\BaculumAPIPage" />
 	</paths>
 	<modules>
 		<!-- database modules -->
-		<module id="db" class="Application.API.Class.Database" />
+		<module id="db" class="Bacularis\API\Modules\Database" />
 		<!-- tools modules -->
-		<module id="bconsole" class="Application.API.Class.Bconsole" />
-		<module id="json_tools" class="Application.API.Class.JSONTools" />
+		<module id="bconsole" class="Bacularis\API\Modules\Bconsole" />
+		<module id="json_tools" class="Bacularis\API\Modules\JSONTools" />
 		<!-- config modules -->
-		<module id="api_config" class="Application.API.Class.APIConfig" />
-		<module id="device_config" class="Application.API.Class.DeviceConfig" />
-		<module id="bacula_setting" class="Application.API.Class.BaculaSetting" />
+		<module id="api_config" class="Bacularis\API\Modules\APIConfig" />
+		<module id="device_config" class="Bacularis\API\Modules\DeviceConfig" />
+		<module id="bacula_setting" class="Bacularis\API\Modules\BaculaSetting" />
 		<!-- internalization modules -->
 		<module id="globalization" class="TGlobalization">
 			<translation type="gettext" source="Application.API.Lang" marker="@@" autosave="false" cache="false" DefaultCulture="en" />
@@ -21,12 +22,12 @@
 			<route class="TFileLogRoute"  Categories="Execute, External, Application, General, Security" LogPath="Application.API.Logs" LogFile="baculum-api.log" MaxFileSize="1000" MaxLogFiles="5" />
 		</module>
 		<!-- auth modules -->
-		<module id="basic_apiuser" class="Application.API.Class.BasicAPIUserConfig" />
-		<module id="basic_config" class="Application.API.Class.BasicConfig" />
-		<module id="oauth2_config" class="Application.API.Class.OAuth2.OAuth2Config" />
+		<module id="basic_apiuser" class="Bacularis\API\Modules\BasicAPIUserConfig" />
+		<module id="basic_config" class="Bacularis\API\Modules\BasicConfig" />
+		<module id="oauth2_config" class="Bacularis\API\Modules\OAuth2\OAuth2Config" />
 		<!-- component actions modules -->
-		<module id="comp_actions" class="Application.API.Class.ComponentActions" />
+		<module id="comp_actions" class="Bacularis\API\Modules\ComponentActions" />
 		<!-- changer command modules -->
-		<module id="changer_command" class="Application.API.Class.ChangerCommand" />
+		<module id="changer_command" class="Bacularis\API\Modules\ChangerCommand" />
 	</modules>
 </configuration>

@@ -1,4 +1,4 @@
-<%@ MasterClass="Application.API.Layouts.Main" Theme="Baculum-v2"%>
+<%@ MasterClass="Bacularis\API\Layouts\Main" Theme="Baculum-v2"%>
 <com:TContent ID="Main">
 	<div class="w3-container">
 		<h3><%[ Welcome on the Baculum API default page ]%></h3>

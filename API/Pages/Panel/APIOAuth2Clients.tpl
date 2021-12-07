@@ -1,4 +1,4 @@
-<%@ MasterClass="Application.API.Layouts.Main" Theme="Baculum-v2"%>
+<%@ MasterClass="Bacularis\API\Layouts\Main" Theme="Baculum-v2"%>
 <com:TContent ID="Main">
 	<header class="w3-container w3-block">
 		<h5>
@@ -344,8 +344,7 @@ $(function() {
 				ValidationGroup="APIOAuth2Edit"
 				OnCommand="TemplateControl.saveOAuth2Item"
 				Text="<%[ Save ]%>"
-			>
-			</com:BActiveButton>
+			/>
 		</div>
 		</com:TPanel>
 	</com:TJuiDialog>

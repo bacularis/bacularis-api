@@ -1,57 +1,57 @@
 <configuration>
 	<paths>
-		<using namespace="Application.API.Class.BaculumAPIServer" />
+		<using namespace="Bacularis.API.Modules.BaculumAPIServer" />
 	</paths>
 	<modules>
 		<!-- OAuth2 - only to be compatible with old OAuth2 endpoints -->
 		<!-- Remove it in the future but keep oauth2_token (it is used in this service to remove old tokens) -->
-		<module id="oauth2" class="Application.API.Class.OAuth2.BaculumOAuth2" />
-		<module id="oauth2_config" class="Application.API.Class.OAuth2.OAuth2Config" />
-		<module id="oauth2_authid" class="Application.API.Class.OAuth2.AuthIdManager" />
-		<module id="oauth2_token" class="Application.API.Class.OAuth2.TokenManager" />
+		<module id="oauth2" class="Bacularis\API\Modules\OAuth2\BaculumOAuth2" />
+		<module id="oauth2_config" class="Bacularis\API\Modules\OAuth2\OAuth2Config" />
+		<module id="oauth2_authid" class="Bacularis\API\Modules\OAuth2\AuthIdManager" />
+		<module id="oauth2_token" class="Bacularis\API\Modules\OAuth2\TokenManager" />
 
 		<!-- Basic user config -->
-		<module id="basic_apiuser" class="Application.API.Class.BasicAPIUserConfig" />
-		<module id="basic_config" class="Application.API.Class.BasicConfig" />
+		<module id="basic_apiuser" class="Bacularis\API\Modules\BasicAPIUserConfig" />
+		<module id="basic_config" class="Bacularis\API\Modules\BasicConfig" />
 
 		<!-- API Server modules -->
-		<module id="api_server_v1" class="Application.API.Class.APIServerV1" />
-		<module id="api_server_v2" class="Application.API.Class.APIServerV2" />
+		<module id="api_server_v1" class="Bacularis\API\Modules\APIServerV1" />
+		<module id="api_server_v2" class="Bacularis\API\Modules\APIServerV2" />
 
 		<!-- database modules -->
-		<module id="db" class="Application.API.Class.Database" />
-		<module id="client" class="Application.API.Class.ClientManager" />
-		<module id="fileset" class="Application.API.Class.FileSetManager" />
-		<module id="job" class="Application.API.Class.JobManager" />
-		<module id="joblog" class="Application.API.Class.LogManager" />
-		<module id="pool" class="Application.API.Class.PoolManager" />
-		<module id="storage" class="Application.API.Class.StorageManager" />
-		<module id="version" class="Application.API.Class.VersionManager" />
-		<module id="volume" class="Application.API.Class.VolumeManager" />
+		<module id="db" class="Bacularis\API\Modules\Database" />
+		<module id="client" class="Bacularis\API\Modules\ClientManager" />
+		<module id="fileset" class="Bacularis\API\Modules\FileSetManager" />
+		<module id="job" class="Bacularis\API\Modules\JobManager" />
+		<module id="joblog" class="Bacularis\API\Modules\LogManager" />
+		<module id="pool" class="Bacularis\API\Modules\PoolManager" />
+		<module id="storage" class="Bacularis\API\Modules\StorageManager" />
+		<module id="version" class="Bacularis\API\Modules\VersionManager" />
+		<module id="volume" class="Bacularis\API\Modules\VolumeManager" />
 		<!-- tools modules -->
-		<module id="bconsole" class="Application.API.Class.Bconsole" />
-		<module id="json_tools" class="Application.API.Class.JSONTools" />
-		<module id="bvfs" class="Application.API.Class.BVFS" />
-		<module id="blstat" class="Application.API.Class.BLStat" />
+		<module id="bconsole" class="Bacularis\API\Modules\Bconsole" />
+		<module id="json_tools" class="Bacularis\API\Modules\JSONTools" />
+		<module id="bvfs" class="Bacularis\API\Modules\BVFS" />
+		<module id="blstat" class="Bacularis\API\Modules\BLStat" />
 		<!-- config modules -->
-		<module id="api_config" class="Application.API.Class.APIConfig" />
-		<module id="bacula_config" class="Application.API.Class.BaculaConfig" />
-		<module id="bacula_setting" class="Application.API.Class.BaculaSetting" />
-		<module id="device_config" class="Application.API.Class.DeviceConfig" />
+		<module id="api_config" class="Bacularis\API\Modules\APIConfig" />
+		<module id="bacula_config" class="Bacularis\API\Modules\BaculaConfig" />
+		<module id="bacula_setting" class="Bacularis\API\Modules\BaculaSetting" />
+		<module id="device_config" class="Bacularis\API\Modules\DeviceConfig" />
 		<!-- logging modules -->
-		<module id="log" class="System.Util.TLogRouter">
-			<route class="TFileLogRoute"  Categories="Execute, External, Application, General, Security" LogPath="Application.API.Logs" LogFile="baculum-api.log" MaxFileSize="1000" MaxLogFiles="5" />
+		<module id="log" class="System\Util\TLogRouter">
+			<route class="TFileLogRoute"  Categories="Execute, External, Application, General, Security" LogPath="Bacularis\API\Logs" LogFile="baculum-api.log" MaxFileSize="1000" MaxLogFiles="5" />
 		</module>
 		<!-- component status modules -->
-		<module id="status_dir" class="Application.API.Class.StatusDirector" />
-		<module id="status_sd" class="Application.API.Class.StatusStorage" />
-		<module id="status_fd" class="Application.API.Class.StatusClient" />
+		<module id="status_dir" class="Bacularis\API\Modules\StatusDirector" />
+		<module id="status_sd" class="Bacularis\API\Modules\StatusStorage" />
+		<module id="status_fd" class="Bacularis\API\Modules\StatusClient" />
 		<!-- component actions modules -->
-		<module id="comp_actions" class="Application.API.Class.ComponentActions" />
+		<module id="comp_actions" class="Bacularis\API\Modules\ComponentActions" />
 		<!-- bconsole command modules -->
-		<module id="ls" class="Application.API.Class.Ls" />
-		<module id="list" class="Application.API.Class.BList" />
+		<module id="ls" class="Bacularis\API\Modules\Ls" />
+		<module id="list" class="Bacularis\API\Modules\BList" />
 		<!-- changer command modules -->
-		<module id="changer_command" class="Application.API.Class.ChangerCommand" />
+		<module id="changer_command" class="Bacularis\API\Modules\ChangerCommand" />
 	</modules>
 </configuration>

@@ -1,5 +1,12 @@
 <?php
 /*
+ * Bacularis - Bacula web interface
+ *
+ * Copyright (C) 2021 Marcin Haba
+ *
+ * The main author of Bacularis is Marcin Haba, with contributors, whose
+ * full list can be found in the AUTHORS file.
+ *
  * Bacula(R) - The Network Backup Solution
  * Baculum   - Bacula web interface
  *
@@ -21,19 +28,19 @@
  */
 
 
-Prado::using('System.Web.UI.ActiveControls.TActiveDropDownList');
-Prado::using('System.Web.UI.ActiveControls.TActiveTextBox');
-Prado::using('System.Web.UI.ActiveControls.TActivePanel');
-Prado::using('System.Web.UI.ActiveControls.TActiveLabel');
-Prado::using('System.Web.UI.ActiveControls.TActiveButton');
-Prado::using('System.Web.UI.ActiveControls.TActiveRadioButton');
-Prado::using('System.Web.UI.ActiveControls.TActiveCustomValidator');
-Prado::using('Application.Common.Class.OAuth2');
-Prado::using('Application.API.Class.APIConfig');
-Prado::using('Application.API.Class.BAPIException');
-Prado::using('Application.API.Class.BaculumAPIPage');
-Prado::using('Application.API.Class.Database');
-Prado::using('Application.API.Class.BasicAPIUserConfig');
+use Prado\Web\UI\ActiveControls\TActiveDropDownList;
+use Prado\Web\UI\ActiveControls\TActiveTextBox;
+use Prado\Web\UI\ActiveControls\TActivePanel;
+use Prado\Web\UI\ActiveControls\TActiveLabel;
+use Prado\Web\UI\ActiveControls\TActiveButton;
+use Prado\Web\UI\ActiveControls\TActiveRadioButton;
+use Prado\Web\UI\ActiveControls\TActiveCustomValidator;
+use Bacularis\Common\Modules\OAuth2;
+use Bacularis\API\Modules\APIConfig;
+use Bacularis\API\Modules\BAPIException;
+use Bacularis\API\Modules\BaculumAPIPage;
+use Bacularis\API\Modules\Database;
+use Bacularis\API\Modules\BasicAPIUserConfig;
 
 /**
  * API install wizard.
@@ -235,6 +242,11 @@ class APIInstallWizard extends BaculumAPIPage {
 					$this->APIPassword->Text,
 					true,
 					$_SERVER['PHP_AUTH_USER']
+				);
+				$this->getModule('basic_config')->addUser(
+					$this->APILogin->Text,
+					$this->APIPassword->Text,
+					['bconsole_cfg_path' => '']
 				);
 			}
 			if (($this->first_run || $this->add_auth_params) && $this->AuthOAuth2->Checked) {

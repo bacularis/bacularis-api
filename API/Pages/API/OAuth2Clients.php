@@ -1,5 +1,12 @@
 <?php
 /*
+ * Bacularis - Bacula web interface
+ *
+ * Copyright (C) 2021 Marcin Haba
+ *
+ * The main author of Bacularis is Marcin Haba, with contributors, whose
+ * full list can be found in the AUTHORS file.
+ *
  * Bacula(R) - The Network Backup Solution
  * Baculum   - Bacula web interface
  *
@@ -20,6 +27,8 @@
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
 
+use Bacularis\Common\Modules\Errors\OAuth2Error;
+
 /**
  * OAuth2 clients endpoint.
  *
@@ -32,7 +41,7 @@ class OAuth2Clients extends BaculumAPIServer {
 	public function get() {
 		$oauth2_cfg = $this->getModule('oauth2_config')->getConfig();
 		$this->output = array_values($oauth2_cfg);
-		$this->error = ClientError::ERROR_NO_ERRORS;
+		$this->error = OAuth2Error::ERROR_NO_ERRORS;
 	}
 }
 ?>
