@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<link rel="icon" href="<%=$this->getPage()->getTheme()->getBaseUrl()%>/favicon.ico" type="image/x-icon" />
 	</com:THead>
-	<body  class="w3-light-grey">
+	<body class="w3-light-grey">
 		<com:TForm>
 			<com:TClientScript PradoScripts="ajax, effects" />
 			<com:BClientScript ScriptUrl=<%~ ../../../../../vendor/bower-asset/datatables.net/js/jquery.dataTables.min.js %> />
