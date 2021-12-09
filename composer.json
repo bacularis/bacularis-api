@@ -1,7 +1,7 @@
 {
 	"name": "bacularis/bacularis-api",
 	"type": "library",
-	"description": "Bacularis API files",
+	"description": "API files for Bacularis - The Bacula web interface",
 	"keywords": ["bacula", "backup", "restore", "bacularis", "bacularis-api"],
 	"homepage": "https://bacularis.app",
 	"license": "AGPL-3.0-only",
