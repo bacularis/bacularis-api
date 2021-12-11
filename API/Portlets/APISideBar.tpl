@@ -26,7 +26,7 @@
 		</div>
 	</div>
 	<div class="w3-container w3-black">
-		<h5 class="w3-center" style="margin: 6px 0 2px 0">Baculum API Menu</h5>
+		<h5 class="w3-center" style="margin: 6px 0 2px 0">Bacularis API Menu</h5>
 	</div>
 	<div class="w3-bar-block" style="margin-bottom: 45px;">
 		<div class="w3-black" style="height: 3px"></div>

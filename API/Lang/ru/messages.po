@@ -134,8 +134,8 @@ msgstr "Путь к файлу конфигурации Bconsole:"
 msgid "NOTE!"
 msgstr "ПРИМЕЧАНИЕ!"
 
-msgid "Baculum needs access to bconsole by the web server."
-msgstr "Baculum необходим доступ к bconsole через веб-сервер."
+msgid "Bacularis needs access to bconsole by the web server."
+msgstr "Bacularis необходим доступ к bconsole через веб-сервер."
 
 msgid "Step 3 - share the Bacula Bconsole commands interface"
 msgstr "Шаг 3 - Поделиться интерфейсом Bacula Bconsole"
@@ -296,23 +296,17 @@ msgstr "Путь к файлу конфигурации выделенного B
 msgid "Please enter Redirect URI."
 msgstr "Пожалуйста, введите редирект URI."
 
-msgid "OAuth2 Redirect URI (example: https://baculumgui:9095/web/redirect):"
-msgstr "OAuth2 Redirect URI (пример: https://baculumgui:9095/web/redirect):"
+msgid "OAuth2 Redirect URI (example: https://bacularis:9097/web/redirect):"
+msgstr "OAuth2 Redirect URI (пример: https://bacularis:9097/web/redirect):"
 
 msgid "(optional)"
 msgstr "(опционально)"
-
-msgid "First client registration"
-msgstr "Первая регистрация клиента"
 
 msgid "OAuth2 scopes (space separated):"
 msgstr "OAuth2 области (разделенные пробелом):"
 
 msgid "Please enter OAuth2 scopes."
 msgstr "Пожалуйста, введите область OAuth2."
-
-msgid "Please do not forget to disable HTTP Basic auth in the API web server config. Othwerise OAuth2 will not work."
-msgstr "Не забудьте отключить базовую аутентификацию HTTP в конфигурации веб-сервера API. Othwerise OAuth2 не будет работать."
 
 msgid "Refresh token"
 msgstr "Обновить токен"
@@ -350,8 +344,8 @@ msgstr "Данный пользователь уже существует в ф�
 msgid "set all scopes"
 msgstr "установить все области"
 
-msgid "Welcome on the Baculum API default page"
-msgstr "Добро пожаловать. Страница по умолчанию Baculum API."
+msgid "Welcome on the Bacularis API default page"
+msgstr "Добро пожаловать. Страница по умолчанию Bacularis API."
 
 msgid "Baculum API Client"
 msgstr "Baculum API клиент"
@@ -416,8 +410,8 @@ msgstr "Версия:"
 msgid "Authentication"
 msgstr "Проверка подлинности"
 
-msgid "Authentication to Baculum REST API"
-msgstr "Аутентификация в Baculum REST API"
+msgid "Authentication to Bacularis REST API"
+msgstr "Аутентификация в Bacularis REST API"
 
 msgid "Authentication type:"
 msgstr "Тип аутентификации:"
@@ -482,8 +476,8 @@ msgstr "Пример конфигурации sudo для пользовател
 msgid "Get sudo configuration"
 msgstr "Как настроить sudo"
 
-msgid "Please copy appropriate sudo configuration and put it to a new sudoers.d file for example /etc/sudoers.d/baculum-api"
-msgstr "Пожалуйста, скопируйте соответствующую конфигурацию sudo и поместите ее в новый файл sudoers.d, например /etc/sudoers.d/baculum-api"
+msgid "Please copy appropriate sudo configuration and put it to a new sudoers.d file for example /etc/sudoers.d/bacularis-api"
+msgstr "Пожалуйста, скопируйте соответствующую конфигурацию sudo и поместите ее в новый файл sudoers.d, например /etc/sudoers.d/bacularis-api"
 
 msgid "Step 5 - enable actions for components"
 msgstr "Шаг 5 - включение действий для компонентов"
@@ -695,3 +689,48 @@ msgstr "Настройка:"
 msgid "Dedicated Bconsole config"
 msgstr "Выделенная Bconsole"
 
+
+msgid "Step 1 - general options"
+msgstr "Step 1 - general options"
+
+msgid "Services:"
+msgstr "Services:"
+
+msgid "Enable API instance"
+msgstr "Enable API instance"
+
+msgid "Enable web interface"
+msgstr "Enable web interface"
+
+msgid "Welcome to the Bacularis install wizard"
+msgstr "Welcome to the Bacularis install wizard"
+
+msgid "Please select language."
+msgstr "Please select language."
+
+msgid "What services would you like to enable for this installation?"
+msgstr "What services would you like to enable for this installation?"
+
+msgid "recommended"
+msgstr "recommended"
+
+msgid "Step 5 - authentication"
+msgstr "Step 5 - authentication"
+
+msgid "API authentication"
+msgstr "API authentication"
+
+msgid "Use the same credentials for the API and for the web interface"
+msgstr "Use the same credentials for the API and for the web interface"
+
+msgid "Advanced options"
+msgstr "Advanced options"
+
+msgid "Web interface settings"
+msgstr "Web interface settings"
+
+msgid "API IP Address/Hostname:"
+msgstr "API IP Address/Hostname:"
+
+msgid "Web interface authentication"
+msgstr "Web interface authentication"

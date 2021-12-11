@@ -40,7 +40,7 @@
 		<module id="device_config" class="Bacularis\API\Modules\DeviceConfig" />
 		<!-- logging modules -->
 		<module id="log" class="System\Util\TLogRouter">
-			<route class="TFileLogRoute"  Categories="Execute, External, Application, General, Security" LogPath="Bacularis\API\Logs" LogFile="baculum-api.log" MaxFileSize="1000" MaxLogFiles="5" />
+			<route class="TFileLogRoute"  Categories="Execute, External, Application, General, Security" LogPath="Bacularis\API\Logs" LogFile="bacularis-api.log" MaxFileSize="1000" MaxLogFiles="5" />
 		</module>
 		<!-- component status modules -->
 		<module id="status_dir" class="Bacularis\API\Modules\StatusDirector" />

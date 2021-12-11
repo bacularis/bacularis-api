@@ -42,7 +42,7 @@ var oSudoConfig = {
 	Options.minWidth="820"
 	Options.minHeight="200"
 >
-	<p><%[ Please copy appropriate sudo configuration and put it to a new sudoers.d file for example /etc/sudoers.d/baculum-api ]%></p>
+	<p><%[ Please copy appropriate sudo configuration and put it to a new sudoers.d file for example /etc/sudoers.d/bacularis-api ]%></p>
 	<p><strong><%[ Note ]%></strong> <%[ Please use visudo to add this configuration, otherwise please do remember to add empty line at the end of file. ]%>
 	<p><%[ Example sudo configuration for Apache web server user (RHEL, CentOS and others): ]%></p>
 	<pre id="sudo_config_apache"></pre>

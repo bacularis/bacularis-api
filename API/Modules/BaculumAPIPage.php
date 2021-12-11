@@ -44,6 +44,12 @@ session_start();
  */
 class BaculumAPIPage extends BaculumPage {
 
+	/**
+	 * It is first application user pre-defined for first login.
+	 * It is removed just after setup application.
+	 */
+	const DEFAULT_AUTH_USER = 'admin';
+
 	public function onPreInit($param) {
 		parent::onPreInit($param);
 		$config = $this->getModule('api_config')->getConfig('api');

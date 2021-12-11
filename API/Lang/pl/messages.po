@@ -134,8 +134,8 @@ msgstr "Lokalizacja pliku konf. bconsole:"
 msgid "NOTE!"
 msgstr "UWAGA!"
 
-msgid "Baculum needs access to bconsole by the web server."
-msgstr "Baculum wymaga dostępu do konsoli bconsole przez serwer www."
+msgid "Bacularis needs access to bconsole by the web server."
+msgstr "Bacularis wymaga dostępu do konsoli bconsole przez serwer www."
 
 msgid "Step 3 - share the Bacula Bconsole commands interface"
 msgstr "Step 3 - udostępnienie interfejsu komend Bconsole"
@@ -296,23 +296,17 @@ msgstr "Dedykowany plik konfiguracyjny Bconsole:"
 msgid "Please enter Redirect URI."
 msgstr "Proszę wprowadzić wartość Redirect URI."
 
-msgid "OAuth2 Redirect URI (example: https://baculumgui:9095/web/redirect):"
-msgstr "OAuth2 Redirect URI (przykład: https://baculumgui:9095/web/redirect):"
+msgid "OAuth2 Redirect URI (example: https://bacularis:9097/web/redirect):"
+msgstr "OAuth2 Redirect URI (przykład: https://bacularis:9097/web/redirect):"
 
 msgid "(optional)"
 msgstr "(opcjonalne)"
-
-msgid "First client registration"
-msgstr "Rejestracja pierwszego klienta"
 
 msgid "OAuth2 scopes (space separated):"
 msgstr "Zakresy OAuth2 scopes (oddzielone spacją):"
 
 msgid "Please enter OAuth2 scopes."
 msgstr "Proszę wprowadzić zakresy OAuth2."
-
-msgid "Please do not forget to disable HTTP Basic auth in the API web server config. Othwerise OAuth2 will not work."
-msgstr "Proszę nie zapomnieć wyłączyć autentykację HTTP Basic w pliku konfiguracyjnym serwera web API. W przeciwnym razie OAuth2 nie będzie działać."
 
 msgid "Refresh token"
 msgstr "Odśwież żeton"
@@ -350,8 +344,8 @@ msgstr "Podany użytkownik już istnieje w pliku konfiguracyjnym."
 msgid "set all scopes"
 msgstr "ustaw wszystkie zakresy"
 
-msgid "Welcome on the Baculum API default page"
-msgstr "Witaj na stronie głównej Baculum API"
+msgid "Welcome on the Bacularis API default page"
+msgstr "Witaj na stronie głównej Bacularis API"
 
 msgid "Baculum API Client"
 msgstr "Klient API Baculum"
@@ -416,8 +410,8 @@ msgstr "Wersja:"
 msgid "Authentication"
 msgstr "Uwierzytelnianie"
 
-msgid "Authentication to Baculum REST API"
-msgstr "Uwierzytelnianie do Baculum REST API"
+msgid "Authentication to Bacularis REST API"
+msgstr "Uwierzytelnianie do Bacularis REST API"
 
 msgid "Authentication type:"
 msgstr "Typ uwierzytelniania:"
@@ -482,8 +476,8 @@ msgstr "Przykładowa konfiguracja sudo dla użytkownika serwerów web Apache i L
 msgid "Get sudo configuration"
 msgstr "Weź konfigurację sudo"
 
-msgid "Please copy appropriate sudo configuration and put it to a new sudoers.d file for example /etc/sudoers.d/baculum-api"
-msgstr "Proszę skopiować odpowiednią konfigurację sudo i wpisać ją do nowego pliku sudoers.d na przykład /etc/sudoers.d/baculum-api"
+msgid "Please copy appropriate sudo configuration and put it to a new sudoers.d file for example /etc/sudoers.d/bacularis-api"
+msgstr "Proszę skopiować odpowiednią konfigurację sudo i wpisać ją do nowego pliku sudoers.d na przykład /etc/sudoers.d/bacularis-api"
 
 msgid "Step 5 - enable actions for components"
 msgstr "Krok 5 - włącz akcje dla komponentów"
@@ -694,3 +688,48 @@ msgstr "Pliki konfig.:"
 
 msgid "Dedicated Bconsole config"
 msgstr "Dedykowana konfiguracja Bconsole"
+
+msgid "Step 1 - general options"
+msgstr "Step 1 - general options"
+
+msgid "Services:"
+msgstr "Services:"
+
+msgid "Enable API instance"
+msgstr "Enable API instance"
+
+msgid "Enable web interface"
+msgstr "Enable web interface"
+
+msgid "Welcome to the Bacularis install wizard"
+msgstr "Welcome to the Bacularis install wizard"
+
+msgid "Please select language."
+msgstr "Please select language."
+
+msgid "What services would you like to enable for this installation?"
+msgstr "What services would you like to enable for this installation?"
+
+msgid "recommended"
+msgstr "recommended"
+
+msgid "Step 5 - authentication"
+msgstr "Step 5 - authentication"
+
+msgid "API authentication"
+msgstr "API authentication"
+
+msgid "Use the same credentials for the API and for the web interface"
+msgstr "Use the same credentials for the API and for the web interface"
+
+msgid "Advanced options"
+msgstr "Advanced options"
+
+msgid "Web interface settings"
+msgstr "Web interface settings"
+
+msgid "API IP Address/Hostname:"
+msgstr "API IP Address/Hostname:"
+
+msgid "Web interface authentication"
+msgstr "Web interface authentication"

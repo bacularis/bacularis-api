@@ -276,7 +276,7 @@ $(function() {
 			</div>
 		</div>
 		<div class="line">
-			<div class="text"><com:TLabel ForControl="APIOAuth2RedirectURI" Text="<%[ OAuth2 Redirect URI (example: https://baculumgui:9095/web/redirect): ]%>" /></div>
+			<div class="text"><com:TLabel ForControl="APIOAuth2RedirectURI" Text="<%[ OAuth2 Redirect URI (example: https://bacularis:9097/web/redirect): ]%>" /></div>
 			<div class="field">
 				<com:TActiveTextBox
 					ID="APIOAuth2RedirectURI"

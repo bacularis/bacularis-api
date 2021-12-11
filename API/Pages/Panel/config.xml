@@ -4,6 +4,12 @@
 		<using namespace="Bacularis\API\Modules\BaculumAPIPage" />
 	</paths>
 	<modules>
+		<!-- Web config modules -->
+		<module id="web_config" class="Bacularis\Web\Modules\WebConfig" />
+		<module id="host_config" class="Bacularis\Web\Modules\HostConfig" />
+		<module id="user_config" class="Bacularis\Web\Modules\WebUserConfig" />>
+		<module id="basic_webuser" class="Bacularis\Web\Modules\BasicWebUserConfig" />
+
 		<!-- database modules -->
 		<module id="db" class="Bacularis\API\Modules\Database" />
 		<!-- tools modules -->
@@ -19,7 +25,7 @@
 		</module>
 		<!-- logging modules -->
 		<module id="log" class="System.Util.TLogRouter">
-			<route class="TFileLogRoute"  Categories="Execute, External, Application, General, Security" LogPath="Application.API.Logs" LogFile="baculum-api.log" MaxFileSize="1000" MaxLogFiles="5" />
+			<route class="TFileLogRoute"  Categories="Execute, External, Application, General, Security" LogPath="Application.API.Logs" LogFile="bacularis-api.log" MaxFileSize="1000" MaxLogFiles="5" />
 		</module>
 		<!-- auth modules -->
 		<module id="basic_apiuser" class="Bacularis\API\Modules\BasicAPIUserConfig" />

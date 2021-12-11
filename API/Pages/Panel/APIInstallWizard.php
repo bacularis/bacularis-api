@@ -41,6 +41,8 @@ use Bacularis\API\Modules\BAPIException;
 use Bacularis\API\Modules\BaculumAPIPage;
 use Bacularis\API\Modules\Database;
 use Bacularis\API\Modules\BasicAPIUserConfig;
+use Bacularis\Web\Modules\HostConfig;
+use Bacularis\Web\Modules\WebUserRoles;
 
 /**
  * API install wizard.
@@ -119,9 +121,15 @@ class APIInstallWizard extends BaculumAPIPage {
 			$this->BBconsJSONPath->Text = self::DEFAULT_BBCONJSON_BIN;
 			$this->BconsCfgPath->Text = self::DEFAULT_BCONSOLE_CONF;
 
-			$this->DatabaseNo->Checked = true;
-			$this->ConsoleNo->Checked = true;
-			$this->ConfigNo->Checked = true;
+			$this->EnableAPI->Checked = true;
+			$this->EnableWeb->Checked = true;
+			$this->DatabaseYes->Checked = true;
+			$this->ConsoleYes->Checked = true;
+			$this->ConfigYes->Checked = true;
+			$this->UseSudo->Checked = true;
+			$this->BJSONUseSudo->Checked = true;
+			$this->BConfigDir->Text = dirname(dirname(__DIR__)) . '/Config';
+			$this->APIHost->Text = 'localhost';
 		} else {
 			// Database param settings
 			if ($this->config['db']['enabled'] == 1) {
@@ -191,11 +199,22 @@ class APIInstallWizard extends BaculumAPIPage {
 	public function PreviousStep($sender, $param) {
 	}
 
+	public function wizardNext($sender, $param) {
+		if ($param->CurrentStepIndex === 0) {
+			if ($this->first_run && !$this->EnableAPI->Checked && $this->EnableWeb->Checked) {
+				$this->Response->redirect('/web');
+			}
+		}
+	}
+
 	public function wizardStop($sender, $param) {
 		$this->goToDefaultPage();
 	}
 
 	public function wizardCompleted($sender, $param) {
+		/****
+		 * SAVE API CONFIG
+		 */
 		$cfg_data = array(
 			'api' => array(),
 			'db' => array(),
@@ -261,9 +280,120 @@ class APIInstallWizard extends BaculumAPIPage {
 				$oauth2_cfg[$this->APIOAuth2ClientId->Text]['name'] = $this->APIOAuth2Name->Text;
 				$this->getModule('oauth2_config')->setConfig($oauth2_cfg);
 			}
-			$this->goToDefaultPage();
 		}
 
+		/****
+		 * SAVE WEB CONFIG (for first run only)
+		 */
+		if ($this->first_run) {
+			if ($this->EnableWeb->Checked) {
+				$host = HostConfig::MAIN_CATALOG_HOST;
+				$cfg_host = array(
+					'auth_type' => '',
+					'login' => '',
+					'password' => '',
+					'client_id' => '',
+					'client_secret' => '',
+					'redirect_uri' => '',
+					'scope' => ''
+				);
+				$cfg_host['protocol'] = 'http';
+				$cfg_host['address'] = $this->APIHost->Text;
+				$cfg_host['port'] = '9097';
+				$cfg_host['url_prefix'] = '';
+				if ($this->AuthBasic->Checked == true) {
+					$cfg_host['auth_type'] = 'basic';
+					$cfg_host['login'] = $this->APILogin->Text;
+					$cfg_host['password'] = $this->APIPassword->Text;
+				} elseif($this->AuthOAuth2->Checked == true) {
+					$cfg_host['auth_type'] = 'oauth2';
+					$cfg_host['client_id'] = $this->APIOAuth2ClientId->Text;
+					$cfg_host['client_secret'] = $this->APIOAuth2ClientSecret->Text;
+					$cfg_host['redirect_uri'] = $this->APIOAuth2RedirectURI->Text;
+					$cfg_host['scope'] = $this->APIOAuth2Scope->Text;
+				}
+				$host_config = $this->getModule('host_config')->getConfig();
+				$host_config[$host] = $cfg_host;
+				$ret = $this->getModule('host_config')->setConfig($host_config);
+				if($ret === true) {
+					// complete new Bacularis main settings
+					$web_config = $this->getModule('web_config');
+					$ret = $web_config->setDefConfigOpts([
+						'baculum' => [
+							'lang' => $this->Lang->SelectedValue
+						]
+					]);
+
+					$basic_webuser = $this->getModule('basic_webuser');
+					if ($this->first_run && $ret && $web_config->isAuthMethodLocal()) {
+						// set new user on first wizard run
+						$previous_user = parent::DEFAULT_AUTH_USER;
+						$ret = $basic_webuser->setUsersConfig(
+							$this->WebLogin->Text,
+							$this->WebPassword->Text,
+							false,
+							$previous_user
+						);
+					} elseif (!$ret) {
+						$emsg = 'Error while saving web basic user config.';
+						$this->getModule('logging')->log(
+							__FUNCTION__,
+							$emsg,
+							Logging::CATEGORY_APPLICATION,
+							__FILE__,
+							__LINE__
+						);
+					}
+
+					if ($this->first_run && $ret) {
+						// create new Bacularis user on first wizard run
+						$user_config = $this->getModule('user_config');
+						$new_user_prop = $user_config->getUserConfigProps([
+							'username' => $this->WebLogin->Text,
+							'roles' => WebUserRoles::ADMIN,
+							'enabled' => 1
+						]);
+						$ret = $user_config->setUserConfig($this->WebLogin->Text, $new_user_prop);
+						if (!$ret) {
+							$emsg = 'Error while saving web user config.';
+							$this->getModule('logging')->log(
+								__FUNCTION__,
+								$emsg,
+								Logging::CATEGORY_APPLICATION,
+								__FILE__,
+								__LINE__
+							);
+						}
+					}
+				} else {
+					$emsg = 'Error while saving auth host config.';
+					$this->getModule('logging')->log(
+						__FUNCTION__,
+						$emsg,
+						Logging::CATEGORY_APPLICATION,
+						__FILE__,
+						__LINE__
+					);
+				}
+			} else {
+				$previous_user = parent::DEFAULT_AUTH_USER;
+				$ret = $this->getModule('basic_webuser')->setUsersConfig(
+					$this->WebLogin->Text,
+					$this->WebPassword->Text,
+					false,
+					$previous_user
+				);
+			}
+		}
+
+		// Go to default user page
+		if ($this->first_run && $this->EnableAPI->Checked && !$this->EnableWeb->Checked) {
+			// Only API configured, so go to API panel page
+			$this->Response->redirect('/panel');
+		} else {
+			// Go to default page
+			$this->Response->redirect('/');
+		}
 	}
 
 	// @TODO: Remove it. It is templates work, not page work
@@ -469,6 +599,15 @@ class APIInstallWizard extends BaculumAPIPage {
 			$this->BConfigDirTestErr->Display = 'Dynamic';
 		}
 		$param->setIsValid($valid);
+	}
+
+	public function validateAdministratorPassword($sender, $param) {
+		if ($this->RetypeWebPasswordRequireValidator->IsValid && $this->RetypeWebPasswordRegexpValidator->IsValid) {
+			$sender->Display = 'Dynamic';
+		} else {
+			$sender->Display = 'None';
+		}
+		$param->IsValid = ($param->Value === $this->WebPassword->Text);
 	}
 }
 ?>
