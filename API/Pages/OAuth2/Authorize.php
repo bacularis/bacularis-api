@@ -27,7 +27,7 @@
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
 
-use Bacularis\API\Modules\BaculumAPIPage;
+use Bacularis\Common\Modules\BaculumPage;
 
 /**
  * OAuth2 authorization server.
@@ -37,7 +37,7 @@ use Bacularis\API\Modules\BaculumAPIPage;
  * @package Baculum API
  */
  
-class Authorize extends BaculumAPIPage {
+class Authorize extends BaculumPage {
 
 	/**
 	 * Request parameter for grant authorization identifier.

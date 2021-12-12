@@ -29,6 +29,7 @@
 
 namespace Bacularis\API\Modules;
 
+use Bacularis\Common\Modules\AuthBasic;
 use Bacularis\Common\Modules\BaculumPage;
 use Bacularis\API\Pages\Requirements;
 use Bacularis\API\Modules\APIConfig;
@@ -52,19 +53,13 @@ class BaculumAPIPage extends BaculumPage {
 
 	public function onPreInit($param) {
 		parent::onPreInit($param);
-		$config = $this->getModule('api_config')->getConfig('api');
-		if (count($config) === 0 || $config['auth_type'] === 'basic') {
-			$username = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : null;
-			$password = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : null;
-			if (!$this->getModule('basic_apiuser')->validateUsernamePassword($username, $password, false)) {
-				// authentication invalid
-				header('WWW-Authenticate: Basic realm="Bacularis"');
-				header('HTTP/1.0 401 Unauthorized');
-				exit();
-			}
+		$auth_mod = $this->getModule('basic_apiuser');
+		if ($this->getModule('auth_basic')->authenticate($auth_mod, AuthBasic::REALM_PANEL, false) === false) {
+			// authentication failed
+			exit();
 		}
 
-
+		$config = $this->getModule('api_config')->getConfig('api');
 		if (count($config) === 0) {
 			if ($this->Service->getRequestedPagePath() != 'APIInstallWizard') {
 				$this->goToPage('APIInstallWizard');

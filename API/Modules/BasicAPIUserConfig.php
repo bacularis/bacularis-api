@@ -31,6 +31,7 @@ namespace Bacularis\API\Modules;
 
 use Prado\Prado;
 use Bacularis\Common\Modules\BasicUserConfig;
+use Bacularis\Common\Modules\IUserConfig;
 
 /**
  * Manage HTTP Basic auth method users.
@@ -39,7 +40,7 @@ use Bacularis\Common\Modules\BasicUserConfig;
  * @category Config
  * @package Baculum API
  */
-class BasicAPIUserConfig extends BasicUserConfig {
+class BasicAPIUserConfig extends BasicUserConfig implements IUserConfig {
 
 	/**
 	 * Users login and password file for HTTP Basic auth.
@@ -52,6 +53,14 @@ class BasicAPIUserConfig extends BasicUserConfig {
 		return parent::getConfigPath() ?: Prado::getPathOfNamespace(self::USERS_FILE_NAME, self::USERS_FILE_EXTENSION);
 	}
 
+	/**
+	 * Check if username and password are correct.
+	 *
+	 * @param string $username user name to log in
+	 * @param string $password user password to log in
+	 * @param boolean $check_conf check if user exists in basic user config
+	 * @return boolean true if user/pass valid, otherwise false
+	 */
 	public function validateUsernamePassword($username, $password, $check_conf = true) {
 		$valid = false;
 		if ($username && $password) {

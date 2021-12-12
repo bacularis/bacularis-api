@@ -31,6 +31,7 @@ namespace Bacularis\API\Modules;
  
 use Prado\Web\UI\TPage;
 use Prado\Exceptions\TException;
+use Bacularis\Common\Modules\AuthBasic;
 use Bacularis\Common\Modules\Errors\{GenericError,AuthenticationError,AuthorizationError};
 use Bacularis\Common\Modules\OAuth2;
 use Bacularis\Common\Modules\Logging;
@@ -110,17 +111,15 @@ abstract class BaculumAPIServer extends TPage {
 			exit();
 		}
 		if ($config['auth_type'] === 'basic') {
-			$username = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : null;
-			$password = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : null;
-			if ($this->getModule('basic_apiuser')->validateUsernamePassword($username, $password)) {
+			$auth_mod = $this->getModule('basic_apiuser');
+			if ($this->getModule('auth_basic')->authenticate($auth_mod, AuthBasic::REALM_API) === true) {
 				// authentication valid
 				$is_auth = true;
+				$username = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : null;
 				$props = $this->getModule('basic_config')->getConfig($username);
 				$this->initAuthParams($props);
-			}
-			if (!$is_auth) {
-				header('WWW-Authenticate: Basic realm="Bacularis"');
-				header('HTTP/1.0 401 Unauthorized');
+			} else {
+				// authentication failed
 				exit();
 			}
 		} elseif ($config['auth_type'] === 'oauth2' && $this->getModule('auth_oauth2')->isAuthRequest()) {
