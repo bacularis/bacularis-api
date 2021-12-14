@@ -1275,23 +1275,58 @@ var oConfigWizardStep4 = {
 					</div>
 				</com:TPanel>
 				<a href="javascript:void(0)" onclick="$('#configure_web_auth_adv').slideToggle('fast');" style="display: <%=$this->first_run && $this->EnableWeb->Checked ? 'block' : 'none'%>"><%[ Advanced options ]%></a>
-				<div id="configure_web_auth_adv" class="w3-row w3-section" style="display: none">
+				<div id="configure_web_auth_adv" style="display: none">
 					<com:TPanel Visible="<%=$this->first_run && $this->EnableWeb->Checked%>">
-						<div class="w3-col w3-third"><com:TLabel ForControl="APIHost" Text="<%[ API IP Address/Hostname: ]%>" /></div>
-						<div class="w3-col w3-twothird">
-							<com:TTextBox
-								ID="APIHost"
-								CssClass="w3-input w3-border"
-								CausesValidation="false"
-								Width="370px"
-							/>
-							<com:TRequiredFieldValidator
-								CssClass="validator-block"
-								Display="Dynamic"
-								ControlCssClass="invalidate"
-								ControlToValidate="APIHost"
-								Text="<%[ Field required. ]%>"
-							/>
+						<div class="w3-row w3-section">
+							<div class="w3-col w3-third"><com:TLabel ForControl="APIProtocol" Text="<%[ API Protocol: ]%>" /></div>
+							<div class="w3-col w3-twothird">
+								<com:TActiveDropDownList
+									ID="APIProtocol"
+									CssClass="w3-select w3-border"
+									Width="150px"
+									CausesValidation="false"
+								>
+									<com:TListItem Value="http" Text="HTTP" Selected="true" />
+									<com:TListItem Value="https" Text="HTTPS"/>
+								</com:TActiveDropDownList>
+							</div>
+						</div>
+						<div class="w3-row w3-section">
+							<div class="w3-col w3-third"><com:TLabel ForControl="APIHost" Text="<%[ API IP Address/Hostname: ]%>" /></div>
+							<div class="w3-col w3-twothird">
+								<com:TTextBox
+									ID="APIHost"
+									CssClass="w3-input w3-border"
+									CausesValidation="false"
+									Width="370px"
+								/>
+								<com:TRequiredFieldValidator
+									CssClass="validator-block"
+									Display="Dynamic"
+									ControlCssClass="invalidate"
+									ControlToValidate="APIHost"
+									Text="<%[ Field required. ]%>"
+								/>
+							</div>
+						</div>
+						<div class="w3-row w3-section">
+							<div class="w3-col w3-third"><com:TLabel ForControl="APIPort" Text="<%[ API Port: ]%>" /></div>
+							<div class="w3-col w3-twothird">
+								<com:TTextBox
+									ID="APIPort"
+									CssClass="w3-input w3-border"
+									CausesValidation="false"
+									Width="100px"
+									Text="9097"
+								/>
+								<com:TRequiredFieldValidator
+									CssClass="validator-block"
+									Display="Dynamic"
+									ControlCssClass="invalidate"
+									ControlToValidate="APIPort"
+									Text="<%[ Field required. ]%>"
+								/>
+							</div>
 						</div>
 					</com:TPanel>
 				</div>

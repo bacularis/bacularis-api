@@ -297,9 +297,9 @@ class APIInstallWizard extends BaculumAPIPage {
 					'redirect_uri' => '',
 					'scope' => ''
 				);
-				$cfg_host['protocol'] = 'http';
+				$cfg_host['protocol'] = $this->APIProtocol->SelectedValue;
 				$cfg_host['address'] = $this->APIHost->Text;
-				$cfg_host['port'] = '9097';
+				$cfg_host['port'] = $this->APIPort->Text;
 				$cfg_host['url_prefix'] = '';
 				if ($this->AuthBasic->Checked == true) {
 					$cfg_host['auth_type'] = 'basic';

@@ -737,3 +737,9 @@ msgstr "Web interface authentication"
 
 msgid "Example sudo configuration for Nginx web server user (RHEL, CentOS and others):"
 msgstr "Example sudo configuration for Nginx web server user (RHEL, CentOS and others):"
+
+msgid "API Protocol:"
+msgstr "API Protocol:"
+
+msgid "API Port:"
+msgstr "API Port:"
