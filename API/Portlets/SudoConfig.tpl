@@ -14,7 +14,7 @@ var oSudoConfig = {
 	get_config: function(type) {
 		var val, pre;
 		var cfg = '';
-		var users = ['apache', 'lighttpd', 'www-data'];
+		var users = ['apache', 'lighttpd', 'nginx', 'www-data'];
 		var fields = this.bin_fields.hasOwnProperty(type) ? this.bin_fields[type] : [];
 		for (var i = 0; i < users.length; i++) {
 			var pre = document.getElementById('sudo_config_' + users[i].replace(/-/g, '_'));
@@ -46,8 +46,10 @@ var oSudoConfig = {
 	<p><strong><%[ Note ]%></strong> <%[ Please use visudo to add this configuration, otherwise please do remember to add empty line at the end of file. ]%>
 	<p><%[ Example sudo configuration for Apache web server user (RHEL, CentOS and others): ]%></p>
 	<pre id="sudo_config_apache"></pre>
+	<p><%[ Example sudo configuration for Nginx web server user (RHEL, CentOS and others): ]%></p>
+	<pre id="sudo_config_nginx"></pre>
 	<p><%[ Example sudo configuration for Lighttpd web server user (RHEL, CentOS and others): ]%></p>
 	<pre id="sudo_config_lighttpd"></pre>
-	<p><%[ Example sudo configuration for Apache and Lighttpd web servers user (Debian, Ubuntu and others): ]%></p>
+	<p><%[ Example sudo configuration for Apache, Nginx and Lighttpd web servers user (Debian, Ubuntu and others): ]%></p>
 	<pre id="sudo_config_www_data"></pre>
 </com:TJuiDialog>

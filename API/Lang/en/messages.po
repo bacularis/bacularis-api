@@ -464,8 +464,8 @@ msgstr "Example sudo configuration for Apache web server user (RHEL, CentOS and 
 msgid "Example sudo configuration for Lighttpd web server user (RHEL, CentOS and others):"
 msgstr "Example sudo configuration for Lighttpd web server user (RHEL, CentOS and others):"
 
-msgid "Example sudo configuration for Apache and Lighttpd web servers user (Debian, Ubuntu and others):"
-msgstr "Example sudo configuration for Apache and Lighttpd web servers user (Debian, Ubuntu and others):"
+msgid "Example sudo configuration for Apache, Nginx and Lighttpd web servers user (Debian, Ubuntu and others):"
+msgstr "Example sudo configuration for Apache, Nginx and Lighttpd web servers user (Debian, Ubuntu and others):"
 
 msgid "Get sudo configuration"
 msgstr "Get sudo configuration"
@@ -727,3 +727,6 @@ msgstr "API IP Address/Hostname:"
 
 msgid "Web interface authentication"
 msgstr "Web interface authentication"
+
+msgid "Example sudo configuration for Nginx web server user (RHEL, CentOS and others):"
+msgstr "Example sudo configuration for Nginx web server user (RHEL, CentOS and others):"
