@@ -464,14 +464,11 @@ msgstr "Вы хотите запускать, останавливать и пе
 msgid "Sudo configuration"
 msgstr "Конфигурация Sudo"
 
-msgid "Example sudo configuration for Apache web server user (RHEL, CentOS and others):"
-msgstr "Пример конфигурации sudo для пользователя веб-сервера Apache (RHEL, CentOS и другие):"
+msgid "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (Debian, Ubuntu and others):"
+msgstr "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (Debian, Ubuntu and others):"
 
-msgid "Example sudo configuration for Lighttpd web server user (RHEL, CentOS and others):"
-msgstr "Пример конфигурации sudo для пользователя Lighttpd веб-сервера (RHEL, CentOS и другие):"
-
-msgid "Example sudo configuration for Apache, Nginx and Lighttpd web servers user (Debian, Ubuntu and others):"
-msgstr "Пример конфигурации sudo для пользователя веб-серверов Apache, Nginx и Lighttpd (Debian, Ubuntu и другие):"
+msgid "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (RHEL, CentOS and others):"
+msgstr "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (RHEL, CentOS and others):"
 
 msgid "Get sudo configuration"
 msgstr "Как настроить sudo"
@@ -734,9 +731,6 @@ msgstr "API IP Address/Hostname:"
 
 msgid "Web interface authentication"
 msgstr "Web interface authentication"
-
-msgid "Example sudo configuration for Nginx web server user (RHEL, CentOS and others):"
-msgstr "Example sudo configuration for Nginx web server user (RHEL, CentOS and others):"
 
 msgid "API Protocol:"
 msgstr "API Protocol:"

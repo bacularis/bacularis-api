@@ -458,14 +458,11 @@ msgstr "Do you want to setup start, stop and restart actions for Bacula componen
 msgid "Sudo configuration"
 msgstr "Sudo configuration"
 
-msgid "Example sudo configuration for Apache web server user (RHEL, CentOS and others):"
-msgstr "Example sudo configuration for Apache web server user (RHEL, CentOS and others):"
+msgid "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (Debian, Ubuntu and others):"
+msgstr "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (Debian, Ubuntu and others):"
 
-msgid "Example sudo configuration for Lighttpd web server user (RHEL, CentOS and others):"
-msgstr "Example sudo configuration for Lighttpd web server user (RHEL, CentOS and others):"
-
-msgid "Example sudo configuration for Apache, Nginx and Lighttpd web servers user (Debian, Ubuntu and others):"
-msgstr "Example sudo configuration for Apache, Nginx and Lighttpd web servers user (Debian, Ubuntu and others):"
+msgid "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (RHEL, CentOS and others):"
+msgstr "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (RHEL, CentOS and others):"
 
 msgid "Get sudo configuration"
 msgstr "Get sudo configuration"
@@ -727,9 +724,6 @@ msgstr "API IP Address/Hostname:"
 
 msgid "Web interface authentication"
 msgstr "Web interface authentication"
-
-msgid "Example sudo configuration for Nginx web server user (RHEL, CentOS and others):"
-msgstr "Example sudo configuration for Nginx web server user (RHEL, CentOS and others):"
 
 msgid "API Protocol:"
 msgstr "API Protocol:"

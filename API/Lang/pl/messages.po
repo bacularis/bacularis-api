@@ -464,14 +464,11 @@ msgstr "Czy chcesz skonfigurować akcje uruchomienia, zatrzymania i restartu kom
 msgid "Sudo configuration"
 msgstr "Konfiguracja sudo"
 
-msgid "Example sudo configuration for Apache web server user (RHEL, CentOS and others):"
-msgstr "Przykładowa konfiguracja sudo dla użytkownika serwera web Apache (RHEL, CentOS i inne):"
+msgid "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (Debian, Ubuntu and others):"
+msgstr "Przykładowa konfiguracja sudo dla użytkownika serwerów web: Apache, Nginx i Lighttpd z domyślną konfiguracją PHP-FPM (Debian, Ubuntu i inne):"
 
-msgid "Example sudo configuration for Lighttpd web server user (RHEL, CentOS and others):"
-msgstr "Przykładowa konfiguracja sudo dla użytkownika serwera web Lighttpd (RHEL, CentOS i inne):"
-
-msgid "Example sudo configuration for Apache, Nginx and Lighttpd web servers user (Debian, Ubuntu and others):"
-msgstr "Przykładowa konfiguracja sudo dla użytkownika serwerów web Apache, Nginx i Lighttpd (Debian, Ubuntu i inne):"
+msgid "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (RHEL, CentOS and others):"
+msgstr "Przykładowa konfiguracja sudo dla użytkownika serwerów web: Apache, Nginx i Lighttpd z domyślną konfiguracją PHP-FPM (RHEL, CentOS and others):"
 
 msgid "Get sudo configuration"
 msgstr "Weź konfigurację sudo"
@@ -733,9 +730,6 @@ msgstr "API IP Address/Hostname:"
 
 msgid "Web interface authentication"
 msgstr "Web interface authentication"
-
-msgid "Example sudo configuration for Nginx web server user (RHEL, CentOS and others):"
-msgstr "Example sudo configuration for Nginx web server user (RHEL, CentOS and others):"
 
 msgid "API Protocol:"
 msgstr "API Protocol:"

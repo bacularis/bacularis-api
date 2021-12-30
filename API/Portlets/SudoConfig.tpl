@@ -14,10 +14,14 @@ var oSudoConfig = {
 	get_config: function(type) {
 		var val, pre;
 		var cfg = '';
-		var users = ['apache', 'lighttpd', 'nginx', 'www-data'];
+		var users = ['apache_nginx_lighttpd', 'www-data'];
 		var fields = this.bin_fields.hasOwnProperty(type) ? this.bin_fields[type] : [];
 		for (var i = 0; i < users.length; i++) {
 			var pre = document.getElementById('sudo_config_' + users[i].replace(/-/g, '_'));
+			if (users[i] == 'apache_nginx_lighttpd') {
+				// For CentOS, RHEL and others by default for PHP-FPM is set apache user.
+				users[i] = 'apache';
+			}
 			pre.textContent = 'Defaults:' + users[i] + ' !requiretty' + "\n";
 			for (var j = 0; j < fields.length; j++) {
 				val = document.getElementById(fields[j]).value.trim();
@@ -44,12 +48,8 @@ var oSudoConfig = {
 >
 	<p><%[ Please copy appropriate sudo configuration and put it to a new sudoers.d file for example /etc/sudoers.d/bacularis-api ]%></p>
 	<p><strong><%[ Note ]%></strong> <%[ Please use visudo to add this configuration, otherwise please do remember to add empty line at the end of file. ]%>
-	<p><%[ Example sudo configuration for Apache web server user (RHEL, CentOS and others): ]%></p>
-	<pre id="sudo_config_apache"></pre>
-	<p><%[ Example sudo configuration for Nginx web server user (RHEL, CentOS and others): ]%></p>
-	<pre id="sudo_config_nginx"></pre>
-	<p><%[ Example sudo configuration for Lighttpd web server user (RHEL, CentOS and others): ]%></p>
-	<pre id="sudo_config_lighttpd"></pre>
-	<p><%[ Example sudo configuration for Apache, Nginx and Lighttpd web servers user (Debian, Ubuntu and others): ]%></p>
+	<p><%[ Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (RHEL, CentOS and others): ]%></p>
+	<pre id="sudo_config_apache_nginx_lighttpd"></pre>
+	<p><%[ Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (Debian, Ubuntu and others): ]%></p>
 	<pre id="sudo_config_www_data"></pre>
 </com:TJuiDialog>
