@@ -346,13 +346,20 @@ WHERE Client.ClientId='$clientid' $wh";
 			default: $type_crit = ' AND FileIndex > 0 '; break;
 		}
 
+		$db_params = $this->getModule('api_config')->getConfig('db');
 		$search_crit = '';
 		if (is_string($search)) {
-			$search_crit = " AND (LOWER(Path.Path) LIKE LOWER('%$search%') OR LOWER(File.Filename) LIKE LOWER('%$search%')) ";
+			$path_col = 'Path.Path';
+			$filename_col = 'File.Filename';
+			if ($db_params['type'] === Database::MYSQL_TYPE) {
+				// Conversion is required because LOWER() and UPPER() do not work with BLOB data type.
+				$path_col = "CONVERT($path_col USING utf8mb4)";
+				$filename_col = "CONVERT($filename_col USING utf8mb4)";
+			}
+			$search_crit = " AND (LOWER($path_col) LIKE LOWER('%$search%') OR LOWER($filename_col) LIKE LOWER('%$search%')) ";
 		}
 
 		$fname_col = 'Path.Path || File.Filename';
-		$db_params = $this->getModule('api_config')->getConfig('db');
 		if ($db_params['type'] === Database::MYSQL_TYPE) {
 			$fname_col = 'CONCAT(Path.Path, File.Filename)';
 		}
