@@ -28,6 +28,7 @@
  */
 
 use Bacularis\API\Modules\APIConfig;
+use Bacularis\Common\Modules\Errors\ActionsError;
  
 /**
  * API actions support.

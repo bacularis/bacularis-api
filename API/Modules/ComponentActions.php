@@ -31,7 +31,7 @@ namespace Bacularis\API\Modules;
 
 use Bacularis\Common\Modules\Logging;
 use Bacularis\API\Modules\APIModule;
-use Bacularis\Common\Modules\Errors;
+use Bacularis\Common\Modules\Errors\ActionsError;
 
 /**
  * Module responsible for executing action commands.
