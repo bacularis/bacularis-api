@@ -43,7 +43,7 @@ use Bacularis\API\Modules\Database;
  */
 class JobManager extends APIModule {
 
-	public function getJobs($criteria = array(), $limit_val) {
+	public function getJobs($criteria = array(), $limit_val = null) {
 		$sort_col = 'JobId';
 		$db_params = $this->getModule('api_config')->getConfig('db');
 		if ($db_params['type'] === Database::PGSQL_TYPE) {
