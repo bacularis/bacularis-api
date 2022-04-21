@@ -511,6 +511,8 @@
 							<option value=""><%[ Select paths ]%></option>
 							<option value="system"><%[ Binaries: ]%> /usr/sbin, <%[ Configs: ]%> /etc/bacula</option>
 							<option value="bacula.org"><%[ Binaries: ]%> /opt/bacula/bin, <%[ Configs: ]%> /opt/bacula/etc</option>
+							<option value="debian"><%[ Binaries: ]%> /usr/lib/bacula, <%[ Configs: ]%> /etc/bacula</option>
+							<option value="freebsd"><%[ Binaries: ]%> /usr/local/sbin, <%[ Configs: ]%> /usr/local/etc/bacula</option>
 						</select>
 					</div>
 					<fieldset>
@@ -871,6 +873,14 @@ var oConfigWizardStep4 = {
 		'bacula.org': {
 			configs: '/opt/bacula/etc/',
 			binaries: '/opt/bacula/bin/'
+		},
+		'debian': {
+			configs: '/etc/bacula/',
+			binaries: '/usr/lib/bacula/'
+		},
+		'freebsd': {
+			configs: '/usr/local/etc/bacula/',
+			binaries: '/usr/local/sbin/'
 		}
 	},
 	ids: {
