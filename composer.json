@@ -53,7 +53,7 @@
 		"bower-asset/fontawesome": "*",
 		"bower-asset/jquery": "*",
 		"bower-asset/jquery-ui": "*",
-		"pradosoft/prado": "~4.1",
+		"pradosoft/prado": "~4.1.2",
 		"bacularis/bacularis-common": "*"
 	},
 	"autoload": {
