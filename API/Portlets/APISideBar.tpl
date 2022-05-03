@@ -2,7 +2,7 @@
 <nav class="w3-sidebar w3-white w3-animate-left w3-margin-bottom" style="z-index:3; width:250px;" id="sidebar">
 	<div class="w3-container w3-row w3-section">
 		<div class="w3-col s3">
-			<img src="<%=$this->getPage()->getTheme()->getBaseUrl()%>/avatar2.png" class="w3-circle w3-margin-right" style="width: 33px" />
+			<img src="<%~ ../../../../../Common/Images/avatar2.png %>" class="w3-circle w3-margin-right" style="width: 33px" />
 		</div>
 		<div class="w3-col s9 w3-bar">
 			<span><%[ Welcome ]%><strong><%=isset($_SERVER['PHP_AUTH_USER']) ? ', ' . $_SERVER['PHP_AUTH_USER'] : ''%></strong></span><br>
