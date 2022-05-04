@@ -760,7 +760,7 @@ var oAPIDevices = {
 			if (dev_conf.value) {
 				name.value = this.devs_config[dev_conf.value].Name;
 				device.value = this.devs_config[dev_conf.value].ArchiveDevice;
-				index.value = this.devs_config[dev_conf.value].DriveIndex;
+				index.value = this.devs_config[dev_conf.value].DriveIndex || 0;
 			} else {
 				name.value = device.value = index.value = '';
 			}
