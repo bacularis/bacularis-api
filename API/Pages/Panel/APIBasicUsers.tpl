@@ -148,11 +148,11 @@ var oBasicUserList = {
 </script>
 	<div id="new_basic_user_window" class="w3-modal">
 		<div class="w3-modal-content w3-animate-top w3-card-4">
-			<header class="w3-container w3-teal">
+			<header class="w3-container w3-green">
 				<span onclick="document.getElementById('new_basic_user_window').style.display = 'none';" class="w3-button w3-display-topright">&times;</span>
 				<h2><%[ Add user ]%></h2>
 			</header>
-			<div class="w3-container w3-margin-left w3-margin-right w3-text-teal">
+			<div class="w3-container w3-margin-left w3-margin-right">
 				<com:Application.Common.Portlets.NewAuthClient
 					ID="NewBasicClient"
 					Mode="add"
@@ -165,11 +165,11 @@ var oBasicUserList = {
 	</div>
 	<div id="edit_basic_user_window" class="w3-modal">
 		<div class="w3-modal-content w3-animate-top w3-card-4">
-			<header class="w3-container w3-teal">
+			<header class="w3-container w3-green">
 				<span onclick="document.getElementById('edit_basic_user_window').style.display = 'none';" class="w3-button w3-display-topright">&times;</span>
 				<h2><%[ Edit user ]%></h2>
 			</header>
-			<div class="w3-container w3-margin-left w3-margin-right w3-text-teal">
+			<div class="w3-container w3-margin-left w3-margin-right">
 				<com:Application.Common.Portlets.NewAuthClient
 					ID="EditBasicClient"
 					Mode="edit"

@@ -137,12 +137,12 @@ oSudoConfig.set_bin_opts(bin_opts);
 </script>
 	<div id="autochanger_window" class="w3-modal">
 		<div class="w3-modal-content w3-animate-top w3-card-4">
-			<header class="w3-container w3-teal">
+			<header class="w3-container w3-green">
 				<span onclick="document.getElementById('autochanger_window').style.display = 'none';" class="w3-button w3-display-topright">&times;</span>
 				<h2 id="autochanger_window_title_add" style="display: none"><%[ Add autochanger ]%></h2>
 				<h2 id="autochanger_window_title_edit" style="display: none"><%[ Edit autochanger ]%></h2>
 			</header>
-			<div class="w3-container w3-margin-left w3-margin-right w3-text-teal">
+			<div class="w3-container w3-margin-left w3-margin-right">
 				<span id="autochanger_exists" class="error" style="display: none"><ul><li><%[ Autochanger with the given name already exists. ]%></li></ul></span>
 				<div class="w3-row w3-section">
 					<div class="w3-col w3-third"><label for="autochanger_config"><%[ Copy from Bacula SD config: ]%></label></div>
@@ -299,7 +299,7 @@ oSudoConfig.set_bin_opts(bin_opts);
 						ValidationGroup="AutchangerGroup"
 						CausesValidation="true"
 						OnCallback="saveAutochanger"
-						CssClass="w3-button w3-section w3-teal w3-padding"
+						CssClass="w3-button w3-section w3-green w3-padding"
 					>
 						<i class="fa fa-save"></i> &nbsp;<%[ Save ]%>
 					</com:TActiveLinkButton>
@@ -622,12 +622,12 @@ var oDeviceList = {
 </script>
 	<div id="device_window" class="w3-modal">
 		<div class="w3-modal-content w3-animate-top w3-card-4">
-			<header class="w3-container w3-teal">
+			<header class="w3-container w3-green">
 				<span onclick="document.getElementById('device_window').style.display = 'none';" class="w3-button w3-display-topright">&times;</span>
 				<h2 id="device_window_title_add" style="display: none"><%[ Add device ]%></h2>
 				<h2 id="device_window_title_edit" style="display: none"><%[ Edit device ]%></h2>
 			</header>
-			<div class="w3-container w3-margin-left w3-margin-right w3-text-teal">
+			<div class="w3-container w3-margin-left w3-margin-right">
 				<span id="device_exists" class="error" style="display: none"><ul><li><%[ Device with the given name already exists. ]%></li></ul></span>
 				<div class="w3-row w3-section">
 					<div class="w3-col w3-third"><label for="device_config"><%[ Copy from Bacula SD config: ]%></label></div>
@@ -708,7 +708,7 @@ var oDeviceList = {
 						ValidationGroup="DeviceGroup"
 						CausesValidation="true"
 						OnCallback="saveDevice"
-						CssClass="w3-button w3-section w3-teal w3-padding"
+						CssClass="w3-button w3-section w3-green w3-padding"
 					>
 						<i class="fa fa-save"></i> &nbsp;<%[ Save ]%>
 					</com:TActiveLinkButton>

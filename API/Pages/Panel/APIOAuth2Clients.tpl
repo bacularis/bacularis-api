@@ -123,11 +123,11 @@ var oOAuth2ClientList = {
 </script>
 	<div id="new_oauth2_client_window" class="w3-modal">
 		<div class="w3-modal-content w3-animate-top w3-card-4">
-			<header class="w3-container w3-teal">
+			<header class="w3-container w3-green">
 				<span onclick="document.getElementById('new_oauth2_client_window').style.display = 'none';" class="w3-button w3-display-topright">&times;</span>
 				<h2><%[ Add client ]%></h2>
 			</header>
-			<div class="w3-container w3-margin-left w3-margin-right w3-text-teal">
+			<div class="w3-container w3-margin-left w3-margin-right">
 				<com:Application.Common.Portlets.NewAuthClient
 					ID="NewOAuth2Client"
 					Mode="add"
@@ -140,11 +140,11 @@ var oOAuth2ClientList = {
 	</div>
 	<div id="edit_oauth2_client_window" class="w3-modal">
 		<div class="w3-modal-content w3-animate-top w3-card-4">
-			<header class="w3-container w3-teal">
+			<header class="w3-container w3-green">
 				<span onclick="document.getElementById('edit_oauth2_client_window').style.display = 'none';" class="w3-button w3-display-topright">&times;</span>
 				<h2><%[ Edit client ]%></h2>
 			</header>
-			<div class="w3-container w3-margin-left w3-margin-right w3-text-teal">
+			<div class="w3-container w3-margin-left w3-margin-right">
 				<com:Application.Common.Portlets.NewAuthClient
 					ID="EditOAuth2Client"
 					Mode="edit"
