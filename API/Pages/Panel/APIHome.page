@@ -40,7 +40,7 @@
 					<option value="joblog">joblog</option>
 					<option value="bvfs">bvfs</option>
 				</select>
-				<input id="api_command" class="w3-input w3-border w3-left" name="command" onkeydown="if (event.keyCode == 13) { oAPIHome.send_request(); }" style="width: 600px;" /> <a class="w3-button w3-green" type="button" name="apply" onclick="oAPIHome.send_request();"><i class="fas fa-paper-plane"></i> &nbsp;<%[ Send request ]%></a>
+				<input id="api_command" class="w3-input w3-border w3-left" name="command" onkeydown="if (event.keyCode == 13) { oAPIHome.send_request(); }" style="width: 600px;" /> <button class="w3-button w3-green" type="button" name="apply" onclick="oAPIHome.send_request();"><i class="fas fa-paper-plane"></i> &nbsp;<%[ Send request ]%></button>
 			</div>
 			<div id="api_output">
 				<pre id="api_result"></pre>
