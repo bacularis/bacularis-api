@@ -29,7 +29,7 @@
 			<com:Bacularis.API.Portlets.APISideBar />
 			<div class="w3-main page_main_el" id="page_main" style="margin-left: 250px; margin-top: 43px;">
 				<com:TContentPlaceHolder ID="Main" />
-				<footer class="w3-container w3-right-align w3-small"><%[ Version: ]%> <%=Params::BACULUM_VERSION%></footer>
+				<footer class="w3-container w3-right-align w3-small"><%[ Version: ]%> <%=Params::BACULARIS_VERSION%></footer>
 			</div>
 			<div id="small" class="w3-hide-large"></div>
 		</com:TForm>
