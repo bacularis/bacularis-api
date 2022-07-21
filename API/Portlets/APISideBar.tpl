@@ -35,7 +35,7 @@
 		<a href="<%=$this->Service->constructUrl('APIOAuth2Clients')%>" class="w3-bar-item w3-button w3-padding<%=$this->Service->getRequestedPagePath() == 'APIOAuth2Clients' ? ' w3-blue': ''%>"><i class="fa fa-user-shield fa-fw"></i> &nbsp;<%[ OAuth2 clients ]%></a>
 		<a href="<%=$this->Service->constructUrl('APIDevices')%>" class="w3-bar-item w3-button w3-padding<%=$this->Service->getRequestedPagePath() == 'APIDevices' ? ' w3-blue': ''%>"><i class="fa fa-server fa-fw"></i> &nbsp;<%[ Devices ]%></a>
 		<a href="<%=$this->Service->constructUrl('APISettings')%>" class="w3-bar-item w3-button w3-padding<%=$this->Service->getRequestedPagePath() == 'APISettings' ? ' w3-blue': ''%>"><i class="fa fa-wrench fa-fw"></i> &nbsp;<%[ Settings ]%></a>
-		<a href="<%=$this->Service->constructUrl('APIInstallWizard')%>" class="w3-bar-item w3-button w3-padding<%=$this->Service->getRequestedPagePath() == 'APIInstallWizard' ? ' w3-blue': ''%>"><i class="fa fa-hat-wizard fa-fw"></i> &nbsp;<%[ Configuration wizard ]%></a>
+		<a href="<%=$this->Service->constructUrl('APIInstallWizard')%>" class="w3-bar-item w3-button w3-padding<%=$this->Service->getRequestedPagePath() == 'APIInstallWizard' ? ' w3-blue': ''%>"><i class="fa fa-magic fa-fw"></i> &nbsp;<%[ Configuration wizard ]%></a>
 	</div>
 </nav>
 <!-- Overlay effect when opening sidebar on small screens -->
