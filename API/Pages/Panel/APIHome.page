@@ -4,7 +4,7 @@
 		<h3><%[ Welcome on the Bacularis API default page ]%></h3>
 		<header class="w3-container w3-white">
 			<h5>
-				<i class="fas fa-user-lock"></i> <%[ Baculum API Client ]%>
+				<i class="fas fa-user-lock"></i> <%[ Bacularis API Client ]%>
 			</h5>
 		</header>
 		<div class="w3-container w3-white">

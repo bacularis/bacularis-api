@@ -347,8 +347,8 @@ msgstr "установить все области"
 msgid "Welcome on the Bacularis API default page"
 msgstr "Добро пожаловать. Страница по умолчанию Bacularis API."
 
-msgid "Baculum API Client"
-msgstr "Baculum API клиент"
+msgid "Bacularis API Client"
+msgstr "Bacularis API клиент"
 
 msgid "Here you can try one from API commands"
 msgstr "Здесь вы можете попробовать одну из команд API"

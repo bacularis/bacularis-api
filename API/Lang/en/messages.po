@@ -341,8 +341,8 @@ msgstr "set all scopes"
 msgid "Welcome on the Bacularis API default page"
 msgstr "Welcome on the Bacularis API default page"
 
-msgid "Baculum API Client"
-msgstr "Baculum API Client"
+msgid "Bacularis API Client"
+msgstr "Bacularis API Client"
 
 msgid "Here you can try one from API commands"
 msgstr "Here you can try one from API commands"

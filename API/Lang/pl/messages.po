@@ -347,8 +347,8 @@ msgstr "ustaw wszystkie zakresy"
 msgid "Welcome on the Bacularis API default page"
 msgstr "Witaj na stronie głównej Bacularis API"
 
-msgid "Baculum API Client"
-msgstr "Klient API Baculum"
+msgid "Bacularis API Client"
+msgstr "Klient API Bacularis"
 
 msgid "Here you can try one from API commands"
 msgstr "Tutaj możesz wypróbować jedną z komend API"
