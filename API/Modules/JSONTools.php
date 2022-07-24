@@ -37,22 +37,23 @@ use Bacularis\Common\Modules\Errors\JSONToolsError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Module
- * @package Baculum API
  */
 class JSONTools extends APIModule
 {
-	const SUDO = 'sudo';
+	public const SUDO = 'sudo';
 
 	/**
 	 * JSON tool command pattern - standard version.
 	 */
-	const JSON_TOOL_COMMAND_PATTERN = '%s%s -c %s %s 2>&1';
+	public const JSON_TOOL_COMMAND_PATTERN = '%s%s -c %s %s 2>&1';
 
-	private function isJSONToolsEnabled() {
+	private function isJSONToolsEnabled()
+	{
 		return $this->getModule('api_config')->isJSONToolsEnabled();
 	}
 
-	private function prepareOutput(array $output) {
+	private function prepareOutput(array $output)
+	{
 		$output_txt = implode('', $output);
 		$out = json_decode($output_txt, true);
 		if (!is_array($out)) {
@@ -62,15 +63,17 @@ class JSONTools extends APIModule
 		return $out;
 	}
 
-	public function prepareResult($output, $exitcode) {
-		$result = array(
+	public function prepareResult($output, $exitcode)
+	{
+		$result = [
 			'output' => $output,
 			'exitcode' => $exitcode
-		);
+		];
 		return $result;
 	}
 
-	private function getSudo($use_sudo) {
+	private function getSudo($use_sudo)
+	{
 		$sudo = '';
 		if ($use_sudo === true) {
 			$sudo = self::SUDO . ' ';
@@ -78,7 +81,8 @@ class JSONTools extends APIModule
 		return $sudo;
 	}
 
-	public function execCommand($component_type, $params = array(), $config = '') {
+	public function execCommand($component_type, $params = [], $config = '')
+	{
 		$result = null;
 		if ($this->isJSONToolsEnabled() === true) {
 			$tool_type = $this->getModule('bacula_setting')->getJSONToolTypeByComponentType($component_type);
@@ -106,12 +110,14 @@ class JSONTools extends APIModule
 		return $result;
 	}
 
-	private function getTool($tool_type) {
+	private function getTool($tool_type)
+	{
 		$tool = $this->getModule('api_config')->getJSONToolConfig($tool_type);
 		return $tool;
 	}
 
-	private function execTool($bin, $cfg, $use_sudo, $params = array(), $config = '') {
+	private function execTool($bin, $cfg, $use_sudo, $params = [], $config = '')
+	{
 		$sudo = $this->getSudo($use_sudo);
 		$options = $this->getOptions($params);
 		$cmd_pattern = $this->getCmdPattern($params);
@@ -125,28 +131,31 @@ class JSONTools extends APIModule
 			unlink($cfg);
 			if ($exitcode === 0) {
 				// @TODO: Temporary value for validation. Do it more pretty.
-				$output = array('[]');
+				$output = ['[]'];
 			}
 		}
 		$result = $this->prepareResult($output, $exitcode);
 		return $result;
 	}
 
-	private function getCmdPattern($params = array()) {
+	private function getCmdPattern($params = [])
+	{
 		// Default command pattern
 		return self::JSON_TOOL_COMMAND_PATTERN;
 	}
 
-	private function prepareConfig($config) {
+	private function prepareConfig($config)
+	{
 		$tool = $this->getModule('api_config')->getConfig('jsontools');
 		$fname = tempnam($tool['bconfig_dir'], 'config_');
 		file_put_contents($fname, $config);
 		return $fname;
 	}
 
-	private function getOptions($params = array()) {
+	private function getOptions($params = [])
+	{
 		$opts = '';
-		$options = array();
+		$options = [];
 		if (array_key_exists('resource_type', $params)) {
 			array_push($options, '-r', $params['resource_type']);
 		}
@@ -171,8 +180,8 @@ class JSONTools extends APIModule
 		return $opts;
 	}
 
-	public function testJSONTool($bin, $cfg, $use_sudo) {
+	public function testJSONTool($bin, $cfg, $use_sudo)
+	{
 		return $this->execTool($bin, $cfg, $use_sudo);
 	}
 }
-?>

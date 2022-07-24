@@ -36,8 +36,7 @@ use Bacularis\API\Modules\BAPIException;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Exception
- * @package Baculum API
  */
-
-class BCatalogException extends BAPIException {
+class BCatalogException extends BAPIException
+{
 }

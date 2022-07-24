@@ -27,7 +27,6 @@
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
 
-
 namespace Bacularis\API\Modules;
 
 use Bacularis\API\Modules\APIModule;
@@ -37,14 +36,13 @@ use Bacularis\API\Modules\APIModule;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Module
- * @package Baculum API
  */
-class BList extends APIModule {
-
+class BList extends APIModule
+{
 	/**
 	 * Pattern to get only files from list files output.
 	 */
-	const LIST_FILES_OUTPUT_PATTERN = '/^\| (?!(filename|jobid|\d))(?P<path>.+) \|$/i';
+	public const LIST_FILES_OUTPUT_PATTERN = '/^\| (?!(filename|jobid|\d))(?P<path>.+) \|$/i';
 
 	/**
 	 * Parse list files output.
@@ -52,8 +50,9 @@ class BList extends APIModule {
 	 * @param array $output raw list files output lines
 	 * @return array parsed list files paths
 	 */
-	public function parseListFilesOutput(array $output) {
-		$result = array();
+	public function parseListFilesOutput(array $output)
+	{
+		$result = [];
 		for ($i = 0; $i < count($output); $i++) {
 			if (preg_match(self::LIST_FILES_OUTPUT_PATTERN, $output[$i], $match) === 1) {
 				$result[] = trim($match['path']);
@@ -69,8 +68,9 @@ class BList extends APIModule {
 	 * @param string $keyword keyword to find
 	 * @return array search result (items)
 	 */
-	public function findFileListItems($file_list, $keyword) {
-		$result = array();
+	public function findFileListItems($file_list, $keyword)
+	{
+		$result = [];
 		for ($i = 0; $i < count($file_list); $i++) {
 			if (preg_match('!' . preg_quote($keyword, '!') . '!i', $file_list[$i], $match) === 1) {
 				$result[] = $file_list[$i];
@@ -78,6 +78,4 @@ class BList extends APIModule {
 		}
 		return $result;
 	}
-
 }
-?>

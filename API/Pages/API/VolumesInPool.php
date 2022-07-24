@@ -27,21 +27,23 @@
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
 
-use Bacularis\Common\Modules\Errors\{PoolError,VolumeError};
+use Bacularis\Common\Modules\Errors\PoolError;
+use Bacularis\Common\Modules\Errors\VolumeError;
 
 /**
  * Volumes in pool endpoint.
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class VolumesInPool extends BaculumAPIServer {
-	public function get() {
-		$poolid = $this->Request->contains('id') ? intval($this->Request['id']) : 0;
+class VolumesInPool extends BaculumAPIServer
+{
+	public function get()
+	{
+		$poolid = $this->Request->contains('id') ? (int) ($this->Request['id']) : 0;
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
-			array('.pool')
+			['.pool']
 		);
 		if ($result->exitcode === 0) {
 			array_shift($result->output);
@@ -60,4 +62,3 @@ class VolumesInPool extends BaculumAPIServer {
 		}
 	}
 }
-?>

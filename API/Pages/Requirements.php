@@ -34,10 +34,9 @@ use Bacularis\Common\Modules\GeneralRequirements;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Requirements
- * @package Baculum API
  */
-class Requirements extends GeneralRequirements {
-
+class Requirements extends GeneralRequirements
+{
 	/**
 	 * Required PHP extensions.
 	 *
@@ -45,14 +44,15 @@ class Requirements extends GeneralRequirements {
 	 * translation engine initialization. From this reason all messages are not
 	 * translated.
 	 */
-	private $req_exts = array(
-		array(
+	private $req_exts = [
+		[
 			'ext' => 'bcmath',
 			'help_msg' => 'Please install <b>PHP BCMath module</b>.'
-		)
-	);
+		]
+	];
 
-	public function __construct($app_dir, $prot_dir, $base_dir) {
+	public function __construct($app_dir, $prot_dir, $base_dir)
+	{
 		parent::__construct($app_dir, $prot_dir, $base_dir);
 		$this->validateEnvironment();
 		parent::showResult('Bacularis API');
@@ -63,10 +63,10 @@ class Requirements extends GeneralRequirements {
 	 *
 	 * @return none
 	 */
-	public function validateEnvironment() {
+	public function validateEnvironment()
+	{
 		parent::validateExtensions($this->req_exts);
 	}
 }
 $service_dir = dirname(__DIR__);
 new Requirements(APPLICATION_WEBROOT, APPLICATION_PROTECTED, $service_dir);
-?>

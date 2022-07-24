@@ -34,30 +34,31 @@ use Bacularis\Common\Modules\Errors\JobError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class JobsRecent extends BaculumAPIServer {
-	public function get() {
+class JobsRecent extends BaculumAPIServer
+{
+	public function get()
+	{
 		$jobname = $this->Request->contains('name') ? $this->Request['name'] : '';
-		$inc_copy_job = $this->Request->contains('inc_copy_job') ? intval($this->Request['inc_copy_job']) : 0;
+		$inc_copy_job = $this->Request->contains('inc_copy_job') ? (int) ($this->Request['inc_copy_job']) : 0;
 		$clientid = null;
 		if ($this->Request->contains('clientid')) {
-			$clientid = intval($this->Request['clientid']);
+			$clientid = (int) ($this->Request['clientid']);
 		} elseif ($this->Request->contains('client') && $this->getModule('misc')->isValidName($this->Request['client'])) {
 			$client = $this->Request['client'];
 			$client_row = $this->getModule('client')->getClientByName($client);
 			if (is_object($client_row)) {
-				$clientid = intval($client_row->clientid);
+				$clientid = (int) ($client_row->clientid);
 			}
 		}
 		$filesetid = null;
 		if ($this->Request->contains('filesetid')) {
-			$filesetid = intval($this->Request['filesetid']);
+			$filesetid = (int) ($this->Request['filesetid']);
 		} elseif ($this->Request->contains('fileset') && $this->getModule('misc')->isValidName($this->Request['fileset'])) {
 			$fileset = $this->Request['fileset'];
 			$fileset_row = $this->getModule('fileset')->getFileSetByName($fileset);
 			if (is_object($fileset_row)) {
-				$filesetid = intval($fileset_row->filesetid);
+				$filesetid = (int) ($fileset_row->filesetid);
 			}
 		}
 
@@ -95,5 +96,3 @@ class JobsRecent extends BaculumAPIServer {
 		}
 	}
 }
-
-?>

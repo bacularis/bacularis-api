@@ -34,12 +34,13 @@ use Bacularis\Common\Modules\Errors\JobError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class Jobs extends BaculumAPIServer {
-	public function get() {
+class Jobs extends BaculumAPIServer
+{
+	public function get()
+	{
 		$misc = $this->getModule('misc');
-		$limit = $this->Request->contains('limit') ? intval($this->Request['limit']) : 0;
+		$limit = $this->Request->contains('limit') ? (int) ($this->Request['limit']) : 0;
 		$jobstatus = $this->Request->contains('jobstatus') ? $this->Request['jobstatus'] : '';
 		$level = $this->Request->contains('level') && $misc->isValidJobLevel($this->Request['level']) ? $this->Request['level'] : '';
 		$type = $this->Request->contains('type') && $misc->isValidJobType($this->Request['type']) ? $this->Request['type'] : '';
@@ -65,7 +66,7 @@ class Jobs extends BaculumAPIServer {
 		for ($i = 0; $i < count($sts); $i++) {
 			if (in_array($sts[$i], $jobstatuses)) {
 				if (!key_exists('Job.JobStatus', $params)) {
-					$params['Job.JobStatus'] = array('operator' => 'OR', 'vals' => array());
+					$params['Job.JobStatus'] = ['operator' => 'OR', 'vals' => []];
 				}
 				$params['Job.JobStatus']['vals'][] = $sts[$i];
 			}
@@ -105,7 +106,7 @@ class Jobs extends BaculumAPIServer {
 			$error = false;
 			// Client name and clientid filter
 			if (!empty($client) || !empty($clientid)) {
-				$result = $this->getModule('bconsole')->bconsoleCommand($this->director, array('.client'));
+				$result = $this->getModule('bconsole')->bconsoleCommand($this->director, ['.client']);
 				if ($result->exitcode === 0) {
 					array_shift($result->output);
 					$cli = null;
@@ -140,4 +141,3 @@ class Jobs extends BaculumAPIServer {
 		}
 	}
 }
-?>

@@ -36,17 +36,17 @@ use Bacularis\API\Modules\ConsoleOutputPage;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-abstract class ConsoleOutputShowPage extends ConsoleOutputPage {
-
+abstract class ConsoleOutputShowPage extends ConsoleOutputPage
+{
 	/**
 	 * Parse 'show' type command output for specific resource.
 	 *
 	 * @param array $output 'show' command output
 	 * @return array parsed output
 	 */
-	protected function parseOutput(array $output) {
+	protected function parseOutput(array $output)
+	{
 		$ret = [];
 		for ($i = 0; $i < count($output); $i++) {
 			$mcount = preg_match_all('/(?<=\s)\w+=.+?(?=\s+\w+=.+|$)/i', $output[$i], $matches);
@@ -54,7 +54,7 @@ abstract class ConsoleOutputShowPage extends ConsoleOutputPage {
 				continue;
 			}
 			for ($j = 0; $j < count($matches[0]); $j++) {
-				list($key, $value) = explode('=', $matches[0][$j], 2);
+				[$key, $value] = explode('=', $matches[0][$j], 2);
 				$key = strtolower($key);
 				if (key_exists($key, $ret)) {
 					/*
@@ -75,7 +75,8 @@ abstract class ConsoleOutputShowPage extends ConsoleOutputPage {
 	 * @param array $output 'show' command output
 	 * @return array parsed output
 	 */
-	protected function parseOutputAll(array $output) {
+	protected function parseOutputAll(array $output)
+	{
 		$ret = $part = [];
 		$section = '';
 		for ($i = 0; $i < count($output); $i++) {
@@ -85,7 +86,7 @@ abstract class ConsoleOutputShowPage extends ConsoleOutputPage {
 				continue;
 			}
 			for ($j = 0; $j < count($matches[0]); $j++) {
-				list($key, $value) = explode('=', $matches[0][$j], 2);
+				[$key, $value] = explode('=', $matches[0][$j], 2);
 				$key = strtolower($key);
 				if ($i > 0 && $scount == 1 && count($part) > 0) {
 					$ret[] = $part;
@@ -109,4 +110,3 @@ abstract class ConsoleOutputShowPage extends ConsoleOutputPage {
 		return $ret;
 	}
 }
-?>

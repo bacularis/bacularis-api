@@ -36,18 +36,17 @@ use Bacularis\API\Modules\APIDbModule;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Database
- * @package Baculum API
  */
-class StorageRecord extends APIDbModule {
-
-	const TABLE = 'Storage';
+class StorageRecord extends APIDbModule
+{
+	public const TABLE = 'Storage';
 
 	public $storageid;
 	public $name;
 	public $autochanger;
 
-	public static function finder($className = __CLASS__) {
+	public static function finder($className = __CLASS__)
+	{
 		return parent::finder($className);
 	}
 }
-?>

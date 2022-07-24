@@ -36,10 +36,10 @@ use Bacularis\API\Modules\APIDbModule;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Database
- * @package Baculum API
  */
-class ClientRecord extends APIDbModule {
-	const TABLE = 'Client';
+class ClientRecord extends APIDbModule
+{
+	public const TABLE = 'Client';
 
 	public $clientid;
 	public $name;
@@ -48,8 +48,8 @@ class ClientRecord extends APIDbModule {
 	public $fileretention;
 	public $jobretention;
 
-	public static function finder($className = __CLASS__) {
+	public static function finder($className = __CLASS__)
+	{
 		return parent::finder($className);
 	}
 }
-?>

@@ -34,11 +34,12 @@ use Bacularis\Common\Modules\Errors\PoolError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class Pool extends BaculumAPIServer {
-	public function get() {
-		$poolid = $this->Request->contains('id') ? intval($this->Request['id']) : 0;
+class Pool extends BaculumAPIServer
+{
+	public function get()
+	{
+		$poolid = $this->Request->contains('id') ? (int) ($this->Request['id']) : 0;
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
 			['.pool'],
@@ -47,7 +48,7 @@ class Pool extends BaculumAPIServer {
 		);
 		if ($result->exitcode === 0) {
 			$pool = $this->getModule('pool')->getPoolById($poolid);
-			if(!is_null($pool) && in_array($pool->name, $result->output)) {
+			if (!is_null($pool) && in_array($pool->name, $result->output)) {
 				$this->output = $pool;
 				$this->error = PoolError::ERROR_NO_ERRORS;
 			} else {
@@ -60,4 +61,3 @@ class Pool extends BaculumAPIServer {
 		}
 	}
 }
-?>

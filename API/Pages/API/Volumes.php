@@ -34,14 +34,14 @@ use Bacularis\Common\Modules\Errors\VolumeError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class Volumes extends BaculumAPIServer {
-	public function get() {
-		$limit = $this->Request->contains('limit') ? intval($this->Request['limit']) : 0;
-		$result = $this->getModule('volume')->getVolumes(array(), $limit);
+class Volumes extends BaculumAPIServer
+{
+	public function get()
+	{
+		$limit = $this->Request->contains('limit') ? (int) ($this->Request['limit']) : 0;
+		$result = $this->getModule('volume')->getVolumes([], $limit);
 		$this->output = $result;
 		$this->error = VolumeError::ERROR_NO_ERRORS;
 	}
 }
-?>

@@ -35,16 +35,16 @@ namespace Bacularis\API\Modules;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Module
- * @package Baculum API
  */
-class APIServerV1 extends APIServer implements IAPIServer {
-
+class APIServerV1 extends APIServer implements IAPIServer
+{
 	/**
 	 * Support for API GET method request.
 	 *
 	 * @return none;
 	 */
-	public function get() {
+	public function get()
+	{
 		$this->getServerObj()->get();
 	}
 
@@ -53,9 +53,10 @@ class APIServerV1 extends APIServer implements IAPIServer {
 	 *
 	 * @return none
 	 */
-	public function put() {
-		$id = $this->Request->contains('id') ? intval($this->Request['id']) : 0;
-		$params = new \StdClass;
+	public function put()
+	{
+		$id = $this->Request->contains('id') ? (int) ($this->Request['id']) : 0;
+		$params = new \StdClass();
 
 		/**
 		 * Check if it is possible to read PUT method data.
@@ -66,7 +67,7 @@ class APIServerV1 extends APIServer implements IAPIServer {
 		 */
 		if ($this->Request->contains('update') && is_array($this->Request['update']) && count($this->Request['update']) > 0) {
 			// $_REQUEST available to read
-			$params = (object)$this->Request['update'];
+			$params = (object) $this->Request['update'];
 		} else {
 			// no possibility to read data from $_REQUEST. Try to load from input stream.
 			$inputstr = file_get_contents("php://input");
@@ -79,8 +80,8 @@ class APIServerV1 extends APIServer implements IAPIServer {
 			 */
 			$chunks = explode('&', $inputstr);
 
-			$response_data = array();
-			for($i = 0; $i<count($chunks); $i++) {
+			$response_data = [];
+			for ($i = 0; $i < count($chunks); $i++) {
 				// if chunks would not be used, then here occurs reach max_input_vars limit
 				parse_str($chunks[$i], $response_el);
 				if (is_array($response_el) && array_key_exists('update', $response_el) && is_array($response_el['update'])) {
@@ -89,7 +90,7 @@ class APIServerV1 extends APIServer implements IAPIServer {
 				}
 			}
 			if (is_array($response_data) && array_key_exists('update', $response_data)) {
-				$params = (object)$response_data['update'];
+				$params = (object) $response_data['update'];
 			}
 		}
 		$this->getServerObj()->set($id, $params);
@@ -100,10 +101,11 @@ class APIServerV1 extends APIServer implements IAPIServer {
 	 *
 	 * @return none
 	 */
-	public function post() {
-		$params = new \StdClass;
+	public function post()
+	{
+		$params = new \StdClass();
 		if ($this->Request->contains('create') && is_array($this->Request['create']) && count($this->Request['create']) > 0) {
-			$params = (object)$this->Request['create'];
+			$params = (object) $this->Request['create'];
 		}
 		$this->getServerObj()->create($params);
 	}
@@ -113,7 +115,8 @@ class APIServerV1 extends APIServer implements IAPIServer {
 	 *
 	 * @return none
 	 */
-	public function delete() {
+	public function delete()
+	{
 		$id = null;
 		if ($this->Request->contains('id')) {
 			$id = $this->Request['id'];
@@ -121,4 +124,3 @@ class APIServerV1 extends APIServer implements IAPIServer {
 		$this->getServerObj()->remove($id);
 	}
 }
-?>

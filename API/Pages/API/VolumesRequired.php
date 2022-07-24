@@ -27,20 +27,21 @@
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
 
-use Bacularis\Common\Modules\Errors\{JobError,VolumeError};
+use Bacularis\Common\Modules\Errors\JobError;
+use Bacularis\Common\Modules\Errors\VolumeError;
 
 /**
  * Required volumes endpoint.
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class VolumesRequired extends BaculumAPIServer {
-
-	public function get() {
-		$jobid = $this->Request->contains('jobid') ? intval($this->Request['jobid']) : 0;
-		$fileid = $this->Request->contains('fileid') ? intval($this->Request['fileid']) : 0;
+class VolumesRequired extends BaculumAPIServer
+{
+	public function get()
+	{
+		$jobid = $this->Request->contains('jobid') ? (int) ($this->Request['jobid']) : 0;
+		$fileid = $this->Request->contains('fileid') ? (int) ($this->Request['fileid']) : 0;
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
 			['.jobs'],
@@ -49,7 +50,7 @@ class VolumesRequired extends BaculumAPIServer {
 		);
 		if ($result->exitcode === 0) {
 			$job = $this->getModule('job')->getJobById($jobid);
-			if(is_object($job) && in_array($job->name, $result->output)) {
+			if (is_object($job) && in_array($job->name, $result->output)) {
 				$volumes = $this->getModule('volume')->getVolumesForJob($jobid, $fileid);
 				$this->output = $volumes;
 				$this->error = VolumeError::ERROR_NO_ERRORS;
@@ -63,4 +64,3 @@ class VolumesRequired extends BaculumAPIServer {
 		}
 	}
 }
-?>

@@ -36,19 +36,18 @@ use Bacularis\API\Modules\APIDbModule;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Database
- * @package Baculum API
  */
-class FileSetRecord extends APIDbModule {
-
-	const TABLE = 'FileSet';
+class FileSetRecord extends APIDbModule
+{
+	public const TABLE = 'FileSet';
 
 	public $filesetid;
 	public $fileset;
 	public $md5;
 	public $createtime;
 
-	public static function finder($className = __CLASS__) {
+	public static function finder($className = __CLASS__)
+	{
 		return parent::finder($className);
 	}
 }
-?>

@@ -36,16 +36,15 @@ use Bacularis\Common\Modules\OAuth2;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Authorization
- * @package Baculum API
  */
-class BaculumOAuth2 extends OAuth2 {
-
+class BaculumOAuth2 extends OAuth2
+{
 	/**
 	 * Set authorization identifier (authorization code).
-	 * 
+	 *
 	 * NOTE!
 	 * It should be using before releasing autorization identifier to client, not after releasing.
-	 * 
+	 *
 	 * @public
 	 * @param string $auth_id authorization identifier
 	 * @param string $client_id client identifier
@@ -53,7 +52,8 @@ class BaculumOAuth2 extends OAuth2 {
 	 * @param string $scope space spearated allowed scopes for client
 	 * @return true if authorization identifier set successfully, otherwise false
 	 */
-	public function setAuthId($auth_id, $client_id, $redirect_uri, $scope) {
+	public function setAuthId($auth_id, $client_id, $redirect_uri, $scope)
+	{
 		$expires = time() + parent::AUTHORIZATION_ID_EXPIRES_TIME;
 		$result = $this->getModule('oauth2_authid')->setAuthId($auth_id, $client_id, $redirect_uri, $expires, $scope);
 		return $result;
@@ -61,7 +61,7 @@ class BaculumOAuth2 extends OAuth2 {
 
 	/**
 	 * Set tokens (access token and refresh token).
-	 * 
+	 *
 	 * @access public
 	 * @param string $access_token access token value
 	 * @param string $refresh_token refresh token value
@@ -71,7 +71,8 @@ class BaculumOAuth2 extends OAuth2 {
 	 * @param string $bconsole_cfg_path dedicated bconsole config file path
 	 * @return true if tokens set properly, otherwise false
 	 */
-	public function setTokens($access_token, $refresh_token, $client_id, $expires, $scope, $bconsole_cfg_path) {
+	public function setTokens($access_token, $refresh_token, $client_id, $expires, $scope, $bconsole_cfg_path)
+	{
 		$expires = time() + parent::ACCESS_TOKEN_EXPIRES_TIME;
 		$result = $this->getModule('oauth2_token')->setTokens(
 			$access_token,
@@ -86,20 +87,23 @@ class BaculumOAuth2 extends OAuth2 {
 
 	/**
 	 * Create error output for client.
-	 * 
+	 *
 	 * NOTE!
 	 * The method does not return any value.
 	 * As result value is returned directly on standard output in JSON format compatible with RFC6749.
 	 * Next all actions all stoped (die() occured)
-	 * 
+	 *
 	 * @access public
 	 * @param string $error_name error name
 	 * @param string $error_description human-readable error description
 	 * @param string $error_uri page location where client is able to get help for returned error
-	 * @return none 
+	 * @param mixed $header
+	 * @param null|mixed $state
+	 * @return none
 	 */
-	public function authorizationError($header, $error_name, $error_description = null, $error_uri = null, $state = null) {
-		$error = array('error' => $error_name);
+	public function authorizationError($header, $error_name, $error_description = null, $error_uri = null, $state = null)
+	{
+		$error = ['error' => $error_name];
 		if (!is_null($error_description)) {
 			$error['error_description'] = $error_description;
 		}
@@ -120,19 +124,19 @@ class BaculumOAuth2 extends OAuth2 {
 
 	/**
 	 * HTTP 302 redirection to 'redirect_uri' client's location.
-	 * 
+	 *
 	 * @see http://tools.ietf.org/html/rfc6749#section-4.1.2
-	 * 
+	 *
 	 * @access public
 	 * @param string $redirect_uri uniform resource identifier (URI)
 	 * @param array $params GET parameters for redirect_uri contained in associative array
 	 * @return none
 	 */
-	public function authorizationRedirect($redirect_uri, $params = array()) {
+	public function authorizationRedirect($redirect_uri, $params = [])
+	{
 		header(parent::HEADER_HTTP_FOUND);
 		$uri = sprintf('Location: %s?%s', $redirect_uri, http_build_query($params));
 		header($uri); // redirection action
 		exit();
 	}
 }
-?>

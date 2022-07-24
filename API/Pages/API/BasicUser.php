@@ -34,11 +34,11 @@ use Bacularis\Common\Modules\Errors\BasicUserError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class BasicUser extends BaculumAPIServer {
-
-	public function get() {
+class BasicUser extends BaculumAPIServer
+{
+	public function get()
+	{
 		$user = $this->Request->contains('id') ? $this->Request['id'] : 0;
 		$basic_apiuser = $this->getModule('basic_apiuser');
 		$username = $basic_apiuser->validateUsername($user) ? $user : null;
@@ -61,7 +61,8 @@ class BasicUser extends BaculumAPIServer {
 		}
 	}
 
-	public function create($params) {
+	public function create($params)
+	{
 		$basic_apiuser = $this->getModule('basic_apiuser');
 		$basic_config = $this->getModule('basic_config');
 		$misc = $this->getModule('misc');
@@ -164,7 +165,8 @@ class BasicUser extends BaculumAPIServer {
 		}
 	}
 
-	public function set($id, $params) {
+	public function set($id, $params)
+	{
 		$basic_apiuser = $this->getModule('basic_apiuser');
 		$basic_config = $this->getModule('basic_config');
 		$misc = $this->getModule('misc');
@@ -267,7 +269,8 @@ class BasicUser extends BaculumAPIServer {
 		}
 	}
 
-	public function remove($id) {
+	public function remove($id)
+	{
 		$user_cfg = $this->getModule('basic_apiuser')->getUserCfg($id);
 		if (count($user_cfg) > 0) {
 			$result = $this->getModule('basic_config')->removeUser($id);
@@ -284,4 +287,3 @@ class BasicUser extends BaculumAPIServer {
 		}
 	}
 }
-?>

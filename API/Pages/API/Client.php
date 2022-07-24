@@ -34,25 +34,25 @@ use Bacularis\Common\Modules\Errors\ClientError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class Client extends BaculumAPIServer {
-
-	public function get() {
-		$clientid = $this->Request->contains('id') ? intval($this->Request['id']) : 0;
+class Client extends BaculumAPIServer
+{
+	public function get()
+	{
+		$clientid = $this->Request->contains('id') ? (int) ($this->Request['id']) : 0;
 		$client = null;
 		if ($clientid > 0) {
 			$client = $this->getModule('client')->getClientById($clientid);
 		}
-		$result = $this->getModule('bconsole')->bconsoleCommand($this->director, array('.client'));
+		$result = $this->getModule('bconsole')->bconsoleCommand($this->director, ['.client']);
 		if ($result->exitcode === 0) {
 			array_shift($result->output);
-			if(is_object($client) && in_array($client->name, $result->output)) {
+			if (is_object($client) && in_array($client->name, $result->output)) {
 				$this->output = $client;
 				$this->error = ClientError::ERROR_NO_ERRORS;
 			} else {
 				$this->output = ClientError::MSG_ERROR_CLIENT_DOES_NOT_EXISTS;
-				$this->error =ClientError::ERROR_CLIENT_DOES_NOT_EXISTS;
+				$this->error = ClientError::ERROR_CLIENT_DOES_NOT_EXISTS;
 			}
 		} else {
 			$this->output = $result->output;
@@ -60,5 +60,3 @@ class Client extends BaculumAPIServer {
 		}
 	}
 }
-
-?>

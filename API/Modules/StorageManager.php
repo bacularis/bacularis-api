@@ -36,24 +36,25 @@ use Prado\Data\ActiveRecord\TActiveRecordCriteria;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Module
- * @package Baculum API
  */
-class StorageManager extends APIModule {
-
-	public function getStorages($limit) {
-		$criteria = new TActiveRecordCriteria;
-		if(is_int($limit) && $limit > 0) {
+class StorageManager extends APIModule
+{
+	public function getStorages($limit)
+	{
+		$criteria = new TActiveRecordCriteria();
+		if (is_int($limit) && $limit > 0) {
 			$criteria->Limit = $limit;
 		}
 		return StorageRecord::finder()->findAll($criteria);
 	}
 
-	public function getStorageByName($name) {
+	public function getStorageByName($name)
+	{
 		return StorageRecord::finder()->findByName($name);
 	}
 
-	public function getStorageById($storageid) {
+	public function getStorageById($storageid)
+	{
 		return StorageRecord::finder()->findBystorageid($storageid);
 	}
 }
-?>

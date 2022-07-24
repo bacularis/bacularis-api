@@ -37,35 +37,34 @@ use Bacularis\Common\Modules\ConfigFileModule;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Device
- * @package Baculum API
  */
-class DeviceConfig extends ConfigFileModule {
-
+class DeviceConfig extends ConfigFileModule
+{
 	/**
 	 * Supported device types
 	 */
-	const DEV_TYPE_DEVICE = 'device';
-	const DEV_TYPE_AUTOCHANGER = 'autochanger';
+	public const DEV_TYPE_DEVICE = 'device';
+	public const DEV_TYPE_AUTOCHANGER = 'autochanger';
 
 	/**
 	 * Device file path patter.
 	 */
-	const DEVICE_PATH_PATTERN = '[a-zA-Z0-9:.\-_ ]+';
+	public const DEVICE_PATH_PATTERN = '[a-zA-Z0-9:.\-_ ]+';
 
 	/**
 	 * Device config file path
 	 */
-	const CONFIG_FILE_PATH = 'Bacularis.API.Config.devices';
+	public const CONFIG_FILE_PATH = 'Bacularis.API.Config.devices';
 
 	/**
 	 * Device config file format
 	 */
-	const CONFIG_FILE_FORMAT = 'ini';
+	public const CONFIG_FILE_FORMAT = 'ini';
 
 	/**
 	 * Stores device config.
 	 */
-	private $config = null;
+	private $config;
 
 	/**
 	 * These options are obligatory for device config.
@@ -78,7 +77,8 @@ class DeviceConfig extends ConfigFileModule {
 	 * @param string $section config section name
 	 * @return array config
 	 */
-	public function getConfig($section = null) {
+	public function getConfig($section = null)
+	{
 		$config = [];
 		if (is_null($this->config)) {
 			$this->config = $this->readConfig(self::CONFIG_FILE_PATH, self::CONFIG_FILE_FORMAT);
@@ -107,9 +107,10 @@ class DeviceConfig extends ConfigFileModule {
 	 * Set (save) device client config.
 	 *
 	 * @param array $config config
-	 * @return boolean true if config saved successfully, otherwise false
+	 * @return bool true if config saved successfully, otherwise false
 	 */
-	public function setConfig(array $config) {
+	public function setConfig(array $config)
+	{
 		$result = $this->writeConfig($config, self::CONFIG_FILE_PATH, self::CONFIG_FILE_FORMAT);
 		if ($result === true) {
 			$this->config = null;
@@ -125,9 +126,10 @@ class DeviceConfig extends ConfigFileModule {
 	 *
 	 * @param string $section section name
 	 * @param array $config config
-	 * @return boolean true if config valid, otherwise false
+	 * @return bool true if config valid, otherwise false
 	 */
-	private function validateConfig($section, array $config = []) {
+	private function validateConfig($section, array $config = [])
+	{
 		$required_options = [$section => $this->required_options];
 		return $this->isConfigValid(
 			$required_options,
@@ -137,7 +139,8 @@ class DeviceConfig extends ConfigFileModule {
 		);
 	}
 
-	public function getChangerDrives($changer) {
+	public function getChangerDrives($changer)
+	{
 		$drives = [];
 		$config = $this->getConfig($changer);
 		if (count($config) > 0) {
@@ -153,4 +156,3 @@ class DeviceConfig extends ConfigFileModule {
 		return $drives;
 	}
 }
-?>

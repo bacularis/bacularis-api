@@ -34,11 +34,13 @@ use Bacularis\Common\Modules\Errors\GenericError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class Welcome extends BaculumAPIServer {
-	public function get() {
-		$panel_url = sprintf('%s://%s:%d',
+class Welcome extends BaculumAPIServer
+{
+	public function get()
+	{
+		$panel_url = sprintf(
+			'%s://%s:%d',
 			isset($_SERVER['HTTPS']) ? 'https' : 'http',
 			$_SERVER['SERVER_NAME'],
 			$_SERVER['SERVER_PORT']
@@ -48,4 +50,3 @@ class Welcome extends BaculumAPIServer {
 		$this->error = GenericError::ERROR_NO_ERRORS;
 	}
 }
-?>

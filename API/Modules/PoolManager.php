@@ -36,29 +36,31 @@ use Prado\Data\ActiveRecord\TActiveRecordCriteria;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Module
- * @package Baculum API
  */
-class PoolManager extends APIModule {
-	public function getPools($limit) {
-		$criteria = new TActiveRecordCriteria;
+class PoolManager extends APIModule
+{
+	public function getPools($limit)
+	{
+		$criteria = new TActiveRecordCriteria();
 		$order = 'Name';
 		$db_params = $this->getModule('api_config')->getConfig('db');
-		if($db_params['type'] === Database::PGSQL_TYPE) {
-		    $order = strtolower($order);
+		if ($db_params['type'] === Database::PGSQL_TYPE) {
+			$order = strtolower($order);
 		}
 		$criteria->OrdersBy[$order] = 'asc';
-		if(is_int($limit) && $limit > 0) {
+		if (is_int($limit) && $limit > 0) {
 			$criteria->Limit = $limit;
 		}
 		return PoolRecord::finder()->findAll($criteria);
 	}
 
-	public function getPoolByName($poolName) {
+	public function getPoolByName($poolName)
+	{
 		return PoolRecord::finder()->findByname($poolName);
 	}
 
-	public function getPoolById($poolId) {
+	public function getPoolById($poolId)
+	{
 		return PoolRecord::finder()->findBypoolid($poolId);
 	}
 }
-?>

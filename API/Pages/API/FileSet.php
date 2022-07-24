@@ -34,19 +34,20 @@ use Bacularis\Common\Modules\Errors\FileSetError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class FileSet extends BaculumAPIServer {
-	public function get() {
-		$filesetid = $this->Request->contains('id') ? intval($this->Request['id']) : 0;
+class FileSet extends BaculumAPIServer
+{
+	public function get()
+	{
+		$filesetid = $this->Request->contains('id') ? (int) ($this->Request['id']) : 0;
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
-			array('.fileset')
+			['.fileset']
 		);
 		if ($result->exitcode === 0) {
 			array_shift($result->output);
 			$fileset = $this->getModule('fileset')->getFileSetById($filesetid);
-			if(!is_null($fileset) && in_array($fileset->fileset, $result->output)) {
+			if (!is_null($fileset) && in_array($fileset->fileset, $result->output)) {
 				$this->output = $fileset;
 				$this->error = FileSetError::ERROR_NO_ERRORS;
 			} else {
@@ -59,5 +60,3 @@ class FileSet extends BaculumAPIServer {
 		}
 	}
 }
-
-?>

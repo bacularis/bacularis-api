@@ -39,28 +39,28 @@ use Bacularis\Common\Modules\Errors\DatabaseError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Database
- * @package Baculum API
  */
-class Database extends APIModule {
-
+class Database extends APIModule
+{
 	public $ID;
 
 	/**
 	 * Supported database types
 	 */
-	const PGSQL_TYPE = 'pgsql';
-	const MYSQL_TYPE = 'mysql';
-	const SQLITE_TYPE = 'sqlite';
+	public const PGSQL_TYPE = 'pgsql';
+	public const MYSQL_TYPE = 'mysql';
+	public const SQLITE_TYPE = 'sqlite';
 
 	/**
 	 * Check/test connection to database.
-	 * 
+	 *
 	 * @access public
 	 * @param array $db_params params to database connection
-	 * @return array true if test passed, otherwise false
 	 * @throws BCatalogException if problem with connection to database
+	 * @return array true if test passed, otherwise false
 	 */
-	public function testDbConnection(array $db_params) {
+	public function testDbConnection(array $db_params)
+	{
 		$is_connection = false;
 		$tables_format = null;
 
@@ -76,7 +76,7 @@ class Database extends APIModule {
 			);
 		}
 
-		if(array_key_exists('password', $db_params)) {
+		if (array_key_exists('password', $db_params)) {
 			// mask database password.
 			$db_params['password'] = preg_replace('/.{1}/', '*', $db_params['password']);
 		}
@@ -99,7 +99,8 @@ class Database extends APIModule {
 	 * @access public
 	 * @return bool true if connection established, otherwise false
 	 */
-	public function testCatalog() {
+	public function testCatalog()
+	{
 		$result = false;
 		$api_config = $this->getModule('api_config')->getConfig();
 		if (array_key_exists('db', $api_config)) {
@@ -115,12 +116,13 @@ class Database extends APIModule {
 
 	/**
 	 * Get Catalog database tables format
-	 * 
+	 *
 	 * @access private
 	 * @param TDBConnection $connection handler to database connection
 	 * @return mixed Catalog database tables format or null
 	 */
-	private function getTablesFormat(TDbConnection $connection) {
+	private function getTablesFormat(TDbConnection $connection)
+	{
 		$query = 'SELECT versionid FROM Version';
 		$command = $connection->createCommand($query);
 		$row = $command->queryRow();
@@ -128,7 +130,8 @@ class Database extends APIModule {
 		return $tables_format;
 	}
 
-	public function getDatabaseSize() {
+	public function getDatabaseSize()
+	{
 		$db_params = $this->getModule('api_config')->getConfig('db');
 
 		$connection = APIDbModule::getAPIDbConnection($db_params);
@@ -162,19 +165,20 @@ class Database extends APIModule {
 				break;
 			}
 		}
-		$dbsize = array('dbsize' => $size, 'dbtype' => $db_params['type']);
+		$dbsize = ['dbsize' => $size, 'dbtype' => $db_params['type']];
 		$pdo = null;
 		return $dbsize;
 	}
 
-	public static function getWhere(array $params, $without_where = false) {
+	public static function getWhere(array $params, $without_where = false)
+	{
 		$where = '';
-		$parameters = array();
+		$parameters = [];
 		if (count($params) > 0) {
-			$condition = array();
+			$condition = [];
 			foreach ($params as $key => $value) {
-				$cond = array();
-				$vals = array();
+				$cond = [];
+				$vals = [];
 				$kval = str_replace('.', '_', $key);
 				if (is_array($value['vals'])) {
 					for ($i = 0; $i < count($value['vals']); $i++) {
@@ -191,13 +195,12 @@ class Database extends APIModule {
 				}
 			}
 			if (count($condition) > 0) {
-				$where = ' (' . implode(') AND (' , $condition) . ')';
-				if ($without_where === false)  {
+				$where = ' (' . implode(') AND (', $condition) . ')';
+				if ($without_where === false) {
 					$where = ' WHERE ' . $where;
 				}
 			}
 		}
-		return array('where' => $where, 'params' => $parameters);
+		return ['where' => $where, 'params' => $parameters];
 	}
 }
-?>

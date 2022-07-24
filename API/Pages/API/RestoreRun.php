@@ -35,16 +35,16 @@ use Bacularis\API\Modules\APIDbModule;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class RestoreRun extends BaculumAPIServer {
-
-	public function create($params) {
+class RestoreRun extends BaculumAPIServer
+{
+	public function create($params)
+	{
 		$misc = $this->getModule('misc');
-		$jobid = property_exists($params, 'id') && $misc->isValidInteger($params->id) ? intval($params->id) : null;
+		$jobid = property_exists($params, 'id') && $misc->isValidInteger($params->id) ? (int) ($params->id) : null;
 		$client = null;
 		if (property_exists($params, 'clientid')) {
-			$clientid = intval($params->clientid);
+			$clientid = (int) ($params->clientid);
 			$client_row = $this->getModule('client')->getClientById($clientid);
 			$client = is_object($client_row) ? $client_row->name : null;
 		} elseif (property_exists($params, 'client') && $misc->isValidName($params->client)) {
@@ -53,7 +53,7 @@ class RestoreRun extends BaculumAPIServer {
 
 		$fileset = null;
 		if (property_exists($params, 'filesetid')) {
-			$filesetid = intval($params->filesetid);
+			$filesetid = (int) ($params->filesetid);
 			$fileset_row = $this->getModule('fileset')->getFileSetById($filesetid);
 			$fileset = is_object($fileset_row) ? $fileset_row->fileset : null;
 		} elseif (property_exists($params, 'fileset') && $misc->isValidName($params->fileset)) {
@@ -61,7 +61,7 @@ class RestoreRun extends BaculumAPIServer {
 		}
 
 		$rfile = property_exists($params, 'rpath') ? $params->rpath : null;
-		$full = property_exists($params, 'full') && $misc->isValidInteger($params->full) ? (bool)$params->full : null;
+		$full = property_exists($params, 'full') && $misc->isValidInteger($params->full) ? (bool) $params->full : null;
 		$where = property_exists($params, 'where') ? $params->where : null;
 		$replace = property_exists($params, 'replace') ? $params->replace : null;
 
@@ -86,32 +86,32 @@ class RestoreRun extends BaculumAPIServer {
 			$regex_where = $params->regex_where;
 		}
 
-		if(is_null($client)) {
+		if (is_null($client)) {
 			$this->output = JobError::MSG_ERROR_CLIENT_DOES_NOT_EXISTS;
 			$this->error = JobError::ERROR_CLIENT_DOES_NOT_EXISTS;
 			return;
 		}
 
-		if(!is_null($rfile) && preg_match($misc::RPATH_PATTERN, $rfile) !== 1) {
+		if (!is_null($rfile) && preg_match($misc::RPATH_PATTERN, $rfile) !== 1) {
 			$this->output = JobError::MSG_ERROR_INVALID_RPATH;
 			$this->error = JobError::ERROR_INVALID_RPATH;
 			return;
 		}
-		if(!is_null($where) && !$misc->isValidPath($where)) {
+		if (!is_null($where) && !$misc->isValidPath($where)) {
 			$this->output = JobError::MSG_ERROR_INVALID_WHERE_OPTION;
 			$this->error = JobError::ERROR_INVALID_WHERE_OPTION;
 			return;
 		}
 
-		if(!is_null($replace) && !$misc->isValidReplace($replace)) {
+		if (!is_null($replace) && !$misc->isValidReplace($replace)) {
 			$this->output = JobError::MSG_ERROR_INVALID_REPLACE_OPTION;
 			$this->error = JobError::ERROR_INVALID_REPLACE_OPTION;
 			return;
 		}
 
-		$command = array('restore',
+		$command = ['restore',
 			'client="' . $client . '"'
-		);
+		];
 		if (is_string($rfile)) {
 			// Restore using Bvfs
 			$command[] = 'file="?' . $rfile . '"';
@@ -151,4 +151,3 @@ class RestoreRun extends BaculumAPIServer {
 		$this->error = $restore->exitcode;
 	}
 }
-?>

@@ -35,21 +35,22 @@ use Bacularis\API\Modules\BaculumAPIPage;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Panel
- * @package Baculum API
  */
-class APIDevices extends BaculumAPIPage {
-
-	const WINDOW_TYPE_ADD = 'add';
-	const WINDOW_TYPE_EDIT = 'edit';
+class APIDevices extends BaculumAPIPage
+{
+	public const WINDOW_TYPE_ADD = 'add';
+	public const WINDOW_TYPE_EDIT = 'edit';
 
 	private $config;
 
-	public function onInit($param) {
+	public function onInit($param)
+	{
 		parent::onInit($param);
 		$this->config = $this->getModule('device_config')->getConfig();
 	}
 
-	public function setAutochangerList($sender, $param) {
+	public function setAutochangerList($sender, $param)
+	{
 		$devices = [];
 		foreach ($this->config as $name => $device) {
 			if ($device['type'] !== DeviceConfig::DEV_TYPE_AUTOCHANGER) {
@@ -69,7 +70,8 @@ class APIDevices extends BaculumAPIPage {
 		}
 	}
 
-	public function addAutochanger($sender, $param) {
+	public function addAutochanger($sender, $param)
+	{
 		$ach_drives = $this->getAutochangerDrives();
 		$disabled_indices = [];
 		for ($i = 0; $i < $this->ChangerDevices->getItemCount(); $i++) {
@@ -85,7 +87,8 @@ class APIDevices extends BaculumAPIPage {
 		);
 	}
 
-	public function loadAutochanger($sender, $param) {
+	public function loadAutochanger($sender, $param)
+	{
 		$ach_name = $param->getCallbackParameter();
 		$ach = [];
 		foreach ($this->config as $name => $device) {
@@ -124,7 +127,8 @@ class APIDevices extends BaculumAPIPage {
 		}
 	}
 
-	public function saveAutochanger($sender, $param) {
+	public function saveAutochanger($sender, $param)
+	{
 		if ($this->AutochangerWindowType->Value == self::WINDOW_TYPE_ADD && key_exists($this->AutochangerName->Text, $this->config)) {
 			$this->getCallbackClient()->show('autochanger_exists');
 			return;
@@ -143,7 +147,7 @@ class APIDevices extends BaculumAPIPage {
 			'device' => $this->ChangerDevice->Text,
 			'command' => $this->ChangerCommand->Text,
 			'use_sudo' => $this->ChangerCommandUseSudo->Checked ? '1' : '0',
-			'drives'=> implode(',', $drives)
+			'drives' => implode(',', $drives)
 		];
 		$this->config[$this->AutochangerName->Text] = $autochanger;
 		$result = $this->getModule('device_config')->setConfig($this->config);
@@ -154,7 +158,8 @@ class APIDevices extends BaculumAPIPage {
 		}
 	}
 
-	public function deleteAutochanger($sender, $param) {
+	public function deleteAutochanger($sender, $param)
+	{
 		$ach = $param->getCallbackParameter();
 		if (!key_exists($ach, $this->config)) {
 			return;
@@ -167,7 +172,8 @@ class APIDevices extends BaculumAPIPage {
 		}
 	}
 
-	public function testChangerCommand($sender, $param) {
+	public function testChangerCommand($sender, $param)
+	{
 		$emsg = '';
 		$use_sudo = $this->ChangerCommandUseSudo->Checked;
 		$changer_command = $this->ChangerCommand->Text;
@@ -204,7 +210,8 @@ class APIDevices extends BaculumAPIPage {
 		}
 	}
 
-	public function setDeviceList($sender, $param) {
+	public function setDeviceList($sender, $param)
+	{
 		$devices = [];
 		$ach_devices = $this->getAutochangerDrives();
 		$dev_names = [];
@@ -232,7 +239,8 @@ class APIDevices extends BaculumAPIPage {
 		}
 	}
 
-	private function getAutochangerDrives() {
+	private function getAutochangerDrives()
+	{
 		$ach_devices = [];
 		foreach ($this->config as $name => $device) {
 			if ($device['type'] !== DeviceConfig::DEV_TYPE_AUTOCHANGER) {
@@ -246,7 +254,8 @@ class APIDevices extends BaculumAPIPage {
 		return $ach_devices;
 	}
 
-	public function loadDevice($sender, $param) {
+	public function loadDevice($sender, $param)
+	{
 		$dev_name = $param->getCallbackParameter();
 		$dev = [];
 		foreach ($this->config as $name => $device) {
@@ -265,7 +274,8 @@ class APIDevices extends BaculumAPIPage {
 		}
 	}
 
-	public function saveDevice($sender, $param) {
+	public function saveDevice($sender, $param)
+	{
 		if ($this->DeviceWindowType->Value == self::WINDOW_TYPE_ADD && key_exists($this->DeviceName->Text, $this->config)) {
 			$this->getCallbackClient()->show('device_exists');
 			return;
@@ -273,7 +283,7 @@ class APIDevices extends BaculumAPIPage {
 		$device = [
 			'type' => DeviceConfig::DEV_TYPE_DEVICE,
 			'device' => $this->DeviceDevice->Text,
-			'index' => intval($this->DeviceIndex->Text)
+			'index' => (int) ($this->DeviceIndex->Text)
 		];
 		$this->config[$this->DeviceName->Text] = $device;
 		$result = $this->getModule('device_config')->setConfig($this->config);
@@ -286,7 +296,8 @@ class APIDevices extends BaculumAPIPage {
 		}
 	}
 
-	public function deleteDevice($sender, $param) {
+	public function deleteDevice($sender, $param)
+	{
 		$device = $param->getCallbackParameter();
 		if (!key_exists($device, $this->config)) {
 			return;
@@ -298,7 +309,8 @@ class APIDevices extends BaculumAPIPage {
 		}
 	}
 
-	private function setConfigAutochangers() {
+	private function setConfigAutochangers()
+	{
 		$achs = [];
 		try {
 			$achs = $this->getModule('bacula_setting')->getConfig('sd', 'Autochanger');
@@ -311,7 +323,8 @@ class APIDevices extends BaculumAPIPage {
 		);
 	}
 
-	private function setConfigDevices() {
+	private function setConfigDevices()
+	{
 		$devs = [];
 		try {
 			$devs = $this->getModule('bacula_setting')->getConfig('sd', 'Device');
@@ -324,4 +337,3 @@ class APIDevices extends BaculumAPIPage {
 		);
 	}
 }
-?>

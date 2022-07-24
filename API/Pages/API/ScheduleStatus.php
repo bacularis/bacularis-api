@@ -35,23 +35,23 @@ use Bacularis\API\Modules\Bconsole;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class ScheduleStatus extends BaculumAPIServer {
-
+class ScheduleStatus extends BaculumAPIServer
+{
 	/**
 	 * Default days limit.
 	 */
-	const DEF_DAYS = 30;
+	public const DEF_DAYS = 30;
 
 	/**
 	 * Default list items limit.
 	 */
-	const DEF_LIMIT = 30;
+	public const DEF_LIMIT = 30;
 
-	public function get() {
+	public function get()
+	{
 		$misc = $this->getModule('misc');
-		$cmd = array('status', 'schedule');
+		$cmd = ['status', 'schedule'];
 		if ($this->Request->contains('job') && $misc->isValidName($this->Request['job'])) {
 			$cmd[] = 'job="' . $this->Request['job'] . '"';
 		}
@@ -92,17 +92,17 @@ class ScheduleStatus extends BaculumAPIServer {
 		}
 	}
 
-	private function formatSchedules(array $output) {
-		$items = $item = array();
+	private function formatSchedules(array $output)
+	{
+		$items = $item = [];
 		for ($i = 0; $i < count($output); $i++) {
 			if (preg_match('/^(?P<key>\w+)=(?P<val>[\s\S]*)$/', $output[$i], $match) === 1) {
 				$item[$match['key']] = $match['val'];
 			} elseif (empty($output[$i]) && count($item) > 0) {
 				$items[] = $item;
-				$item = array();
+				$item = [];
 			}
 		}
 		return $items;
 	}
 }
-?>

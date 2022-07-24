@@ -32,32 +32,33 @@ namespace Bacularis\API\Modules\OAuth2;
 use Prado\Prado;
 use Bacularis\Common\Modules\ISessionItem;
 use Bacularis\Common\Modules\SessionRecord;
- 
+
 /**
  * Get/set OAuth2 auth identifier.
- * 
+ *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Authorization
- * @package Baculum API
  */
-class AuthIdRecord extends SessionRecord implements ISessionItem {
-
+class AuthIdRecord extends SessionRecord implements ISessionItem
+{
 	public $auth_id;
 	public $client_id;
 	public $redirect_uri;
 	public $expires;
 	public $scope;
 
-	public static function getRecordId() {
+	public static function getRecordId()
+	{
 		return 'oauth2_auth_id';
 	}
 
-	public static function getPrimaryKey() {
+	public static function getPrimaryKey()
+	{
 		return 'auth_id';
 	}
 
-	public static function getSessionFile() {
+	public static function getSessionFile()
+	{
 		return Prado::getPathOfNamespace('Bacularis.API.Config.session', '.dump');
 	}
 }
-?>

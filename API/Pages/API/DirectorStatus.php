@@ -35,11 +35,11 @@ use Bacularis\API\Modules\ConsoleOutputPage;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class DirectorStatus extends ConsoleOutputPage {
-
-	public function get() {
+class DirectorStatus extends ConsoleOutputPage
+{
+	public function get()
+	{
 		$status = $this->getModule('status_dir');
 		$director = $this->Request->contains('name') && $this->getModule('misc')->isValidName($this->Request['name']) ? $this->Request['name'] : null;
 		$type = $this->Request->contains('type') && $status->isValidOutputType($this->Request['type']) ? $this->Request['type'] : null;
@@ -58,7 +58,7 @@ class DirectorStatus extends ConsoleOutputPage {
 			return;
 		}
 
-		$out = (object)['output' => [], 'error' => 0];
+		$out = (object) ['output' => [], 'error' => 0];
 		if ($out_format === parent::OUTPUT_FORMAT_RAW) {
 			$out = $this->getRawOutput(['director' => $director]);
 		} elseif ($out_format === parent::OUTPUT_FORMAT_JSON) {
@@ -71,7 +71,8 @@ class DirectorStatus extends ConsoleOutputPage {
 		$this->error = $out['error'];
 	}
 
-	protected function getRawOutput($params = []) {
+	protected function getRawOutput($params = [])
+	{
 		// traditional status director output
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$params['director'],
@@ -88,7 +89,8 @@ class DirectorStatus extends ConsoleOutputPage {
 		return $ret;
 	}
 
-	protected function getJSONOutput($params = []) {
+	protected function getJSONOutput($params = [])
+	{
 		// status director JSON output by API 2 interface
 		$status = $this->getModule('status_dir');
 		return $status->getStatus(
@@ -98,5 +100,3 @@ class DirectorStatus extends ConsoleOutputPage {
 		);
 	}
 }
-
-?>

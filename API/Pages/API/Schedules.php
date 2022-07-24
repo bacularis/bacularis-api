@@ -34,11 +34,12 @@ use Bacularis\Common\Modules\Errors\PoolError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class Schedules extends BaculumAPIServer {
-	public function get() {
-		$result = $this->getModule('bconsole')->bconsoleCommand($this->director, array('.schedule'));
+class Schedules extends BaculumAPIServer
+{
+	public function get()
+	{
+		$result = $this->getModule('bconsole')->bconsoleCommand($this->director, ['.schedule']);
 		if ($result->exitcode === 0) {
 			array_shift($result->output);
 			$this->output = $result->output;
@@ -49,4 +50,3 @@ class Schedules extends BaculumAPIServer {
 		}
 	}
 }
-?>

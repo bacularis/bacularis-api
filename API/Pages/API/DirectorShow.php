@@ -36,11 +36,11 @@ use Bacularis\API\Modules\ConsoleOutputShowPage;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class DirectorShow extends ConsoleOutputShowPage {
-
-	public function get() {
+class DirectorShow extends ConsoleOutputShowPage
+{
+	public function get()
+	{
 		$director = $this->Request->contains('name') && $this->getModule('misc')->isValidName($this->Request['name']) ? $this->Request['name'] : null;
 		$out_format = $this->Request->contains('output') && $this->isOutputFormatValid($this->Request['output']) ? $this->Request['output'] : ConsoleOutputPage::OUTPUT_FORMAT_RAW;
 		$dirs = [];
@@ -50,13 +50,13 @@ class DirectorShow extends ConsoleOutputShowPage {
 		}
 
 		if (is_string($director) && in_array($director, $dirs)) {
-			$out = (object)[
+			$out = (object) [
 				'output' => [],
 				'exitcode' => 0
 			];
 			if ($out_format === ConsoleOutputPage::OUTPUT_FORMAT_RAW) {
 				$out = $this->getRawOutput(['director' => $director]);
-			} elseif($out_format === ConsoleOutputPage::OUTPUT_FORMAT_JSON) {
+			} elseif ($out_format === ConsoleOutputPage::OUTPUT_FORMAT_JSON) {
 				$out = $this->getJSONOutput(['director' => $director]);
 			}
 			$this->output = $out->output;
@@ -73,7 +73,8 @@ class DirectorShow extends ConsoleOutputShowPage {
 	 * @param array $params command parameters
 	 * @return StdClass object with output and exitcode
 	 */
-	protected function getRawOutput($params = []) {
+	protected function getRawOutput($params = [])
+	{
 		return $this->getModule('bconsole')->bconsoleCommand(
 			$params['director'],
 			['show', 'director']
@@ -86,8 +87,9 @@ class DirectorShow extends ConsoleOutputShowPage {
 	 * @param array $params command parameters
 	 * @return StdClass object with output and exitcode
 	 */
-	protected function getJSONOutput($params = []) {
-		$result = (object)[
+	protected function getJSONOutput($params = [])
+	{
+		$result = (object) [
 			'output' => [],
 			'exitcode' => 0
 		];
@@ -100,4 +102,3 @@ class DirectorShow extends ConsoleOutputShowPage {
 		return $result;
 	}
 }
-?>

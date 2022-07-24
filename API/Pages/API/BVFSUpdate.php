@@ -34,16 +34,16 @@ use Bacularis\Common\Modules\Errors\BVFSError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class BVFSUpdate extends BaculumAPIServer {
-
-	public function set($id, $params) {
+class BVFSUpdate extends BaculumAPIServer
+{
+	public function set($id, $params)
+	{
 		$jobids = null;
 		if (property_exists($params, 'jobids') && $this->getModule('misc')->isValidIdsList($params->jobids)) {
 			$jobids = $params->jobids;
 		}
-		
+
 		if (is_null($jobids)) {
 			$this->output = BVFSError::MSG_ERROR_INVALID_JOBID_LIST;
 			$this->error = BVFSError::ERROR_INVALID_JOBID_LIST;
@@ -52,10 +52,9 @@ class BVFSUpdate extends BaculumAPIServer {
 
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
-			array('.bvfs_update', 'jobid="' . $jobids . '"')
+			['.bvfs_update', 'jobid="' . $jobids . '"']
 		);
 		$this->output = $result->output;
 		$this->error = $result->exitcode;
 	}
 }
-?>

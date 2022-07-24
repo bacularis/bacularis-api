@@ -27,7 +27,8 @@
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
 
-use Bacularis\Common\Modules\Errors\{GenericError,JobError};
+use Bacularis\Common\Modules\Errors\GenericError;
+use Bacularis\Common\Modules\Errors\JobError;
 use Bacularis\API\Modules\BaculumAPIServer;
 
 /**
@@ -35,11 +36,11 @@ use Bacularis\API\Modules\BaculumAPIServer;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class JobBandwidthLimit extends BaculumAPIServer {
-
-	public function set($id, $params) {
+class JobBandwidthLimit extends BaculumAPIServer
+{
+	public function set($id, $params)
+	{
 		$job = null;
 		if ($id > 0) {
 			$job = $this->getModule('job')->getJobById($id);
@@ -53,7 +54,7 @@ class JobBandwidthLimit extends BaculumAPIServer {
 			true
 		);
 		if ($result->exitcode === 0) {
-			if(is_object($job) && in_array($job->name, $result->output)) {
+			if (is_object($job) && in_array($job->name, $result->output)) {
 				$jobid = $job->jobid;
 			}
 		}
@@ -65,7 +66,7 @@ class JobBandwidthLimit extends BaculumAPIServer {
 
 		$limit = property_exists($params, 'limit') && $this->getModule('misc')->isValidInteger($params->limit) ? $params->limit : 0;
 
-		$cmd = array('setbandwidth', 'jobid="' . $jobid . '"', 'limit="' . $limit . '"');
+		$cmd = ['setbandwidth', 'jobid="' . $jobid . '"', 'limit="' . $limit . '"'];
 		$result = $this->getModule('bconsole')->bconsoleCommand($this->director, $cmd);
 		$this->output = $result->output;
 		if ($result->exitcode === 0) {
@@ -75,4 +76,3 @@ class JobBandwidthLimit extends BaculumAPIServer {
 		}
 	}
 }
-?>

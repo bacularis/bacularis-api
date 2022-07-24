@@ -37,21 +37,20 @@ use Prado\Prado;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Module
- * @package Baculum API
  */
-class APIServer extends APIModule {
-
+class APIServer extends APIModule
+{
 	/**
 	 * Default API version if there was not possible to determine version.
 	 */
-	const DEFAULT_VERSION = 2;
+	public const DEFAULT_VERSION = 2;
 
-	const VERSION_PATTERN = '!/api/v(?P<version>\d+)/!';
+	public const VERSION_PATTERN = '!/api/v(?P<version>\d+)/!';
 
 	/**
 	 * Stores API server instance.
 	 */
-	protected $server = null;
+	protected $server;
 
 	/**
 	 * Set API server instance.
@@ -59,28 +58,31 @@ class APIServer extends APIModule {
 	 * @param BaculumAPIServer $obj server object
 	 * @return none
 	 */
-	public function setServerObj($obj) {
+	public function setServerObj($obj)
+	{
 		$this->server = $obj;
 	}
 
 	/**
 	 * Get API server instance.
-	 * @return BaculumAPIServer|null API server object
+	 * @return null|BaculumAPIServer API server object
 	 */
-	public function getServerObj() {
+	public function getServerObj()
+	{
 		return $this->server;
 	}
 
 	/**
 	 * Get requested API version from URL path.
 	 *
-	 * @return integer requested API version number
+	 * @return int requested API version number
 	 */
-	public static function getVersion() {
+	public static function getVersion()
+	{
 		$version = self::DEFAULT_VERSION;
 		$path = Prado::getApplication()->Request->getPathInfo();
 		if (preg_match(self::VERSION_PATTERN, $path, $match) === 1) {
-			$version = intval($match['version']);
+			$version = (int) ($match['version']);
 		}
 		return $version;
 	}

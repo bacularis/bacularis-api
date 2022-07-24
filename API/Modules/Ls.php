@@ -27,7 +27,6 @@
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
 
-
 namespace Bacularis\API\Modules;
 
 use Bacularis\API\Modules\APIModule;
@@ -37,30 +36,30 @@ use Bacularis\API\Modules\APIModule;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Module
- * @package Baculum API
  */
-class Ls extends APIModule {
-	const LS_OUTPUT_PATTERN = '/^(?P<perm>[a-z\-\.]+)\s+(?P<nb_hardlink>\d+)\s+(?P<owner>\w+)\s+(?P<group>\w+)\s+(?P<size>\d+)\s+(?P<mtime>[\d\-]+\s+[\d:]+)\s+(?P<item>(?U:[\S\s]+))(?P<dest>(?(?=\s+\-\>\s+)[\S\s]*))$/i';
+class Ls extends APIModule
+{
+	public const LS_OUTPUT_PATTERN = '/^(?P<perm>[a-z\-\.]+)\s+(?P<nb_hardlink>\d+)\s+(?P<owner>\w+)\s+(?P<group>\w+)\s+(?P<size>\d+)\s+(?P<mtime>[\d\-]+\s+[\d:]+)\s+(?P<item>(?U:[\S\s]+))(?P<dest>(?(?=\s+\-\>\s+)[\S\s]*))$/i';
 
-	public function parseOutput(array $output) {
-		$result = array();
+	public function parseOutput(array $output)
+	{
+		$result = [];
 		for ($i = 0; $i < count($output); $i++) {
 			if (preg_match(self::LS_OUTPUT_PATTERN, $output[$i], $match) === 1) {
 				$type = substr($match['perm'], 0, 1);
-				$result[] = array(
+				$result[] = [
 					'perm' => $match['perm'],
-					'nb_hardlink' => intval($match['nb_hardlink']),
+					'nb_hardlink' => (int) ($match['nb_hardlink']),
 					'owner' => $match['owner'],
 					'group' => $match['group'],
-					'size' => intval($match['size']),
+					'size' => (int) ($match['size']),
 					'mtime' => $match['mtime'],
 					'item' => $match['item'],
 					'type' => $type,
 					'dest' => key_exists('dest', $match) ? $match['dest'] : null
-				);
+				];
 			}
 		}
 		return $result;
 	}
 }
-?>

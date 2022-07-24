@@ -34,17 +34,17 @@ namespace Bacularis\API\Modules;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Module
- * @package Baculum API
  */
-class BLStat extends APIModule {
-
+class BLStat extends APIModule
+{
 	/**
 	 * Decode Bacula base64 encoded LStat value.
 	 *
 	 * @param string $lstat encoded LStat string
 	 * @return array decoded values from LStat string
 	 */
-	public function decode($lstat) {
+	public function decode($lstat)
+	{
 		$base64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 		$lstat = trim($lstat);
 		$lstat_fields = explode(' ', $lstat);
@@ -57,7 +57,7 @@ class BLStat extends APIModule {
 			array_splice($lstat_fields, 16);
 		}
 
-		list(
+		[
 			$dev,
 			$inode,
 			$mode,
@@ -74,8 +74,8 @@ class BLStat extends APIModule {
 			$linkfi,
 			$flags,
 			$data
-		) = $lstat_fields;
-		$encoded_values = array(
+		] = $lstat_fields;
+		$encoded_values = [
 			'dev' => $dev,
 			'inode' => $inode,
 			'mode' => $mode,
@@ -92,22 +92,22 @@ class BLStat extends APIModule {
 			'linkfi' => $linkfi,
 			'flags' => $flags,
 			'data' => $data
-		);
+		];
 
-		$ret = array();
-		foreach($encoded_values as $key => $val) {
+		$ret = [];
+		foreach ($encoded_values as $key => $val) {
 			$result = 0;
 			$is_minus = false;
 			$start = 0;
 
-			if(substr($val, 0, 1) === '-') {
+			if (substr($val, 0, 1) === '-') {
 				$is_minus = true;
 				$start++;
 			}
 
-			for($i = $start; $i < strlen($val); $i++) {
-				$result = bcmul($result, bcpow(2,6));
-				$result +=  strpos($base64, substr($val, $i , 1));
+			for ($i = $start; $i < strlen($val); $i++) {
+				$result = bcmul($result, bcpow(2, 6));
+				$result += strpos($base64, substr($val, $i, 1));
 			}
 			$ret[$key] = ($is_minus === true) ? -$result : $result;
 		}
@@ -120,7 +120,8 @@ class BLStat extends APIModule {
 	 * @param string $lstat LStat value to decode
 	 * @return array decoded LStat values
 	 */
-	public function lstat_human($lstat) {
+	public function lstat_human($lstat)
+	{
 		$value = $this->decode($lstat);
 		$value['mode'] = $this->get_human_mode($value['mode']);
 		return $value;
@@ -129,10 +130,11 @@ class BLStat extends APIModule {
 	/**
 	 * Get human readable mode/attributes (ex. drwx-r-xr-x).
 	 *
-	 * @param integer $dmode mode value in decimal LStat form
+	 * @param int $dmode mode value in decimal LStat form
 	 * @return string mode in human readable form
 	 */
-	private function get_human_mode($dmode) {
+	private function get_human_mode($dmode)
+	{
 		$ts = [
 			0140000 => 'ssocket',
 			0120000 => 'llink',
@@ -147,12 +149,11 @@ class BLStat extends APIModule {
 		$t = decoct($dmode & 0170000); // File Encoding Bit
 		$mode = (key_exists(octdec($t), $ts)) ? $ts[octdec($t)][0] : 'u';
 		$mode .= (($p & 0x0100) ? 'r' : '-') . (($p & 0x0080) ? 'w' : '-');
-		$mode .= (($p & 0x0040) ? (($p & 0x0800) ?'s':'x'):(($p & 0x0800) ? 'S' : '-'));
-		$mode .= (($p & 0x0020) ? 'r':'-').(($p & 0x0010)? 'w' : '-');
-		$mode .= (($p & 0x0008) ? (($p & 0x0400) ?'s':'x'):(($p & 0x0400) ? 'S' : '-'));
-		$mode .= (($p & 0x0004) ? 'r':'-').(($p & 0x0002) ? 'w' : '-');
-		$mode .= (($p & 0x0001) ? (($p & 0x0200) ?'t':'x'):(($p & 0x0200) ? 'T' : '-'));
+		$mode .= (($p & 0x0040) ? (($p & 0x0800) ? 's' : 'x') : (($p & 0x0800) ? 'S' : '-'));
+		$mode .= (($p & 0x0020) ? 'r' : '-') . (($p & 0x0010) ? 'w' : '-');
+		$mode .= (($p & 0x0008) ? (($p & 0x0400) ? 's' : 'x') : (($p & 0x0400) ? 'S' : '-'));
+		$mode .= (($p & 0x0004) ? 'r' : '-') . (($p & 0x0002) ? 'w' : '-');
+		$mode .= (($p & 0x0001) ? (($p & 0x0200) ? 't' : 'x') : (($p & 0x0200) ? 'T' : '-'));
 		return $mode;
 	}
 }
-?>

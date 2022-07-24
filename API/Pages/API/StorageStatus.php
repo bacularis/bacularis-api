@@ -29,25 +29,25 @@
 
 use Bacularis\Common\Modules\Errors\StorageError;
 use Bacularis\API\Modules\ConsoleOutputPage;
- 
+
 /**
  * Storage status command endpoint.
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class StorageStatus extends ConsoleOutputPage {
-
-	public function get() {
-		$storageid = $this->Request->contains('id') ? intval($this->Request['id']) : 0;
+class StorageStatus extends ConsoleOutputPage
+{
+	public function get()
+	{
+		$storageid = $this->Request->contains('id') ? (int) ($this->Request['id']) : 0;
 		$storage = $this->getModule('storage')->getStorageById($storageid);
 		$status = $this->getModule('status_sd');
 		$type = $this->Request->contains('type') && $status->isValidOutputType($this->Request['type']) ? $this->Request['type'] : null;
 		$out_format = $this->Request->contains('output') && $this->isOutputFormatValid($this->Request['output']) ? $this->Request['output'] : parent::OUTPUT_FORMAT_RAW;
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
-			array('.storage')
+			['.storage']
 		);
 
 		$storage_exists = false;
@@ -62,7 +62,7 @@ class StorageStatus extends ConsoleOutputPage {
 			return;
 		}
 
-		$out = (object)['output' => [], 'error' => 0];
+		$out = (object) ['output' => [], 'error' => 0];
 		if ($out_format === parent::OUTPUT_FORMAT_RAW) {
 			$out = $this->getRawOutput(['storage' => $storage->name]);
 		} elseif ($out_format === parent::OUTPUT_FORMAT_JSON) {
@@ -75,7 +75,8 @@ class StorageStatus extends ConsoleOutputPage {
 		$this->error = $out['error'];
 	}
 
-	protected function getRawOutput($params = []) {
+	protected function getRawOutput($params = [])
+	{
 		// traditional status storage output
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
@@ -92,7 +93,8 @@ class StorageStatus extends ConsoleOutputPage {
 		return $ret;
 	}
 
-	protected function getJSONOutput($params = []) {
+	protected function getJSONOutput($params = [])
+	{
 		// status storage JSON output by API 2 interface
 		$status = $this->getModule('status_sd');
 		return $status->getStatus(
@@ -102,5 +104,3 @@ class StorageStatus extends ConsoleOutputPage {
 		);
 	}
 }
-
-?>

@@ -28,4 +28,3 @@
  */
 
 use Bacularis\API\Pages\OAuth2\RequestToken;
-?>

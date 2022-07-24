@@ -38,26 +38,26 @@ use Bacularis\Common\Modules\Errors\ActionsError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Module
- * @package Baculum API
  */
-class ComponentActions extends APIModule {
-
+class ComponentActions extends APIModule
+{
 	/**
 	 * Sudo command.
 	 */
-	const SUDO = 'sudo';
+	public const SUDO = 'sudo';
 
 	/**
 	 * Action command pattern used to execute command.
 	 */
-	const ACTION_COMMAND_PATTERN = "%s%s 2>&1";
+	public const ACTION_COMMAND_PATTERN = "%s%s 2>&1";
 
 	/**
 	 * Get command pattern.
 	 *
 	 * @return string command pattern
 	 */
-	private function getCmdPattern() {
+	private function getCmdPattern()
+	{
 		// Default command pattern
 		return self::ACTION_COMMAND_PATTERN;
 	}
@@ -65,10 +65,11 @@ class ComponentActions extends APIModule {
 	/**
 	 * Get sudo command.
 	 *
-	 * @param boolean $use_sudo sudo option state
+	 * @param bool $use_sudo sudo option state
 	 * @return string sudo command
 	 */
-	private function getSudo($use_sudo) {
+	private function getSudo($use_sudo)
+	{
 		$sudo = '';
 		if ($use_sudo === true) {
 			$sudo = self::SUDO . ' ';
@@ -82,9 +83,10 @@ class ComponentActions extends APIModule {
 	 * @param string $action_type action type (dir_start, dir_stop ...etc.)
 	 * @return array result with output and exitcode
 	 */
-	public function execAction($action_type) {
+	public function execAction($action_type)
+	{
 		$result = null;
-		$output = array();
+		$output = [];
 		$exitcode = -1;
 		$api_config = $this->getModule('api_config');
 		if ($api_config->isActionConfigured($action_type) === true) {
@@ -114,9 +116,10 @@ class ComponentActions extends APIModule {
 	 * Execute action command.
 	 *
 	 * @param string $bin command
-	 * @param boolean $use_sudo use sudo
+	 * @param bool $use_sudo use sudo
 	 */
-	public function execCommand($bin, $use_sudo) {
+	public function execCommand($bin, $use_sudo)
+	{
 		$sudo = $this->getSudo($use_sudo);
 		$cmd_pattern = $this->getCmdPattern();
 		$cmd = sprintf($cmd_pattern, $sudo, $bin);
@@ -130,16 +133,15 @@ class ComponentActions extends APIModule {
 	 * Prepare action command result.
 	 *
 	 * @param array $output output from command execution
-	 * @param integer $exitcode command exit code
+	 * @param int $exitcode command exit code
 	 * @return array result with output and exitcode
 	 */
-	public function prepareResult($output, $exitcode) {
-		$result = (object)array(
+	public function prepareResult($output, $exitcode)
+	{
+		$result = (object) [
 			'output' => $output,
 			'error' => $exitcode
-		);
+		];
 		return $result;
 	}
-
 }
-?>

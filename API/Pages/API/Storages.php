@@ -34,22 +34,22 @@ use Bacularis\Common\Modules\Errors\StorageError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class Storages extends BaculumAPIServer {
-
-	public function get() {
-		$limit = $this->Request->contains('limit') ? intval($this->Request['limit']) : 0;
+class Storages extends BaculumAPIServer
+{
+	public function get()
+	{
+		$limit = $this->Request->contains('limit') ? (int) ($this->Request['limit']) : 0;
 		$storages = $this->getModule('storage')->getStorages($limit);
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
-			array('.storage')
+			['.storage']
 		);
 		if ($result->exitcode === 0) {
 			array_shift($result->output);
-			$storages_output = array();
-			foreach($storages as $storage) {
-				if(in_array($storage->name, $result->output)) {
+			$storages_output = [];
+			foreach ($storages as $storage) {
+				if (in_array($storage->name, $result->output)) {
 					$storages_output[] = $storage;
 				}
 			}
@@ -61,4 +61,3 @@ class Storages extends BaculumAPIServer {
 		}
 	}
 }
-?>

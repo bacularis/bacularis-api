@@ -38,24 +38,25 @@ use Bacularis\API\Modules\FileSetRecord;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Module
- * @package Baculum API
  */
-class FileSetManager extends APIModule {
-
-	public function getFileSets($limit) {
-		$criteria = new TActiveRecordCriteria;
-		if(is_int($limit) && $limit > 0) {
+class FileSetManager extends APIModule
+{
+	public function getFileSets($limit)
+	{
+		$criteria = new TActiveRecordCriteria();
+		if (is_int($limit) && $limit > 0) {
 			$criteria->Limit = $limit;
 		}
 		return FileSetRecord::finder()->findAll($criteria);
 	}
 
-	public function getFileSetById($id) {
+	public function getFileSetById($id)
+	{
 		return FileSetRecord::finder()->findByfilesetid($id);
 	}
 
-	public function getFileSetByName($name) {
+	public function getFileSetByName($name)
+	{
 		return FileSetRecord::finder()->findByfileset($name);
 	}
 }
-?>

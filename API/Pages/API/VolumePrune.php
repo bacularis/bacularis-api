@@ -34,24 +34,25 @@ use Bacularis\Common\Modules\Errors\VolumeError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class VolumePrune extends BaculumAPIServer {
-
+class VolumePrune extends BaculumAPIServer
+{
 	/**
 	 * Remove this method when finished support for old API
 	 */
-	public function get() {
+	public function get()
+	{
 		$this->set(null, null);
 	}
 
-	public function set($id, $params) {
-		$mediaid = $this->Request->contains('id') ? intval($this->Request['id']) : 0;
+	public function set($id, $params)
+	{
+		$mediaid = $this->Request->contains('id') ? (int) ($this->Request['id']) : 0;
 		$volume = $this->getModule('volume')->getVolumeById($mediaid);
-		if(is_object($volume)) {
+		if (is_object($volume)) {
 			$result = $this->getModule('bconsole')->bconsoleCommand(
 				$this->director,
-				array('prune', 'volume="' . $volume->volumename . '"', 'yes')
+				['prune', 'volume="' . $volume->volumename . '"', 'yes']
 			);
 			$this->output = $result->output;
 			$this->error = $result->exitcode;
@@ -61,5 +62,3 @@ class VolumePrune extends BaculumAPIServer {
 		}
 	}
 }
-
-?>

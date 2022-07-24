@@ -31,28 +31,27 @@ use Bacularis\Common\Modules\BaculumPage;
 
 /**
  * OAuth2 authorization server - request token part.
- * 
+ *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
- 
-class RequestToken extends BaculumPage {
-
+class RequestToken extends BaculumPage
+{
 	/**
 	 * Request parameter for get access token.
 	 */
-	const REQUEST_TYPE_AUTHORIZATION_CODE = 'authorization_code';
+	public const REQUEST_TYPE_AUTHORIZATION_CODE = 'authorization_code';
 
 	/**
 	 * Response fields.
 	 */
-	const FIELD_ACCESS_TOKEN = 'access_token';
-	const FIELD_REFRESH_TOKEN = 'refresh_token';
-	const FIELD_TOKEN_TYPE = 'token_type';
-	const FIELD_EXPIRES_IN = 'expires_in';
+	public const FIELD_ACCESS_TOKEN = 'access_token';
+	public const FIELD_REFRESH_TOKEN = 'refresh_token';
+	public const FIELD_TOKEN_TYPE = 'token_type';
+	public const FIELD_EXPIRES_IN = 'expires_in';
 
-	public function onLoad($param) {
+	public function onLoad($param)
+	{
 		parent::onLoad($param);
 		$oauth2 = $this->getModule('oauth2');
 
@@ -135,14 +134,13 @@ class RequestToken extends BaculumPage {
 			$client['bconsole_cfg_path']
 		);
 
-		$token_data = array(
+		$token_data = [
 			self::FIELD_ACCESS_TOKEN => $access_token,
 			self::FIELD_REFRESH_TOKEN => $refresh_token,
 			self::FIELD_TOKEN_TYPE => 'Bearer',
 			self::FIELD_EXPIRES_IN => $expires_in
-		);
+		];
 		echo json_encode($token_data);
 		// end action
 	}
 }
-?>

@@ -34,15 +34,15 @@ use Bacularis\Common\Modules\Errors\BVFSError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class BVFSGetJobids extends BaculumAPIServer {
-
-	public function get() {
-		$jobid = $this->Request->contains('jobid') ? intval($this->Request['jobid']) : 0;
-		$inc_copy_job = $this->Request->contains('inc_copy_job') ? intval($this->Request['inc_copy_job']) : 0;
+class BVFSGetJobids extends BaculumAPIServer
+{
+	public function get()
+	{
+		$jobid = $this->Request->contains('jobid') ? (int) ($this->Request['jobid']) : 0;
+		$inc_copy_job = $this->Request->contains('inc_copy_job') ? (int) ($this->Request['inc_copy_job']) : 0;
 		if ($jobid > 0) {
-			$result = array();
+			$result = [];
 			$error = BVFSError::ERROR_NO_ERRORS;
 			if ($inc_copy_job == 1) {
 				/**
@@ -54,10 +54,10 @@ class BVFSGetJobids extends BaculumAPIServer {
 				$jobids = $this->getModule('job')->getJobidsToRestore($jobid);
 				$jobids_str = implode(',', $jobids); // implode to be compatible with Bvfs output
 				if (!empty($jobids_str)) {
-					$result = array($jobids_str);
+					$result = [$jobids_str];
 				}
 			} else {
-				$cmd = array('.bvfs_get_jobids', 'jobid="' . $jobid . '"');
+				$cmd = ['.bvfs_get_jobids', 'jobid="' . $jobid . '"'];
 				$jobids = $this->getModule('bconsole')->bconsoleCommand($this->director, $cmd);
 				$result = $jobids->output;
 				$error = $jobids->exitcode;
@@ -70,4 +70,3 @@ class BVFSGetJobids extends BaculumAPIServer {
 		}
 	}
 }
-?>

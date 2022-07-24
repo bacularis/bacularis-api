@@ -35,8 +35,7 @@ use Prado\Web\UI\TTemplateControl;
  * Main layout.
  *
  * @category Layout
- * @package Baculum API
  */
-class Main extends TTemplateControl {
+class Main extends TTemplateControl
+{
 }
-?>

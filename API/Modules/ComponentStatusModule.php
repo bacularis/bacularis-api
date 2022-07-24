@@ -37,10 +37,9 @@ use Bacularis\API\Modules\APIModule;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Module
- * @package Baculum API
  */
-abstract class ComponentStatusModule extends APIModule {
-
+abstract class ComponentStatusModule extends APIModule
+{
 	/**
 	 * Get parsed status.
 	 *
@@ -67,7 +66,8 @@ abstract class ComponentStatusModule extends APIModule {
 	 * @param string $line single line from component status
 	 * @return mixed array with key and value on success, otherwise null
 	 */
-	protected function parseLine($line) {
+	protected function parseLine($line)
+	{
 		$ret = null;
 		if (preg_match('/^(?P<key>\w+)=(?P<value>[\S\s]*)$/', $line, $match) === 1) {
 			$ret = $match;
@@ -79,8 +79,7 @@ abstract class ComponentStatusModule extends APIModule {
 	 * Validate status output type.
 	 *
 	 * @param string $type output type (e.g. header, running, terminated ...etc.)
-	 * @return boolean true if output type is valid for component, otherwise false
+	 * @return bool true if output type is valid for component, otherwise false
 	 */
 	abstract public function isValidOutputType($type);
 }
-?>

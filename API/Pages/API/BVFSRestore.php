@@ -26,7 +26,7 @@
  *
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
- 
+
 use Bacularis\Common\Modules\Errors\BVFSError;
 
 /**
@@ -34,11 +34,11 @@ use Bacularis\Common\Modules\Errors\BVFSError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class BVFSRestore extends BaculumAPIServer {
-
-	public function create($params) {
+class BVFSRestore extends BaculumAPIServer
+{
+	public function create($params)
+	{
 		$misc = $this->getModule('misc');
 		$jobids = property_exists($params, 'jobids') ? $params->jobids : null;
 		$fileids = property_exists($params, 'fileid') ? $params->fileid : null;
@@ -73,7 +73,7 @@ class BVFSRestore extends BaculumAPIServer {
 			return;
 		}
 
-		$cmd = array('.bvfs_restore', 'jobid="' .  $jobids . '"', 'path="' . $path . '"');
+		$cmd = ['.bvfs_restore', 'jobid="' . $jobids . '"', 'path="' . $path . '"'];
 		if (is_string($fileids)) {
 			array_push($cmd, 'fileid="' . $fileids . '"');
 		}
@@ -89,4 +89,3 @@ class BVFSRestore extends BaculumAPIServer {
 		$this->error = $result->exitcode;
 	}
 }
-?>

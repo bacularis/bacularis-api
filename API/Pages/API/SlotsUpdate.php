@@ -27,7 +27,8 @@
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
 
-use Bacularis\Common\Modules\Errors\{StorageError,VolumeError};
+use Bacularis\Common\Modules\Errors\StorageError;
+use Bacularis\Common\Modules\Errors\VolumeError;
 use Bacularis\API\Modules\Bconsole;
 
 /**
@@ -35,12 +36,12 @@ use Bacularis\API\Modules\Bconsole;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class SlotsUpdate extends BaculumAPIServer {
-
-	public function get() {
-		$output = array();
+class SlotsUpdate extends BaculumAPIServer
+{
+	public function get()
+	{
+		$output = [];
 		$misc = $this->getModule('misc');
 		if ($this->Request->contains('out_id') && $misc->isValidAlphaNumeric($this->Request->itemAt('out_id'))) {
 			$out_id = $this->Request->itemAt('out_id');
@@ -50,15 +51,16 @@ class SlotsUpdate extends BaculumAPIServer {
 		$this->error = VolumeError::ERROR_NO_ERRORS;
 	}
 
-	public function set($id, $params) {
+	public function set($id, $params)
+	{
 		$slots = property_exists($params, 'slots') ? $params->slots : 0;
-		$drive = property_exists($params, 'drive') ? intval($params->drive) : 0;
+		$drive = property_exists($params, 'drive') ? (int) ($params->drive) : 0;
 		$barcodes = ($this->Request->contains('barcodes') && $this->Request->itemAt('barcodes') === 'barcodes');
 		$misc = $this->getModule('misc');
 
 		$storage = null;
 		if (property_exists($params, 'storageid')) {
-			$storageid = intval($params->storageid);
+			$storageid = (int) ($params->storageid);
 			$result = $this->getModule('storage')->getStorageById($storageid);
 			if (is_object($result)) {
 				$storage = $result->name;
@@ -70,7 +72,7 @@ class SlotsUpdate extends BaculumAPIServer {
 		if (!is_null($storage)) {
 			$result = $this->getModule('bconsole')->bconsoleCommand(
 				$this->director,
-				array('.storage')
+				['.storage']
 			);
 			if ($result->exitcode === 0) {
 				array_shift($result->output);
@@ -96,16 +98,16 @@ class SlotsUpdate extends BaculumAPIServer {
 			return;
 		}
 
-		$cmd = array(
+		$cmd = [
 			'update',
 			'slots',
 			'storage="' . $storage . '"',
 			'drive="' . $drive . '"',
 			'slot="' . $slots . '"'
-		);
+		];
 
 		if ($barcodes === false) {
-			array_splice($cmd, 2, 0, array('scan'));
+			array_splice($cmd, 2, 0, ['scan']);
 		}
 
 		$result = $this->getModule('bconsole')->bconsoleCommand(
@@ -123,4 +125,3 @@ class SlotsUpdate extends BaculumAPIServer {
 		}
 	}
 }
-?>

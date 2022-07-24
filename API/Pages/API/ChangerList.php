@@ -34,13 +34,13 @@ use Bacularis\Common\Modules\Errors\DeviceError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class ChangerList extends BaculumAPIServer {
+class ChangerList extends BaculumAPIServer
+{
+	public const LIST_PATTERN = '/^(?P<slot>\d+):(?P<volume>\S+)$/';
 
-	const LIST_PATTERN = '/^(?P<slot>\d+):(?P<volume>\S+)$/';
-
-	public function get() {
+	public function get()
+	{
 		$misc = $this->getModule('misc');
 		$device_name = $this->Request->contains('device_name') && $misc->isValidName($this->Request['device_name']) ? $this->Request['device_name'] : null;
 
@@ -63,7 +63,8 @@ class ChangerList extends BaculumAPIServer {
 		$this->error = $result->error;
 	}
 
-	private function parseList($output) {
+	private function parseList($output)
+	{
 		$list = [];
 		for ($i = 0; $i < count($output); $i++) {
 			if (preg_match(self::LIST_PATTERN, $output[$i], $match) == 1) {
@@ -76,4 +77,3 @@ class ChangerList extends BaculumAPIServer {
 		return $list;
 	}
 }
-?>

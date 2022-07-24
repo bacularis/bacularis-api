@@ -34,10 +34,11 @@ use Bacularis\Common\Modules\Errors\JobError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class JobTotals extends BaculumAPIServer {
-	public function get() {
+class JobTotals extends BaculumAPIServer
+{
+	public function get()
+	{
 		$error = false;
 		$allowed = [];
 		$result = $this->getModule('bconsole')->bconsoleCommand(
@@ -67,4 +68,3 @@ class JobTotals extends BaculumAPIServer {
 		}
 	}
 }
-?>

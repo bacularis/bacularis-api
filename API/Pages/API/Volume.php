@@ -34,13 +34,14 @@ use Bacularis\Common\Modules\Errors\VolumeError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class Volume extends BaculumAPIServer {
-	public function get() {
-		$mediaid = $this->Request->contains('id') ? intval($this->Request['id']) : 0;
+class Volume extends BaculumAPIServer
+{
+	public function get()
+	{
+		$mediaid = $this->Request->contains('id') ? (int) ($this->Request['id']) : 0;
 		$volume = $this->getModule('volume')->getVolumeById($mediaid);
-		if(is_object($volume)) {
+		if (is_object($volume)) {
 			$this->output = $volume;
 			$this->error = VolumeError::ERROR_NO_ERRORS;
 		} else {
@@ -48,46 +49,47 @@ class Volume extends BaculumAPIServer {
 			$this->error = VolumeError::ERROR_VOLUME_DOES_NOT_EXISTS;
 		}
 	}
-	
-	public function set($id, $params) {
+
+	public function set($id, $params)
+	{
 		$volume = $this->getModule('volume')->getVolumeById($id);
 		if (is_object($volume)) {
 			$misc = $this->getModule('misc');
-			$cmd = array('update', 'volume="' . $volume->volumename . '"');
-			if(property_exists($params, 'volstatus') && $misc->isValidState($params->volstatus)) {
+			$cmd = ['update', 'volume="' . $volume->volumename . '"'];
+			if (property_exists($params, 'volstatus') && $misc->isValidState($params->volstatus)) {
 				$cmd[] = 'volstatus="' . $params->volstatus . '"';
 			}
-			if(property_exists($params, 'poolid') && $misc->isValidId($params->poolid)) {
+			if (property_exists($params, 'poolid') && $misc->isValidId($params->poolid)) {
 				$pool = $this->getModule('pool')->getPoolById($params->poolid);
 				if (is_object($pool)) {
 					$cmd[] = 'pool="' . $pool->name . '"';
 				}
 			}
-			if(property_exists($params, 'volretention') && $misc->isValidInteger($params->volretention)) {
+			if (property_exists($params, 'volretention') && $misc->isValidInteger($params->volretention)) {
 				$cmd[] = 'volretention="' . $params->volretention . '"';
 			}
-			if(property_exists($params, 'voluseduration') && $misc->isValidInteger($params->voluseduration)) {
+			if (property_exists($params, 'voluseduration') && $misc->isValidInteger($params->voluseduration)) {
 				$cmd[] = 'voluseduration="' . $params->voluseduration . '"';
 			}
-			if(property_exists($params, 'maxvoljobs') && $misc->isValidInteger($params->maxvoljobs)) {
+			if (property_exists($params, 'maxvoljobs') && $misc->isValidInteger($params->maxvoljobs)) {
 				$cmd[] = 'maxvoljobs="' . $params->maxvoljobs . '"';
 			}
-			if(property_exists($params, 'maxvolfiles') && $misc->isValidInteger($params->maxvolfiles)) {
+			if (property_exists($params, 'maxvolfiles') && $misc->isValidInteger($params->maxvolfiles)) {
 				$cmd[] = 'maxvolfiles="' . $params->maxvolfiles . '"';
 			}
-			if(property_exists($params, 'maxvolbytes') && $misc->isValidInteger($params->maxvolbytes)) {
+			if (property_exists($params, 'maxvolbytes') && $misc->isValidInteger($params->maxvolbytes)) {
 				$cmd[] = 'maxvolbytes="' . $params->maxvolbytes . '"';
 			}
-			if(property_exists($params, 'slot') && $misc->isValidInteger($params->slot)) {
+			if (property_exists($params, 'slot') && $misc->isValidInteger($params->slot)) {
 				$cmd[] = 'slot="' . $params->slot . '"';
 			}
-			if(property_exists($params, 'recycle') && $misc->isValidBoolean($params->recycle)) {
+			if (property_exists($params, 'recycle') && $misc->isValidBoolean($params->recycle)) {
 				$cmd[] = 'recycle="' . ($params->recycle ? 'yes' : 'no') . '"';
 			}
-			if(property_exists($params, 'enabled') && $misc->isValidBoolean($params->enabled)) {
+			if (property_exists($params, 'enabled') && $misc->isValidBoolean($params->enabled)) {
 				$cmd[] = 'enabled="' . ($params->enabled ? 'yes' : 'no') . '"';
 			}
-			if(property_exists($params, 'inchanger') && $misc->isValidBoolean($params->inchanger)) {
+			if (property_exists($params, 'inchanger') && $misc->isValidBoolean($params->inchanger)) {
 				$cmd[] = 'inchanger="' . ($params->inchanger ? 'yes' : 'no') . '"';
 			}
 			$result = $this->getModule('bconsole')->bconsoleCommand($this->director, $cmd);
@@ -99,8 +101,9 @@ class Volume extends BaculumAPIServer {
 		}
 	}
 
-	public function remove() {
-		$mediaid = $this->Request->contains('id') ? intval($this->Request['id']) : 0;
+	public function remove()
+	{
+		$mediaid = $this->Request->contains('id') ? (int) ($this->Request['id']) : 0;
 		$volume = $this->getModule('volume')->getVolumeById($mediaid);
 		if (is_object($volume)) {
 			$result = $this->getModule('bconsole')->bconsoleCommand(
@@ -124,5 +127,3 @@ class Volume extends BaculumAPIServer {
 		}
 	}
 }
-
-?>

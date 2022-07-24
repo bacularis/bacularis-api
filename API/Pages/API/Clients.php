@@ -26,7 +26,7 @@
  *
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
- 
+
 use Bacularis\Common\Modules\Errors\ClientError;
 
 /**
@@ -34,30 +34,27 @@ use Bacularis\Common\Modules\Errors\ClientError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class Clients extends BaculumAPIServer {
-
-	public function get() {
-		$limit = $this->Request->contains('limit') ? intval($this->Request['limit']) : 0;
-		$result = $this->getModule('bconsole')->bconsoleCommand($this->director, array('.client'));
+class Clients extends BaculumAPIServer
+{
+	public function get()
+	{
+		$limit = $this->Request->contains('limit') ? (int) ($this->Request['limit']) : 0;
+		$result = $this->getModule('bconsole')->bconsoleCommand($this->director, ['.client']);
 		if ($result->exitcode === 0) {
 			$clients = $this->getModule('client')->getClients($limit);
 			array_shift($result->output);
-			$clients_output = array();
-			foreach($clients as $client) {
-				if(in_array($client->name, $result->output)) {
+			$clients_output = [];
+			foreach ($clients as $client) {
+				if (in_array($client->name, $result->output)) {
 					$clients_output[] = $client;
 				}
 			}
 			$this->output = $clients_output;
 			$this->error = ClientError::ERROR_NO_ERRORS;
 		} else {
-
 			$this->output = $result->output;
 			$this->error = $result->exitcode;
 		}
 	}
 }
-
-?>

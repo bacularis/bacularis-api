@@ -34,12 +34,13 @@ use Bacularis\Common\Modules\Errors\BconsoleError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class Directors extends BaculumAPIServer {
-	public function get() {
+class Directors extends BaculumAPIServer
+{
+	public function get()
+	{
 		$result = $this->getModule('bconsole')->getDirectors();
-		if($result->exitcode === 0) {
+		if ($result->exitcode === 0) {
 			$this->output = $result->output;
 			$this->error = BconsoleError::ERROR_NO_ERRORS;
 		} else {
@@ -48,4 +49,3 @@ class Directors extends BaculumAPIServer {
 		}
 	}
 }
-?>

@@ -34,10 +34,11 @@ use Bacularis\Common\Modules\Errors\BconsoleError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class FileSetResNames extends BaculumAPIServer {
-	public function get() {
+class FileSetResNames extends BaculumAPIServer
+{
+	public function get()
+	{
 		$directors = $this->getModule('bconsole')->getDirectors();
 		if ($directors->exitcode != 0) {
 			$this->output = $directors->output;
@@ -45,20 +46,20 @@ class FileSetResNames extends BaculumAPIServer {
 			return;
 		}
 
-		$filesets = array();
+		$filesets = [];
 		$error = false;
 		$error_obj = null;
 		for ($i = 0; $i < count($directors->output); $i++) {
 			$result = $this->getModule('bconsole')->bconsoleCommand(
 				$directors->output[$i],
-				array('show', 'fileset')
+				['show', 'fileset']
 			);
 			if ($result->exitcode != 0) {
 				$error_obj = $result;
 				$error = true;
 				break;
 			}
-			$filesets[$directors->output[$i]] = array();
+			$filesets[$directors->output[$i]] = [];
 
 			for ($j = 0; $j < count($result->output); $j++) {
 				if (preg_match('/^FileSet:\ name=(.+?(?=\s\S+\=.+)|.+$)/i', $result->output[$j], $match) === 1) {
@@ -72,8 +73,7 @@ class FileSetResNames extends BaculumAPIServer {
 			$this->error = $error_obj->exitcode;
 		} else {
 			$this->output = $filesets;
-			$this->error =  BconsoleError::ERROR_NO_ERRORS;
+			$this->error = BconsoleError::ERROR_NO_ERRORS;
 		}
 	}
 }
-?>

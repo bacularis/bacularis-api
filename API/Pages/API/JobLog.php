@@ -34,14 +34,15 @@ use Bacularis\Common\Modules\Errors\JobError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class JobLog extends BaculumAPIServer {
-	public function get() {
-		$jobid = $this->Request->contains('id') ? intval($this->Request['id']) : 0;
+class JobLog extends BaculumAPIServer
+{
+	public function get()
+	{
+		$jobid = $this->Request->contains('id') ? (int) ($this->Request['id']) : 0;
 		$show_time = false;
 		if ($this->Request->contains('show_time') && $this->getModule('misc')->isValidBoolean($this->Request['show_time'])) {
-			$show_time = (bool)$this->Request['show_time'];
+			$show_time = (bool) $this->Request['show_time'];
 		}
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
@@ -67,4 +68,3 @@ class JobLog extends BaculumAPIServer {
 		}
 	}
 }
-?>

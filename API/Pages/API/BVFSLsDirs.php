@@ -29,23 +29,23 @@
 
 use Bacularis\Common\Modules\Errors\BVFSError;
 use Bacularis\API\Modules\ConsoleOutputPage;
- 
+
 /**
  * BVFS list directories.
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class BVFSLsDirs extends ConsoleOutputPage {
-
-	public function get() {
+class BVFSLsDirs extends ConsoleOutputPage
+{
+	public function get()
+	{
 		$misc = $this->getModule('misc');
-		$limit = $this->Request->contains('limit') ? intval($this->Request['limit']) : 0;
-		$offset = $this->Request->contains('offset') ? intval($this->Request['offset']) : 0;
+		$limit = $this->Request->contains('limit') ? (int) ($this->Request['limit']) : 0;
+		$offset = $this->Request->contains('offset') ? (int) ($this->Request['offset']) : 0;
 		$jobids = $this->Request->contains('jobids') && $misc->isValidIdsList($this->Request['jobids']) ? $this->Request['jobids'] : null;
 		$path = $this->Request->contains('path') && $misc->isValidPath($this->Request['path']) ? $this->Request['path'] : '';
-		$pathid = $this->Request->contains('pathid') ? intval($this->Request['pathid']) : null;
+		$pathid = $this->Request->contains('pathid') ? (int) ($this->Request['pathid']) : null;
 		$out_format = $this->Request->contains('output') && $this->isOutputFormatValid($this->Request['output']) ? $this->Request['output'] : parent::OUTPUT_FORMAT_RAW;
 
 		if (is_null($jobids)) {
@@ -67,10 +67,10 @@ class BVFSLsDirs extends ConsoleOutputPage {
 			'offset' => $offset,
 			'limit' => $limit
 		];
-		$out = (object)['output' => [], 'exitcode' => 0];
+		$out = (object) ['output' => [], 'exitcode' => 0];
 		if ($out_format === parent::OUTPUT_FORMAT_RAW) {
 			$out = $this->getRawOutput($params);
-		} elseif($out_format === parent::OUTPUT_FORMAT_JSON) {
+		} elseif ($out_format === parent::OUTPUT_FORMAT_JSON) {
 			$out = $this->getJSONOutput($params);
 		}
 
@@ -84,23 +84,24 @@ class BVFSLsDirs extends ConsoleOutputPage {
 	 * @param array $params command  parameters
 	 * @return StdClass object with output and exitcode
 	 */
-	protected function getRawOutput($params = []) {
+	protected function getRawOutput($params = [])
+	{
 		$cmd = [
 			'.bvfs_lsdirs',
 			'jobid="' . $params['jobids'] . '"'
 		];
 
 		if ($params['pathid']) {
-			array_push($cmd, 'pathid="' .  $params['pathid'] . '"');
+			array_push($cmd, 'pathid="' . $params['pathid'] . '"');
 		} else {
-			array_push($cmd, 'path="' .  $params['path'] . '"');
+			array_push($cmd, 'path="' . $params['path'] . '"');
 		}
 
 		if ($params['offset'] > 0) {
-			array_push($cmd, 'offset="' .  $params['offset'] . '"');
+			array_push($cmd, 'offset="' . $params['offset'] . '"');
 		}
 		if ($params['limit'] > 0) {
-			array_push($cmd, 'limit="' .  $params['limit'] . '"');
+			array_push($cmd, 'limit="' . $params['limit'] . '"');
 		}
 		return $this->getModule('bconsole')->bconsoleCommand($this->director, $cmd);
 	}
@@ -111,8 +112,9 @@ class BVFSLsDirs extends ConsoleOutputPage {
 	 * @param array $params command  parameters
 	 * @return StdClass object with output and exitcode
 	 */
-	protected function getJSONOutput($params = []) {
-		$result = (object)['output' => [], 'exitcode' => 0];
+	protected function getJSONOutput($params = [])
+	{
+		$result = (object) ['output' => [], 'exitcode' => 0];
 		$raw = $this->getRawOutput($params);
 		if ($raw->exitcode === 0) {
 			$result->output = $this->getModule('bvfs')->parseFileDirList($raw->output);
@@ -122,4 +124,3 @@ class BVFSLsDirs extends ConsoleOutputPage {
 		return $result;
 	}
 }
-?>

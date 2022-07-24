@@ -34,15 +34,15 @@ use Bacularis\Common\Modules\Errors\DeviceError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class ChangerListAll extends BaculumAPIServer {
+class ChangerListAll extends BaculumAPIServer
+{
+	public const LIST_ALL_DRIVE_PATTERN = '/^D:(?P<index>\d+):(?P<state>[EF]):?(?P<slot>\d+)?:?(?P<volume>\S+)?$/';
+	public const LIST_ALL_SLOT_PATTERN = '/^S:(?P<slot>\d+):(?P<state>[EF]):?(?P<volume>\S+)?$/';
+	public const LIST_ALL_IO_SLOT_PATTERN = '/^I:(?P<slot>\d+):(?P<state>[EF]):?(?P<volume>\S+)?$/';
 
-	const LIST_ALL_DRIVE_PATTERN = '/^D:(?P<index>\d+):(?P<state>[EF]):?(?P<slot>\d+)?:?(?P<volume>\S+)?$/';
-	const LIST_ALL_SLOT_PATTERN = '/^S:(?P<slot>\d+):(?P<state>[EF]):?(?P<volume>\S+)?$/';
-	const LIST_ALL_IO_SLOT_PATTERN = '/^I:(?P<slot>\d+):(?P<state>[EF]):?(?P<volume>\S+)?$/';
-
-	public function get() {
+	public function get()
+	{
 		$misc = $this->getModule('misc');
 		$device_name = $this->Request->contains('device_name') && $misc->isValidName($this->Request['device_name']) ? $this->Request['device_name'] : null;
 
@@ -65,7 +65,8 @@ class ChangerListAll extends BaculumAPIServer {
 		$this->error = $result->error;
 	}
 
-	private function parseListAll($device_name, $output) {
+	private function parseListAll($device_name, $output)
+	{
 		$list = ['drives' => [], 'slots' => [], 'ie_slots' => []];
 		$drives = $this->getModule('device_config')->getChangerDrives($device_name);
 		$volumes = [];
@@ -77,7 +78,7 @@ class ChangerListAll extends BaculumAPIServer {
 			 */
 			$volumes = $this->getModule('volume')->getVolumesKeys();
 		}
-		$get_volume_info  = function($volname) use ($volumes) {
+		$get_volume_info = function ($volname) use ($volumes) {
 			$volume = [
 				'mediaid' => 0,
 				'volume' => '',
@@ -90,7 +91,7 @@ class ChangerListAll extends BaculumAPIServer {
 				'slot' => ''
 			];
 			if (key_exists($volname, $volumes)) {
-				$volume['mediaid'] = intval($volumes[$volname]->mediaid);
+				$volume['mediaid'] = (int) ($volumes[$volname]->mediaid);
 				$volume['mediatype'] = $volumes[$volname]->mediatype;
 				$volume['pool'] = $volumes[$volname]->pool;
 				$volume['lastwritten'] = $volumes[$volname]->lastwritten;
@@ -103,7 +104,7 @@ class ChangerListAll extends BaculumAPIServer {
 		};
 		for ($i = 0; $i < count($output); $i++) {
 			if (preg_match(self::LIST_ALL_DRIVE_PATTERN, $output[$i], $match) == 1) {
-				$index = intval($match['index']);
+				$index = (int) ($match['index']);
 				if (!key_exists($index, $drives)) {
 					continue;
 				}
@@ -120,7 +121,7 @@ class ChangerListAll extends BaculumAPIServer {
 					'drive' => $drive,
 					'device' => $device,
 					'state' => $match['state'],
-					'slot_ach' => key_exists('slot', $match) ? intval($match['slot']) : '',
+					'slot_ach' => key_exists('slot', $match) ? (int) ($match['slot']) : '',
 					'mediaid' => $volinfo['mediaid'],
 					'volume' => $volume,
 					'mediatype' => $volinfo['mediatype'],
@@ -139,7 +140,7 @@ class ChangerListAll extends BaculumAPIServer {
 				$volinfo = $get_volume_info($volume);
 				$list['slots'][] = [
 					'type' => 'slot',
-					'slot_ach' => intval($match['slot']),
+					'slot_ach' => (int) ($match['slot']),
 					'state' => $match['state'],
 					'mediaid' => $volinfo['mediaid'],
 					'volume' => $volume,
@@ -159,7 +160,7 @@ class ChangerListAll extends BaculumAPIServer {
 				$volinfo = $get_volume_info($volume);
 				$list['ie_slots'][] = [
 					'type' => 'ie_slot',
-					'slot_ach' => intval($match['slot']),
+					'slot_ach' => (int) ($match['slot']),
 					'state' => $match['state'],
 					'mediaid' => $volinfo['mediaid'],
 					'volume' => $volume,
@@ -176,4 +177,3 @@ class ChangerListAll extends BaculumAPIServer {
 		return $list;
 	}
 }
-?>

@@ -34,11 +34,11 @@ use Bacularis\Common\Modules\Errors\OAuth2Error;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class OAuth2Client extends BaculumAPIServer {
-
-	public function get() {
+class OAuth2Client extends BaculumAPIServer
+{
+	public function get()
+	{
 		$oauth2_client_id = $this->Request->contains('id') ? $this->Request['id'] : 0;
 		$client_id = $this->getModule('oauth2')->validateClientId($oauth2_client_id) ? $oauth2_client_id : null;
 		if (is_string($client_id)) {
@@ -56,7 +56,8 @@ class OAuth2Client extends BaculumAPIServer {
 		}
 	}
 
-	public function create($params) {
+	public function create($params)
+	{
 		$oauth2 = $this->getModule('oauth2');
 		$oauth2_config = $this->getModule('oauth2_config');
 		$misc = $this->getModule('misc');
@@ -128,12 +129,12 @@ class OAuth2Client extends BaculumAPIServer {
 			if (!$misc->isValidName($params->console)) {
 				$this->output = OAuth2Error::MSG_ERROR_OAUTH2_CLIENT_INVALID_CONSOLE;
 				$this->error = OAuth2Error::ERROR_OAUTH2_CLIENT_INVALID_CONSOLE;
-				return;	
+				return;
 			}
 			if (!$misc->isValidName($params->director)) {
 				$this->output = OAuth2Error::MSG_ERROR_OAUTH2_CLIENT_INVALID_DIRECTOR;
 				$this->error = OAuth2Error::ERROR_OAUTH2_CLIENT_INVALID_DIRECTOR;
-				return;	
+				return;
 			}
 			$bs = $this->getModule('bacula_setting');
 
@@ -184,7 +185,8 @@ class OAuth2Client extends BaculumAPIServer {
 		}
 	}
 
-	public function set($id, $params) {
+	public function set($id, $params)
+	{
 		$oauth2_client_id = property_exists($params, 'client_id') ? $params->client_id : 0;
 		$client_id = $this->getModule('oauth2')->validateClientId($oauth2_client_id) ? $oauth2_client_id : null;
 		if (!is_string($client_id)) {
@@ -255,12 +257,12 @@ class OAuth2Client extends BaculumAPIServer {
 			if (!$misc->isValidName($params->console)) {
 				$this->output = OAuth2Error::MSG_ERROR_OAUTH2_CLIENT_INVALID_CONSOLE;
 				$this->error = OAuth2Error::ERROR_OAUTH2_CLIENT_INVALID_CONSOLE;
-				return;	
+				return;
 			}
 			if (!$misc->isValidName($params->director)) {
 				$this->output = OAuth2Error::MSG_ERROR_OAUTH2_CLIENT_INVALID_DIRECTOR;
 				$this->error = OAuth2Error::ERROR_OAUTH2_CLIENT_INVALID_DIRECTOR;
-				return;	
+				return;
 			}
 			$bs = $this->getModule('bacula_setting');
 
@@ -309,7 +311,8 @@ class OAuth2Client extends BaculumAPIServer {
 		}
 	}
 
-	public function remove($id) {
+	public function remove($id)
+	{
 		$oauth2 = $this->getModule('oauth2_config');
 		$oauth2_cfg = $oauth2->getConfig();
 		if (key_exists($id, $oauth2_cfg)) {
@@ -328,4 +331,3 @@ class OAuth2Client extends BaculumAPIServer {
 		}
 	}
 }
-?>

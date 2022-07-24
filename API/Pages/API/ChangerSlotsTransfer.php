@@ -35,11 +35,11 @@ use Bacularis\API\Modules\ChangerCommand;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class ChangerSlotsTransfer extends BaculumAPIServer {
-
-	public function get() {
+class ChangerSlotsTransfer extends BaculumAPIServer
+{
+	public function get()
+	{
 		$output = [];
 		$misc = $this->getModule('misc');
 		if ($this->Request->contains('out_id') && $misc->isValidAlphaNumeric($this->Request->itemAt('out_id'))) {
@@ -50,11 +50,12 @@ class ChangerSlotsTransfer extends BaculumAPIServer {
 		$this->error = DeviceError::ERROR_NO_ERRORS;
 	}
 
-	public function set($id, $params) {
+	public function set($id, $params)
+	{
 		$misc = $this->getModule('misc');
 		$device_name = $this->Request->contains('device_name') && $misc->isValidName($this->Request['device_name']) ? $this->Request['device_name'] : null;
-		$slotsrc = $this->Request->contains('slotsrc') && $misc->isValidInteger($this->Request['slotsrc']) ? intval($this->Request['slotsrc']) : null;
-		$slotdest = $this->Request->contains('slotdest') && $misc->isValidInteger($this->Request['slotdest']) ? intval($this->Request['slotdest']) : null;
+		$slotsrc = $this->Request->contains('slotsrc') && $misc->isValidInteger($this->Request['slotsrc']) ? (int) ($this->Request['slotsrc']) : null;
+		$slotdest = $this->Request->contains('slotdest') && $misc->isValidInteger($this->Request['slotdest']) ? (int) ($this->Request['slotdest']) : null;
 
 		if (is_null($slotsrc) || is_null($slotdest)) {
 			$this->output = DeviceError::MSG_ERROR_DEVICE_WRONG_SLOT_NUMBER;
@@ -74,4 +75,3 @@ class ChangerSlotsTransfer extends BaculumAPIServer {
 		$this->error = $result->error;
 	}
 }
-?>

@@ -26,7 +26,7 @@
  *
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
- 
+
 use Bacularis\Common\Modules\Errors\StorageError;
 use Bacularis\API\Modules\Bconsole;
 
@@ -35,11 +35,11 @@ use Bacularis\API\Modules\Bconsole;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class StorageRelease extends BaculumAPIServer {
-
-	public function get() {
+class StorageRelease extends BaculumAPIServer
+{
+	public function get()
+	{
 		$output = [];
 		$misc = $this->getModule('misc');
 		if ($this->Request->contains('out_id') && $misc->isValidAlphaNumeric($this->Request->itemAt('out_id'))) {
@@ -50,8 +50,9 @@ class StorageRelease extends BaculumAPIServer {
 		$this->error = StorageError::ERROR_NO_ERRORS;
 	}
 
-	public function set($id, $params) {
-		$drive = $this->Request->contains('drive') ? intval($this->Request['drive']) : 0;
+	public function set($id, $params)
+	{
+		$drive = $this->Request->contains('drive') ? (int) ($this->Request['drive']) : 0;
 		$device = $this->Request->contains('device') ? $this->Request['device'] : null;
 
 		$result = $this->getModule('bconsole')->bconsoleCommand(
@@ -84,5 +85,3 @@ class StorageRelease extends BaculumAPIServer {
 		}
 	}
 }
-
-?>

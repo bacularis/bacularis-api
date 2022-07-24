@@ -31,7 +31,8 @@ namespace Bacularis\API\Modules;
 
 use Bacularis\Common\Modules\Logging;
 use Bacularis\Common\Modules\Params;
-use Bacularis\Common\Modules\Errors\{BaculaConfigError,JSONToolsError};
+use Bacularis\Common\Modules\Errors\BaculaConfigError;
+use Bacularis\Common\Modules\Errors\JSONToolsError;
 use Bacularis\API\Modules\BAPIException;
 use Bacularis\API\Modules\APIModule;
 use Bacularis\API\Modules\APIConfig;
@@ -41,34 +42,33 @@ use Bacularis\API\Modules\APIConfig;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Config
- * @package Baculum API
  */
-class BaculaSetting extends APIModule {
-
-	const COMPONENT_DIR_TYPE = 'dir';
-	const COMPONENT_SD_TYPE = 'sd';
-	const COMPONENT_FD_TYPE = 'fd';
-	const COMPONENT_BCONS_TYPE = 'bcons';
+class BaculaSetting extends APIModule
+{
+	public const COMPONENT_DIR_TYPE = 'dir';
+	public const COMPONENT_SD_TYPE = 'sd';
+	public const COMPONENT_FD_TYPE = 'fd';
+	public const COMPONENT_BCONS_TYPE = 'bcons';
 
 	/**
 	 * These string value directives cannot by defined in quotes.
 	 */
-	private $unquoted_string_directives = array(
-		'Director' => array(
+	private $unquoted_string_directives = [
+		'Director' => [
 			'DirAddress',
 			'DirAddresses',
 			'DirSourceAddress'
-		),
-		'FileDaemon' => array(
+		],
+		'FileDaemon' => [
 			'FdAddress',
 			'FdAddresses',
 			'FdSourceAddress'
-		),
-		'Storage' => array(
+		],
+		'Storage' => [
 			'SdAddress',
 			'SdAddresses'
-		),
-		'Messages' => array(
+		],
+		'Messages' => [
 			'Append',
 			'Catalog',
 			'Console',
@@ -81,26 +81,28 @@ class BaculaSetting extends APIModule {
 			'Stderr',
 			'Stdout',
 			'Syslog'
-		)
-	);
+		]
+	];
 
-	private function getComponentTypes() {
-		$types = array(
+	private function getComponentTypes()
+	{
+		$types = [
 			self::COMPONENT_DIR_TYPE,
 			self::COMPONENT_SD_TYPE,
 			self::COMPONENT_FD_TYPE,
 			self::COMPONENT_BCONS_TYPE
-		);
+		];
 		return $types;
 	}
 
-	public function getConfig($component_type = null, $resource_type = null, $resource_name = null, $opts = []) {
+	public function getConfig($component_type = null, $resource_type = null, $resource_name = null, $opts = [])
+	{
 		$this->checkConfigSupport($component_type);
-		$config = array();
+		$config = [];
 		$json_tools = $this->Application->getModule('json_tools');
 		if (!is_null($component_type)) {
 			// get resources config
-			$params = array();
+			$params = [];
 			if ($component_type == self::COMPONENT_DIR_TYPE && (!key_exists('apply_jobdefs', $opts) || $opts['apply_jobdefs'] == false)) {
 				$params['dont_apply_jobdefs'] = true;
 			}
@@ -118,8 +120,9 @@ class BaculaSetting extends APIModule {
 		return $config;
 	}
 
-	private function getComponents() {
-		$components_info = array();
+	private function getComponents()
+	{
+		$components_info = [];
 		$json_tools = $this->Application->getModule('json_tools');
 		$components = $this->getSupportedComponents();
 		$is_any = false;
@@ -129,11 +132,11 @@ class BaculaSetting extends APIModule {
 			$error_msg = '';
 			$resource_type = $this->Application->getModule('misc')->getMainComponentResource($component_type);
 			$directive_name = 'Name';
-			$params = array(
+			$params = [
 				'resource_type' => $resource_type,
 				'directive_name' => $directive_name,
 				'data_only' => true
-			);
+			];
 			$result = $json_tools->execCommand($component_type, $params);
 			$state = ($result['exitcode'] === 0 && is_array($result['output']));
 			if ($state === true) {
@@ -151,12 +154,12 @@ class BaculaSetting extends APIModule {
 				 */
 				$error_msg = $result['output'];
 			}
-			$component = array(
+			$component = [
 				'component_type' => $component_type,
 				'component_name' => $component_name,
 				'state' => $state,
 				'error_msg' => $error_msg
-			);
+			];
 			array_push($components_info, $component);
 		}
 
@@ -168,11 +171,12 @@ class BaculaSetting extends APIModule {
 		return $result;
 	}
 
-	public function setConfig($config, $component_type, $resource_type = null, $resource_name = null) {
-		$ret = array('is_valid' => false, 'save_result' => false, 'result' => null);
+	public function setConfig($config, $component_type, $resource_type = null, $resource_name = null)
+	{
+		$ret = ['is_valid' => false, 'save_result' => false, 'result' => null];
 		$this->checkConfigSupport($component_type);
 		$json_tools = $this->Application->getModule('json_tools');
-		$params = array();
+		$params = [];
 		if ($component_type == self::COMPONENT_DIR_TYPE) {
 			$params['dont_apply_jobdefs'] = true;
 		}
@@ -181,7 +185,7 @@ class BaculaSetting extends APIModule {
 			$config_orig = $result['output'];
 			if (!is_null($resource_type) && !is_null($resource_name)) {
 				// Set single resource
-				$config_new = array($resource_type => $config);
+				$config_new = [$resource_type => $config];
 			} else {
 				// Set whole config
 				$config_new = $config;
@@ -193,8 +197,9 @@ class BaculaSetting extends APIModule {
 		return $ret;
 	}
 
-	private function saveConfig(array $config_orig, array $config_new, $component_type, $resource_type = null, $resource_name = null) {
-		$config = array();
+	private function saveConfig(array $config_orig, array $config_new, $component_type, $resource_type = null, $resource_name = null)
+	{
+		$config = [];
 
 		if (!is_null($resource_type) && !is_null($resource_name)) {
 			// Update single resource in config
@@ -215,15 +220,16 @@ class BaculaSetting extends APIModule {
 		return $this->getModule('bacula_config')->setConfig($component_type, $config);
 	}
 
-	private function updateConfig(array $config_orig, array $config_new) {
+	private function updateConfig(array $config_orig, array $config_new)
+	{
 		$config = $config_orig;
-		$updated_res = array();
+		$updated_res = [];
 		for ($i = 0; $i < count($config_new); $i++) {
 			$resource_new = $config_new[$i];
 			$found = false;
 			for ($j = 0; $j < count($config_orig); $j++) {
 				$resource_orig = $config_orig[$j];
-				if ($this->compareResources(array($resource_orig, $resource_new)) === true) {
+				if ($this->compareResources([$resource_orig, $resource_new]) === true) {
 					// Resource type and name are the same. Update directives.
 					$config[$j] = $this->updateResource($resource_orig, $resource_new);
 					$updated_res[] = $config[$j];
@@ -244,7 +250,7 @@ class BaculaSetting extends APIModule {
 		for ($i = 0; $i < count($config); $i++) {
 			$resource = $config[$i];
 			for ($j = 0; $j < count($updated_res); $j++) {
-				if ($this->compareResources(array($resource, $updated_res[$j])) === true) {
+				if ($this->compareResources([$resource, $updated_res[$j]]) === true) {
 					// skip already formatted resources
 					continue 2;
 				}
@@ -255,12 +261,13 @@ class BaculaSetting extends APIModule {
 		return $config;
 	}
 
-	private function updateConfigResource(array $config_orig, array $resource, $resource_type, $resource_name) {
-		$config = array();
+	private function updateConfigResource(array $config_orig, array $resource, $resource_type, $resource_name)
+	{
+		$config = [];
 		$is_update = false;
 		for ($i = 0; $i < count($config_orig); $i++) {
 			$resource_orig = $config_orig[$i];
-			if ($this->compareResources(array($resource_orig, $resource)) === true) {
+			if ($this->compareResources([$resource_orig, $resource]) === true) {
 				// Resource type and name are the same. Update directives.
 				$config[] = $this->updateResource($resource_orig, $resource);
 				$is_update = true;
@@ -283,26 +290,27 @@ class BaculaSetting extends APIModule {
 				$config[] = $this->updateResource($resource_orig, $resource);
 			} else {
 				// Add new resource
-				$config[] = $this->updateResource(array($resource_type => array()), $resource);
+				$config[] = $this->updateResource([$resource_type => []], $resource);
 			}
 		}
 		return $config;
 	}
 
-	private function updateResource(array $resource_orig, array $resource_new) {
-		$resource = array();
+	private function updateResource(array $resource_orig, array $resource_new)
+	{
+		$resource = [];
 		$resource_type_orig = key($resource_orig);
 		$resource_type_new = key($resource_new);
 
 		if ($resource_type_new === 'Schedule') {
 			$resource_type = $resource_type_new;
-			$resource = array($resource_type => array());
+			$resource = [$resource_type => []];
 			foreach ($resource_new[$resource_type] as $directive_name => $directive_value) {
 				if ($directive_name === 'Run' || $directive_name === 'Connect') {
-					for($i = 0; $i < count($directive_value); $i++) {
+					for ($i = 0; $i < count($directive_value); $i++) {
 						if (is_array($directive_value[$i])) {
 							if (key_exists('Hour', $directive_value[$i])) {
-								$values = array();
+								$values = [];
 								foreach ($directive_value[$i] as $value) {
 									$values[] = $this->formatDirectiveValue(
 										$resource_type,
@@ -330,10 +338,10 @@ class BaculaSetting extends APIModule {
 								$woms = Params::getWeeksOfMonthConfig($directive_value[$i]['WeekOfMonth']);
 								$dows = Params::getDaysOfWeekConfig($directive_value[$i]['DayOfWeek']);
 								$t = Params::getTimeConfig($directive_value[$i]['Hour'], $min);
-								$value = array($overwrite_directive, $moys, $woys, $doms, $woms, $dows, $t);
+								$value = [$overwrite_directive, $moys, $woys, $doms, $woms, $dows, $t];
 								$value = array_filter($value);
 								if (!array_key_exists($directive_name, $resource[$resource_type])) {
-									$resource[$resource_type][$directive_name] = array();
+									$resource[$resource_type][$directive_name] = [];
 								}
 								$resource[$resource_type][$directive_name][] = implode(' ', $value);
 							} else {
@@ -347,14 +355,13 @@ class BaculaSetting extends APIModule {
 					$resource[$resource_type][$directive_name] = $this->formatDirectiveValue($resource_type, $directive_name, $directive_value);
 				}
 			}
-
 		} elseif ($resource_type_new === 'Messages') {
 			$resource_type = $resource_type_new;
-			$resource = array($resource_type => array());
+			$resource = [$resource_type => []];
 			foreach ($resource_new[$resource_type] as $directive_name => $directive_value) {
 				if ($directive_name === 'Destinations') {
 					for ($i = 0; $i < count($directive_value); $i++) {
-						$value = array();
+						$value = [];
 						if (array_key_exists('Where', $directive_value[$i])) {
 							array_push($value, implode(',', $directive_value[$i]['Where']));
 						}
@@ -365,10 +372,9 @@ class BaculaSetting extends APIModule {
 					$resource[$resource_type][$directive_name] = $this->formatDirectiveValue($resource_type, $directive_name, $directive_value);
 				}
 			}
-
 		} elseif ($resource_type_orig === $resource_type_new) {
 			$resource_type = $resource_type_orig;
-			$resource = array($resource_type => array());
+			$resource = [$resource_type => []];
 
 			foreach ($resource_orig[$resource_type] as $directive_name => $directive_value) {
 				if (!array_key_exists($directive_name, $resource_new[$resource_type])) {
@@ -404,9 +410,10 @@ class BaculaSetting extends APIModule {
 		return $resource;
 	}
 
-	private function updateSubResource($resource_type, $directive_name, array $subresource_new) {
-		$resource = array();
-		foreach($subresource_new as $index => $directive_value) {
+	private function updateSubResource($resource_type, $directive_name, array $subresource_new)
+	{
+		$resource = [];
+		foreach ($subresource_new as $index => $directive_value) {
 			$check_recursive = false;
 			if (is_array($directive_value)) {
 				$assoc_keys = array_filter(array_keys($directive_value), 'is_string');
@@ -430,9 +437,10 @@ class BaculaSetting extends APIModule {
 	}
 
 
-	private function compareResources(array $resources) {
+	private function compareResources(array $resources)
+	{
 		$same_resource = false;
-		$items = array('type' => array(), 'name' => array());
+		$items = ['type' => [], 'name' => []];
 		$resources_count = count($resources);
 		$counter = 0;
 		for ($i = 0; $i < $resources_count; $i++) {
@@ -458,11 +466,12 @@ class BaculaSetting extends APIModule {
 		return $same_resource;
 	}
 
-	private function getConfigResourceIndex($config, $resource_type, $resource_name) {
+	private function getConfigResourceIndex($config, $resource_type, $resource_name)
+	{
 		$index = null;
-		$find_resource = array($resource_type => array('Name' => $resource_name));
+		$find_resource = [$resource_type => ['Name' => $resource_name]];
 		for ($i = 0; $i < count($config); $i++) {
-			if ($this->compareResources(array($config[$i], $find_resource)) === true) {
+			if ($this->compareResources([$config[$i], $find_resource]) === true) {
 				$index = $i;
 				break;
 			}
@@ -480,7 +489,8 @@ class BaculaSetting extends APIModule {
 	 * @param mixed $value directive value
 	 * @return mixed formatted directive value
 	 */
-	private function formatDirectiveValue($resource_type, $directive_name, $value) {
+	private function formatDirectiveValue($resource_type, $directive_name, $value)
+	{
 		$directive_value = null;
 		if (is_bool($value)) {
 			$directive_value = Params::getBoolValue($value);
@@ -494,7 +504,7 @@ class BaculaSetting extends APIModule {
 			$directive_value = $value;
 		} elseif (is_array($value)) {
 			// only simple numeric arrays
-			$dvalues = array();
+			$dvalues = [];
 			for ($i = 0; $i < count($value); $i++) {
 				if (is_array($value[$i])) {
 					$dvalues[] = $this->updateSubResource($resource_type, $directive_name, $value[$i]);
@@ -523,11 +533,12 @@ class BaculaSetting extends APIModule {
 	 * Currently a component type is the same as related JSON tool type, but it can be
 	 * changed in the future. From this reason components have theirown types.
 	 *
-	 * @return array supported component types
 	 * @throws BConfigException if json tools support is disabled
+	 * @return array supported component types
 	 */
-	public function getSupportedComponents() {
-		$components = array();
+	public function getSupportedComponents()
+	{
+		$components = [];
 		$types = $this->getComponentTypes();
 		$tools = $this->getModule('api_config')->getSupportedJSONTools();
 		for ($i = 0; $i < count($tools); $i++) {
@@ -546,7 +557,8 @@ class BaculaSetting extends APIModule {
 	 * @param mixed $component_type component type for which config support is checked
 	 * @throws BConfigException if support is not configured or disabled
 	 */
-	private function checkConfigSupport($component_type = null) {
+	private function checkConfigSupport($component_type = null)
+	{
 		$api_cfg = $this->getModule('api_config');
 		if (!$api_cfg->isJSONToolsConfigured($component_type) || !$api_cfg->isJSONToolsEnabled()) {
 			throw new BConfigException(
@@ -572,7 +584,8 @@ class BaculaSetting extends APIModule {
 	 * @param string $component_type component type
 	 * @return string json tool type
 	 */
-	public function getJSONToolTypeByComponentType($component_type) {
+	public function getJSONToolTypeByComponentType($component_type)
+	{
 		$tool_type = null;
 		switch ($component_type) {
 			case self::COMPONENT_DIR_TYPE: $tool_type = APIConfig::JSON_TOOL_DIR_TYPE; break;
@@ -583,9 +596,10 @@ class BaculaSetting extends APIModule {
 		return $tool_type;
 	}
 
-	private function overwrite_directives_callback($directive_name, $directive_value) {
+	private function overwrite_directives_callback($directive_name, $directive_value)
+	{
 		$directive = '';
-		$overwrite_directives = array(
+		$overwrite_directives = [
 			'Level',
 			'Pool',
 			'Storage',
@@ -599,11 +613,10 @@ class BaculaSetting extends APIModule {
 			'MaxRunSchedTime',
 			'NextPool',
 			'MaxConnectTime'
-		);
+		];
 		if (in_array($directive_name, $overwrite_directives)) {
 			$directive = "{$directive_name}={$directive_value}";
 		}
 		return $directive;
 	}
 }
-?>

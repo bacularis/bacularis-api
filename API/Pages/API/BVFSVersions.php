@@ -26,7 +26,7 @@
  *
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
- 
+
 use Bacularis\Common\Modules\Errors\BVFSError;
 use Bacularis\API\Modules\ConsoleOutputPage;
 
@@ -35,21 +35,21 @@ use Bacularis\API\Modules\ConsoleOutputPage;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class BVFSVersions extends ConsoleOutputPage {
-
-	public function get() {
-		$jobid = $this->Request->contains('jobid') ? intval($this->Request['jobid']) : 0;
-		$pathid = $this->Request->contains('pathid') ? intval($this->Request['pathid']) : 0;
-		$filenameid = $this->Request->contains('filenameid') ? intval($this->Request['filenameid']) : 0;
-		$copies = $this->Request->contains('copies') ? intval($this->Request['copies']) : 0;
+class BVFSVersions extends ConsoleOutputPage
+{
+	public function get()
+	{
+		$jobid = $this->Request->contains('jobid') ? (int) ($this->Request['jobid']) : 0;
+		$pathid = $this->Request->contains('pathid') ? (int) ($this->Request['pathid']) : 0;
+		$filenameid = $this->Request->contains('filenameid') ? (int) ($this->Request['filenameid']) : 0;
+		$copies = $this->Request->contains('copies') ? (int) ($this->Request['copies']) : 0;
 		$out_format = $this->Request->contains('output') && $this->isOutputFormatValid($this->Request['output']) ? $this->Request['output'] : parent::OUTPUT_FORMAT_RAW;
 		$client = null;
 		if ($this->Request->contains('client') && $this->getModule('misc')->isValidName($this->Request['client'])) {
 			$client = $this->Request['client'];
 		} elseif ($this->Request->contains('clientid')) {
-			$clientid = intval($this->Request['clientid']);
+			$clientid = (int) ($this->Request['clientid']);
 			$client_row = $this->getModule('client')->getClientById($clientid);
 			if (is_object($client_row)) {
 				$client = $client_row->name;
@@ -68,10 +68,10 @@ class BVFSVersions extends ConsoleOutputPage {
 			'filenameid' => $filenameid,
 			'copies' => $copies
 		];
-		$out = (object)['output' => [], 'exitcode' => 0];
+		$out = (object) ['output' => [], 'exitcode' => 0];
 		if ($out_format === parent::OUTPUT_FORMAT_RAW) {
 			$out = $this->getRawOutput($params);
-		} elseif($out_format === parent::OUTPUT_FORMAT_JSON) {
+		} elseif ($out_format === parent::OUTPUT_FORMAT_JSON) {
 			$out = $this->getJSONOutput($params);
 		}
 
@@ -85,14 +85,15 @@ class BVFSVersions extends ConsoleOutputPage {
 	 * @param array $params command  parameters
 	 * @return StdClass object with output and exitcode
 	 */
-	protected function getRawOutput($params = []) {
-		$cmd = array(
+	protected function getRawOutput($params = [])
+	{
+		$cmd = [
 			'.bvfs_versions',
 			'client="' . $params['client'] . '"',
 			'jobid="' . $params['jobid'] . '"',
 			'pathid="' . $params['pathid'] . '"',
 			'fnid="' . $params['filenameid'] . '"'
-		);
+		];
 		if ($params['copies'] == 1) {
 			$cmd[] = 'copies';
 		}
@@ -105,8 +106,9 @@ class BVFSVersions extends ConsoleOutputPage {
 	 * @param array $params command  parameters
 	 * @return StdClass object with output and exitcode
 	 */
-	protected function getJSONOutput($params = []) {
-		$result = (object)['output' => [], 'exitcode' => 0];
+	protected function getJSONOutput($params = [])
+	{
+		$result = (object) ['output' => [], 'exitcode' => 0];
 		$raw = $this->getRawOutput($params);
 		if ($raw->exitcode === 0) {
 			$result->output = $this->getModule('bvfs')->parseFileVersions($raw->output);
@@ -116,4 +118,3 @@ class BVFSVersions extends ConsoleOutputPage {
 		return $result;
 	}
 }
-?>

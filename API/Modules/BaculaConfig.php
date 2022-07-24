@@ -37,14 +37,13 @@ use Bacularis\Common\Modules\ConfigFileModule;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Config
- * @package Baculum API
  */
-class BaculaConfig extends ConfigFileModule {
-
+class BaculaConfig extends ConfigFileModule
+{
 	/**
 	 * Bacula config file format
 	 */
-	const CONFIG_FILE_FORMAT = 'bacula';
+	public const CONFIG_FILE_FORMAT = 'bacula';
 
 	/**
 	 * Get (read) Bacula config.
@@ -54,8 +53,9 @@ class BaculaConfig extends ConfigFileModule {
 	 * @param array $params requested config parameters
 	 * @return array config
 	 */
-	public function getConfig($component_type, $params = array()) {
-		$config = array();
+	public function getConfig($component_type, $params = [])
+	{
+		$config = [];
 		$result = $this->getModule('json_tools')->execCommand($component_type, $params);
 		if ($result['exitcode'] === 0 && is_array($result['output'])) {
 			$config = $result['output'];
@@ -72,8 +72,9 @@ class BaculaConfig extends ConfigFileModule {
 	 * @param string $file config file path
 	 * @return array validation result, validation output and write to config result
 	 */
-	public function setConfig($component_type, array $config, $file = null) {
-		$result = array('is_valid' => false, 'save_result' => false, 'output' => null);
+	public function setConfig($component_type, array $config, $file = null)
+	{
+		$result = ['is_valid' => false, 'save_result' => false, 'output' => null];
 		$config_content = $this->prepareConfig($config, self::CONFIG_FILE_FORMAT);
 		$validation = $this->validateConfig($component_type, $config_content);
 		$result['is_valid'] = $validation['is_valid'];
@@ -100,9 +101,10 @@ class BaculaConfig extends ConfigFileModule {
 	 * @param string $config config
 	 * @return array validation output and exitcode
 	 */
-	private function validateConfig($component_type, $config) {
-		$ret = array('is_valid' => false, 'result' => null);
-		$params = array('test_config' => true);
+	private function validateConfig($component_type, $config)
+	{
+		$ret = ['is_valid' => false, 'result' => null];
+		$params = ['test_config' => true];
 		$result = $this->getModule('json_tools')->execCommand($component_type, $params, $config);
 		if ($result['exitcode'] === 0) {
 			$ret['is_valid'] = true;
@@ -123,4 +125,3 @@ class BaculaConfig extends ConfigFileModule {
 		return $ret;
 	}
 }
-?>

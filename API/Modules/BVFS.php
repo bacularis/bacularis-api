@@ -35,23 +35,23 @@ namespace Bacularis\API\Modules;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Module
- * @package Baculum API
  */
-class BVFS extends APIModule {
+class BVFS extends APIModule
+{
+	public const DIR_PATTERN = '/^(?P<pathid>\d+)\t(?P<filenameid>\d+)\t(?P<fileid>\d+)\t(?P<jobid>\d+)\t(?P<lstat>[a-zA-z0-9\+\-\/\ ]+)\t(?P<name>(.*\/|\.{2}))$/';
+	public const FILE_PATTERN = '/^(?P<pathid>\d+)\t(?P<filenameid>\d+)\t(?P<fileid>\d+)\t(?P<jobid>\d+)\t(?P<lstat>[a-zA-z0-9\+\-\/\ ]+)\t(?P<name>[^\/]+)$/';
+	public const VERSION_PATTERN = '/^(?P<pathid>\d+)\t(?P<filenameid>\d+)\t(?P<fileid>\d+)\t(?P<jobid>\d+)\t(?P<lstat>[a-zA-Z0-9\+\-\/\ ]+)\t(?P<md5>.+)\t(?P<volname>.+)\t(?P<inchanger>\d+)$/';
 
-	const DIR_PATTERN = '/^(?P<pathid>\d+)\t(?P<filenameid>\d+)\t(?P<fileid>\d+)\t(?P<jobid>\d+)\t(?P<lstat>[a-zA-z0-9\+\-\/\ ]+)\t(?P<name>(.*\/|\.{2}))$/';
-	const FILE_PATTERN = '/^(?P<pathid>\d+)\t(?P<filenameid>\d+)\t(?P<fileid>\d+)\t(?P<jobid>\d+)\t(?P<lstat>[a-zA-z0-9\+\-\/\ ]+)\t(?P<name>[^\/]+)$/';
-	const VERSION_PATTERN = '/^(?P<pathid>\d+)\t(?P<filenameid>\d+)\t(?P<fileid>\d+)\t(?P<jobid>\d+)\t(?P<lstat>[a-zA-Z0-9\+\-\/\ ]+)\t(?P<md5>.+)\t(?P<volname>.+)\t(?P<inchanger>\d+)$/';
-
-	public function parseFileDirList($list) {
-		$elements = array();
+	public function parseFileDirList($list)
+	{
+		$elements = [];
 		$blstat = $this->getModule('blstat');
-		for($i = 0; $i < count($list); $i++) {
-			if(preg_match(self::DIR_PATTERN, $list[$i], $match) == 1) {
-				if($match['name'] == '.') {
+		for ($i = 0; $i < count($list); $i++) {
+			if (preg_match(self::DIR_PATTERN, $list[$i], $match) == 1) {
+				if ($match['name'] == '.') {
 					continue;
 				}
-				$elements[] = array(
+				$elements[] = [
 					'pathid' => $match['pathid'],
 					'filenameid' => $match['filenameid'],
 					'fileid' => $match['fileid'],
@@ -59,12 +59,12 @@ class BVFS extends APIModule {
 					'lstat' => $blstat->decode($match['lstat']),
 					'name' => $match['name'],
 					'type' => 'dir'
-				);
-			} elseif(preg_match(self::FILE_PATTERN, $list[$i], $match) == 1) {
-				if($match['name'] == '.') {
+				];
+			} elseif (preg_match(self::FILE_PATTERN, $list[$i], $match) == 1) {
+				if ($match['name'] == '.') {
 					continue;
 				}
-				$elements[] = array(
+				$elements[] = [
 					'pathid' => $match['pathid'],
 					'filenameid' => $match['filenameid'],
 					'fileid' => $match['fileid'],
@@ -72,18 +72,19 @@ class BVFS extends APIModule {
 					'lstat' => $blstat->decode($match['lstat']),
 					'name' => $match['name'],
 					'type' => 'file'
-				);
+				];
 			}
 		}
 		usort($elements, [__NAMESPACE__ . '\BVFS', 'sortFilesListByName']);
 		return $elements;
 	}
 
-	public function parseFileVersions($list) {
-		$elements = array();
-		for($i = 0; $i < count($list); $i++) {
-			if(preg_match(self::VERSION_PATTERN, $list[$i], $match) == 1) {
-				$elements[$match['fileid']] = array(
+	public function parseFileVersions($list)
+	{
+		$elements = [];
+		for ($i = 0; $i < count($list); $i++) {
+			if (preg_match(self::VERSION_PATTERN, $list[$i], $match) == 1) {
+				$elements[$match['fileid']] = [
 					'pathid' => $match['pathid'],
 					'filenameid' => $match['filenameid'],
 					'fileid' => $match['fileid'],
@@ -93,7 +94,7 @@ class BVFS extends APIModule {
 					'volname' => $match['volname'],
 					'inchanger' => $match['inchanger'],
 					'type' => 'file'
-				);
+				];
 			}
 		}
 		return $elements;
@@ -103,15 +104,15 @@ class BVFS extends APIModule {
 	 * Function keeps '.' and '..' names always in the beginning of array.
 	 * Used to sort files and directories from Bvfs.
 	 */
-	private function sortFilesListByName($a, $b) {
+	private function sortFilesListByName($a, $b)
+	{
 		$firstLeft = substr($a['name'], 0, 1);
 		$firstRight = substr($b['name'], 0, 1);
 		if ($firstLeft == '.' && $firstRight != '.') {
 			return -1;
-		} else if ($firstRight == '.' && $firstLeft != '.') {
+		} elseif ($firstRight == '.' && $firstLeft != '.') {
 			return 1;
 		}
 		return strcmp($a['name'], $b['name']);
 	}
 }
-?>

@@ -26,7 +26,7 @@
  *
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
- 
+
 use Bacularis\Common\Modules\Errors\StorageError;
 
 /**
@@ -34,18 +34,19 @@ use Bacularis\Common\Modules\Errors\StorageError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class StorageMountV1 extends BaculumAPIServer {
-	public function get() {
-		$storageid = $this->Request->contains('id') ? intval($this->Request['id']) : 0;
-		$drive = $this->Request->contains('drive') ? intval($this->Request['drive']) : 0;
+class StorageMountV1 extends BaculumAPIServer
+{
+	public function get()
+	{
+		$storageid = $this->Request->contains('id') ? (int) ($this->Request['id']) : 0;
+		$drive = $this->Request->contains('drive') ? (int) ($this->Request['drive']) : 0;
 		$device = ($this->Request->contains('device') && $this->getModule('misc')->isValidName($this->Request['device'])) ? $this->Request['device'] : null;
-		$slot = $this->Request->contains('slot') ? intval($this->Request['slot']) : 0;
+		$slot = $this->Request->contains('slot') ? (int) ($this->Request['slot']) : 0;
 
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
-			array('.storage')
+			['.storage']
 		);
 		if ($result->exitcode === 0) {
 			array_shift($result->output);
@@ -53,12 +54,12 @@ class StorageMountV1 extends BaculumAPIServer {
 			if (is_object($storage) && in_array($storage->name, $result->output)) {
 				$result = $this->getModule('bconsole')->bconsoleCommand(
 					$this->director,
-					array(
+					[
 						'mount',
 						'storage="' . $storage->name . '"',
 						(is_string($device) ? 'device="' . $device . '" drive=0' : 'drive=' . $drive),
 						'slot=' . $slot
-					)
+					]
 				);
 				$this->output = $result->output;
 				$this->error = $result->exitcode;
@@ -72,5 +73,3 @@ class StorageMountV1 extends BaculumAPIServer {
 		}
 	}
 }
-
-?>

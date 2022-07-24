@@ -37,22 +37,22 @@ use Bacularis\API\Modules\LogRecord;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Module
- * @package Baculum API
  */
-class LogManager extends APIModule {
-
+class LogManager extends APIModule
+{
 	/**
 	 * Get job log by job identifier.
 	 *
-	 * @param integer $jobid job identifier
-	 * @param boolean $show_time show time in job log
+	 * @param int $jobid job identifier
+	 * @param bool $show_time show time in job log
 	 * @return array job log lines
 	 */
-	public function getLogByJobId($jobid, $show_time = false) {
+	public function getLogByJobId($jobid, $show_time = false)
+	{
 		$logs = LogRecord::finder()->findAllByjobid($jobid);
 		$joblog = [];
-		if(is_array($logs)) {
-			foreach($logs as $log) {
+		if (is_array($logs)) {
+			foreach ($logs as $log) {
 				if ($show_time) {
 					$joblog[] = $log->time . ' ' . $log->logtext;
 				} else {
@@ -63,4 +63,3 @@ class LogManager extends APIModule {
 		return $joblog;
 	}
 }
-?>

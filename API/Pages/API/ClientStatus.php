@@ -26,7 +26,7 @@
  *
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
- 
+
 use Bacularis\API\Modules\ConsoleOutputPage;
 
 /**
@@ -34,19 +34,19 @@ use Bacularis\API\Modules\ConsoleOutputPage;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class ClientStatus extends ConsoleOutputPage {
-
-	public function get() {
-		$clientid = $this->Request->contains('id') ? intval($this->Request['id']) : 0;
+class ClientStatus extends ConsoleOutputPage
+{
+	public function get()
+	{
+		$clientid = $this->Request->contains('id') ? (int) ($this->Request['id']) : 0;
 		$client = $this->getModule('client')->getClientById($clientid);
 		$status = $this->getModule('status_fd');
 		$type = $this->Request->contains('type') && $status->isValidOutputType($this->Request['type']) ? $this->Request['type'] : null;
 		$out_format = $this->Request->contains('output') && $this->isOutputFormatValid($this->Request['output']) ? $this->Request['output'] : parent::OUTPUT_FORMAT_RAW;
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
-			array('.client'),
+			['.client'],
 			null,
 			true
 		);
@@ -62,7 +62,7 @@ class ClientStatus extends ConsoleOutputPage {
 			$this->error = ClientError::ERROR_CLIENT_DOES_NOT_EXISTS;
 			return;
 		}
-		$out = (object)['output' => [], 'error' => 0];
+		$out = (object) ['output' => [], 'error' => 0];
 		if ($out_format === parent::OUTPUT_FORMAT_RAW) {
 			$out = $this->getRawOutput(['client' => $client->name]);
 		} elseif ($out_format === parent::OUTPUT_FORMAT_JSON) {
@@ -75,7 +75,8 @@ class ClientStatus extends ConsoleOutputPage {
 		$this->error = $out['error'];
 	}
 
-	protected function getRawOutput($params = []) {
+	protected function getRawOutput($params = [])
+	{
 		// traditional status client output
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
@@ -92,7 +93,8 @@ class ClientStatus extends ConsoleOutputPage {
 		return $ret;
 	}
 
-	protected function getJSONOutput($params = []) {
+	protected function getJSONOutput($params = [])
+	{
 		// status client JSON output by API 2 interface
 		$status = $this->getModule('status_fd');
 		return $status->getStatus(
@@ -102,5 +104,3 @@ class ClientStatus extends ConsoleOutputPage {
 		);
 	}
 }
-
-?>

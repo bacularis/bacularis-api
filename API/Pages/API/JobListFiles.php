@@ -27,7 +27,8 @@
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
 
-use Bacularis\Common\Modules\Errors\{GenericError,JobError};
+use Bacularis\Common\Modules\Errors\GenericError;
+use Bacularis\Common\Modules\Errors\JobError;
 use Bacularis\API\Modules\APIServer;
 
 /**
@@ -35,16 +36,16 @@ use Bacularis\API\Modules\APIServer;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class JobListFiles extends BaculumAPIServer {
-
-	public function get() {
+class JobListFiles extends BaculumAPIServer
+{
+	public function get()
+	{
 		$misc = $this->getModule('misc');
-		$jobid = $this->Request->contains('id') ? intval($this->Request['id']) : 0;
+		$jobid = $this->Request->contains('id') ? (int) ($this->Request['id']) : 0;
 		$type = $this->Request->contains('type') && $misc->isValidListFilesType($this->Request['type']) ? $this->Request['type'] : null;
-		$offset = $this->Request->contains('offset') ? intval($this->Request['offset']) : 0;
-		$limit = $this->Request->contains('limit') ? intval($this->Request['limit']) : 0;
+		$offset = $this->Request->contains('offset') ? (int) ($this->Request['offset']) : 0;
+		$limit = $this->Request->contains('limit') ? (int) ($this->Request['limit']) : 0;
 		$search = $this->Request->contains('search') && $misc->isValidPath($this->Request['search']) ? $this->Request['search'] : null;
 		$details = $this->Request->contains('details') && $misc->isValidBooleanTrue($this->Request['details']) ? $this->Request['details'] : false;
 
@@ -97,9 +98,11 @@ class JobListFiles extends BaculumAPIServer {
 	 * Get simple output with file list and total number of items.
 	 *
 	 * @params array $params job parameters to get file list
+	 * @param mixed $params
 	 * @return array file list
 	 */
-	protected function getSimpleOutput($params = []) {
+	protected function getSimpleOutput($params = [])
+	{
 		$result = $this->getModule('job')->getJobFiles(
 			$params['jobid'],
 			$params['type'],
@@ -116,9 +119,11 @@ class JobListFiles extends BaculumAPIServer {
 	 * It also includes LStat value.
 	 *
 	 * @params array $params job parameters to get file list
+	 * @param mixed $params
 	 * @return array file list
 	 */
-	protected function getDetailedOutput($params = []) {
+	protected function getDetailedOutput($params = [])
+	{
 		$result = $this->getModule('job')->getJobFiles(
 			$params['jobid'],
 			$params['type'],
@@ -129,4 +134,3 @@ class JobListFiles extends BaculumAPIServer {
 		return $result;
 	}
 }
-?>

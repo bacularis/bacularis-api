@@ -37,14 +37,13 @@ use Bacularis\API\Modules\VersionRecord;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Module
- * @package Baculum API
  */
 class VersionManager extends APIModule
 {
-	public function getVersionId() {
-		$criteria = new TActiveRecordCriteria;
+	public function getVersionId()
+	{
+		$criteria = new TActiveRecordCriteria();
 		$criteria->Limit = 1;
 		return VersionRecord::finder()->find($criteria);
 	}
 }
-?>

@@ -42,35 +42,35 @@ use Prado\Data\ActiveRecord\TActiveRecord;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Database
- * @package Baculum API
  */
-class APIDbModule extends TActiveRecord {
-
+class APIDbModule extends TActiveRecord
+{
 	/**
 	 * Get Data Source Name (DSN).
-	 * 
+	 *
 	 * For SQLite params are:
 	 * 	array('type' => 'type', 'path' => '/some/system/path');
 	 * For others params are:
 	 * 	array('type' => 'type', 'name' => 'name', 'host' => 'IP or hostname', 'port' => 'database port');
-	 * 
+	 *
 	 * @access public
 	 * @param array $db_params database connection params
 	 * @return string Data Source Name (DSN)
 	 */
-	public static function getDsn(array $db_params) {
-		$dsn_params = array();
+	public static function getDsn(array $db_params)
+	{
+		$dsn_params = [];
 
-		if(array_key_exists('path', $db_params) && !empty($db_params['path'])) {
+		if (array_key_exists('path', $db_params) && !empty($db_params['path'])) {
 			$dsn_params[] = $db_params['type'] . ':' . $db_params['path'];
 		} else {
-			$dsn_params[] =  $db_params['type'] . ':' . 'dbname=' . $db_params['name'];
+			$dsn_params[] = $db_params['type'] . ':' . 'dbname=' . $db_params['name'];
 
-			if(array_key_exists('ip_addr', $db_params)) {
+			if (array_key_exists('ip_addr', $db_params)) {
 				$dsn_params[] = 'host=' . $db_params['ip_addr'];
 			}
 
-			if(array_key_exists('port', $db_params)) {
+			if (array_key_exists('port', $db_params)) {
 				$dsn_params[] = 'port=' . $db_params['port'];
 			}
 		}
@@ -79,7 +79,8 @@ class APIDbModule extends TActiveRecord {
 		return $dsn;
 	}
 
-	public function getDbConnection() {
+	public function getDbConnection()
+	{
 		$config = new APIConfig();
 		$db_params = $config->getConfig('db');
 		$db_connection = self::getAPIDbConnection($db_params);
@@ -92,10 +93,13 @@ class APIDbModule extends TActiveRecord {
 	 * @access public
 	 * @param array database parameters from api config
 	 * @param bool force connection try (used when db_params are not saved yet)
-	 * @return object TDbConnection instance or null if errors occured during connecting
+	 * @param array $db_params
+	 * @param mixed $force
 	 * @throws BCatalogExcemption if cataloga access is not supported
+	 * @return object TDbConnection instance or null if errors occured during connecting
 	 */
-	public static function getAPIDbConnection(array $db_params, $force = false) {
+	public static function getAPIDbConnection(array $db_params, $force = false)
+	{
 		$db_connection = null;
 		if ((array_key_exists('enabled', $db_params) && $db_params['enabled'] === '1') || $force === true) {
 			$dsn = self::getDsn($db_params);
@@ -120,7 +124,8 @@ class APIDbModule extends TActiveRecord {
 		return $db_connection;
 	}
 
-	public function getColumnValue($column_name) {
+	public function getColumnValue($column_name)
+	{
 		// column name to lower due to not correct working PDO::CASE_LOWER for SQLite database
 		$column_name = strtolower($column_name);
 		$value = parent::getColumnValue($column_name);

@@ -35,9 +35,7 @@ use Prado\Web\UI\TTemplateControl;
  * Wizard layout.
  *
  * @category Layout
- * @package Baculum API
  */
 class Wizard extends TTemplateControl
 {
 }
-?>

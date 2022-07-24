@@ -32,11 +32,11 @@
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class ChangerSlots extends BaculumAPIServer {
-
-	public function get() {
+class ChangerSlots extends BaculumAPIServer
+{
+	public function get()
+	{
 		$misc = $this->getModule('misc');
 		$device_name = $this->Request->contains('device_name') && $misc->isValidName($this->Request['device_name']) ? $this->Request['device_name'] : null;
 
@@ -46,11 +46,10 @@ class ChangerSlots extends BaculumAPIServer {
 		);
 
 		if ($result->error === 0 && count($result->output)) {
-			$this->output = ['slots' => intval($result->output[0])];
+			$this->output = ['slots' => (int) ($result->output[0])];
 		} else {
 			$this->output = $result->output;
 		}
 		$this->error = $result->error;
 	}
 }
-?>

@@ -37,17 +37,16 @@ use Bacularis\API\Modules\ComponentStatusModule;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Status
- * @package Baculum API
  */
-class StatusDirector extends ComponentStatusModule {
-
+class StatusDirector extends ComponentStatusModule
+{
 	/**
 	 * Output types (output sections).
 	 */
-	const OUTPUT_TYPE_HEADER = 'header';
-	const OUTPUT_TYPE_SCHEDULED = 'scheduled';
-	const OUTPUT_TYPE_RUNNING = 'running';
-	const OUTPUT_TYPE_TERMINATED = 'terminated';
+	public const OUTPUT_TYPE_HEADER = 'header';
+	public const OUTPUT_TYPE_SCHEDULED = 'scheduled';
+	public const OUTPUT_TYPE_RUNNING = 'running';
+	public const OUTPUT_TYPE_TERMINATED = 'terminated';
 
 
 	/**
@@ -58,11 +57,12 @@ class StatusDirector extends ComponentStatusModule {
 	 * @param string $type output type (e.g. header, running, terminated ...etc.)
 	 * @return array ready array parsed component status output
 	 */
-	public function getStatus($director, $component_name = null, $type = null) {
-		$ret = array('output' => array(), 'error' => 0);
+	public function getStatus($director, $component_name = null, $type = null)
+	{
+		$ret = ['output' => [], 'error' => 0];
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$director,
-			array('status', 'director'),
+			['status', 'director'],
 			Bconsole::PTYPE_API_CMD
 		);
 		if ($result->exitcode === 0) {
@@ -88,7 +88,8 @@ class StatusDirector extends ComponentStatusModule {
 	 * @param string $type output type (e.g. header, running, terminated ...etc.)
 	 * @return array array with parsed director status values
 	 */
-	public function parseStatus(array $output, $type) {
+	public function parseStatus(array $output, $type)
+	{
 		$result = [
 			self::OUTPUT_TYPE_HEADER => [],
 			self::OUTPUT_TYPE_SCHEDULED => [],
@@ -97,13 +98,13 @@ class StatusDirector extends ComponentStatusModule {
 		];
 		$type = null;
 		$line = null;
-		$types = array(
+		$types = [
 			self::OUTPUT_TYPE_HEADER . ':',
 			self::OUTPUT_TYPE_RUNNING . ':',
 			self::OUTPUT_TYPE_TERMINATED . ':'
-		);
-		$opts = array();
-		for($i = 0; $i < count($output); $i++) {
+		];
+		$opts = [];
+		for ($i = 0; $i < count($output); $i++) {
 			if (in_array($output[$i], $types)) { // check if type
 				$type = rtrim($output[$i], ':');
 			} elseif ($type === self::OUTPUT_TYPE_HEADER && count($opts) == 0 && $output[$i] === '') {
@@ -116,12 +117,12 @@ class StatusDirector extends ComponentStatusModule {
 				$line = $this->parseLine($output[$i]);
 				if (is_array($line)) { // check if line
 					if (!key_exists($type, $result)) {
-						$result[$type] = array();
+						$result[$type] = [];
 					}
 					$opts[$line['key']] = $line['value'];
 				} elseif (count($opts) > 0) { // dump all parameters
 					$result[$type][] = $opts;
-					$opts = array();
+					$opts = [];
 				}
 			}
 		}
@@ -135,18 +136,18 @@ class StatusDirector extends ComponentStatusModule {
 	 * Validate status output type.
 	 *
 	 * @param string $type output type (e.g. header, running, terminated ...etc.)
-	 * @return boolean true if output type is valid for component, otherwise false
+	 * @return bool true if output type is valid for component, otherwise false
 	 */
-	public function isValidOutputType($type) {
+	public function isValidOutputType($type)
+	{
 		return in_array(
 			$type,
-			array(
+			[
 				self::OUTPUT_TYPE_HEADER,
 				self::OUTPUT_TYPE_SCHEDULED,
 				self::OUTPUT_TYPE_RUNNING,
 				self::OUTPUT_TYPE_TERMINATED
-			)
+			]
 		);
 	}
 }
-?>

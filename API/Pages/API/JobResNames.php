@@ -34,19 +34,20 @@ use Bacularis\Common\Modules\Errors\BconsoleError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class JobResNames extends BaculumAPIServer {
-	public function get() {
-		$limit = $this->Request->contains('limit') ? intval($this->Request['limit']) : 0;
+class JobResNames extends BaculumAPIServer
+{
+	public function get()
+	{
+		$limit = $this->Request->contains('limit') ? (int) ($this->Request['limit']) : 0;
 		$jobs_cmd = ['.jobs'];
 		$types = $this->getModule('misc')->job_types;
 		if ($this->Request->contains('type') && key_exists($this->Request['type'], $types)) {
-			array_push($jobs_cmd, 'type="' . $this->Request['type']. '"');
+			array_push($jobs_cmd, 'type="' . $this->Request['type'] . '"');
 		}
 
 		$directors = $this->getModule('bconsole')->getDirectors();
-		if($directors->exitcode != 0) {
+		if ($directors->exitcode != 0) {
 			$this->output = $directors->output;
 			$this->error = $directors->exitcode;
 			return;
@@ -81,9 +82,7 @@ class JobResNames extends BaculumAPIServer {
 			$this->error = $error_obj->exitcode;
 		} else {
 			$this->output = $jobs;
-			$this->error =  BconsoleError::ERROR_NO_ERRORS;
+			$this->error = BconsoleError::ERROR_NO_ERRORS;
 		}
 	}
 }
-
-?>

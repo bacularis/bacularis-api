@@ -34,21 +34,22 @@ use Bacularis\Common\Modules\Errors\StorageError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class Storage extends BaculumAPIServer {
-	public function get() {
-		$storageid = $this->Request->contains('id') ? intval($this->Request['id']) : 0;
+class Storage extends BaculumAPIServer
+{
+	public function get()
+	{
+		$storageid = $this->Request->contains('id') ? (int) ($this->Request['id']) : 0;
 		$storage = null;
 		if ($storageid > 0) {
 			$storage = $this->getModule('storage')->getStorageById($storageid);
 		}
-		$result = $this->getModule('bconsole')->bconsoleCommand($this->director, array('.storage'));
+		$result = $this->getModule('bconsole')->bconsoleCommand($this->director, ['.storage']);
 		if ($result->exitcode === 0) {
 			array_shift($result->output);
-			if(is_object($storage) && in_array($storage->name, $result->output)) {
+			if (is_object($storage) && in_array($storage->name, $result->output)) {
 				$this->output = $storage;
-				$this->error =  StorageError::ERROR_NO_ERRORS;
+				$this->error = StorageError::ERROR_NO_ERRORS;
 			} else {
 				$this->output = StorageError::MSG_ERROR_STORAGE_DOES_NOT_EXISTS;
 				$this->error = StorageError::ERROR_STORAGE_DOES_NOT_EXISTS;
@@ -59,5 +60,3 @@ class Storage extends BaculumAPIServer {
 		}
 	}
 }
-
-?>

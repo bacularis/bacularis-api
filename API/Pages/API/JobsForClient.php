@@ -34,13 +34,13 @@ use Bacularis\Common\Modules\Errors\JobError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class JobsForClient extends BaculumAPIServer {
-
-	public function get() {
-		$allowed_jobs = array();
-		$clientid = $this->Request->contains('id') ? intval($this->Request['id']) : 0;
+class JobsForClient extends BaculumAPIServer
+{
+	public function get()
+	{
+		$allowed_jobs = [];
+		$clientid = $this->Request->contains('id') ? (int) ($this->Request['id']) : 0;
 		$error = false;
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
@@ -69,4 +69,3 @@ class JobsForClient extends BaculumAPIServer {
 		}
 	}
 }
-?>

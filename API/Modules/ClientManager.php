@@ -36,24 +36,25 @@ use Prado\Data\ActiveRecord\TActiveRecordCriteria;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Module
- * @package Baculum API
  */
-class ClientManager extends APIModule {
-
-	public function getClients($limit) {
-		$criteria = new TActiveRecordCriteria;
-		if(is_numeric($limit) && $limit > 0) {
+class ClientManager extends APIModule
+{
+	public function getClients($limit)
+	{
+		$criteria = new TActiveRecordCriteria();
+		if (is_numeric($limit) && $limit > 0) {
 			$criteria->Limit = $limit;
 		}
 		return ClientRecord::finder()->findAll($criteria);
 	}
 
-	public function getClientByName($name) {
+	public function getClientByName($name)
+	{
 		return ClientRecord::finder()->findByName($name);
 	}
 
-	public function getClientById($id) {
+	public function getClientById($id)
+	{
 		return ClientRecord::finder()->findByclientid($id);
 	}
 }
-?>

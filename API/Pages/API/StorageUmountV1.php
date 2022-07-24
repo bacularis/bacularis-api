@@ -26,7 +26,7 @@
  *
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
- 
+
 use Bacularis\Common\Modules\Errors\StorageError;
 
 /**
@@ -34,17 +34,18 @@ use Bacularis\Common\Modules\Errors\StorageError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class StorageUmountV1 extends BaculumAPIServer {
-	public function get() {
-		$storageid = $this->Request->contains('id') ? intval($this->Request['id']) : 0;
-		$drive = $this->Request->contains('drive') ? intval($this->Request['drive']) : 0;
+class StorageUmountV1 extends BaculumAPIServer
+{
+	public function get()
+	{
+		$storageid = $this->Request->contains('id') ? (int) ($this->Request['id']) : 0;
+		$drive = $this->Request->contains('drive') ? (int) ($this->Request['drive']) : 0;
 		$device = $this->Request->contains('device') ? $this->Request['device'] : null;
 
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
-			array('.storage')
+			['.storage']
 		);
 		if ($result->exitcode === 0) {
 			array_shift($result->output);
@@ -52,11 +53,11 @@ class StorageUmountV1 extends BaculumAPIServer {
 			if (is_object($storage) && in_array($storage->name, $result->output)) {
 				$result = $this->getModule('bconsole')->bconsoleCommand(
 					$this->director,
-					array(
+					[
 						'umount',
 						'storage="' . $storage->name . '"',
 						(is_string($device) ? 'device="' . $device . '" slot=0 drive=0' : 'drive=' . $drive . ' slot=0')
-					)
+					]
 				);
 				$this->output = $result->output;
 				$this->error = $result->exitcode;
@@ -70,5 +71,3 @@ class StorageUmountV1 extends BaculumAPIServer {
 		}
 	}
 }
-
-?>

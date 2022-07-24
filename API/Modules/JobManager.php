@@ -39,19 +39,19 @@ use Bacularis\API\Modules\Database;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Module
- * @package Baculum API
  */
-class JobManager extends APIModule {
-
-	public function getJobs($criteria = array(), $limit_val = null) {
+class JobManager extends APIModule
+{
+	public function getJobs($criteria = [], $limit_val = null)
+	{
 		$sort_col = 'JobId';
 		$db_params = $this->getModule('api_config')->getConfig('db');
 		if ($db_params['type'] === Database::PGSQL_TYPE) {
-		    $sort_col = strtolower($sort_col);
+			$sort_col = strtolower($sort_col);
 		}
 		$order = ' ORDER BY ' . $sort_col . ' DESC';
 		$limit = '';
-		if(is_int($limit_val) && $limit_val > 0) {
+		if (is_int($limit_val) && $limit_val > 0) {
 			$limit = ' LIMIT ' . $limit_val;
 		}
 
@@ -70,13 +70,14 @@ LEFT JOIN FileSet USING (FilesetId)'
 		return JobRecord::finder()->findAllBySql($sql, $where['params']);
 	}
 
-	public function getJobById($jobid) {
-		$job = $this->getJobs(array(
-			'Job.JobId' => array(
-				'vals' => array($jobid),
+	public function getJobById($jobid)
+	{
+		$job = $this->getJobs([
+			'Job.JobId' => [
+				'vals' => [$jobid],
 				'operator' => 'AND'
-			)
-		), 1);
+			]
+		], 1);
 		if (is_array($job) && count($job) > 0) {
 			$job = array_shift($job);
 		}
@@ -89,17 +90,18 @@ LEFT JOIN FileSet USING (FilesetId)'
 	 * @param array $jobs jobid to start searching for jobs
 	 * @return array compositional jobs regarding given jobid
 	 */
-	private function findCompositionalJobs(array $jobs) {
+	private function findCompositionalJobs(array $jobs)
+	{
 		$jobids = [];
 		$wait_on_full = false;
-		foreach($jobs as $job) {
-			if($job->level == 'F') {
+		foreach ($jobs as $job) {
+			if ($job->level == 'F') {
 				$jobids[] = $job->jobid;
 				break;
-			} elseif($job->level == 'D' && $wait_on_full === false) {
+			} elseif ($job->level == 'D' && $wait_on_full === false) {
 				$jobids[] = $job->jobid;
 				$wait_on_full = true;
-			} elseif($job->level == 'I' && $wait_on_full === false) {
+			} elseif ($job->level == 'I' && $wait_on_full === false) {
 				$jobids[] = $job->jobid;
 			}
 		}
@@ -110,33 +112,34 @@ LEFT JOIN FileSet USING (FilesetId)'
 	 * Get latest recent compositional jobids to do restore.
 	 *
 	 * @param string $jobname job name
-	 * @param integer $clientid client identifier
-	 * @param integer $filesetid fileset identifier
-	 * @param boolean $inc_copy_job determine if include copy jobs to result
+	 * @param int $clientid client identifier
+	 * @param int $filesetid fileset identifier
+	 * @param bool $inc_copy_job determine if include copy jobs to result
 	 * @return array list of jobids required to do restore
 	 */
-	public function getRecentJobids($jobname, $clientid, $filesetid, $inc_copy_job = false) {
+	public function getRecentJobids($jobname, $clientid, $filesetid, $inc_copy_job = false)
+	{
 		$types = "('B')";
 		if ($inc_copy_job) {
 			$types = "('B', 'C')";
 		}
 		$sql = "name='$jobname' AND clientid='$clientid' AND filesetid='$filesetid' AND type IN $types AND jobstatus IN ('T', 'W') AND level IN ('F', 'I', 'D')";
 		$finder = JobRecord::finder();
-		$criteria = new TActiveRecordCriteria;
+		$criteria = new TActiveRecordCriteria();
 		$order1 = 'RealEndTime';
 		$order2 = 'JobId';
 		$db_params = $this->getModule('api_config')->getConfig('db');
 		if ($db_params['type'] === Database::PGSQL_TYPE) {
-		    $order1 = strtolower($order1);
-		    $order2 = strtolower($order2);
+			$order1 = strtolower($order1);
+			$order2 = strtolower($order2);
 		}
 		$criteria->OrdersBy[$order1] = 'desc';
 		$criteria->OrdersBy[$order2] = 'desc';
 		$criteria->Condition = $sql;
 		$jobs = $finder->findAll($criteria);
 
-		$jobids = array();
-		if(is_array($jobs)) {
+		$jobids = [];
+		if (is_array($jobs)) {
 			$jobids = $this->findCompositionalJobs($jobs);
 		}
 		return $jobids;
@@ -145,10 +148,11 @@ LEFT JOIN FileSet USING (FilesetId)'
 	/**
 	 * Get compositional jobids to do restore starting from given job (full/incremental/differential).
 	 *
-	 * @param integer $jobid job identifier of last job to do restore
+	 * @param int $jobid job identifier of last job to do restore
 	 * @return array list of jobids required to do restore
 	 */
-	public function getJobidsToRestore($jobid) {
+	public function getJobidsToRestore($jobid)
+	{
 		$jobids = [];
 		$bjob = JobRecord::finder()->findBySql(
 			"SELECT * FROM Job WHERE jobid = '$jobid' AND jobstatus IN ('T', 'W') AND type IN ('B', 'C') AND level IN ('F', 'I', 'D')"
@@ -159,7 +163,7 @@ LEFT JOIN FileSet USING (FilesetId)'
 					" AND jobstatus IN ('T', 'W') AND level IN ('F', 'I', 'D') " .
 					" AND starttime <= :starttime and jobid <= :jobid";
 				$finder = JobRecord::finder();
-				$criteria = new TActiveRecordCriteria;
+				$criteria = new TActiveRecordCriteria();
 				$order1 = 'JobId';
 				$db_params = $this->getModule('api_config')->getConfig('db');
 				if ($db_params['type'] === Database::PGSQL_TYPE) {
@@ -173,7 +177,7 @@ LEFT JOIN FileSet USING (FilesetId)'
 				$criteria->Parameters[':jobid'] = $bjob->jobid;
 				$jobs = $finder->findAll($criteria);
 
-				if(is_array($jobs)) {
+				if (is_array($jobs)) {
 					$jobids = $this->findCompositionalJobs($jobs);
 				}
 			} else {
@@ -183,8 +187,9 @@ LEFT JOIN FileSet USING (FilesetId)'
 		return $jobids;
 	}
 
-	public function getJobTotals($allowed_jobs = array()) {
-		$jobtotals = array('bytes' => 0, 'files' => 0);
+	public function getJobTotals($allowed_jobs = [])
+	{
+		$jobtotals = ['bytes' => 0, 'files' => 0];
 		$connection = JobRecord::finder()->getDbConnection();
 		$connection->setActive(true);
 
@@ -210,7 +215,8 @@ LEFT JOIN FileSet USING (FilesetId)'
 	 * @param array $allowed_jobs jobs allowed to show
 	 * @return array jobs stored on volume
 	 */
-	public function getJobsOnVolume($mediaid, $allowed_jobs = array()) {
+	public function getJobsOnVolume($mediaid, $allowed_jobs = [])
+	{
 		$jobs_criteria = '';
 		if (count($allowed_jobs) > 0) {
 			$jobs_sql = implode("', '", $allowed_jobs);
@@ -236,7 +242,8 @@ WHERE JobMedia.MediaId='$mediaid' $jobs_criteria";
 	 * @param array $allowed_jobs jobs allowed to show
 	 * @return array jobs for specific client
 	 */
-	public function getJobsForClient($clientid, $allowed_jobs = array()) {
+	public function getJobsForClient($clientid, $allowed_jobs = [])
+	{
 		$where = '';
 		if (count($allowed_jobs) > 0) {
 			$criteria = [
@@ -268,12 +275,13 @@ WHERE Client.ClientId='$clientid' $wh";
 	 *
 	 * @param string $clientid client identifier
 	 * @param string $filename filename without path
-	 * @param boolean $strict_mode if true then it maches exact filename, otherwise with % around filename
+	 * @param bool $strict_mode if true then it maches exact filename, otherwise with % around filename
 	 * @param string $path path to narrow results to one specific path
 	 * @param array $allowed_jobs jobs allowed to show
 	 * @return array jobs for specific client and filename
 	 */
-	public function getJobsByFilename($clientid, $filename, $strict_mode = false, $path = '', $allowed_jobs = array()) {
+	public function getJobsByFilename($clientid, $filename, $strict_mode = false, $path = '', $allowed_jobs = [])
+	{
 		$jobs_criteria = '';
 		if (count($allowed_jobs) > 0) {
 			$jobs_sql = implode("', '", $allowed_jobs);
@@ -330,14 +338,16 @@ WHERE Client.ClientId='$clientid' $wh";
 	/**
 	 * Get job file list
 	 *
-	 * @param integer $jobid job identifier
+	 * @param int $jobid job identifier
 	 * @param string $type file list type: saved, deleted or all.
-	 * @param integer $offset SQL query offset
-	 * @param integer $limit SQL query limit
+	 * @param int $offset SQL query offset
+	 * @param int $limit SQL query limit
 	 * @param string $search search file keyword
+	 * @param mixed $fetch_group
 	 * @return array jobs job list
 	 */
-	public function getJobFiles($jobid, $type, $offset = 0, $limit = 100, $search = null, $fetch_group = false) {
+	public function getJobFiles($jobid, $type, $offset = 0, $limit = 100, $search = null, $fetch_group = false)
+	{
 		$type_crit = '';
 		switch ($type) {
 			case 'saved': $type_crit = ' AND FileIndex > 0 '; break;
@@ -423,4 +433,3 @@ WHERE Client.ClientId='$clientid' $wh";
 		return $result;
 	}
 }
-?>

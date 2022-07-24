@@ -34,23 +34,24 @@ namespace Bacularis\API\Modules;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-abstract class ConsoleOutputPage extends BaculumAPIServer {
-
+abstract class ConsoleOutputPage extends BaculumAPIServer
+{
 	/**
 	 * Available output formats.
 	 */
-	const OUTPUT_FORMAT_RAW = 'raw';
-	const OUTPUT_FORMAT_JSON = 'json';
+	public const OUTPUT_FORMAT_RAW = 'raw';
+	public const OUTPUT_FORMAT_JSON = 'json';
 
 	/**
 	 * Get raw output from console.
+	 * @param mixed $params
 	 */
 	abstract protected function getRawOutput($params = []);
 
 	/**
 	 * Get parsed JSON output from console.
+	 * @param mixed $params
 	 */
 	abstract protected function getJSONOutput($params = []);
 
@@ -58,10 +59,10 @@ abstract class ConsoleOutputPage extends BaculumAPIServer {
 	 * Validate output format.
 	 *
 	 * @param string $format output format
-	 * @return boolean true if output format is valid, otherwise false
+	 * @return bool true if output format is valid, otherwise false
 	 */
-	protected function isOutputFormatValid($format) {
+	protected function isOutputFormatValid($format)
+	{
 		return ($format === self::OUTPUT_FORMAT_RAW || $format === self::OUTPUT_FORMAT_JSON);
 	}
 }
-?>

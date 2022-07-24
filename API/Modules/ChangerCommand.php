@@ -42,28 +42,27 @@ use Bacularis\API\Modules\APIModule;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Autochanger
- * @package Baculum API
  */
-class ChangerCommand extends APIModule {
-
-	const SUDO = 'sudo';
+class ChangerCommand extends APIModule
+{
+	public const SUDO = 'sudo';
 
 	/**
 	 * Types to determine how changer command is executed (foreground, background...)
 	 */
-	const PTYPE_FG_CMD = 0;
-	const PTYPE_BG_CMD = 1;
+	public const PTYPE_FG_CMD = 0;
+	public const PTYPE_BG_CMD = 1;
 
 	/**
 	 * Output file prefix used to temporary store output from commands.
 	 */
-	const OUTPUT_FILE_PREFIX = 'output_';
+	public const OUTPUT_FILE_PREFIX = 'output_';
 
 	/**
 	 * Pattern to changer command.
 	 */
-	const CHANGER_COMMAND_FG_PATTERN = '%s %s 2>&1';
-	const CHANGER_COMMAND_BG_PATTERN = '{ %s %s 1>%s 2>&1; echo "quit" >> %s ; } &';
+	public const CHANGER_COMMAND_FG_PATTERN = '%s %s 2>&1';
+	public const CHANGER_COMMAND_BG_PATTERN = '{ %s %s 1>%s 2>&1; echo "quit" >> %s ; } &';
 
 	/**
 	 * Supported parameters with short codes.
@@ -95,26 +94,29 @@ class ChangerCommand extends APIModule {
 	 */
 	private $config;
 
-	public function init($param) {
+	public function init($param)
+	{
 		$this->config = $this->getModule('device_config')->getConfig();
 	}
 
 	/**
 	 * Validate changer script command.
 	 * @param string $command script command
-	 * @return boolean true on validation success, otherwise false
+	 * @return bool true on validation success, otherwise false
 	 */
-	private function validateCommand($command) {
+	private function validateCommand($command)
+	{
 		return in_array($command, $this->commands);
 	}
 
 	/**
 	 * Get sudo command.
 	 *
-	 * @param boolean $use_sudo sudo option state
+	 * @param bool $use_sudo sudo option state
 	 * @return string sudo command
 	 */
-	private function getSudo($use_sudo) {
+	private function getSudo($use_sudo)
+	{
 		$sudo = '';
 		if ($use_sudo === true) {
 			$sudo = self::SUDO;
@@ -133,20 +135,21 @@ class ChangerCommand extends APIModule {
 	 * @param string $ptype command pattern type
 	 * @return StdClass executed command output and error code
 	 */
-	public function execChangerCommand($changer, $command, $device = null, $slot = null, $slotdest = null, $ptype = null) {
+	public function execChangerCommand($changer, $command, $device = null, $slot = null, $slotdest = null, $ptype = null)
+	{
 		if (!$this->validateCommand($command)) {
 			$output = DeviceError::MSG_ERROR_DEVICE_INVALID_COMMAND;
 			$error = DeviceError::ERROR_DEVICE_INVALID_COMMAND;
 			$result = $this->prepareResult($output, $error);
 			return $result;
 		}
-		if (count($this->config) == 0)  {
+		if (count($this->config) == 0) {
 			$output = DeviceError::MSG_ERROR_DEVICE_DEVICE_CONFIG_DOES_NOT_EXIST;
 			$error = DeviceError::ERROR_DEVICE_DEVICE_CONFIG_DOES_NOT_EXIST;
 			$result = $this->prepareResult($output, $error);
 			return $result;
 		}
-		if (!key_exists($changer, $this->config) || $this->config[$changer]['type'] !== DeviceConfig::DEV_TYPE_AUTOCHANGER)  {
+		if (!key_exists($changer, $this->config) || $this->config[$changer]['type'] !== DeviceConfig::DEV_TYPE_AUTOCHANGER) {
 			$output = DeviceError::MSG_ERROR_DEVICE_AUTOCHANGER_DOES_NOT_EXIST;
 			$error = DeviceError::ERROR_DEVICE_AUTOCHANGER_DOES_NOT_EXIST;
 			$result = $this->prepareResult($output, $error);
@@ -154,7 +157,7 @@ class ChangerCommand extends APIModule {
 		}
 		if (is_string($device)) {
 			$drives = explode(',', $this->config[$changer]['drives']);
-			if (!in_array($device, $drives))  {
+			if (!in_array($device, $drives)) {
 				$output = DeviceError::MSG_ERROR_DEVICE_DRIVE_DOES_NOT_BELONG_TO_AUTOCHANGER;
 				$error = DeviceError::ERROR_DEVICE_DRIVE_DOES_NOT_BELONG_TO_AUTOCHANGER;
 				$result = $this->prepareResult($output, $error);
@@ -162,7 +165,7 @@ class ChangerCommand extends APIModule {
 			}
 		}
 
-		if (is_string($device) && (!key_exists($device, $this->config) || $this->config[$device]['type'] !== DeviceConfig::DEV_TYPE_DEVICE))  {
+		if (is_string($device) && (!key_exists($device, $this->config) || $this->config[$device]['type'] !== DeviceConfig::DEV_TYPE_DEVICE)) {
 			$output = DeviceError::MSG_ERROR_DEVICE_AUTOCHANGER_DRIVE_DOES_NOT_EXIST;
 			$error = DeviceError::ERROR_DEVICE_AUTOCHANGER_DRIVE_DOES_NOT_EXIST;
 			$result = $this->prepareResult($output, $error);
@@ -210,14 +213,15 @@ class ChangerCommand extends APIModule {
 	 * @param string $drive_index archive device index (autochanger drive index)
 	 * @return StdClass executed command output and error code
 	 */
-	private function prepareChangerCommand($changer_command, $changer_device, $command, $slot, $archive_device, $drive_index) {
+	private function prepareChangerCommand($changer_command, $changer_device, $command, $slot, $archive_device, $drive_index)
+	{
 		$from = array_keys($this->params);
 		$to = [
-			'"' . $changer_device .'"',
-			'"' . $command .'"',
-			'"' . $slot .'"',
-			'"' . $archive_device .'"',
-			'"' . $drive_index .'"'
+			'"' . $changer_device . '"',
+			'"' . $command . '"',
+			'"' . $slot . '"',
+			'"' . $archive_device . '"',
+			'"' . $drive_index . '"'
 		];
 		return str_replace($from, $to, $changer_command);
 	}
@@ -226,13 +230,14 @@ class ChangerCommand extends APIModule {
 	 * Get changer command to execute.
 	 *
 	 * @param string $pattern changer command pattern (@see PTYPE_ constants)
-	 * @param boolean $use_sudo information about using sudo
+	 * @param bool $use_sudo information about using sudo
 	 * @param string $bin changer command
 	 * @return array changer command (and output id if selected pattern to
 	 * move command to background)
 	 */
-	private function getCommand($pattern, $use_sudo, $bin) {
-		$command = array('cmd' => null, 'out_id' => null);
+	private function getCommand($pattern, $use_sudo, $bin)
+	{
+		$command = ['cmd' => null, 'out_id' => null];
 		$misc = $this->getModule('misc');
 		$sudo = $this->getSudo($use_sudo);
 
@@ -259,9 +264,10 @@ class ChangerCommand extends APIModule {
 	 * Create and get output file.
 	 * Used with background type command patterns (ex. PTYPE_BG_CMD)
 	 *
-	 * @return string|boolean new temporary filename (with path), or false on failure.
+	 * @return bool|string new temporary filename (with path), or false on failure.
 	 */
-	private function prepareOutputFile() {
+	private function prepareOutputFile()
+	{
 		$dir = Prado::getPathOfNamespace('Bacularis.API.Config');
 		$fname = tempnam($dir, self::OUTPUT_FILE_PREFIX);
 		return $fname;
@@ -274,7 +280,8 @@ class ChangerCommand extends APIModule {
 	 * @param string $out_id command output identifier
 	 * @return array command output with one line per one array element
 	 */
-	public static function readOutputFile($out_id) {
+	public static function readOutputFile($out_id)
+	{
 		$output = [];
 		$dir = Prado::getPathOfNamespace('Bacularis.API.Config');
 		if (preg_match('/^[a-z0-9]+$/i', $out_id) === 1) {
@@ -283,7 +290,7 @@ class ChangerCommand extends APIModule {
 				$output = file($file);
 			}
 			$output_count = count($output);
-			$last = $output_count > 0 ? trim($output[$output_count-1]) : '';
+			$last = $output_count > 0 ? trim($output[$output_count - 1]) : '';
 			if ($last === 'quit') {
 				// output is complete, so remove the file
 				unlink($file);
@@ -297,9 +304,11 @@ class ChangerCommand extends APIModule {
 	 *
 	 * @param string $bin command
 	 * @param string $ptype command pattern type
+	 * @param mixed $cmd
 	 * @return array result with output and error code
 	 */
-	public function execCommand($cmd, $ptype = null) {
+	public function execCommand($cmd, $ptype = null)
+	{
 		exec($cmd['cmd'], $output, $exitcode);
 		$this->getModule('logging')->log(
 			$cmd['cmd'],
@@ -320,13 +329,14 @@ class ChangerCommand extends APIModule {
 	 * Prepare changer command result.
 	 *
 	 * @param array $output output from command execution
-	 * @param integer $error command error code
+	 * @param int $error command error code
 	 * @return array result with output and error code
 	 */
-	public function prepareResult($output, $error) {
-		$result = new \StdClass;
+	public function prepareResult($output, $error)
+	{
+		$result = new \StdClass();
 		$result->output = $output;
-		$result->error  = $error;
+		$result->error = $error;
 		return $result;
 	}
 
@@ -336,7 +346,8 @@ class ChangerCommand extends APIModule {
 	 * @param string $ptype pattern type (@see PTYPE_ constants)
 	 * @return string command pattern
 	 */
-	private function getCmdPattern($ptype) {
+	private function getCmdPattern($ptype)
+	{
 		$pattern = null;
 		switch ($ptype) {
 			case self::PTYPE_FG_CMD: $pattern = self::CHANGER_COMMAND_FG_PATTERN; break;
@@ -350,7 +361,7 @@ class ChangerCommand extends APIModule {
 	 * Check changer command parameters.
 	 * Used to test parameters.
 	 *
-	 * @param boolean $use_sudo information about using sudo
+	 * @param bool $use_sudo information about using sudo
 	 * @param string $changer_command full changer command
 	 * @param string $changer_device changer device name
 	 * @param string $command changer command (load, unload ...etc.)
@@ -359,7 +370,8 @@ class ChangerCommand extends APIModule {
 	 * @param string $drive_index archive device index (autochanger drive index)
 	 * @return StdClass executed command output and error code
 	 */
-	public function testChangerCommand($use_sudo, $changer_command, $changer_device, $command, $slot, $archive_device, $drive_index) {
+	public function testChangerCommand($use_sudo, $changer_command, $changer_device, $command, $slot, $archive_device, $drive_index)
+	{
 		$command = $this->prepareChangerCommand(
 			$changer_command,
 			$changer_device,
@@ -374,4 +386,3 @@ class ChangerCommand extends APIModule {
 		return $result;
 	}
 }
-?>

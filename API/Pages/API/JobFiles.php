@@ -35,11 +35,11 @@ use Bacularis\Common\Modules\Errors\JobError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class JobFiles extends BaculumAPIServer {
-
-	public function get() {
+class JobFiles extends BaculumAPIServer
+{
+	public function get()
+	{
 		$misc = $this->getModule('misc');
 		$filename = $this->Request->contains('filename') && $misc->isValidFilename($this->Request['filename']) ? $this->Request['filename'] : null;
 		$strict_mode = ($this->Request->contains('strict') && $misc->isValidBooleanTrue($this->Request['strict']));
@@ -47,10 +47,10 @@ class JobFiles extends BaculumAPIServer {
 
 		$clientid = null;
 		if ($this->Request->contains('clientid')) {
-			$clientid = intval($this->Request['clientid']);
+			$clientid = (int) ($this->Request['clientid']);
 		} elseif ($this->Request->contains('client') && $this->getModule('misc')->isValidName($this->Request['client'])) {
 			$client_row = $this->getModule('client')->getClientByName($this->Request['client']);
-			$clientid = is_object($client_row) ? intval($client_row->clientid) : null;
+			$clientid = is_object($client_row) ? (int) ($client_row->clientid) : null;
 		}
 
 		if (is_null($clientid)) {
@@ -89,4 +89,3 @@ class JobFiles extends BaculumAPIServer {
 		}
 	}
 }
-?>

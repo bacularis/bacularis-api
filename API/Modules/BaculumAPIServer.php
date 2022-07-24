@@ -28,11 +28,13 @@
  */
 
 namespace Bacularis\API\Modules;
- 
+
 use Prado\Web\UI\TPage;
 use Prado\Exceptions\TException;
 use Bacularis\Common\Modules\AuthBasic;
-use Bacularis\Common\Modules\Errors\{GenericError,AuthenticationError,AuthorizationError};
+use Bacularis\Common\Modules\Errors\GenericError;
+use Bacularis\Common\Modules\Errors\AuthenticationError;
+use Bacularis\Common\Modules\Errors\AuthorizationError;
 use Bacularis\Common\Modules\OAuth2;
 use Bacularis\Common\Modules\Logging;
 use Bacularis\API\Modules\BAPIException;
@@ -46,14 +48,13 @@ use Bacularis\API\Modules\APIServer;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-abstract class BaculumAPIServer extends TPage {
-
+abstract class BaculumAPIServer extends TPage
+{
 	/**
 	 * API server version (used in HTTP header)
 	 */
-	const API_SERVER_VERSION = 0.2;
+	public const API_SERVER_VERSION = 0.2;
 
 	/**
 	 * Storing output from API commands in numeric array.
@@ -80,30 +81,31 @@ abstract class BaculumAPIServer extends TPage {
 	/**
 	 * Endpoints available for every authenticated client.
 	 */
-	private $public_endpoints = array('auth', 'token', 'welcome', 'catalog', 'dbsize', 'directors');
+	private $public_endpoints = ['auth', 'token', 'welcome', 'catalog', 'dbsize', 'directors'];
 
 	/**
 	 * Action methods.
 	 */
 
 	// get elements
-	const GET_METHOD = 'GET';
+	public const GET_METHOD = 'GET';
 
 	// create new elemenet
-	const POST_METHOD = 'POST';
+	public const POST_METHOD = 'POST';
 
 	// update elements
-	const PUT_METHOD = 'PUT';
+	public const PUT_METHOD = 'PUT';
 
 	// delete element
-	const DELETE_METHOD = 'DELETE';
+	public const DELETE_METHOD = 'DELETE';
 
 	/**
 	 * API Server authentication.
 	 *
 	 * @return true if user is successfully authenticated, otherwise false
 	 */
-	private function authenticate() {
+	private function authenticate()
+	{
 		$is_auth = false;
 		$config = $this->getModule('api_config')->getConfig('api');
 		if (count($config) === 0) {
@@ -115,7 +117,7 @@ abstract class BaculumAPIServer extends TPage {
 			if ($this->getModule('auth_basic')->authenticate($auth_mod, AuthBasic::REALM_API) === true) {
 				// authentication valid
 				$is_auth = true;
-				$username = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : null;
+				$username = $_SERVER['PHP_AUTH_USER'] ?? null;
 				$props = $this->getModule('basic_config')->getConfig($username);
 				$this->initAuthParams($props);
 			} else {
@@ -138,7 +140,8 @@ abstract class BaculumAPIServer extends TPage {
 	 *
 	 * @return true if user is successfully authorized, otherwise false
 	 */
-	private function authorize() {
+	private function authorize()
+	{
 		$is_auth = false;
 		$is_token = false;
 
@@ -166,7 +169,7 @@ abstract class BaculumAPIServer extends TPage {
 				$this->initAuthParams($auth);
 			} else {
 				// Scopes error. Access attempt to not allowed resource
-				$this->output = AuthorizationError::MSG_ERROR_ACCESS_ATTEMPT_TO_NOT_ALLOWED_RESOURCE .' Endpoint: ' .  $path;
+				$this->output = AuthorizationError::MSG_ERROR_ACCESS_ATTEMPT_TO_NOT_ALLOWED_RESOURCE . ' Endpoint: ' . $path;
 				$this->error = AuthorizationError::ERROR_ACCESS_ATTEMPT_TO_NOT_ALLOWED_RESOURCE;
 			}
 		}
@@ -180,7 +183,8 @@ abstract class BaculumAPIServer extends TPage {
 	 * @param mixed $params onInit action params
 	 * @return none
 	 */
-	public function onInit($params) {
+	public function onInit($params)
+	{
 		parent::onInit($params);
 		// Initialize auth modules
 		$this->getModule('auth_basic')->initialize($this->Request);
@@ -207,13 +211,14 @@ abstract class BaculumAPIServer extends TPage {
 	 *
 	 * @return none
 	 */
-	private function runResource() {
+	private function runResource()
+	{
 		$version = APIServer::getVersion();
 		$api = $this->getModule('api_server_v' . $version);
 		$api->setServerObj($this);
 
 		try {
-			switch($_SERVER['REQUEST_METHOD']) {
+			switch ($_SERVER['REQUEST_METHOD']) {
 				case self::GET_METHOD: {
 					$api->get();
 					break;
@@ -255,7 +260,8 @@ abstract class BaculumAPIServer extends TPage {
 	 * @param array $auth token params stored in TokenRecord session
 	 * @return none
 	 */
-	private function initAuthParams(array $auth) {
+	private function initAuthParams(array $auth)
+	{
 		// if client has own bconsole config, assign it here
 		if (key_exists('bconsole_cfg_path', $auth) && !empty($auth['bconsole_cfg_path'])) {
 			Bconsole::setCfgPath($auth['bconsole_cfg_path'], true);
@@ -271,8 +277,9 @@ abstract class BaculumAPIServer extends TPage {
 	 * @access private
 	 * @return string JSON value with output and error values
 	 */
-	private function getOutput() {
-		$output = array('output' => $this->output, 'error' => $this->error);
+	private function getOutput()
+	{
+		$output = ['output' => $this->output, 'error' => $this->error];
 		$this->setOutputHeaders();
 		$json = '';
 		if (PHP_VERSION_ID >= 70200) {
@@ -287,10 +294,11 @@ abstract class BaculumAPIServer extends TPage {
 	/**
 	 * Set output headers to send in response.
 	 */
-	private function setOutputHeaders() {
+	private function setOutputHeaders()
+	{
 		$response = $this->getResponse();
 		$response->setContentType('application/json');
-		$response->appendHeader('Baculum-API-Version: ' . strval(self::API_SERVER_VERSION));
+		$response->appendHeader('Baculum-API-Version: ' . (string) (self::API_SERVER_VERSION));
 	}
 
 	/**
@@ -301,7 +309,8 @@ abstract class BaculumAPIServer extends TPage {
 	 * @param mixed $params onInit action params
 	 * @return none
 	 */
-	public function onLoad($params) {
+	public function onLoad($params)
+	{
 		parent::onLoad($params);
 		echo $this->getOutput();
 	}
@@ -314,7 +323,8 @@ abstract class BaculumAPIServer extends TPage {
 	 * @param string $name application module name
 	 * @return object module class instance
 	 */
-	public function getModule($name) {
+	public function getModule($name)
+	{
 		return $this->Application->getModule($name);
 	}
 
@@ -323,13 +333,13 @@ abstract class BaculumAPIServer extends TPage {
 	 *
 	 * @return float client version
 	 */
-	public function getClientVersion() {
+	public function getClientVersion()
+	{
 		$version = 0;
 		$headers = $this->getRequest()->getHeaders(CASE_LOWER);
 		if (array_key_exists('x-baculum-api', $headers)) {
-			$version = floatval($headers['x-baculum-api']);
+			$version = (float) ($headers['x-baculum-api']);
 		}
 		return $version;
 	}
 }
-?>

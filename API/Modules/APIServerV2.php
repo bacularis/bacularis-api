@@ -39,17 +39,16 @@ use Bacularis\API\Modules\APIServer;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Module
- * @package Baculum API
  */
-
-class APIServerV2 extends APIServer implements IAPIServer {
-
+class APIServerV2 extends APIServer implements IAPIServer
+{
 	/**
 	 * Support for API GET method request.
 	 *
 	 * @return none;
 	 */
-	public function get() {
+	public function get()
+	{
 		$this->getServerObj()->get();
 	}
 
@@ -58,12 +57,13 @@ class APIServerV2 extends APIServer implements IAPIServer {
 	 *
 	 * @return none
 	 */
-	public function put() {
-		$id = $this->Request->contains('id') ? intval($this->Request['id']) : 0;
+	public function put()
+	{
+		$id = $this->Request->contains('id') ? (int) ($this->Request['id']) : 0;
 		$inputstr = file_get_contents("php://input");
 		$params = json_decode($inputstr);
 		if (is_null($params)) {
-			$params = new \StdClass;
+			$params = new \StdClass();
 		}
 		$this->getServerObj()->set($id, $params);
 	}
@@ -73,11 +73,12 @@ class APIServerV2 extends APIServer implements IAPIServer {
 	 *
 	 * @return none
 	 */
-	public function post() {
+	public function post()
+	{
 		$inputstr = file_get_contents("php://input");
 		$params = json_decode($inputstr);
 		if (is_null($params)) {
-			$params = new \StdClass;
+			$params = new \StdClass();
 		}
 		$this->getServerObj()->create($params);
 	}
@@ -87,7 +88,8 @@ class APIServerV2 extends APIServer implements IAPIServer {
 	 *
 	 * @return none
 	 */
-	public function delete() {
+	public function delete()
+	{
 		$id = null;
 		if ($this->Request->contains('id')) {
 			$id = $this->Request['id'];
@@ -95,4 +97,3 @@ class APIServerV2 extends APIServer implements IAPIServer {
 		$this->getServerObj()->remove($id);
 	}
 }
-?>

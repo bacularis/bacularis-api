@@ -37,15 +37,14 @@ use Bacularis\Common\Modules\BaculumUrlMapping;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category URL
- * @package Baculum API
  */
-class APIUrlMapping extends TUrlMappingPattern {
+class APIUrlMapping extends TUrlMappingPattern
+{
+	public const SERVICE_ID = 'api';
 
-	const SERVICE_ID = 'api';
-
-	public function __construct(BaculumUrlMapping $manager) {
+	public function __construct(BaculumUrlMapping $manager)
+	{
 		parent::__construct($manager);
 		$this->setServiceID(self::SERVICE_ID);
 	}
 }
-?>

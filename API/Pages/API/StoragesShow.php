@@ -26,7 +26,7 @@
  *
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
- 
+
 use Bacularis\API\Modules\ConsoleOutputPage;
 use Bacularis\API\Modules\ConsoleOutputShowPage;
 
@@ -35,11 +35,11 @@ use Bacularis\API\Modules\ConsoleOutputShowPage;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class StoragesShow extends ConsoleOutputShowPage {
-
-	public function get() {
+class StoragesShow extends ConsoleOutputShowPage
+{
+	public function get()
+	{
 		$out_format = $this->Request->contains('output') && $this->isOutputFormatValid($this->Request['output']) ? $this->Request['output'] : ConsoleOutputPage::OUTPUT_FORMAT_RAW;
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
@@ -68,13 +68,13 @@ class StoragesShow extends ConsoleOutputShowPage {
 			$params = ['storage' => $storage];
 		}
 
-		$out = (object)[
+		$out = (object) [
 			'output' => [],
 			'exitcode' => 0
 		];
 		if ($out_format === ConsoleOutputPage::OUTPUT_FORMAT_RAW) {
 			$out = $this->getRawOutput($params);
-		} elseif($out_format === ConsoleOutputPage::OUTPUT_FORMAT_JSON) {
+		} elseif ($out_format === ConsoleOutputPage::OUTPUT_FORMAT_JSON) {
 			$out = $this->getJSONOutput($params);
 		}
 
@@ -88,7 +88,8 @@ class StoragesShow extends ConsoleOutputShowPage {
 	 * @param array $params command  parameters
 	 * @return StdClass object with output and exitcode
 	 */
-	protected function getRawOutput($params = []) {
+	protected function getRawOutput($params = [])
+	{
 		$cmd = ['show'];
 		if (key_exists('storage', $params)) {
 			$cmd[] = 'storage="' . $params['storage'] . '"';
@@ -108,8 +109,9 @@ class StoragesShow extends ConsoleOutputShowPage {
 	 * @param array $params command parameters
 	 * @return StdClass object with output and exitcode
 	 */
-	protected function getJSONOutput($params = []) {
-		$result = (object)[
+	protected function getJSONOutput($params = [])
+	{
+		$result = (object) [
 			'output' => [],
 			'exitcode' => 0
 		];
@@ -126,4 +128,3 @@ class StoragesShow extends ConsoleOutputShowPage {
 		return $result;
 	}
 }
-?>

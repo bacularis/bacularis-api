@@ -35,11 +35,11 @@ use Bacularis\API\Modules\ChangerCommand;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class ChangerDriveLoad extends BaculumAPIServer {
-
-	public function get() {
+class ChangerDriveLoad extends BaculumAPIServer
+{
+	public function get()
+	{
 		$output = [];
 		$misc = $this->getModule('misc');
 		if ($this->Request->contains('out_id') && $misc->isValidAlphaNumeric($this->Request->itemAt('out_id'))) {
@@ -50,11 +50,12 @@ class ChangerDriveLoad extends BaculumAPIServer {
 		$this->error = DeviceError::ERROR_NO_ERRORS;
 	}
 
-	public function set($id, $params) {
+	public function set($id, $params)
+	{
 		$misc = $this->getModule('misc');
 		$device_name = $this->Request->contains('device_name') && $misc->isValidName($this->Request['device_name']) ? $this->Request['device_name'] : null;
 		$drive = $this->Request->contains('drive') && $misc->isValidName($this->Request['drive']) ? $this->Request['drive'] : null;
-		$slot = $this->Request->contains('slot') && $misc->isValidInteger($this->Request['slot']) ? intval($this->Request['slot']) : null;
+		$slot = $this->Request->contains('slot') && $misc->isValidInteger($this->Request['slot']) ? (int) ($this->Request['slot']) : null;
 
 		if (is_null($drive)) {
 			$this->output = DeviceError::MSG_ERROR_DEVICE_AUTOCHANGER_DRIVE_DOES_NOT_EXIST;
@@ -80,4 +81,3 @@ class ChangerDriveLoad extends BaculumAPIServer {
 		$this->error = $result->error;
 	}
 }
-?>

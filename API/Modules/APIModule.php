@@ -37,11 +37,11 @@ use Prado\TModule;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Module
- * @package Baculum API
  */
-abstract class APIModule extends TModule {
-
-	protected function getModule($id) {
+abstract class APIModule extends TModule
+{
+	protected function getModule($id)
+	{
 		return $this->getApplication()->getModule($id);
 	}
 }

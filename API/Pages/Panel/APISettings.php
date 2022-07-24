@@ -37,23 +37,23 @@ use Bacularis\API\Modules\BAPIException;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Panel
- * @package Baculum API
  */
-class APISettings extends BaculumAPIPage {
-
+class APISettings extends BaculumAPIPage
+{
 	public $config;
 
-	const DEFAULT_ACTION_DIR_START = '/usr/bin/systemctl start bacula-dir';
-	const DEFAULT_ACTION_DIR_STOP = '/usr/bin/systemctl stop bacula-dir';
-	const DEFAULT_ACTION_DIR_RESTART = '/usr/bin/systemctl restart bacula-dir';
-	const DEFAULT_ACTION_SD_START = '/usr/bin/systemctl start bacula-sd';
-	const DEFAULT_ACTION_SD_STOP = '/usr/bin/systemctl stop bacula-sd';
-	const DEFAULT_ACTION_SD_RESTART = '/usr/bin/systemctl restart bacula-sd';
-	const DEFAULT_ACTION_FD_START = '/usr/bin/systemctl start bacula-fd';
-	const DEFAULT_ACTION_FD_STOP = '/usr/bin/systemctl stop bacula-fd';
-	const DEFAULT_ACTION_FD_RESTART = '/usr/bin/systemctl restart bacula-fd';
+	public const DEFAULT_ACTION_DIR_START = '/usr/bin/systemctl start bacula-dir';
+	public const DEFAULT_ACTION_DIR_STOP = '/usr/bin/systemctl stop bacula-dir';
+	public const DEFAULT_ACTION_DIR_RESTART = '/usr/bin/systemctl restart bacula-dir';
+	public const DEFAULT_ACTION_SD_START = '/usr/bin/systemctl start bacula-sd';
+	public const DEFAULT_ACTION_SD_STOP = '/usr/bin/systemctl stop bacula-sd';
+	public const DEFAULT_ACTION_SD_RESTART = '/usr/bin/systemctl restart bacula-sd';
+	public const DEFAULT_ACTION_FD_START = '/usr/bin/systemctl start bacula-fd';
+	public const DEFAULT_ACTION_FD_STOP = '/usr/bin/systemctl stop bacula-fd';
+	public const DEFAULT_ACTION_FD_RESTART = '/usr/bin/systemctl restart bacula-fd';
 
-	public function onInit($param) {
+	public function onInit($param)
+	{
 		parent::onInit($param);
 		$config = $this->getModule('api_config');
 		$this->config = $config->getConfig();
@@ -65,15 +65,17 @@ class APISettings extends BaculumAPIPage {
 		$this->loadAuthSettings();
 	}
 
-	private function loadGeneralSettings() {
+	private function loadGeneralSettings()
+	{
 		if ($this->IsPostBack || $this->IsCallBack) {
 			return;
 		}
-		$this->GeneralLang->SelectedValue= $this->config['api']['lang'];
+		$this->GeneralLang->SelectedValue = $this->config['api']['lang'];
 		$this->GeneralDebug->Checked = ($this->config['api']['debug'] == 1);
 	}
 
-	private function loadDbSettings() {
+	private function loadDbSettings()
+	{
 		if ($this->IsPostBack || $this->IsCallBack) {
 			return;
 		}
@@ -88,7 +90,8 @@ class APISettings extends BaculumAPIPage {
 		$this->setDBType(null, null);
 	}
 
-	private function loadBconsoleSettings() {
+	private function loadBconsoleSettings()
+	{
 		if ($this->IsPostBack || $this->IsCallBack) {
 			return;
 		}
@@ -98,7 +101,8 @@ class APISettings extends BaculumAPIPage {
 		$this->BconsoleUseSudo->Checked = ($this->config['bconsole']['use_sudo'] == 1);
 	}
 
-	private function loadConfigSettings() {
+	private function loadConfigSettings()
+	{
 		if ($this->IsPostBack || $this->IsCallBack) {
 			return;
 		}
@@ -135,7 +139,8 @@ class APISettings extends BaculumAPIPage {
 		}
 	}
 
-	private function loadActionsSettings() {
+	private function loadActionsSettings()
+	{
 		if ($this->IsPostBack || $this->IsCallBack) {
 			return;
 		}
@@ -187,7 +192,8 @@ class APISettings extends BaculumAPIPage {
 		}
 	}
 
-	private function loadAuthSettings() {
+	private function loadAuthSettings()
+	{
 		if ($this->IsPostBack || $this->IsCallBack) {
 			return;
 		}
@@ -198,7 +204,8 @@ class APISettings extends BaculumAPIPage {
 		}
 	}
 
-	public function setDBType($sender, $param) {
+	public function setDBType($sender, $param)
+	{
 		$db = $this->DBType->SelectedValue;
 		$this->setDBLogin($db);
 		$this->setDBPassword($db);
@@ -207,32 +214,35 @@ class APISettings extends BaculumAPIPage {
 		$this->setDBPath($db);
 	}
 
-	public function setDBLogin($db) {
+	public function setDBLogin($db)
+	{
 		$this->DBLogin->Enabled = ($db !== Database::SQLITE_TYPE);
 	}
 
-	public function setDBPassword($db) {
+	public function setDBPassword($db)
+	{
 		$this->DBPassword->Enabled = ($db !== Database::SQLITE_TYPE);
-
 	}
 
-	public function setDBAddress($db) {
+	public function setDBAddress($db)
+	{
 		$this->DBAddress->Enabled = ($db !== Database::SQLITE_TYPE);
 	}
 
-	public function setDBPort($db) {
+	public function setDBPort($db)
+	{
 		$port = null;
-		if(Database::PGSQL_TYPE === $db) {
+		if (Database::PGSQL_TYPE === $db) {
 			$port = 5432;
-		} elseif(Database::MYSQL_TYPE === $db) {
+		} elseif (Database::MYSQL_TYPE === $db) {
 			$port = 3306;
-		} elseif(Database::SQLITE_TYPE === $db) {
+		} elseif (Database::SQLITE_TYPE === $db) {
 			$port = null;
 		}
 
 		$prevPort = $this->DBPort->getViewState('port');
 
-		if(is_null($port)) {
+		if (is_null($port)) {
 			$this->DBPort->Text = '';
 			$this->DBPort->Enabled = false;
 		} else {
@@ -242,7 +252,8 @@ class APISettings extends BaculumAPIPage {
 		$this->DBPort->setViewState('port', '');
 	}
 
-	public function setDBPath($db) {
+	public function setDBPath($db)
+	{
 		if ($db === Database::SQLITE_TYPE) {
 			$this->DBPath->Enabled = true;
 			$this->DBPathField->Display = 'Fixed';
@@ -252,18 +263,19 @@ class APISettings extends BaculumAPIPage {
 		}
 	}
 
-	public function connectionDBTest($sender, $param) {
+	public function connectionDBTest($sender, $param)
+	{
 		$validation = false;
-		$db_params = array();
+		$db_params = [];
 		$db_params['type'] = $this->DBType->SelectedValue;
-		if($db_params['type'] === Database::MYSQL_TYPE || $db_params['type'] === Database::PGSQL_TYPE) {
+		if ($db_params['type'] === Database::MYSQL_TYPE || $db_params['type'] === Database::PGSQL_TYPE) {
 			$db_params['name'] = $this->DBName->Text;
 			$db_params['login'] = $this->DBLogin->Text;
 			$db_params['password'] = $this->DBPassword->Text;
 			$db_params['ip_addr'] = $this->DBAddress->Text;
 			$db_params['port'] = $this->DBPort->Text;
 			$validation = true;
-		} elseif($db_params['type'] === Database::SQLITE_TYPE && !empty($this->DBPath->Text)) {
+		} elseif ($db_params['type'] === Database::SQLITE_TYPE && !empty($this->DBPath->Text)) {
 			$db_params['path'] = $this->DBPath->Text;
 			$validation = true;
 		}
@@ -291,10 +303,11 @@ class APISettings extends BaculumAPIPage {
 		}
 	}
 
-	public function connectionBconsoleTest($sender, $param) {
+	public function connectionBconsoleTest($sender, $param)
+	{
 		$emsg = '';
 		$result = $this->getModule('bconsole')->testBconsoleCommand(
-			array('version'),
+			['version'],
 			$this->BconsolePath->Text,
 			$this->BconsoleConfigPath->Text,
 			$this->BconsoleUseSudo->Checked
@@ -314,41 +327,41 @@ class APISettings extends BaculumAPIPage {
 		}
 	}
 
-	public function testJSONToolsCfg($sender, $param) {
-		$jsontools = array(
-			'dir' => array(
+	public function testJSONToolsCfg($sender, $param)
+	{
+		$jsontools = [
+			'dir' => [
 				'path' => $this->BDirJSONPath->Text,
 				'cfg' => $this->DirCfgPath->Text,
 				'ok_el' => $this->BDirJSONPathTestOk,
 				'error_el' => $this->BDirJSONPathTestErr
-			),
-			'sd' => array(
+			],
+			'sd' => [
 				'path' => $this->BSdJSONPath->Text,
 				'cfg' => $this->SdCfgPath->Text,
 				'ok_el' => $this->BSdJSONPathTestOk,
 				'error_el' => $this->BSdJSONPathTestErr
-			),
-			'fd' => array(
+			],
+			'fd' => [
 				'path' => $this->BFdJSONPath->Text,
 				'cfg' => $this->FdCfgPath->Text,
 				'ok_el' => $this->BFdJSONPathTestOk,
 				'error_el' => $this->BFdJSONPathTestErr
-			),
-			'bcons' => array(
+			],
+			'bcons' => [
 				'path' => $this->BBconsJSONPath->Text,
 				'cfg' => $this->BconsCfgPath->Text,
 				'ok_el' => $this->BBconsJSONPathTestOk,
 				'error_el' => $this->BBconsJSONPathTestErr
-			)
-		);
+			]
+		];
 		$use_sudo = $this->BJSONUseSudo->Checked;
 
 		foreach ($jsontools as $type => $config) {
 			$config['ok_el']->Display = 'None';
 			$config['error_el']->Display = 'None';
 			if (!empty($config['path']) && !empty($config['cfg'])) {
-
-				$result = (object)$this->getModule('json_tools')->testJSONTool($config['path'], $config['cfg'], $use_sudo);
+				$result = (object) $this->getModule('json_tools')->testJSONTool($config['path'], $config['cfg'], $use_sudo);
 				if ($result->exitcode === 0) {
 					// test passed
 					$config['ok_el']->Display = 'Dynamic';
@@ -361,7 +374,8 @@ class APISettings extends BaculumAPIPage {
 		}
 	}
 
-	public function testConfigDir($sender, $param) {
+	public function testConfigDir($sender, $param)
+	{
 		$valid = is_writeable($this->BConfigDir->Text);
 		$this->BConfigDirTestOk->Display = 'None';
 		$this->BConfigDirTestErr->Display = 'None';
@@ -375,7 +389,8 @@ class APISettings extends BaculumAPIPage {
 		$param->setIsValid($valid);
 	}
 
-	public function testExecActionCommand($sender, $param) {
+	public function testExecActionCommand($sender, $param)
+	{
 		$action = $param->CommandParameter;
 		$cmd = '';
 		switch ($action) {
@@ -390,10 +405,11 @@ class APISettings extends BaculumAPIPage {
 			case 'fd_restart': $cmd = $this->FdRestartAction->Text; break;
 		};
 		$result = $this->getModule('comp_actions')->execCommand($cmd, $this->ActionsUseSudo->Checked);
-		$this->getCallbackClient()->callClientFunction('set_action_command_output', array($action, (array)$result));
+		$this->getCallbackClient()->callClientFunction('set_action_command_output', [$action, (array) $result]);
 	}
 
-	public function saveGeneral($sender, $param) {
+	public function saveGeneral($sender, $param)
+	{
 		$reload_page = false;
 		if ($this->config['api']['lang'] != $this->GeneralLang->SelectedValue) {
 			$reload_page = true;
@@ -406,7 +422,8 @@ class APISettings extends BaculumAPIPage {
 		}
 	}
 
-	public function saveCatalog($sender, $param) {
+	public function saveCatalog($sender, $param)
+	{
 		$cfg = [
 			'enabled' => ($this->DBEnabled->Checked ? 1 : 0),
 			'type' => $this->DBType->SelectedValue,
@@ -421,7 +438,8 @@ class APISettings extends BaculumAPIPage {
 		$this->getModule('api_config')->setConfig($this->config);
 	}
 
-	public function saveBconsole($sender, $param) {
+	public function saveBconsole($sender, $param)
+	{
 		$cfg = [
 			'enabled' => ($this->BconsoleEnabled->Checked ? 1 : 0),
 			'bin_path' => $this->BconsolePath->Text,
@@ -432,7 +450,8 @@ class APISettings extends BaculumAPIPage {
 		$this->getModule('api_config')->setConfig($this->config);
 	}
 
-	public function saveConfig($sender, $param) {
+	public function saveConfig($sender, $param)
+	{
 		$cfg = [
 			'enabled' => ($this->ConfigEnabled->Checked ? 1 : 0),
 			'use_sudo' => ($this->BJSONUseSudo->Checked ? 1 : 0),
@@ -450,7 +469,8 @@ class APISettings extends BaculumAPIPage {
 		$this->getModule('api_config')->setConfig($this->config);
 	}
 
-	public function saveActions($sender, $param) {
+	public function saveActions($sender, $param)
+	{
 		$cfg = [
 			'enabled' => ($this->ActionsEnabled->Checked ? 1 : 0),
 			'use_sudo' => ($this->ActionsUseSudo->Checked ? 1 : 0),
@@ -468,7 +488,8 @@ class APISettings extends BaculumAPIPage {
 		$this->getModule('api_config')->setConfig($this->config);
 	}
 
-	public function saveAuth($sender, $param) {
+	public function saveAuth($sender, $param)
+	{
 		$auth_type = AuthBasic::NAME;
 		if ($this->AuthOAuth2->Checked) {
 			$auth_type = AuthOAuth2::NAME;
@@ -479,4 +500,3 @@ class APISettings extends BaculumAPIPage {
 		$this->getModule('api_config')->setConfig($this->config);
 	}
 }
-?>

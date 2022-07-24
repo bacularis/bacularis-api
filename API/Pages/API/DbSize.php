@@ -26,7 +26,7 @@
  *
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
- 
+
 use Bacularis\Common\Modules\Errors\JobError;
 
 /**
@@ -34,13 +34,13 @@ use Bacularis\Common\Modules\Errors\JobError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class DbSize extends BaculumAPIServer {
-	public function get() {
+class DbSize extends BaculumAPIServer
+{
+	public function get()
+	{
 		$dbsize = $this->getModule('db')->getDatabaseSize();
 		$this->output = $dbsize;
 		$this->error = JobError::ERROR_NO_ERRORS;
 	}
 }
-?>

@@ -36,10 +36,10 @@ use Bacularis\API\Modules\APIDbModule;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Database
- * @package Baculum API
  */
-class JobRecord extends APIDbModule {
-	const TABLE = 'Job';
+class JobRecord extends APIDbModule
+{
+	public const TABLE = 'Job';
 
 	public $jobid;
 	public $job;
@@ -76,8 +76,8 @@ class JobRecord extends APIDbModule {
 	public $pool;
 	public $fileset;
 
-	public static function finder($className = __CLASS__) {
+	public static function finder($className = __CLASS__)
+	{
 		return parent::finder($className);
 	}
 }
-?>

@@ -36,8 +36,7 @@ use Bacularis\Common\Portlets\PortletTemplate;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Control
- * @package Baculum API
  */
-class SudoConfig extends PortletTemplate {
+class SudoConfig extends PortletTemplate
+{
 }
-?>

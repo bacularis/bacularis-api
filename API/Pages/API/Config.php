@@ -34,15 +34,16 @@ use Bacularis\Common\Modules\Errors\BaculaConfigError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class Config extends BaculumAPIServer {
-	public function get() {
+class Config extends BaculumAPIServer
+{
+	public function get()
+	{
 		$misc = $this->getModule('misc');
 		$component_type = $this->Request->contains('component_type') ? $this->Request['component_type'] : null;
 		$resource_type = $this->Request->contains('resource_type') ? $this->Request['resource_type'] : null;
 		$resource_name = $this->Request->contains('resource_name') ? $this->Request['resource_name'] : null;
-		$apply_jobdefs = $this->Request->contains('apply_jobdefs') && $misc->isValidBoolean($this->Request['apply_jobdefs']) ? (bool)$this->Request['apply_jobdefs'] : null;
+		$apply_jobdefs = $this->Request->contains('apply_jobdefs') && $misc->isValidBoolean($this->Request['apply_jobdefs']) ? (bool) $this->Request['apply_jobdefs'] : null;
 		$opts = [];
 		if ($apply_jobdefs) {
 			$opts['apply_jobdefs'] = $apply_jobdefs;
@@ -53,8 +54,9 @@ class Config extends BaculumAPIServer {
 		$this->error = $config['exitcode'];
 	}
 
-	public function set($id, $params) {
-		$config = (array)$params;
+	public function set($id, $params)
+	{
+		$config = (array) $params;
 		if (array_key_exists('config', $config)) {
 			if ($this->getClientVersion() <= 0.2) {
 				// old way sending config as serialized array
@@ -63,7 +65,7 @@ class Config extends BaculumAPIServer {
 				$config = json_decode($config['config'], true);
 			}
 		} else {
-			$config = array();
+			$config = [];
 		}
 		if (is_null($config)) {
 			$this->output = BaculaConfigError::MSG_ERROR_CONFIG_VALIDATION_ERROR;
@@ -78,7 +80,7 @@ class Config extends BaculumAPIServer {
 		if ($result['save_result'] === true) {
 			$this->output = BaculaConfigError::MSG_ERROR_NO_ERRORS;
 			$this->error = BaculaConfigError::ERROR_NO_ERRORS;
-		} else if ($result['is_valid'] === false) {
+		} elseif ($result['is_valid'] === false) {
 			$this->output = BaculaConfigError::MSG_ERROR_CONFIG_VALIDATION_ERROR . print_r($result['result'], true);
 			$this->error = BaculaConfigError::ERROR_CONFIG_VALIDATION_ERROR;
 		} else {

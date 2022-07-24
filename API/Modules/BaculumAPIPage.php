@@ -41,17 +41,17 @@ session_start();
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Page
- * @package Baculum API
  */
-class BaculumAPIPage extends BaculumPage {
-
+class BaculumAPIPage extends BaculumPage
+{
 	/**
 	 * It is first application user pre-defined for first login.
 	 * It is removed just after setup application.
 	 */
-	const DEFAULT_AUTH_USER = 'admin';
+	public const DEFAULT_AUTH_USER = 'admin';
 
-	public function onPreInit($param) {
+	public function onPreInit($param)
+	{
 		parent::onPreInit($param);
 		$auth_mod = $this->getModule('basic_apiuser');
 		if ($this->getModule('auth_basic')->authenticate($auth_mod, AuthBasic::REALM_PANEL, false) === false) {
@@ -71,4 +71,3 @@ class BaculumAPIPage extends BaculumPage {
 		$this->Application->getGlobalization()->Culture = $lang;
 	}
 }
-?>

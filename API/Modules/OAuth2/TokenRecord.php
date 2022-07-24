@@ -33,15 +33,14 @@ use Prado\Prado;
 use Bacularis\Common\Modules\ISessionItem;
 use Bacularis\Common\Modules\SessionRecord;
 
-/** 
+/**
  * Module to store tokens as session record.
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Authorization
- * @package Baculum
  */
-class TokenRecord extends SessionRecord implements ISessionItem  {
-
+class TokenRecord extends SessionRecord implements ISessionItem
+{
 	public $access_token;
 	public $refresh_token;
 	public $client_id;
@@ -49,16 +48,18 @@ class TokenRecord extends SessionRecord implements ISessionItem  {
 	public $scope;
 	public $bconsole_cfg_path;
 
-	public static function getRecordId() {
+	public static function getRecordId()
+	{
 		return 'oauth2_token';
 	}
 
-	public static function getPrimaryKey() {
+	public static function getPrimaryKey()
+	{
 		return 'access_token';
 	}
 
-	public static function getSessionFile() {
+	public static function getSessionFile()
+	{
 		return Prado::getPathOfNamespace('Bacularis.API.Config.session', '.dump');
 	}
 }
-?>

@@ -36,11 +36,10 @@ use Bacularis\API\Modules\APIDbModule;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Database
- * @package Baculum API
  */
-class VolumeRecord extends APIDbModule {
-
-	const TABLE = 'Media';
+class VolumeRecord extends APIDbModule
+{
+	public const TABLE = 'Media';
 
 	public $mediaid;
 	public $volumename;
@@ -100,8 +99,8 @@ class VolumeRecord extends APIDbModule {
 	public $recyclepool;
 	public $whenexpire;
 
-	public static function finder($className = __CLASS__) {
+	public static function finder($className = __CLASS__)
+	{
 		return parent::finder($className);
 	}
 }
-?>

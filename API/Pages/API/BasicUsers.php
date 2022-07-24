@@ -34,13 +34,13 @@ use Bacularis\Common\Modules\Errors\ClientError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class BasicUsers extends BaculumAPIServer {
-
-	public function get() {
-		$this->output = $this->getModule('basic_config')->getUsers();;
+class BasicUsers extends BaculumAPIServer
+{
+	public function get()
+	{
+		$this->output = $this->getModule('basic_config')->getUsers();
+		;
 		$this->error = ClientError::ERROR_NO_ERRORS;
 	}
 }
-?>

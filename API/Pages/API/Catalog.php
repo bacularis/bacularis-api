@@ -34,11 +34,11 @@ use Bacularis\Common\Modules\Errors\DatabaseError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class Catalog extends BaculumAPIServer {
-
-	public function get() {
+class Catalog extends BaculumAPIServer
+{
+	public function get()
+	{
 		$result = $this->getModule('db')->testCatalog();
 		if ($result) {
 			$this->output = DatabaseError::MSG_ERROR_NO_ERRORS;
@@ -49,4 +49,3 @@ class Catalog extends BaculumAPIServer {
 		}
 	}
 }
-?>

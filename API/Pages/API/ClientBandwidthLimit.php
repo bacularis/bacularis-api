@@ -32,21 +32,21 @@
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class ClientBandwidthLimit extends BaculumAPIServer {
-
-	public function set($id, $params) {
+class ClientBandwidthLimit extends BaculumAPIServer
+{
+	public function set($id, $params)
+	{
 		$cli = null;
 		if ($id > 0) {
 			$cli = $this->getModule('client')->getClientById($id);
 		}
 
 		$client = null;
-		$result = $this->getModule('bconsole')->bconsoleCommand($this->director, array('.client'));
+		$result = $this->getModule('bconsole')->bconsoleCommand($this->director, ['.client']);
 		if ($result->exitcode === 0) {
 			array_shift($result->output);
-			if(is_object($cli) && in_array($cli->name, $result->output)) {
+			if (is_object($cli) && in_array($cli->name, $result->output)) {
 				$client = $cli->name;
 			}
 		}
@@ -58,7 +58,7 @@ class ClientBandwidthLimit extends BaculumAPIServer {
 
 		$limit = property_exists($params, 'limit') && $this->getModule('misc')->isValidInteger($params->limit) ? $params->limit : 0;
 
-		$cmd = array('setbandwidth', 'client="' . $client . '"', 'limit="' . $limit . '"');
+		$cmd = ['setbandwidth', 'client="' . $client . '"', 'limit="' . $limit . '"'];
 		$result = $this->getModule('bconsole')->bconsoleCommand($this->director, $cmd);
 		$this->output = $result->output;
 		if ($result->exitcode === 0) {
@@ -68,4 +68,3 @@ class ClientBandwidthLimit extends BaculumAPIServer {
 		}
 	}
 }
-?>

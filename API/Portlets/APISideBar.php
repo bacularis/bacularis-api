@@ -35,25 +35,27 @@ use Bacularis\Common\Portlets\PortletTemplate;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Control
- * @package Baculum API
  */
-class APISideBar extends PortletTemplate {
+class APISideBar extends PortletTemplate
+{
 	/**
 	 * Reload URL is used to refresh page after logout with Basic auth.
 	 */
 	public $reload_url = '';
 
-	public function onInit($param) {
+	public function onInit($param)
+	{
 		parent::onInit($param);
 		$fake_pwd = $this->getModule('crypto')->getRandomString();
 		// must be different than currently logged in Basic user
-		$user = (isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '') . '1';
+		$user = ($_SERVER['PHP_AUTH_USER'] ?? '') . '1';
 
 		// do a login try with different user and password to logout current user
 		$this->reload_url = $this->getPage()->getFullLoginUrl($user, $fake_pwd);
 	}
 
-	public function logout($sender, $param) {
+	public function logout($sender, $param)
+	{
 		/**
 		 * This status code 401 is necessary to stop comming AJAX requests
 		 * and to bring the login prompt on.
@@ -61,4 +63,3 @@ class APISideBar extends PortletTemplate {
 		$this->Response->setStatusCode(401);
 	}
 }
-?>

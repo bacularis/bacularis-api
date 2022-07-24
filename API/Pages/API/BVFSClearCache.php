@@ -32,17 +32,16 @@
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class BVFSClearCache extends BaculumAPIServer {
-
-	public function set($id, $params) {
+class BVFSClearCache extends BaculumAPIServer
+{
+	public function set($id, $params)
+	{
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
-			array('.bvfs_clear_cache', 'yes')
+			['.bvfs_clear_cache', 'yes']
 		);
 		$this->output = $result->output;
 		$this->error = $result->exitcode;
 	}
 }
-?>

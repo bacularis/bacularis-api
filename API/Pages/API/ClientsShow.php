@@ -26,7 +26,7 @@
  *
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
- 
+
 use Bacularis\Common\Modules\Errors\ClientError;
 use Bacularis\API\Modules\ConsoleOutputPage;
 use Bacularis\API\Modules\ConsoleOutputShowPage;
@@ -36,11 +36,11 @@ use Bacularis\API\Modules\ConsoleOutputShowPage;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class ClientsShow extends ConsoleOutputShowPage {
-
-	public function get() {
+class ClientsShow extends ConsoleOutputShowPage
+{
+	public function get()
+	{
 		$out_format = $this->Request->contains('output') && $this->isOutputFormatValid($this->Request['output']) ? $this->Request['output'] : ConsoleOutputPage::OUTPUT_FORMAT_RAW;
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
@@ -68,13 +68,13 @@ class ClientsShow extends ConsoleOutputShowPage {
 		if (is_string($client)) {
 			$params = ['client' => $client];
 		}
-		$out = (object)[
+		$out = (object) [
 			'output' => [],
 			'exitcode' => 0
 		];
 		if ($out_format === ConsoleOutputPage::OUTPUT_FORMAT_RAW) {
 			$out = $this->getRawOutput($params);
-		} elseif($out_format === ConsoleOutputPage::OUTPUT_FORMAT_JSON) {
+		} elseif ($out_format === ConsoleOutputPage::OUTPUT_FORMAT_JSON) {
 			$out = $this->getJSONOutput($params);
 		}
 		$this->output = $out->output;
@@ -87,7 +87,8 @@ class ClientsShow extends ConsoleOutputShowPage {
 	 * @param array $params command  parameters
 	 * @return StdClass object with output and exitcode
 	 */
-	protected function getRawOutput($params = []) {
+	protected function getRawOutput($params = [])
+	{
 		$cmd = ['show'];
 		if (key_exists('client', $params)) {
 			$cmd[] = 'client="' . $params['client'] . '"';
@@ -106,8 +107,9 @@ class ClientsShow extends ConsoleOutputShowPage {
 	 * @param array $params command parameters
 	 * @return StdClass object with output and exitcode
 	 */
-	protected function getJSONOutput($params = []) {
-		$result = (object)[
+	protected function getJSONOutput($params = [])
+	{
+		$result = (object) [
 			'output' => [],
 			'exitcode' => 0
 		];
@@ -124,4 +126,3 @@ class ClientsShow extends ConsoleOutputShowPage {
 		return $result;
 	}
 }
-?>

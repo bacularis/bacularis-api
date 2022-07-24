@@ -26,7 +26,7 @@
  *
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
- 
+
 use Bacularis\Common\Modules\Errors\PoolError;
 
 /**
@@ -34,11 +34,12 @@ use Bacularis\Common\Modules\Errors\PoolError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class Pools extends BaculumAPIServer {
-	public function get() {
-		$limit = $this->Request->contains('limit') ? intval($this->Request['limit']) : 0;
+class Pools extends BaculumAPIServer
+{
+	public function get()
+	{
+		$limit = $this->Request->contains('limit') ? (int) ($this->Request['limit']) : 0;
 		$pools = $this->getModule('pool')->getPools($limit);
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
@@ -48,9 +49,9 @@ class Pools extends BaculumAPIServer {
 		);
 		if ($result->exitcode === 0) {
 			if (is_array($pools) && count($pools) > 0) {
-				$pools_output = array();
-				foreach($pools as $pool) {
-					if(in_array($pool->name, $result->output)) {
+				$pools_output = [];
+				foreach ($pools as $pool) {
+					if (in_array($pool->name, $result->output)) {
 						$pools_output[] = $pool;
 					}
 				}
@@ -66,4 +67,3 @@ class Pools extends BaculumAPIServer {
 		}
 	}
 }
-?>

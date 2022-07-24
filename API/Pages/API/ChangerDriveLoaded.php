@@ -32,11 +32,11 @@
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class ChangerDriveLoaded extends BaculumAPIServer {
-
-	public function get() {
+class ChangerDriveLoaded extends BaculumAPIServer
+{
+	public function get()
+	{
 		$misc = $this->getModule('misc');
 		$device_name = $this->Request->contains('device_name') && $misc->isValidName($this->Request['device_name']) ? $this->Request['device_name'] : null;
 		$drive = $this->Request->contains('drive') && $misc->isValidName($this->Request['drive']) ? $this->Request['drive'] : null;
@@ -54,7 +54,7 @@ class ChangerDriveLoaded extends BaculumAPIServer {
 		);
 
 		if ($result->error === 0 && count($result->output)) {
-			$this->output = ['slot' => intval($result->output[0])];
+			$this->output = ['slot' => (int) ($result->output[0])];
 		} else {
 			$this->output = $result->output;
 		}
@@ -62,4 +62,3 @@ class ChangerDriveLoaded extends BaculumAPIServer {
 		$this->error = $result->error;
 	}
 }
-?>

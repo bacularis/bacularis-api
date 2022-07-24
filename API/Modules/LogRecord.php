@@ -36,19 +36,18 @@ use Bacularis\API\Modules\APIDbModule;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Database
- * @package Baculum API
  */
-class LogRecord extends APIDbModule {
-
-	const TABLE = 'Log';
+class LogRecord extends APIDbModule
+{
+	public const TABLE = 'Log';
 
 	public $logid;
 	public $jobid;
 	public $time;
 	public $logtext;
 
-	public static function finder($className = __CLASS__) {
+	public static function finder($className = __CLASS__)
+	{
 		return parent::finder($className);
 	}
 }
-?>

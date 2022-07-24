@@ -36,11 +36,12 @@ use Bacularis\API\Modules\ConsoleOutputShowPage;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class JobShow extends ConsoleOutputShowPage {
-	public function get() {
-		$jobid = $this->Request->contains('id') ? intval($this->Request['id']) : 0;
+class JobShow extends ConsoleOutputShowPage
+{
+	public function get()
+	{
+		$jobid = $this->Request->contains('id') ? (int) ($this->Request['id']) : 0;
 		$out_format = $this->Request->contains('output') && $this->isOutputFormatValid($this->Request['output']) ? $this->Request['output'] : ConsoleOutputPage::OUTPUT_FORMAT_RAW;
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
@@ -51,13 +52,13 @@ class JobShow extends ConsoleOutputShowPage {
 		if ($result->exitcode === 0) {
 			$job = $this->getModule('job')->getJobById($jobid);
 			if (is_object($job) && in_array($job->name, $result->output)) {
-				$out = (object)[
+				$out = (object) [
 					'output' => [],
 					'exitcode' => 0
 				];
 				if ($out_format === ConsoleOutputPage::OUTPUT_FORMAT_RAW) {
 					$out = $this->getRawOutput(['job' => $job->name]);
-				} elseif($out_format === ConsoleOutputPage::OUTPUT_FORMAT_JSON) {
+				} elseif ($out_format === ConsoleOutputPage::OUTPUT_FORMAT_JSON) {
 					$out = $this->getJSONOutput(['job' => $job->name]);
 				}
 				$this->output = $out->output;
@@ -78,7 +79,8 @@ class JobShow extends ConsoleOutputShowPage {
 	 * @param array $params command parameters
 	 * @return StdClass object with output and exitcode
 	 */
-	protected function getRawOutput($params = []) {
+	protected function getRawOutput($params = [])
+	{
 		return $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
 			['show', 'job="' . $params['job'] . '"']
@@ -91,8 +93,9 @@ class JobShow extends ConsoleOutputShowPage {
 	 * @param array $params command parameters
 	 * @return StdClass object with output and exitcode
 	 */
-	protected function getJSONOutput($params = []) {
-		$result = (object)[
+	protected function getJSONOutput($params = [])
+	{
+		$result = (object) [
 			'output' => [],
 			'exitcode' => 0
 		];
@@ -105,4 +108,3 @@ class JobShow extends ConsoleOutputShowPage {
 		return $result;
 	}
 }
-?>

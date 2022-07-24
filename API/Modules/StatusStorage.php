@@ -36,17 +36,16 @@ use Bacularis\API\Modules\ComponentStatusModule;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Status
- * @package Baculum API
  */
-class StatusStorage extends ComponentStatusModule {
-
+class StatusStorage extends ComponentStatusModule
+{
 	/**
 	 * Output types (output sections).
 	 */
-	const OUTPUT_TYPE_HEADER = 'header';
-	const OUTPUT_TYPE_RUNNING = 'running';
-	const OUTPUT_TYPE_TERMINATED = 'terminated';
-	const OUTPUT_TYPE_DEVICES = 'devices';
+	public const OUTPUT_TYPE_HEADER = 'header';
+	public const OUTPUT_TYPE_RUNNING = 'running';
+	public const OUTPUT_TYPE_TERMINATED = 'terminated';
+	public const OUTPUT_TYPE_DEVICES = 'devices';
 
 	/**
 	 * Get parsed storage status.
@@ -56,11 +55,12 @@ class StatusStorage extends ComponentStatusModule {
 	 * @param string $type output type (e.g. header, running, terminated ...etc.)
 	 * @return array ready array parsed component status output
 	 */
-	public function getStatus($director, $component_name = null, $type = null) {
-		$ret = array('output' => array(), 'error' => 0);
+	public function getStatus($director, $component_name = null, $type = null)
+	{
+		$ret = ['output' => [], 'error' => 0];
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$director,
-			array('.status', 'storage="' . $component_name . '"', $type),
+			['.status', 'storage="' . $component_name . '"', $type],
 			Bconsole::PTYPE_API_CMD
 		);
 		if ($result->exitcode === 0) {
@@ -79,7 +79,8 @@ class StatusStorage extends ComponentStatusModule {
 	 * @param string $type output type (e.g. header, running, terminated ...etc.)
 	 * @return array array with parsed storage status values
 	 */
-	public function parseStatus(array $output, $type) {
+	public function parseStatus(array $output, $type)
+	{
 		$result = [];
 		$line = null;
 		$part = [];
@@ -87,15 +88,15 @@ class StatusStorage extends ComponentStatusModule {
 		$autochangers = [];
 		$ach_dev = [];
 		$empty_lines = 0;
-		for($i = 0; $i < count($output); $i++) {
+		for ($i = 0; $i < count($output); $i++) {
 			if (empty($output[$i])) {
 				$empty_lines++;
-				if  (count($part) > 10) {
+				if (count($part) > 10) {
 					$result[] = $part;
 					$part = [];
 				}
 				if (count($ach_dev) == 2) {
-					$autochangers[$autochanger]['devices'][]  = $ach_dev;
+					$autochangers[$autochanger]['devices'][] = $ach_dev;
 					$ach_dev = [];
 				}
 				if ($empty_lines == 4 && $autochanger) {
@@ -109,7 +110,7 @@ class StatusStorage extends ComponentStatusModule {
 				}
 
 				if ($line['key'] == 'autochanger') {
-					$autochanger  = $line['value'];
+					$autochanger = $line['value'];
 					$autochangers[$autochanger] = ['devices' => []];
 				} elseif ($autochanger) {
 					$ach_dev[$line['key']] = $line['value'];
@@ -144,18 +145,18 @@ class StatusStorage extends ComponentStatusModule {
 	 * Validate status output type.
 	 *
 	 * @param string $type output type (e.g. header, running, terminated ...etc.)
-	 * @return boolean true if output type is valid for component, otherwise false
+	 * @return bool true if output type is valid for component, otherwise false
 	 */
-	public function isValidOutputType($type) {
+	public function isValidOutputType($type)
+	{
 		return in_array(
 			$type,
-			array(
+			[
 				self::OUTPUT_TYPE_HEADER,
 				self::OUTPUT_TYPE_RUNNING,
 				self::OUTPUT_TYPE_TERMINATED,
 				self::OUTPUT_TYPE_DEVICES
-			)
+			]
 		);
 	}
 }
-?>

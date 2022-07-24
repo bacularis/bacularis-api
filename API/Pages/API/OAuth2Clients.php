@@ -34,14 +34,13 @@ use Bacularis\Common\Modules\Errors\OAuth2Error;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class OAuth2Clients extends BaculumAPIServer {
-
-	public function get() {
+class OAuth2Clients extends BaculumAPIServer
+{
+	public function get()
+	{
 		$oauth2_cfg = $this->getModule('oauth2_config')->getConfig();
 		$this->output = array_values($oauth2_cfg);
 		$this->error = OAuth2Error::ERROR_NO_ERRORS;
 	}
 }
-?>

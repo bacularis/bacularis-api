@@ -34,24 +34,24 @@ use Bacularis\Common\Modules\Errors\PoolError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class PoolUpdateVolumes extends BaculumAPIServer {
-
-	public function set($id, $params) {
+class PoolUpdateVolumes extends BaculumAPIServer
+{
+	public function set($id, $params)
+	{
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
-			array('.pool')
+			['.pool']
 		);
 		if ($result->exitcode === 0) {
 			array_shift($result->output);
 			$pool = $this->getModule('pool')->getPoolById($id);
 			if (is_object($pool) && in_array($pool->name, $result->output)) {
 				$voldata = $this->getModule('volume')->getVolumeByPoolId($pool->poolid);
-				if(is_object($voldata)) {
+				if (is_object($voldata)) {
 					$result = $this->getModule('bconsole')->bconsoleCommand(
 						$this->director,
-						array('update', 'volume="' .  $voldata->volumename . '"', 'allfrompool="' . $pool->name . '"')
+						['update', 'volume="' . $voldata->volumename . '"', 'allfrompool="' . $pool->name . '"']
 					);
 					$this->output = $result->output;
 					$this->error = $result->exitcode;
@@ -69,5 +69,3 @@ class PoolUpdateVolumes extends BaculumAPIServer {
 		}
 	}
 }
-
-?>

@@ -31,26 +31,25 @@ use Bacularis\Common\Modules\BaculumPage;
 
 /**
  * OAuth2 authorization server.
- * 
+ *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
- 
-class Authorize extends BaculumPage {
-
+class Authorize extends BaculumPage
+{
 	/**
 	 * Request parameter for grant authorization identifier.
 	 */
-	const RESPONSE_TYPE_CODE = 'code';
+	public const RESPONSE_TYPE_CODE = 'code';
 
 	/**
 	 * Response fields.
 	 */
-	const FIELD_CODE = 'code';
-	const FIELD_STATE = 'state';
+	public const FIELD_CODE = 'code';
+	public const FIELD_STATE = 'state';
 
-	public function onLoad($param) {
+	public function onLoad($param)
+	{
 		parent::onLoad($param);
 		$oauth2 = $this->getModule('oauth2');
 
@@ -80,13 +79,13 @@ class Authorize extends BaculumPage {
 		}
 
 		$client = $this->getModule('oauth2_config')->getConfig($_GET['client_id']);
-		if(count($client) === 0 || $_GET['redirect_uri'] !== $client['redirect_uri']) {
+		if (count($client) === 0 || $_GET['redirect_uri'] !== $client['redirect_uri']) {
 			$oauth2->authorizationError(
 				$oauth2::HEADER_UNAUTHORIZED,
 				$oauth2::AUTHORIZATION_ERROR_ACCESS_DENIED
 			);
 			// end action
-		} 
+		}
 
 		// deleting expired authorization identifiers
 		$this->getModule('oauth2_authid')->deleteExpiredAuthIds();
@@ -101,7 +100,7 @@ class Authorize extends BaculumPage {
 		$result = $oauth2->setAuthId($auth_id, $_GET['client_id'], $client['redirect_uri'], $client['scope']);
 
 		// redirecting user's application response to 'redirect URI value'
-		$uri_params = array(self::FIELD_CODE => $auth_id);
+		$uri_params = [self::FIELD_CODE => $auth_id];
 		if (!empty($_GET['state'])) {
 			$uri_params[self::FIELD_STATE] = $_GET['state'];
 		}
@@ -109,4 +108,3 @@ class Authorize extends BaculumPage {
 		// end action
 	}
 }
-?>

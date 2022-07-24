@@ -36,7 +36,7 @@ use Bacularis\Common\Modules\BException;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Exception
- * @package Baculum API
  */
-class BAPIException extends BException {
+class BAPIException extends BException
+{
 }

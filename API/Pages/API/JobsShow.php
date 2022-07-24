@@ -36,11 +36,11 @@ use Bacularis\API\Modules\ConsoleOutputShowPage;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class JobsShow extends ConsoleOutputShowPage {
-
-	public function get() {
+class JobsShow extends ConsoleOutputShowPage
+{
+	public function get()
+	{
 		$out_format = $this->Request->contains('output') && $this->isOutputFormatValid($this->Request['output']) ? $this->Request['output'] : ConsoleOutputPage::OUTPUT_FORMAT_RAW;
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
@@ -69,13 +69,13 @@ class JobsShow extends ConsoleOutputShowPage {
 		if (is_string($job)) {
 			$params = ['job' => $job];
 		}
-		$out = (object)[
+		$out = (object) [
 			'output' => [],
 			'exitcode' => 0
 		];
 		if ($out_format === ConsoleOutputPage::OUTPUT_FORMAT_RAW) {
 			$out = $this->getRawOutput($params);
-		} elseif($out_format === ConsoleOutputPage::OUTPUT_FORMAT_JSON) {
+		} elseif ($out_format === ConsoleOutputPage::OUTPUT_FORMAT_JSON) {
 			$out = $this->getJSONOutput($params);
 		}
 		$this->output = $out->output;
@@ -88,7 +88,8 @@ class JobsShow extends ConsoleOutputShowPage {
 	 * @param array $params command parameters
 	 * @return StdClass object with output and exitcode
 	 */
-	protected function getRawOutput($params = []) {
+	protected function getRawOutput($params = [])
+	{
 		$cmd = ['show'];
 		if (key_exists('job', $params)) {
 			$cmd[] = 'job="' . $params['job'] . '"';
@@ -107,8 +108,9 @@ class JobsShow extends ConsoleOutputShowPage {
 	 * @param array $params command parameters
 	 * @return StdClass object with output and exitcode
 	 */
-	protected function getJSONOutput($params = []) {
-		$result = (object)[
+	protected function getJSONOutput($params = [])
+	{
+		$result = (object) [
 			'output' => [],
 			'exitcode' => 0
 		];
@@ -125,5 +127,3 @@ class JobsShow extends ConsoleOutputShowPage {
 		return $result;
 	}
 }
-
-?>

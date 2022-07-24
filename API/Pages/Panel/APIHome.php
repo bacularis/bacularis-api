@@ -39,15 +39,15 @@ use Bacularis\API\Modules\BaculumAPIPage;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Panel
- * @package Baculum API
  */
-class APIHome extends BaculumAPIPage {
-
-	public function onInit($param) {
+class APIHome extends BaculumAPIPage
+{
+	public function onInit($param)
+	{
 		parent::onInit($param);
 
 		$config = $this->getModule('api_config')->getConfig();
-		if(count($config) === 0) {
+		if (count($config) === 0) {
 			// Config doesn't exist, go to wizard
 			$this->goToPage('APIInstallWizard');
 			return;
@@ -57,10 +57,11 @@ class APIHome extends BaculumAPIPage {
 		}
 	}
 
-	public function setAuthParams($sender, $param) {
+	public function setAuthParams($sender, $param)
+	{
 		$config = $this->getModule('api_config')->getConfig();
-		$base_params = array('auth_type' => $config['api']['auth_type']);
-		$params = array();
+		$base_params = ['auth_type' => $config['api']['auth_type']];
+		$params = [];
 		if ($config['api']['auth_type'] === 'oauth2') {
 			$oauth2_cfg = $this->getModule('oauth2_config')->getConfig();
 			$client_id = null;
@@ -68,12 +69,12 @@ class APIHome extends BaculumAPIPage {
 				$client_id = $param->CallbackParameter;
 			}
 			if (is_string($client_id)) {
-				$params = array(
+				$params = [
 					'client_id' => $oauth2_cfg[$client_id]['client_id'],
-					'client_secret' =>  $oauth2_cfg[$client_id]['client_secret'],
+					'client_secret' => $oauth2_cfg[$client_id]['client_secret'],
 					'redirect_uri' => $oauth2_cfg[$client_id]['redirect_uri'],
 					'scope' => explode(' ', $oauth2_cfg[$client_id]['scope'])
-				);
+				];
 			}
 		} elseif ($config['api']['auth_type'] === 'basic') {
 			if (is_object($param)) {
@@ -88,13 +89,14 @@ class APIHome extends BaculumAPIPage {
 		$this->AuthParamsInput->Value = json_encode($params);
 	}
 
-	public function loadAuthParams($sender, $param) {
-		$ids = $values = array();
+	public function loadAuthParams($sender, $param)
+	{
+		$ids = $values = [];
 		$config = $this->getModule('api_config')->getConfig();
 		if ($config['api']['auth_type'] === 'oauth2') {
 			$oauth2_cfg = $this->getModule('oauth2_config')->getConfig();
 			$ids = array_keys($oauth2_cfg);
-			$values = array();
+			$values = [];
 			for ($i = 0; $i < count($ids); $i++) {
 				$values[] = "{$oauth2_cfg[$ids[$i]]['client_id']} ({$oauth2_cfg[$ids[$i]]['name']})";
 			}
@@ -105,6 +107,4 @@ class APIHome extends BaculumAPIPage {
 		$this->AuthParamsCombo->DataSource = array_combine($ids, $values);
 		$this->AuthParamsCombo->dataBind();
 	}
-
 }
-?>

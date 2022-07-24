@@ -27,7 +27,8 @@
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
 
-use Bacularis\Common\Modules\Errors\{JobError,VolumeError};
+use Bacularis\Common\Modules\Errors\JobError;
+use Bacularis\Common\Modules\Errors\VolumeError;
 use Bacularis\API\Modules\Bconsole;
 
 /**
@@ -35,11 +36,11 @@ use Bacularis\API\Modules\Bconsole;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class JobEstimate extends BaculumAPIServer {
-
-	public function get() {
+class JobEstimate extends BaculumAPIServer
+{
+	public function get()
+	{
 		$output = [];
 		$misc = $this->getModule('misc');
 		if ($this->Request->contains('out_id') && $misc->isValidAlphaNumeric($this->Request->itemAt('out_id'))) {
@@ -50,10 +51,11 @@ class JobEstimate extends BaculumAPIServer {
 		$this->error = VolumeError::ERROR_NO_ERRORS;
 	}
 
-	public function create($params) {
+	public function create($params)
+	{
 		$job = null;
 		if (property_exists($params, 'id')) {
-			$jobid = intval($params->id);
+			$jobid = (int) ($params->id);
 			$job_row = $this->getModule('job')->getJobById($jobid);
 			$job = is_object($job_row) ? $job_row->name : null;
 		} elseif (property_exists($params, 'name') && $this->getModule('misc')->isValidName($params->name)) {
@@ -69,7 +71,7 @@ class JobEstimate extends BaculumAPIServer {
 		}
 		$client = null;
 		if (property_exists($params, 'clientid')) {
-			$clientid = intval($params->clientid);
+			$clientid = (int) ($params->clientid);
 			$client_row = $this->getModule('client')->getClientById($clientid);
 			$client = is_object($client_row) ? $client_row->name : null;
 		} elseif (property_exists($params, 'client') && $this->getModule('misc')->isValidName($params->client)) {
@@ -77,7 +79,7 @@ class JobEstimate extends BaculumAPIServer {
 		}
 		$accurate = 'no';
 		if (property_exists($params, 'accurate')) {
-			$accurate_job = intval($params->accurate);
+			$accurate_job = (int) ($params->accurate);
 			$accurate = $accurate_job === 1 ? 'yes' : 'no';
 		}
 
@@ -124,15 +126,15 @@ class JobEstimate extends BaculumAPIServer {
 			return;
 		}
 
-		$joblevels  = $this->getModule('misc')->getJobLevels();
-		$cmd = array(
+		$joblevels = $this->getModule('misc')->getJobLevels();
+		$cmd = [
 			'estimate',
 			'job="' . $job . '"',
 			'level="' . $joblevels[$level] . '"',
-			'fileset="' . $fileset. '"',
+			'fileset="' . $fileset . '"',
 			'client="' . $client . '"',
 			'accurate="' . $accurate . '"'
-		);
+		];
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
 			$cmd,
@@ -143,5 +145,3 @@ class JobEstimate extends BaculumAPIServer {
 		$this->error = $result->exitcode;
 	}
 }
-
-?>

@@ -35,15 +35,15 @@ use Bacularis\API\Modules\BaculumAPIPage;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Panel
- * @package Baculum API
  */
-class APIBasicUsers extends BaculumAPIPage {
-
-	public function onInit($param) {
+class APIBasicUsers extends BaculumAPIPage
+{
+	public function onInit($param)
+	{
 		parent::onInit($param);
 
 		$config = $this->getModule('api_config')->getConfig();
-		if(count($config) === 0) {
+		if (count($config) === 0) {
 			// Config doesn't exist, go to wizard
 			$this->goToPage('APIInstallWizard');
 			return;
@@ -52,7 +52,8 @@ class APIBasicUsers extends BaculumAPIPage {
 		}
 	}
 
-	public function loadBasicUsers($sender, $param) {
+	public function loadBasicUsers($sender, $param)
+	{
 		$users = $this->getModule('basic_config')->getUsers();
 		$this->getCallbackClient()->callClientFunction(
 			'oAPIBasicUsers.load_basic_users_cb',
@@ -61,11 +62,13 @@ class APIBasicUsers extends BaculumAPIPage {
 		$this->hideBasicUserWindow($sender);
 	}
 
-	public function cancelBasicUserWindow($sender, $param) {
+	public function cancelBasicUserWindow($sender, $param)
+	{
 		$this->hideBasicUserWindow($sender);
 	}
 
-	private function hideBasicUserWindow($sender) {
+	private function hideBasicUserWindow($sender)
+	{
 		if (is_object($sender)) {
 			if ($sender->ID === 'NewBasicClient') {
 				$this->getCallbackClient()->callClientFunction(
@@ -81,10 +84,10 @@ class APIBasicUsers extends BaculumAPIPage {
 		}
 	}
 
-	public function deleteBasicUser($sender, $param) {
+	public function deleteBasicUser($sender, $param)
+	{
 		$username = $param->getCallbackParameter();
 		$this->getModule('basic_config')->removeUser($username);
 		$this->loadBasicUsers(null, null);
 	}
 }
-?>

@@ -36,16 +36,15 @@ use Bacularis\API\Modules\APIDbModule;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Database
- * @package Baculum API
  */
 class VersionRecord extends APIDbModule
 {
-	const TABLE = 'Version';
+	public const TABLE = 'Version';
 
 	public $versionid;
 
-	public static function finder($className = __CLASS__) {
+	public static function finder($className = __CLASS__)
+	{
 		return parent::finder($className);
 	}
 }
-?>

@@ -34,13 +34,13 @@ use Bacularis\Common\Modules\Errors\GenericError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class Messages extends BaculumAPIServer {
-
-	public function get() {
+class Messages extends BaculumAPIServer
+{
+	public function get()
+	{
 		$misc = $this->getModule('misc');
-		$limit = $this->Request->contains('limit') ? intval($this->Request['limit']) : 0;
+		$limit = $this->Request->contains('limit') ? (int) ($this->Request['limit']) : 0;
 
 		$cmd = ['messages'];
 		$result = $this->getModule('bconsole')->bconsoleCommand($this->director, $cmd, null, true);
@@ -52,4 +52,3 @@ class Messages extends BaculumAPIServer {
 		$this->error = $result->exitcode > 0 ? GenericError::ERROR_WRONG_EXITCODE : GenericError::ERROR_NO_ERRORS;
 	}
 }
-?>

@@ -37,55 +37,54 @@ use Bacularis\Common\Modules\ConfigFileModule;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Config
- * @package Baculum API
  */
-class APIConfig extends ConfigFileModule {
-
+class APIConfig extends ConfigFileModule
+{
 	/**
 	 * Default application language
 	 */
-	const DEF_LANG = 'en';
+	public const DEF_LANG = 'en';
 
 	/**
 	 * API config file path
 	 */
-	const CONFIG_FILE_PATH = 'Bacularis.API.Config.api';
+	public const CONFIG_FILE_PATH = 'Bacularis.API.Config.api';
 
 	/**
 	 * API config file format
 	 */
-	const CONFIG_FILE_FORMAT = 'ini';
+	public const CONFIG_FILE_FORMAT = 'ini';
 
 	/**
 	 * JSON tool types
 	 */
-	const JSON_TOOL_DIR_TYPE = 'dir';
-	const JSON_TOOL_SD_TYPE = 'sd';
-	const JSON_TOOL_FD_TYPE = 'fd';
-	const JSON_TOOL_BCONS_TYPE = 'bcons';
+	public const JSON_TOOL_DIR_TYPE = 'dir';
+	public const JSON_TOOL_SD_TYPE = 'sd';
+	public const JSON_TOOL_FD_TYPE = 'fd';
+	public const JSON_TOOL_BCONS_TYPE = 'bcons';
 
 	/**
 	 * Action types
 	 */
-	const ACTION_DIR_START = 'dir_start';
-	const ACTION_DIR_STOP = 'dir_stop';
-	const ACTION_DIR_RESTART = 'dir_restart';
-	const ACTION_SD_START = 'sd_start';
-	const ACTION_SD_STOP = 'sd_stop';
-	const ACTION_SD_RESTART = 'sd_restart';
-	const ACTION_FD_START = 'fd_start';
-	const ACTION_FD_STOP = 'fd_stop';
-	const ACTION_FD_RESTART = 'fd_restart';
+	public const ACTION_DIR_START = 'dir_start';
+	public const ACTION_DIR_STOP = 'dir_stop';
+	public const ACTION_DIR_RESTART = 'dir_restart';
+	public const ACTION_SD_START = 'sd_start';
+	public const ACTION_SD_STOP = 'sd_stop';
+	public const ACTION_SD_RESTART = 'sd_restart';
+	public const ACTION_FD_START = 'fd_start';
+	public const ACTION_FD_STOP = 'fd_stop';
+	public const ACTION_FD_RESTART = 'fd_restart';
 
 	/**
 	 * These options are obligatory for API config.
 	 */
-	private $required_options = array(
-		'api' => array('auth_type', 'debug'),
-		'db' => array('type', 'name', 'login', 'password', 'ip_addr', 'port', 'path'),
-		'bconsole' => array('bin_path', 'cfg_path', 'use_sudo'),
-		'jsontools' => array('enabled')
-	);
+	private $required_options = [
+		'api' => ['auth_type', 'debug'],
+		'db' => ['type', 'name', 'login', 'password', 'ip_addr', 'port', 'path'],
+		'bconsole' => ['bin_path', 'cfg_path', 'use_sudo'],
+		'jsontools' => ['enabled']
+	];
 
 	/**
 	 * Get (read) API config.
@@ -94,14 +93,15 @@ class APIConfig extends ConfigFileModule {
 	 * @param string $section config section name
 	 * @return array config
 	 */
-	public function getConfig($section = null) {
+	public function getConfig($section = null)
+	{
 		$config = $this->readConfig(self::CONFIG_FILE_PATH, self::CONFIG_FILE_FORMAT);
 		if ($this->validateConfig($config) === true) {
 			if (!is_null($section)) {
-				$config = array_key_exists($section, $this->required_options) ? $config[$section] : array();
+				$config = array_key_exists($section, $this->required_options) ? $config[$section] : [];
 			}
 		} else {
-			$config = array();
+			$config = [];
 		}
 		return $config;
 	}
@@ -111,9 +111,10 @@ class APIConfig extends ConfigFileModule {
 	 *
 	 * @access public
 	 * @param array $config config
-	 * @return boolean true if config saved successfully, otherwise false
+	 * @return bool true if config saved successfully, otherwise false
 	 */
-	public function setConfig(array $config) {
+	public function setConfig(array $config)
+	{
 		$result = false;
 		if ($this->validateConfig($config) === true) {
 			$result = $this->writeConfig($config, self::CONFIG_FILE_PATH, self::CONFIG_FILE_FORMAT);
@@ -128,34 +129,38 @@ class APIConfig extends ConfigFileModule {
 	 *
 	 * @access private
 	 * @param array $config config
-	 * @return boolean true if config valid, otherwise false
+	 * @return bool true if config valid, otherwise false
 	 */
-	private function validateConfig(array $config = array()) {
+	private function validateConfig(array $config = [])
+	{
 		return $this->isConfigValid($this->required_options, $config, self::CONFIG_FILE_FORMAT, self::CONFIG_FILE_PATH);
 	}
 
-	private function getJSONToolTypes() {
-		return array(
+	private function getJSONToolTypes()
+	{
+		return [
 			self::JSON_TOOL_DIR_TYPE,
 			self::JSON_TOOL_SD_TYPE,
 			self::JSON_TOOL_FD_TYPE,
 			self::JSON_TOOL_BCONS_TYPE
-		);
+		];
 	}
 
 	/**
 	 * Check if JSON tools are configured for application.
 	 *
 	 * @access public
-	 * @return boolean true if JSON tools are configured, otherwise false
+	 * @return bool true if JSON tools are configured, otherwise false
 	 */
-	public function isJSONToolsConfigured() {
+	public function isJSONToolsConfigured()
+	{
 		$config = $this->getConfig();
 		$configured = array_key_exists('jsontools', $config);
 		return $configured;
 	}
 
-	public function isJSONToolConfigured($tool_type) {
+	public function isJSONToolConfigured($tool_type)
+	{
 		$configured = false;
 		$tool = $this->getJSONToolOptions($tool_type);
 		$config = $this->getJSONToolsConfig();
@@ -167,11 +172,12 @@ class APIConfig extends ConfigFileModule {
 		return $configured;
 	}
 
-	private function getJSONToolOptions($tool_type) {
-		$options = array(
+	private function getJSONToolOptions($tool_type)
+	{
+		$options = [
 			'bin' => "b{$tool_type}json_path",
 			'cfg' => "{$tool_type}_cfg_path"
-		);
+		];
 		return $options;
 	}
 
@@ -179,9 +185,10 @@ class APIConfig extends ConfigFileModule {
 	 * Check if JSON tools support is enabled.
 	 *
 	 * @access public
-	 * @return boolean true if JSON tools support is enabled, otherwise false
+	 * @return bool true if JSON tools support is enabled, otherwise false
 	 */
-	public function isJSONToolsEnabled() {
+	public function isJSONToolsEnabled()
+	{
 		$enabled = false;
 		if ($this->isJSONToolsConfigured() === true) {
 			$config = $this->getConfig();
@@ -195,8 +202,9 @@ class APIConfig extends ConfigFileModule {
 	 *
 	 * @return array JSON tools config parameters
 	 */
-	public function getJSONToolsConfig() {
-		$cfg = array();
+	public function getJSONToolsConfig()
+	{
+		$cfg = [];
 		if ($this->isJSONToolsConfigured() === true) {
 			$config = $this->getConfig();
 			$cfg = $config['jsontools'];
@@ -204,8 +212,9 @@ class APIConfig extends ConfigFileModule {
 		return $cfg;
 	}
 
-	public function getJSONToolConfig($tool_type) {
-		$tool = array('bin' => '', 'cfg' => '', 'use_sudo' => false);
+	public function getJSONToolConfig($tool_type)
+	{
+		$tool = ['bin' => '', 'cfg' => '', 'use_sudo' => false];
 		$tools = $this->getSupportedJSONTools();
 		$config = $this->getJSONToolsConfig();
 		if (in_array($tool_type, $tools)) {
@@ -239,15 +248,16 @@ class APIConfig extends ConfigFileModule {
 	 * but they should be provided in pairs (tool and cfg paths).
 	 *
 	 * @param array $jsontools_config associative array with JSON tools parameters
-	 * @return boolean true if JSON tools parameters saved successfully, otherwise false
+	 * @return bool true if JSON tools parameters saved successfully, otherwise false
 	 */
-	public function saveJSONToolsConfig(array $jsontools_config) {
+	public function saveJSONToolsConfig(array $jsontools_config)
+	{
 		$saved = false;
 		$added = false;
 		$config = $this->getConfig();
 
 		if ($this->isJSONToolsConfigured() === false) {
-			$config['jsontools'] = array();
+			$config['jsontools'] = [];
 		}
 		if (array_key_exists('enabled', $jsontools_config)) {
 			$config['jsontools']['enabled'] = ($jsontools_config['enabled'] === true) ? 1 : 0;
@@ -280,8 +290,9 @@ class APIConfig extends ConfigFileModule {
 		return $saved;
 	}
 
-	public function getSupportedJSONTools() {
-		$tools = array();
+	public function getSupportedJSONTools()
+	{
+		$tools = [];
 		$types = $this->getJSONToolTypes();
 		for ($i = 0; $i < count($types); $i++) {
 			if ($this->isJSONToolConfigured($types[$i]) === true) {
@@ -296,8 +307,9 @@ class APIConfig extends ConfigFileModule {
 	 *
 	 * @return array action types
 	 */
-	public function getActionTypes() {
-		return array(
+	public function getActionTypes()
+	{
+		return [
 			self::ACTION_DIR_START,
 			self::ACTION_DIR_STOP,
 			self::ACTION_DIR_RESTART,
@@ -307,15 +319,16 @@ class APIConfig extends ConfigFileModule {
 			self::ACTION_FD_START,
 			self::ACTION_FD_STOP,
 			self::ACTION_FD_RESTART
-		);
+		];
 	}
 
 	/**
 	 * Check if Actions are configured for application.
 	 *
-	 * @return boolean true if Actions are configured, otherwise false
+	 * @return bool true if Actions are configured, otherwise false
 	 */
-	public function isActionsConfigured() {
+	public function isActionsConfigured()
+	{
 		$config = $this->getConfig();
 		return key_exists('actions', $config);
 	}
@@ -323,9 +336,11 @@ class APIConfig extends ConfigFileModule {
 	/**
 	 * Check if single action is configured for application.
 	 *
-	 * @return boolean true if single action is configured, otherwise false
+	 * @param mixed $action_type
+	 * @return bool true if single action is configured, otherwise false
 	 */
-	public function isActionConfigured($action_type) {
+	public function isActionConfigured($action_type)
+	{
 		$configured = false;
 		$config = $this->getActionsConfig();
 		return (key_exists($action_type, $config) && !empty($config[$action_type]));
@@ -334,9 +349,10 @@ class APIConfig extends ConfigFileModule {
 	/**
 	 * Check if Actions support is enabled.
 	 *
-	 * @return boolean true if Actions support is enabled, otherwise false
+	 * @return bool true if Actions support is enabled, otherwise false
 	 */
-	public function isActionsEnabled() {
+	public function isActionsEnabled()
+	{
 		$enabled = false;
 		if ($this->isActionsConfigured() === true) {
 			$config = $this->getConfig();
@@ -350,8 +366,9 @@ class APIConfig extends ConfigFileModule {
 	 *
 	 * @return array Actions config parameters
 	 */
-	public function getActionsConfig() {
-		$cfg = array();
+	public function getActionsConfig()
+	{
+		$cfg = [];
 		if ($this->isActionsConfigured() === true) {
 			$config = $this->getConfig();
 			$cfg = $config['actions'];
@@ -365,8 +382,9 @@ class APIConfig extends ConfigFileModule {
 	 * @param string $action_type action type (dir_start, dir_stop ...etc.)
 	 * @return array command and sudo option state
 	 */
-	public function getActionConfig($action_type) {
-		$action = array('cmd' => '', 'use_sudo' => false);
+	public function getActionConfig($action_type)
+	{
+		$action = ['cmd' => '', 'use_sudo' => false];
 		$actions = $this->getSupportedActions();
 		$config = $this->getActionsConfig();
 		if (in_array($action_type, $actions) && $this->isActionConfigured($action_type) === true) {
@@ -381,8 +399,9 @@ class APIConfig extends ConfigFileModule {
 	 *
 	 * @return array supported actions
 	 */
-	public function getSupportedActions() {
-		$actions = array();
+	public function getSupportedActions()
+	{
+		$actions = [];
 		$types = $this->getActionTypes();
 		for ($i = 0; $i < count($types); $i++) {
 			if ($this->isActionConfigured($types[$i]) === true) {

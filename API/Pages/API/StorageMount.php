@@ -26,7 +26,7 @@
  *
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
- 
+
 use Bacularis\Common\Modules\Errors\StorageError;
 use Bacularis\API\Modules\Bconsole;
 
@@ -35,11 +35,11 @@ use Bacularis\API\Modules\Bconsole;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class StorageMount extends BaculumAPIServer {
-
-	public function get() {
+class StorageMount extends BaculumAPIServer
+{
+	public function get()
+	{
 		$output = [];
 		$misc = $this->getModule('misc');
 		if ($this->Request->contains('out_id') && $misc->isValidAlphaNumeric($this->Request->itemAt('out_id'))) {
@@ -50,10 +50,11 @@ class StorageMount extends BaculumAPIServer {
 		$this->error = StorageError::ERROR_NO_ERRORS;
 	}
 
-	public function set($id, $params) {
-		$drive = $this->Request->contains('drive') ? intval($this->Request['drive']) : 0;
+	public function set($id, $params)
+	{
+		$drive = $this->Request->contains('drive') ? (int) ($this->Request['drive']) : 0;
 		$device = ($this->Request->contains('device') && $this->getModule('misc')->isValidName($this->Request['device'])) ? $this->Request['device'] : null;
-		$slot = $this->Request->contains('slot') ? intval($this->Request['slot']) : 0;
+		$slot = $this->Request->contains('slot') ? (int) ($this->Request['slot']) : 0;
 
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
@@ -86,5 +87,3 @@ class StorageMount extends BaculumAPIServer {
 		}
 	}
 }
-
-?>

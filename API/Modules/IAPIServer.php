@@ -34,14 +34,13 @@ namespace Bacularis\API\Modules;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Interfaces
- * @package Baculum API
  */
 
 /**
  * Defines methods to work with API Server.
  */
-interface IAPIServer {
-
+interface IAPIServer
+{
 	public function get();
 
 	public function put();

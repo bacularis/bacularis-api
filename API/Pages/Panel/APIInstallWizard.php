@@ -49,44 +49,45 @@ use Bacularis\Web\Modules\WebUserRoles;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Panel
- * @package Baculum API
  */
-class APIInstallWizard extends BaculumAPIPage {
-
+class APIInstallWizard extends BaculumAPIPage
+{
 	public $first_run;
 	public $add_auth_params = false;
 	public $config;
 
-	const DEFAULT_DB_NAME = 'bacula';
-	const DEFAULT_DB_LOGIN = 'bacula';
-	const DEFAULT_BCONSOLE_BIN = '/usr/sbin/bconsole';
-	const DEFAULT_BCONSOLE_CONF = '/etc/bacula/bconsole.conf';
-	const DEFAULT_BDIRJSON_BIN = '/usr/sbin/bdirjson';
-	const DEFAULT_DIR_CONF = '/etc/bacula/bacula-dir.conf';
-	const DEFAULT_BSDJSON_BIN = '/usr/sbin/bsdjson';
-	const DEFAULT_SD_CONF = '/etc/bacula/bacula-sd.conf';
-	const DEFAULT_BFDJSON_BIN = '/usr/sbin/bfdjson';
-	const DEFAULT_FD_CONF = '/etc/bacula/bacula-fd.conf';
-	const DEFAULT_BBCONJSON_BIN = '/usr/sbin/bbconsjson';
+	public const DEFAULT_DB_NAME = 'bacula';
+	public const DEFAULT_DB_LOGIN = 'bacula';
+	public const DEFAULT_BCONSOLE_BIN = '/usr/sbin/bconsole';
+	public const DEFAULT_BCONSOLE_CONF = '/etc/bacula/bconsole.conf';
+	public const DEFAULT_BDIRJSON_BIN = '/usr/sbin/bdirjson';
+	public const DEFAULT_DIR_CONF = '/etc/bacula/bacula-dir.conf';
+	public const DEFAULT_BSDJSON_BIN = '/usr/sbin/bsdjson';
+	public const DEFAULT_SD_CONF = '/etc/bacula/bacula-sd.conf';
+	public const DEFAULT_BFDJSON_BIN = '/usr/sbin/bfdjson';
+	public const DEFAULT_FD_CONF = '/etc/bacula/bacula-fd.conf';
+	public const DEFAULT_BBCONJSON_BIN = '/usr/sbin/bbconsjson';
 
-	const DEFAULT_ACTION_DIR_START = '/usr/bin/systemctl start bacula-dir';
-	const DEFAULT_ACTION_DIR_STOP = '/usr/bin/systemctl stop bacula-dir';
-	const DEFAULT_ACTION_DIR_RESTART = '/usr/bin/systemctl restart bacula-dir';
-	const DEFAULT_ACTION_SD_START = '/usr/bin/systemctl start bacula-sd';
-	const DEFAULT_ACTION_SD_STOP = '/usr/bin/systemctl stop bacula-sd';
-	const DEFAULT_ACTION_SD_RESTART = '/usr/bin/systemctl restart bacula-sd';
-	const DEFAULT_ACTION_FD_START = '/usr/bin/systemctl start bacula-fd';
-	const DEFAULT_ACTION_FD_STOP = '/usr/bin/systemctl stop bacula-fd';
-	const DEFAULT_ACTION_FD_RESTART = '/usr/bin/systemctl restart bacula-fd';
+	public const DEFAULT_ACTION_DIR_START = '/usr/bin/systemctl start bacula-dir';
+	public const DEFAULT_ACTION_DIR_STOP = '/usr/bin/systemctl stop bacula-dir';
+	public const DEFAULT_ACTION_DIR_RESTART = '/usr/bin/systemctl restart bacula-dir';
+	public const DEFAULT_ACTION_SD_START = '/usr/bin/systemctl start bacula-sd';
+	public const DEFAULT_ACTION_SD_STOP = '/usr/bin/systemctl stop bacula-sd';
+	public const DEFAULT_ACTION_SD_RESTART = '/usr/bin/systemctl restart bacula-sd';
+	public const DEFAULT_ACTION_FD_START = '/usr/bin/systemctl start bacula-fd';
+	public const DEFAULT_ACTION_FD_STOP = '/usr/bin/systemctl stop bacula-fd';
+	public const DEFAULT_ACTION_FD_RESTART = '/usr/bin/systemctl restart bacula-fd';
 
-	public function onPreInit($param) {
+	public function onPreInit($param)
+	{
 		parent::onPreInit($param);
 		if (isset($_SESSION['language'])) {
 			$this->Application->getGlobalization()->Culture = $_SESSION['language'];
 		}
 	}
 
-	public function onInit($param) {
+	public function onInit($param)
+	{
 		parent::onInit($param);
 		$config = $this->getModule('api_config');
 		$this->config = $config->getConfig();
@@ -100,7 +101,8 @@ class APIInstallWizard extends BaculumAPIPage {
 		}
 	}
 
-	public function onLoad($param) {
+	public function onLoad($param)
+	{
 		parent::onLoad($param);
 		$this->Port->setViewState('port', $this->Port->Text);
 		if ($this->IsPostBack || $this->IsCallBack) {
@@ -128,7 +130,7 @@ class APIInstallWizard extends BaculumAPIPage {
 			$this->ConfigYes->Checked = true;
 			$this->UseSudo->Checked = true;
 			$this->BJSONUseSudo->Checked = true;
-			$this->BConfigDir->Text = dirname(dirname(__DIR__)) . '/Config';
+			$this->BConfigDir->Text = dirname(__DIR__, 2) . '/Config';
 			$this->APIHost->Text = 'localhost';
 		} else {
 			// Database param settings
@@ -193,13 +195,16 @@ class APIInstallWizard extends BaculumAPIPage {
 		}
 	}
 
-	public function NextStep($sender, $param) {
+	public function NextStep($sender, $param)
+	{
 	}
 
-	public function PreviousStep($sender, $param) {
+	public function PreviousStep($sender, $param)
+	{
 	}
 
-	public function wizardNext($sender, $param) {
+	public function wizardNext($sender, $param)
+	{
 		if ($param->CurrentStepIndex === 0) {
 			if ($this->first_run && !$this->EnableAPI->Checked && $this->EnableWeb->Checked) {
 				$this->Response->redirect('/web');
@@ -207,28 +212,30 @@ class APIInstallWizard extends BaculumAPIPage {
 		}
 	}
 
-	public function wizardStop($sender, $param) {
+	public function wizardStop($sender, $param)
+	{
 		$this->goToDefaultPage();
 	}
 
-	public function wizardCompleted($sender, $param) {
+	public function wizardCompleted($sender, $param)
+	{
 		/****
 		 * SAVE API CONFIG
 		 */
-		$cfg_data = array(
-			'api' => array(),
-			'db' => array(),
-			'bconsole' => array(),
-			'jsontools' => array()
-		);
+		$cfg_data = [
+			'api' => [],
+			'db' => [],
+			'bconsole' => [],
+			'jsontools' => []
+		];
 		if ($this->AuthBasic->Checked) {
-			$cfg_data['api']['auth_type'] =  'basic';
-		} elseif($this->AuthOAuth2->Checked) {
-			$cfg_data['api']['auth_type'] =  'oauth2';
+			$cfg_data['api']['auth_type'] = 'basic';
+		} elseif ($this->AuthOAuth2->Checked) {
+			$cfg_data['api']['auth_type'] = 'oauth2';
 		}
-		$cfg_data['api']['debug'] = isset($this->config['api']['debug']) ? $this->config['api']['debug'] : "0";
-		$cfg_data['api']['lang'] = isset($_SESSION['language']) ? $_SESSION['language'] : APIConfig::DEF_LANG;
-		$cfg_data['db']['enabled'] = (integer)($this->DatabaseYes->Checked === true);
+		$cfg_data['api']['debug'] = $this->config['api']['debug'] ?? "0";
+		$cfg_data['api']['lang'] = $_SESSION['language'] ?? APIConfig::DEF_LANG;
+		$cfg_data['db']['enabled'] = (int) ($this->DatabaseYes->Checked === true);
 		$cfg_data['db']['type'] = $this->DBType->SelectedValue;
 		$cfg_data['db']['name'] = $this->DBName->Text;
 		$cfg_data['db']['login'] = $this->Login->Text;
@@ -236,12 +243,12 @@ class APIInstallWizard extends BaculumAPIPage {
 		$cfg_data['db']['ip_addr'] = $this->IP->Text;
 		$cfg_data['db']['port'] = $this->Port->Text;
 		$cfg_data['db']['path'] = $this->isSQLiteType($cfg_data['db']['type']) ? $this->DBPath->Text : '';
-		$cfg_data['bconsole']['enabled'] = (integer)($this->ConsoleYes->Checked === true);
+		$cfg_data['bconsole']['enabled'] = (int) ($this->ConsoleYes->Checked === true);
 		$cfg_data['bconsole']['bin_path'] = $this->BconsolePath->Text;
 		$cfg_data['bconsole']['cfg_path'] = $this->BconsoleConfigPath->Text;
-		$cfg_data['bconsole']['use_sudo'] = (integer)($this->UseSudo->Checked === true);
-		$cfg_data['jsontools']['enabled'] = (integer)($this->ConfigYes->Checked === true);
-		$cfg_data['jsontools']['use_sudo'] = (integer)($this->BJSONUseSudo->Checked === true);
+		$cfg_data['bconsole']['use_sudo'] = (int) ($this->UseSudo->Checked === true);
+		$cfg_data['jsontools']['enabled'] = (int) ($this->ConfigYes->Checked === true);
+		$cfg_data['jsontools']['use_sudo'] = (int) ($this->BJSONUseSudo->Checked === true);
 		$cfg_data['jsontools']['bconfig_dir'] = $this->BConfigDir->Text;
 		$cfg_data['jsontools']['bdirjson_path'] = $this->BDirJSONPath->Text;
 		$cfg_data['jsontools']['dir_cfg_path'] = $this->DirCfgPath->Text;
@@ -271,7 +278,7 @@ class APIInstallWizard extends BaculumAPIPage {
 			if (($this->first_run || $this->add_auth_params) && $this->AuthOAuth2->Checked) {
 				// save OAuth2 auth user on first run or when no OAuth2 client defined
 				$oauth2_cfg = $this->getModule('oauth2_config')->getConfig();
-				$oauth2_cfg[$this->APIOAuth2ClientId->Text] = array();
+				$oauth2_cfg[$this->APIOAuth2ClientId->Text] = [];
 				$oauth2_cfg[$this->APIOAuth2ClientId->Text]['client_id'] = $this->APIOAuth2ClientId->Text;
 				$oauth2_cfg[$this->APIOAuth2ClientId->Text]['client_secret'] = $this->APIOAuth2ClientSecret->Text;
 				$oauth2_cfg[$this->APIOAuth2ClientId->Text]['redirect_uri'] = $this->APIOAuth2RedirectURI->Text;
@@ -288,7 +295,7 @@ class APIInstallWizard extends BaculumAPIPage {
 		if ($this->first_run) {
 			if ($this->EnableWeb->Checked) {
 				$host = HostConfig::MAIN_CATALOG_HOST;
-				$cfg_host = array(
+				$cfg_host = [
 					'auth_type' => '',
 					'login' => '',
 					'password' => '',
@@ -296,7 +303,7 @@ class APIInstallWizard extends BaculumAPIPage {
 					'client_secret' => '',
 					'redirect_uri' => '',
 					'scope' => ''
-				);
+				];
 				$cfg_host['protocol'] = $this->APIProtocol->SelectedValue;
 				$cfg_host['address'] = $this->APIHost->Text;
 				$cfg_host['port'] = $this->APIPort->Text;
@@ -305,7 +312,7 @@ class APIInstallWizard extends BaculumAPIPage {
 					$cfg_host['auth_type'] = 'basic';
 					$cfg_host['login'] = $this->APILogin->Text;
 					$cfg_host['password'] = $this->APIPassword->Text;
-				} elseif($this->AuthOAuth2->Checked == true) {
+				} elseif ($this->AuthOAuth2->Checked == true) {
 					$cfg_host['auth_type'] = 'oauth2';
 					$cfg_host['client_id'] = $this->APIOAuth2ClientId->Text;
 					$cfg_host['client_secret'] = $this->APIOAuth2ClientSecret->Text;
@@ -315,7 +322,7 @@ class APIInstallWizard extends BaculumAPIPage {
 				$host_config = $this->getModule('host_config')->getConfig();
 				$host_config[$host] = $cfg_host;
 				$ret = $this->getModule('host_config')->setConfig($host_config);
-				if($ret === true) {
+				if ($ret === true) {
 					// complete new Bacularis main settings
 					$web_config = $this->getModule('web_config');
 					$ret = $web_config->setDefConfigOpts([
@@ -397,7 +404,8 @@ class APIInstallWizard extends BaculumAPIPage {
 	}
 
 	// @TODO: Remove it. It is templates work, not page work
-	public function getDbNameByType($type) {
+	public function getDbNameByType($type)
+	{
 		$db_name = null;
 		switch ($type) {
 			case Database::PGSQL_TYPE: $db_name = 'PostgreSQL'; break;
@@ -408,11 +416,13 @@ class APIInstallWizard extends BaculumAPIPage {
 	}
 
 	// @TODO: Remove it and check SQLite prettier and not here
-	public function isSQLiteType($type) {
+	public function isSQLiteType($type)
+	{
 		return ($type === Database::SQLITE_TYPE);
 	}
 
-	public function setDBType($sender, $param) {
+	public function setDBType($sender, $param)
+	{
 		$db = $this->DBType->SelectedValue;
 		$this->setLogin($db);
 		$this->setPassword($db);
@@ -421,31 +431,35 @@ class APIInstallWizard extends BaculumAPIPage {
 		$this->setDBPath($db);
 	}
 
-	public function setLogin($db) {
+	public function setLogin($db)
+	{
 		$this->Login->Enabled = ($this->isSQLiteType($db) === false);
 	}
 
-	public function setPassword($db) {
+	public function setPassword($db)
+	{
 		$this->Password->Enabled = ($this->isSQLiteType($db) === false);
 	}
 
-	public function setIP($db) {
+	public function setIP($db)
+	{
 		$this->IP->Enabled = ($this->isSQLiteType($db) === false);
 	}
 
-	public function setDefaultPort($db) {
+	public function setDefaultPort($db)
+	{
 		$port = null;
-		if(Database::PGSQL_TYPE === $db) {
+		if (Database::PGSQL_TYPE === $db) {
 			$port = 5432;
-		} elseif(Database::MYSQL_TYPE === $db) {
+		} elseif (Database::MYSQL_TYPE === $db) {
 			$port = 3306;
-		} elseif(Database::SQLITE_TYPE === $db) {
+		} elseif (Database::SQLITE_TYPE === $db) {
 			$port = null;
 		}
 
 		$prevPort = $this->Port->getViewState('port');
 
-		if(is_null($port)) {
+		if (is_null($port)) {
 			$this->Port->Text = '';
 			$this->Port->Enabled = false;
 		} else {
@@ -455,8 +469,9 @@ class APIInstallWizard extends BaculumAPIPage {
 		$this->Port->setViewState('port', '');
 	}
 
-	public function setDBPath($db) {
-		if($this->isSQLiteType($db) === true) {
+	public function setDBPath($db)
+	{
+		if ($this->isSQLiteType($db) === true) {
 			$this->DBPath->Enabled = true;
 			$this->DBPathField->Display = 'Fixed';
 		} else {
@@ -465,11 +480,13 @@ class APIInstallWizard extends BaculumAPIPage {
 		}
 	}
 
-	public function setLang($sender, $param) {
+	public function setLang($sender, $param)
+	{
 		$_SESSION['language'] = $sender->SelectedValue;
 	}
 
-	public function renderPanel($sender, $param) {
+	public function renderPanel($sender, $param)
+	{
 		$this->LoginValidator->Display = ($this->Login->Enabled === true) ? 'Dynamic' : 'None';
 		$this->PortValidator->Display = ($this->Port->Enabled === true) ? 'Dynamic' : 'None';
 		$this->IPValidator->Display = ($this->IP->Enabled === true) ? 'Dynamic' : 'None';
@@ -478,18 +495,19 @@ class APIInstallWizard extends BaculumAPIPage {
 		$this->Step2Content->render($param->NewWriter);
 	}
 
-	public function connectionDBTest($sender, $param) {
+	public function connectionDBTest($sender, $param)
+	{
 		$validation = false;
-		$db_params = array();
+		$db_params = [];
 		$db_params['type'] = $this->DBType->SelectedValue;
-		if($db_params['type'] === Database::MYSQL_TYPE || $db_params['type'] === Database::PGSQL_TYPE) {
+		if ($db_params['type'] === Database::MYSQL_TYPE || $db_params['type'] === Database::PGSQL_TYPE) {
 			$db_params['name'] = $this->DBName->Text;
 			$db_params['login'] = $this->Login->Text;
 			$db_params['password'] = $this->Password->Text;
 			$db_params['ip_addr'] = $this->IP->Text;
 			$db_params['port'] = $this->Port->Text;
 			$validation = true;
-		} elseif($db_params['type'] === Database::SQLITE_TYPE && !empty($this->DBPath->Text)) {
+		} elseif ($db_params['type'] === Database::SQLITE_TYPE && !empty($this->DBPath->Text)) {
 			$db_params['path'] = $this->DBPath->Text;
 			$validation = true;
 		}
@@ -517,10 +535,11 @@ class APIInstallWizard extends BaculumAPIPage {
 		}
 	}
 
-	public function connectionBconsoleTest($sender, $param) {
+	public function connectionBconsoleTest($sender, $param)
+	{
 		$emsg = '';
 		$result = $this->getModule('bconsole')->testBconsoleCommand(
-			array('version'),
+			['version'],
 			$this->BconsolePath->Text,
 			$this->BconsoleConfigPath->Text,
 			$this->UseSudo->Checked
@@ -540,41 +559,41 @@ class APIInstallWizard extends BaculumAPIPage {
 		}
 	}
 
-	public function testJSONToolsCfg($sender, $param) {
-		$jsontools = array(
-			'dir' => array(
+	public function testJSONToolsCfg($sender, $param)
+	{
+		$jsontools = [
+			'dir' => [
 				'path' => $this->BDirJSONPath->Text,
 				'cfg' => $this->DirCfgPath->Text,
 				'ok_el' => $this->BDirJSONPathTestOk,
 				'error_el' => $this->BDirJSONPathTestErr
-			),
-			'sd' => array(
+			],
+			'sd' => [
 				'path' => $this->BSdJSONPath->Text,
 				'cfg' => $this->SdCfgPath->Text,
 				'ok_el' => $this->BSdJSONPathTestOk,
 				'error_el' => $this->BSdJSONPathTestErr
-			),
-			'fd' => array(
+			],
+			'fd' => [
 				'path' => $this->BFdJSONPath->Text,
 				'cfg' => $this->FdCfgPath->Text,
 				'ok_el' => $this->BFdJSONPathTestOk,
 				'error_el' => $this->BFdJSONPathTestErr
-			),
-			'bcons' => array(
+			],
+			'bcons' => [
 				'path' => $this->BBconsJSONPath->Text,
 				'cfg' => $this->BconsCfgPath->Text,
 				'ok_el' => $this->BBconsJSONPathTestOk,
 				'error_el' => $this->BBconsJSONPathTestErr
-			)
-		);
+			]
+		];
 		$use_sudo = $this->BJSONUseSudo->Checked;
 
 		foreach ($jsontools as $type => $config) {
 			$config['ok_el']->Display = 'None';
 			$config['error_el']->Display = 'None';
 			if (!empty($config['path']) && !empty($config['cfg'])) {
-
-				$result = (object)$this->getModule('json_tools')->testJSONTool($config['path'], $config['cfg'], $use_sudo);
+				$result = (object) $this->getModule('json_tools')->testJSONTool($config['path'], $config['cfg'], $use_sudo);
 				if ($result->exitcode === 0) {
 					// test passed
 					$config['ok_el']->Display = 'Dynamic';
@@ -587,7 +606,8 @@ class APIInstallWizard extends BaculumAPIPage {
 		}
 	}
 
-	public function testConfigDir($sender, $param) {
+	public function testConfigDir($sender, $param)
+	{
 		$valid = is_writeable($this->BConfigDir->Text);
 		$this->BConfigDirTestOk->Display = 'None';
 		$this->BConfigDirTestErr->Display = 'None';
@@ -601,7 +621,8 @@ class APIInstallWizard extends BaculumAPIPage {
 		$param->setIsValid($valid);
 	}
 
-	public function validateAdministratorPassword($sender, $param) {
+	public function validateAdministratorPassword($sender, $param)
+	{
 		if ($this->RetypeWebPasswordRequireValidator->IsValid && $this->RetypeWebPasswordRegexpValidator->IsValid) {
 			$sender->Display = 'Dynamic';
 		} else {
@@ -610,4 +631,3 @@ class APIInstallWizard extends BaculumAPIPage {
 		$param->IsValid = ($param->Value === $this->WebPassword->Text);
 	}
 }
-?>

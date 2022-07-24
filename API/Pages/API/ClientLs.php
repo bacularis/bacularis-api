@@ -27,29 +27,30 @@
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
 
-use Bacularis\Common\Modules\Errors\{ClientError,GenericError};
+use Bacularis\Common\Modules\Errors\ClientError;
+use Bacularis\Common\Modules\Errors\GenericError;
 
 /**
  * Client list directories.
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class ClientLs extends BaculumAPIServer {
-
-	public function get() {
-		$clientid = $this->Request->contains('id') ? intval($this->Request['id']) : 0;
+class ClientLs extends BaculumAPIServer
+{
+	public function get()
+	{
+		$clientid = $this->Request->contains('id') ? (int) ($this->Request['id']) : 0;
 		$client = null;
 		$cli = null;
 		if ($clientid > 0) {
 			$cli = $this->getModule('client')->getClientById($clientid);
 		}
 
-		$result = $this->getModule('bconsole')->bconsoleCommand($this->director, array('.client'));
+		$result = $this->getModule('bconsole')->bconsoleCommand($this->director, ['.client']);
 		if ($result->exitcode === 0) {
 			array_shift($result->output);
-			if(is_object($cli) && in_array($cli->name, $result->output)) {
+			if (is_object($cli) && in_array($cli->name, $result->output)) {
 				$client = $cli->name;
 			}
 		}
@@ -67,7 +68,7 @@ class ClientLs extends BaculumAPIServer {
 			return;
 		}
 
-		$cmd = array('.ls', 'client="' . $client . '"', 'path="' . $path . '"');
+		$cmd = ['.ls', 'client="' . $client . '"', 'path="' . $path . '"'];
 		$result = $this->getModule('bconsole')->bconsoleCommand($this->director, $cmd);
 		if ($result->exitcode === 0) {
 			$ls = $this->getModule('ls')->parseOutput($result->output);
@@ -76,4 +77,3 @@ class ClientLs extends BaculumAPIServer {
 		}
 	}
 }
-?>

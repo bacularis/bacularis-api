@@ -34,16 +34,16 @@ use Bacularis\API\Modules\Bconsole;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class ComponentStatus extends BaculumAPIServer {
-
-	public function get() {
+class ComponentStatus extends BaculumAPIServer
+{
+	public function get()
+	{
 		$component = $this->Request->contains('component') ? $this->Request['component'] : '';
 		$component_name = $this->Request->contains('name') && $this->getModule('misc')->isValidName($this->Request['name']) ? $this->Request['name'] : null;
 		$type = null;
 		$status = null;
-		switch($component) {
+		switch ($component) {
 			case 'director': {
 				$status = $this->getModule('status_dir');
 				$type = $this->Request->contains('type') && $status->isValidOutputType($this->Request['type']) ? $this->Request['type'] : '';
@@ -69,8 +69,7 @@ class ComponentStatus extends BaculumAPIServer {
 			$this->error = $ret['error'];
 		} else {
 			$this->output = GenericError::MSG_ERROR_INTERNAL_ERROR;
-			$this->error =  GenericError::ERROR_INTERNAL_ERROR;
+			$this->error = GenericError::ERROR_INTERNAL_ERROR;
 		}
 	}
 }
-?>

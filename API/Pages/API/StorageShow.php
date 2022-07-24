@@ -26,7 +26,7 @@
  *
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
- 
+
 use Bacularis\Common\Modules\Errors\StorageError;
 use Bacularis\API\Modules\ConsoleOutputPage;
 use Bacularis\API\Modules\ConsoleOutputShowPage;
@@ -36,11 +36,12 @@ use Bacularis\API\Modules\ConsoleOutputShowPage;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class StorageShow extends ConsoleOutputShowPage {
-	public function get() {
-		$storageid = $this->Request->contains('id') ? intval($this->Request['id']) : 0;
+class StorageShow extends ConsoleOutputShowPage
+{
+	public function get()
+	{
+		$storageid = $this->Request->contains('id') ? (int) ($this->Request['id']) : 0;
 		$out_format = $this->Request->contains('output') && $this->isOutputFormatValid($this->Request['output']) ? $this->Request['output'] : ConsoleOutputPage::OUTPUT_FORMAT_RAW;
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
@@ -51,10 +52,10 @@ class StorageShow extends ConsoleOutputShowPage {
 		if ($result->exitcode === 0) {
 			$storage = $this->getModule('storage')->getStorageById($storageid);
 			if (is_object($storage) && in_array($storage->name, $result->output)) {
-				$out = (object)['output' => [], 'exitcode' => 0];
+				$out = (object) ['output' => [], 'exitcode' => 0];
 				if ($out_format === ConsoleOutputPage::OUTPUT_FORMAT_RAW) {
 					$out = $this->getRawOutput(['storage' => $storage->name]);
-				} elseif($out_format === ConsoleOutputPage::OUTPUT_FORMAT_JSON) {
+				} elseif ($out_format === ConsoleOutputPage::OUTPUT_FORMAT_JSON) {
 					$out = $this->getJSONOutput(['storage' => $storage->name]);
 				}
 				$this->output = $out->output;
@@ -75,7 +76,8 @@ class StorageShow extends ConsoleOutputShowPage {
 	 * @param array $params command  parameters
 	 * @return StdClass object with output and exitcode
 	 */
-	protected function getRawOutput($params = []) {
+	protected function getRawOutput($params = [])
+	{
 		return $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
 			['show', 'storage="' . $params['storage'] . '"'],
@@ -90,8 +92,9 @@ class StorageShow extends ConsoleOutputShowPage {
 	 * @param array $params command parameters
 	 * @return StdClass object with output and exitcode
 	 */
-	protected function getJSONOutput($params = []) {
-		$result = (object)['output' => [], 'exitcode' => 0];
+	protected function getJSONOutput($params = [])
+	{
+		$result = (object) ['output' => [], 'exitcode' => 0];
 		$output = $this->getRawOutput($params);
 		if ($output->exitcode === 0) {
 			$result->output = $this->parseOutput($output->output);
@@ -100,5 +103,3 @@ class StorageShow extends ConsoleOutputShowPage {
 		return $result;
 	}
 }
-
-?>

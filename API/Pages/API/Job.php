@@ -35,11 +35,12 @@ use Bacularis\API\Modules\BaculumAPIServer;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class Job extends BaculumAPIServer {
-	public function get() {
-		$jobid = $this->Request->contains('id') ? intval($this->Request['id']) : 0;
+class Job extends BaculumAPIServer
+{
+	public function get()
+	{
+		$jobid = $this->Request->contains('id') ? (int) ($this->Request['id']) : 0;
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
 			['.jobs'],
@@ -61,8 +62,9 @@ class Job extends BaculumAPIServer {
 		}
 	}
 
-	public function remove($id) {
-		$jobid = intval($id);
+	public function remove($id)
+	{
+		$jobid = (int) $id;
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
 			['.jobs'],
@@ -71,10 +73,10 @@ class Job extends BaculumAPIServer {
 		);
 		if ($result->exitcode === 0) {
 			$job = $this->getModule('job')->getJobById($jobid);
-			if(is_object($job) && in_array($job->name, $result->output)) {
+			if (is_object($job) && in_array($job->name, $result->output)) {
 				$result = $this->getModule('bconsole')->bconsoleCommand(
 					$this->director,
-					array('delete', 'jobid="' . $job->jobid . '"')
+					['delete', 'jobid="' . $job->jobid . '"']
 				);
 				$this->output = $result->output;
 				$this->error = $result->exitcode;
@@ -88,5 +90,3 @@ class Job extends BaculumAPIServer {
 		}
 	}
 }
-
-?>

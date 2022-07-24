@@ -34,15 +34,15 @@ use Bacularis\API\Modules\BaculumAPIPage;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Panel
- * @package Baculum API
  */
-class APIOAuth2Clients extends BaculumAPIPage {
-
-	public function onInit($param) {
+class APIOAuth2Clients extends BaculumAPIPage
+{
+	public function onInit($param)
+	{
 		parent::onInit($param);
 
 		$config = $this->getModule('api_config')->getConfig();
-		if(count($config) === 0) {
+		if (count($config) === 0) {
 			// Config doesn't exist, go to wizard
 			$this->goToPage('APIInstallWizard');
 			return;
@@ -51,7 +51,8 @@ class APIOAuth2Clients extends BaculumAPIPage {
 		}
 	}
 
-	public function loadOAuth2Clients($sender, $param) {
+	public function loadOAuth2Clients($sender, $param)
+	{
 		$oauth2_cfg = $this->getModule('oauth2_config')->getConfig();
 		$clients = array_values($oauth2_cfg);
 		$this->getCallbackClient()->callClientFunction(
@@ -61,11 +62,13 @@ class APIOAuth2Clients extends BaculumAPIPage {
 		$this->hideOAuth2ClientWindow($sender);
 	}
 
-	public function cancelOAuth2ClientWindow($sender, $param) {
+	public function cancelOAuth2ClientWindow($sender, $param)
+	{
 		$this->hideOAuth2ClientWindow($sender);
 	}
 
-	private function hideOAuth2ClientWindow($sender) {
+	private function hideOAuth2ClientWindow($sender)
+	{
 		if (is_object($sender)) {
 			if ($sender->ID === 'NewOAuth2Client') {
 				$this->getCallbackClient()->callClientFunction(
@@ -81,7 +84,8 @@ class APIOAuth2Clients extends BaculumAPIPage {
 		}
 	}
 
-	public function deleteOAuth2Client($sender, $param) {
+	public function deleteOAuth2Client($sender, $param)
+	{
 		$config = $this->getModule('oauth2_config');
 		$clients = $config->getConfig();
 		$client_id = $param->getCallbackParameter();
@@ -92,4 +96,3 @@ class APIOAuth2Clients extends BaculumAPIPage {
 		$this->loadOAuth2Clients(null, null);
 	}
 }
-?>

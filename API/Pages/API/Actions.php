@@ -29,17 +29,17 @@
 
 use Bacularis\API\Modules\APIConfig;
 use Bacularis\Common\Modules\Errors\ActionsError;
- 
+
 /**
  * API actions support.
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class Actions extends BaculumAPIServer {
-
-	public function get() {
+class Actions extends BaculumAPIServer
+{
+	public function get()
+	{
 		$component = $this->Request->contains('component') ? $this->Request['component'] : '';
 		$action = $this->Request->contains('action') ? $this->Request['action'] : '';
 		$action_type = null;
@@ -89,4 +89,3 @@ class Actions extends BaculumAPIServer {
 		}
 	}
 }
-?>

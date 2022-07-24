@@ -37,24 +37,23 @@ use Bacularis\Common\Modules\ConfigFileModule;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Authorization
- * @package Baculum API
  */
-class OAuth2Config extends ConfigFileModule {
-
+class OAuth2Config extends ConfigFileModule
+{
 	/**
 	 * OAuth2 client config file path
 	 */
-	const CONFIG_FILE_PATH = 'Bacularis.API.Config.oauth2';
+	public const CONFIG_FILE_PATH = 'Bacularis.API.Config.oauth2';
 
 	/**
 	 * OAuth2 client config file format
 	 */
-	const CONFIG_FILE_FORMAT = 'ini';
+	public const CONFIG_FILE_FORMAT = 'ini';
 
 	/**
 	 * These options are obligatory for OAuth2 config.
 	 */
-	private $required_options = array('client_id', 'client_secret', 'redirect_uri', 'scope');
+	private $required_options = ['client_id', 'client_secret', 'redirect_uri', 'scope'];
 
 	/**
 	 * New options with default values that has been added later (after creating config).
@@ -62,7 +61,7 @@ class OAuth2Config extends ConfigFileModule {
 	 *
 	 * @see OAuth2Config::setAddedOptions()
 	 */
-	private $added_options = array('name' => '');
+	private $added_options = ['name' => ''];
 
 	/**
 	 * Get (read) OAuth2 client config.
@@ -71,11 +70,12 @@ class OAuth2Config extends ConfigFileModule {
 	 * @param string $section config section name
 	 * @return array config
 	 */
-	public function getConfig($section = null) {
+	public function getConfig($section = null)
+	{
 		$config = $this->readConfig(self::CONFIG_FILE_PATH, self::CONFIG_FILE_FORMAT);
 		$is_valid = true;
 		if (!is_null($section)) {
-			$config = key_exists($section, $config) ? $config[$section] : array();
+			$config = key_exists($section, $config) ? $config[$section] : [];
 			$is_valid = $this->validateConfig($config);
 		} else {
 			foreach ($config as $value) {
@@ -87,7 +87,7 @@ class OAuth2Config extends ConfigFileModule {
 		}
 		if ($is_valid === false) {
 			// no validity, no config
-			$config = array();
+			$config = [];
 		} else {
 			$this->setAddedOptions($config, $section);
 		}
@@ -99,9 +99,10 @@ class OAuth2Config extends ConfigFileModule {
 	 *
 	 * @access public
 	 * @param array $config config
-	 * @return boolean true if config saved successfully, otherwise false
+	 * @return bool true if config saved successfully, otherwise false
 	 */
-	public function setConfig(array $config) {
+	public function setConfig(array $config)
+	{
 		return $this->writeConfig($config, self::CONFIG_FILE_PATH, self::CONFIG_FILE_FORMAT);
 	}
 
@@ -113,9 +114,10 @@ class OAuth2Config extends ConfigFileModule {
 	 *
 	 * @access private
 	 * @param array $config config
-	 * @return boolean true if config valid, otherwise false
+	 * @return bool true if config valid, otherwise false
 	 */
-	private function validateConfig(array $config = array()) {
+	private function validateConfig(array $config = [])
+	{
 		$is_valid = true;
 		/**
 		 * Don't use validation from parent class because it logs to file in
@@ -146,10 +148,11 @@ class OAuth2Config extends ConfigFileModule {
 	 * @param mixed $section determines if passed all config or only section
 	 * @return none
 	 */
-	private function setAddedOptions(&$config, $section = null) {
+	private function setAddedOptions(&$config, $section = null)
+	{
 		foreach ($this->added_options as $added_opt => $defval) {
 			if (is_null($section)) {
-				foreach($config as $key => $value) {
+				foreach ($config as $key => $value) {
 					if (!key_exists($added_opt, $value)) {
 						$config[$key][$added_opt] = $defval;
 					}
@@ -160,4 +163,3 @@ class OAuth2Config extends ConfigFileModule {
 		}
 	}
 }
-?>

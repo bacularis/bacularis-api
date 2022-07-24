@@ -26,21 +26,20 @@
  *
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
- 
+
 /**
  * Console command endpoint.
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class ConsoleCommand extends BaculumAPIServer {
-
-	public function set($id, $params) {
-		$params = (array)$params;
+class ConsoleCommand extends BaculumAPIServer
+{
+	public function set($id, $params)
+	{
+		$params = (array) $params;
 		$result = $this->getModule('bconsole')->bconsoleCommand($this->director, $params);
 		$this->output = $result->output;
 		$this->error = $result->exitcode;
 	}
 }
-?>

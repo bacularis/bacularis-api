@@ -27,7 +27,9 @@
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
 
-use Bacularis\Common\Modules\Errors\{PoolError,StorageError,VolumeError};
+use Bacularis\Common\Modules\Errors\PoolError;
+use Bacularis\Common\Modules\Errors\StorageError;
+use Bacularis\Common\Modules\Errors\VolumeError;
 use Bacularis\API\Modules\Bconsole;
 
 /**
@@ -35,12 +37,12 @@ use Bacularis\API\Modules\Bconsole;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class VolumeLabelBarcodes extends BaculumAPIServer {
-
-	public function get() {
-		$output = array();
+class VolumeLabelBarcodes extends BaculumAPIServer
+{
+	public function get()
+	{
+		$output = [];
 		$misc = $this->getModule('misc');
 		if ($this->Request->contains('out_id') && $misc->isValidAlphaNumeric($this->Request->itemAt('out_id'))) {
 			$out_id = $this->Request->itemAt('out_id');
@@ -50,14 +52,15 @@ class VolumeLabelBarcodes extends BaculumAPIServer {
 		$this->error = VolumeError::ERROR_NO_ERRORS;
 	}
 
-	public function create($params) {
+	public function create($params)
+	{
 		$slots = property_exists($params, 'slots') ? $params->slots : 0;
-		$drive = property_exists($params, 'drive') ? intval($params->drive) : 0;
+		$drive = property_exists($params, 'drive') ? (int) ($params->drive) : 0;
 		$misc = $this->getModule('misc');
 
 		$storage = null;
 		if (property_exists($params, 'storageid')) {
-			$storageid = intval($params->storageid);
+			$storageid = (int) ($params->storageid);
 			$result = $this->getModule('storage')->getStorageById($storageid);
 			if (is_object($result)) {
 				$storage = $result->name;
@@ -74,7 +77,7 @@ class VolumeLabelBarcodes extends BaculumAPIServer {
 
 		$pool = null;
 		if (property_exists($params, 'poolid')) {
-			$poolid = intval($params->poolid);
+			$poolid = (int) ($params->poolid);
 			$result = $this->getModule('pool')->getPoolById($poolid);
 			if (is_object($result)) {
 				$pool = $result->name;
@@ -86,7 +89,7 @@ class VolumeLabelBarcodes extends BaculumAPIServer {
 		if (!is_null($storage)) {
 			$result = $this->getModule('bconsole')->bconsoleCommand(
 				$this->director,
-				array('.storage')
+				['.storage']
 			);
 			if ($result->exitcode === 0) {
 				array_shift($result->output);
@@ -109,7 +112,7 @@ class VolumeLabelBarcodes extends BaculumAPIServer {
 		if (!is_null($pool)) {
 			$result = $this->getModule('bconsole')->bconsoleCommand(
 				$this->director,
-				array('.pool')
+				['.pool']
 			);
 			if ($result->exitcode === 0) {
 				array_shift($result->output);
@@ -129,14 +132,14 @@ class VolumeLabelBarcodes extends BaculumAPIServer {
 			return;
 		}
 
-		$cmd = array (
+		$cmd = [
 			'label',
 			'barcodes',
 			'slots="' . $slots . '"',
 			'storage="' . $storage . '"',
 			'drive="' . $drive . '"',
 			'pool="' . $pool . '"'
-		);
+		];
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
 			$cmd,
@@ -152,5 +155,3 @@ class VolumeLabelBarcodes extends BaculumAPIServer {
 		}
 	}
 }
-
-?>

@@ -34,16 +34,16 @@ use Bacularis\Common\Modules\Errors\JobError;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
- * @package Baculum API
  */
-class JobCancel extends BaculumAPIServer {
-
-	public function set($id, $params) {
+class JobCancel extends BaculumAPIServer
+{
+	public function set($id, $params)
+	{
 		$job = $this->getModule('job')->getJobById($id);
 		if (is_object($job)) {
 			$cancel = $this->getModule('bconsole')->bconsoleCommand(
 				$this->director,
-				array('cancel', 'jobid="' . $job->jobid . '"')
+				['cancel', 'jobid="' . $job->jobid . '"']
 			);
 			$this->output = $cancel->output;
 			$this->error = $cancel->exitcode;
@@ -53,5 +53,3 @@ class JobCancel extends BaculumAPIServer {
 		}
 	}
 }
-
-?>

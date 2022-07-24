@@ -37,19 +37,18 @@ use Bacularis\Common\Modules\ConfigFileModule;
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category Authorization
- * @package Baculum API
  */
-class BasicConfig extends ConfigFileModule {
-
+class BasicConfig extends ConfigFileModule
+{
 	/**
 	 * Basic user config file path
 	 */
-	const CONFIG_FILE_PATH = 'Bacularis.API.Config.basic';
+	public const CONFIG_FILE_PATH = 'Bacularis.API.Config.basic';
 
 	/**
 	 * Basic user config file format
 	 */
-	const CONFIG_FILE_FORMAT = 'ini';
+	public const CONFIG_FILE_FORMAT = 'ini';
 
 	/**
 	 * These options are obligatory for Basic config.
@@ -59,7 +58,7 @@ class BasicConfig extends ConfigFileModule {
 	/**
 	 * Stores basic user config content.
 	 */
-	private $config = null;
+	private $config;
 
 	/**
 	 * Get (read) Basic user config.
@@ -68,7 +67,8 @@ class BasicConfig extends ConfigFileModule {
 	 * @param string $section config section name
 	 * @return array config
 	 */
-	public function getConfig($section = null) {
+	public function getConfig($section = null)
+	{
 		$config = [];
 		if (is_null($this->config)) {
 			$this->config = $this->readConfig(self::CONFIG_FILE_PATH, self::CONFIG_FILE_FORMAT);
@@ -98,9 +98,10 @@ class BasicConfig extends ConfigFileModule {
 	 *
 	 * @access public
 	 * @param array $config config
-	 * @return boolean true if config saved successfully, otherwise false
+	 * @return bool true if config saved successfully, otherwise false
 	 */
-	public function setConfig(array $config) {
+	public function setConfig(array $config)
+	{
 		$result = $this->writeConfig($config, self::CONFIG_FILE_PATH, self::CONFIG_FILE_FORMAT);
 		if ($result === true) {
 			$this->config = null;
@@ -115,9 +116,10 @@ class BasicConfig extends ConfigFileModule {
 	 *
 	 * @access private
 	 * @param array $config config
-	 * @return boolean true if config valid, otherwise false
+	 * @return bool true if config valid, otherwise false
 	 */
-	private function validateConfig(array $config = array()) {
+	private function validateConfig(array $config = [])
+	{
 		$is_valid = true;
 		/**
 		 * Don't use validation from parent class because it logs to file in
@@ -147,11 +149,12 @@ class BasicConfig extends ConfigFileModule {
 	 *
 	 * @return array basic user list
 	 */
-	public function getUsers() {
+	public function getUsers()
+	{
 		$basic_users = [];
 		$basic_apiuser = $this->getModule('basic_apiuser')->getUsers();
 		$basic_config = $this->getConfig();
-		foreach($basic_apiuser as $user => $pwd) {
+		foreach ($basic_apiuser as $user => $pwd) {
 			$bconsole_cfg_path = '';
 			if (key_exists($user, $basic_config) && key_exists('bconsole_cfg_path', $basic_config[$user])) {
 				$bconsole_cfg_path = $basic_config[$user]['bconsole_cfg_path'];
@@ -162,7 +165,6 @@ class BasicConfig extends ConfigFileModule {
 			];
 		}
 		return $basic_users;
-
 	}
 
 	/**
@@ -173,9 +175,11 @@ class BasicConfig extends ConfigFileModule {
 	 * @param string $username user name
 	 * @param string $password password
 	 * @param array $params user properties
-	 * @return boolean true on success, otherwise false
+	 * @param array $props
+	 * @return bool true on success, otherwise false
 	 */
-	public function addUser($username, $password, array $props) {
+	public function addUser($username, $password, array $props)
+	{
 		$success = false;
 		$config = $this->getConfig();
 		if (!key_exists($username, $config)) {
@@ -199,9 +203,11 @@ class BasicConfig extends ConfigFileModule {
 	 * @param string $username user name
 	 * @param string $password password
 	 * @param array $params user properties
-	 * @return boolean true on success, otherwise false
+	 * @param array $props
+	 * @return bool true on success, otherwise false
 	 */
-	public function editUser($username, $password, array $props = []) {
+	public function editUser($username, $password, array $props = [])
+	{
 		$success = false;
 		$config = $this->getConfig();
 		if (key_exists($username, $config)) {
@@ -229,9 +235,10 @@ class BasicConfig extends ConfigFileModule {
 	 * Remove single basic user.
 	 *
 	 * @param string $username user name
-	 * @return boolean true on success, otherwise false
+	 * @return bool true on success, otherwise false
 	 */
-	public function removeUser($username) {
+	public function removeUser($username)
+	{
 		$config = $this->getConfig();
 		if (key_exists($username, $config)) {
 			unset($config[$username]);
@@ -247,4 +254,3 @@ class BasicConfig extends ConfigFileModule {
 		return $success;
 	}
 }
-?>
