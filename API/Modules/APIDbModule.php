@@ -31,9 +31,6 @@ namespace Bacularis\API\Modules;
 
 use Prado\Data\TDbConnection;
 use Bacularis\Common\Modules\Errors\DatabaseError;
-use Bacularis\API\Modules\APIConfig;
-use Bacularis\API\Modules\BCatalogException;
-use Bacularis\API\Modules\Database;
 use Prado\Data\ActiveRecord\TActiveRecord;
 
 /**
@@ -103,7 +100,6 @@ class APIDbModule extends TActiveRecord
 		$db_connection = null;
 		if ((array_key_exists('enabled', $db_params) && $db_params['enabled'] === '1') || $force === true) {
 			$dsn = self::getDsn($db_params);
-			$db_connection = null;
 			if (array_key_exists('login', $db_params) && array_key_exists('password', $db_params)) {
 				$db_connection = new TDbConnection($dsn, $db_params['login'], $db_params['password']);
 			} else {

@@ -61,7 +61,6 @@ class Requirements extends GeneralRequirements
 	/**
 	 * Validate all API environment depenencies.
 	 *
-	 * @return none
 	 */
 	public function validateEnvironment()
 	{

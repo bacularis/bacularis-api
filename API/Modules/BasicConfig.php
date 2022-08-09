@@ -30,6 +30,7 @@
 namespace Bacularis\API\Modules;
 
 use Bacularis\Common\Modules\ConfigFileModule;
+use Bacularis\Common\Modules\Logging;
 
 /**
  * Manage Basic user configuration.

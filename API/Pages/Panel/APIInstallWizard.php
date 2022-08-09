@@ -28,19 +28,11 @@
  */
 
 
-use Prado\Web\UI\ActiveControls\TActiveDropDownList;
-use Prado\Web\UI\ActiveControls\TActiveTextBox;
-use Prado\Web\UI\ActiveControls\TActivePanel;
-use Prado\Web\UI\ActiveControls\TActiveLabel;
-use Prado\Web\UI\ActiveControls\TActiveButton;
-use Prado\Web\UI\ActiveControls\TActiveRadioButton;
-use Prado\Web\UI\ActiveControls\TActiveCustomValidator;
-use Bacularis\Common\Modules\OAuth2;
+use Bacularis\Common\Modules\Logging;
 use Bacularis\API\Modules\APIConfig;
 use Bacularis\API\Modules\BAPIException;
 use Bacularis\API\Modules\BaculumAPIPage;
 use Bacularis\API\Modules\Database;
-use Bacularis\API\Modules\BasicAPIUserConfig;
 use Bacularis\Web\Modules\HostConfig;
 use Bacularis\Web\Modules\WebUserRoles;
 
@@ -537,7 +529,6 @@ class APIInstallWizard extends BaculumAPIPage
 
 	public function connectionBconsoleTest($sender, $param)
 	{
-		$emsg = '';
 		$result = $this->getModule('bconsole')->testBconsoleCommand(
 			['version'],
 			$this->BconsolePath->Text,

@@ -29,9 +29,6 @@
 
 namespace Bacularis\API\Modules;
 
-use Bacularis\API\Modules\Bconsole;
-use Bacularis\API\Modules\ComponentStatusModule;
-
 /**
  * Module used to parse and prepare director status output.
  *

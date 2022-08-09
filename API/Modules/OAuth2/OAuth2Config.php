@@ -30,6 +30,7 @@
 namespace Bacularis\API\Modules\OAuth2;
 
 use Bacularis\Common\Modules\ConfigFileModule;
+use Bacularis\Common\Modules\Logging;
 
 /**
  * Manage OAuth2 client configuration.
@@ -146,7 +147,6 @@ class OAuth2Config extends ConfigFileModule
 	 *
 	 * @param array reference $config config to set added options.
 	 * @param mixed $section determines if passed all config or only section
-	 * @return none
 	 */
 	private function setAddedOptions(&$config, $section = null)
 	{

@@ -41,7 +41,6 @@ class APIServerV1 extends APIServer implements IAPIServer
 	/**
 	 * Support for API GET method request.
 	 *
-	 * @return none;
 	 */
 	public function get()
 	{
@@ -51,7 +50,6 @@ class APIServerV1 extends APIServer implements IAPIServer
 	/**
 	 * Support for API PUT method request.
 	 *
-	 * @return none
 	 */
 	public function put()
 	{
@@ -99,7 +97,6 @@ class APIServerV1 extends APIServer implements IAPIServer
 	/**
 	 * Support for API POST method request.
 	 *
-	 * @return none
 	 */
 	public function post()
 	{
@@ -113,7 +110,6 @@ class APIServerV1 extends APIServer implements IAPIServer
 	/**
 	 * Support for API DELETE method request.
 	 *
-	 * @return none
 	 */
 	public function delete()
 	{

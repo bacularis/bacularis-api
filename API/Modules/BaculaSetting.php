@@ -33,9 +33,6 @@ use Bacularis\Common\Modules\Logging;
 use Bacularis\Common\Modules\Params;
 use Bacularis\Common\Modules\Errors\BaculaConfigError;
 use Bacularis\Common\Modules\Errors\JSONToolsError;
-use Bacularis\API\Modules\BAPIException;
-use Bacularis\API\Modules\APIModule;
-use Bacularis\API\Modules\APIConfig;
 
 /**
  * Read/write Bacula configuration.

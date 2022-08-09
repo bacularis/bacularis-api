@@ -31,8 +31,6 @@ namespace Bacularis\API\Modules;
 
 use Bacularis\Common\Modules\AuthBasic;
 use Bacularis\Common\Modules\BaculumPage;
-use Bacularis\API\Pages\Requirements;
-use Bacularis\API\Modules\APIConfig;
 
 session_start();
 

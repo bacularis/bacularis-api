@@ -99,7 +99,6 @@ class BaculumOAuth2 extends OAuth2
 	 * @param string $error_uri page location where client is able to get help for returned error
 	 * @param mixed $header
 	 * @param null|mixed $state
-	 * @return none
 	 */
 	public function authorizationError($header, $error_name, $error_description = null, $error_uri = null, $state = null)
 	{
@@ -130,7 +129,6 @@ class BaculumOAuth2 extends OAuth2
 	 * @access public
 	 * @param string $redirect_uri uniform resource identifier (URI)
 	 * @param array $params GET parameters for redirect_uri contained in associative array
-	 * @return none
 	 */
 	public function authorizationRedirect($redirect_uri, $params = [])
 	{

@@ -29,8 +29,6 @@
 
 namespace Bacularis\API\Modules;
 
-use Bacularis\API\Modules\APIServer;
-
 /**
  * API Server version 2.
  * This version receives parameters as GET and POST parameters.
@@ -45,7 +43,6 @@ class APIServerV2 extends APIServer implements IAPIServer
 	/**
 	 * Support for API GET method request.
 	 *
-	 * @return none;
 	 */
 	public function get()
 	{
@@ -55,7 +52,6 @@ class APIServerV2 extends APIServer implements IAPIServer
 	/**
 	 * Support for API PUT method request.
 	 *
-	 * @return none
 	 */
 	public function put()
 	{
@@ -71,7 +67,6 @@ class APIServerV2 extends APIServer implements IAPIServer
 	/**
 	 * Support for API POST method request.
 	 *
-	 * @return none
 	 */
 	public function post()
 	{
@@ -86,7 +81,6 @@ class APIServerV2 extends APIServer implements IAPIServer
 	/**
 	 * Support for API DELETE method request.
 	 *
-	 * @return none
 	 */
 	public function delete()
 	{

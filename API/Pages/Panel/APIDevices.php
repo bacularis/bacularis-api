@@ -29,6 +29,7 @@
 
 use Bacularis\API\Modules\DeviceConfig;
 use Bacularis\API\Modules\BaculumAPIPage;
+use Bacularis\API\Modules\BConfigException;
 
 /**
  * API devices page.
@@ -101,7 +102,7 @@ class APIDevices extends BaculumAPIPage
 			}
 		}
 		if (count($ach) > 0) {
-			$this->AutochangerName->Text = $name;
+			$this->AutochangerName->Text = $ach_name;
 			$this->ChangerDevice->Text = $ach['device'];
 			$this->ChangerCommand->Text = $ach['command'];
 			$this->ChangerCommandUseSudo->Checked = ($ach['use_sudo'] == 1);
@@ -174,7 +175,6 @@ class APIDevices extends BaculumAPIPage
 
 	public function testChangerCommand($sender, $param)
 	{
-		$emsg = '';
 		$use_sudo = $this->ChangerCommandUseSudo->Checked;
 		$changer_command = $this->ChangerCommand->Text;
 		$changer_device = $this->ChangerDevice->Text;
@@ -268,7 +268,7 @@ class APIDevices extends BaculumAPIPage
 			}
 		}
 		if (count($dev) > 0) {
-			$this->DeviceName->Text = $name;
+			$this->DeviceName->Text = $dev_name;
 			$this->DeviceDevice->Text = $dev['device'];
 			$this->DeviceIndex->Text = $dev['index'];
 		}

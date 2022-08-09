@@ -1,11 +1,6 @@
 <urls>
 	<!-- #### NEW API version 1 #### -->
 
-	<!-- OAuth2 - only to be compatible with old OAuth2 endpoints -->
-	<!-- Remove it in the future -->
-	<url ServiceParameter="Authorize" pattern="api/auth/" />
-	<url ServiceParameter="RequestToken" pattern="api/token/" />
-
 	<!-- API v2 -->
 	<!-- general endpoint -->
 	<url ServiceParameter="Welcome" pattern="api/v2/welcome/" />

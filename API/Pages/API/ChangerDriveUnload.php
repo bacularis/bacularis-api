@@ -58,14 +58,14 @@ class ChangerDriveUnload extends BaculumAPIServer
 		$slot = $this->Request->contains('slot') && $misc->isValidInteger($this->Request['slot']) ? (int) ($this->Request['slot']) : null;
 
 		if (is_null($drive)) {
-			$this->output = ChangerCommandError::MSG_ERROR_CHANGER_COMMAND_AUTOCHANGER_DRIVE_DOES_NOT_EXIST;
-			$this->error = ChangerCommandError::ERROR_CHANGER_COMMAND_AUTOCHANGER_DRIVE_DOES_NOT_EXIST;
+			$this->output = DeviceError::MSG_ERROR_DEVICE_AUTOCHANGER_DRIVE_DOES_NOT_EXIST;
+			$this->error = DeviceError::ERROR_DEVICE_AUTOCHANGER_DRIVE_DOES_NOT_EXIST;
 			return;
 		}
 
 		if (is_null($slot)) {
-			$this->output = ChangerCommandError::MSG_ERROR_CHANGER_COMMAND_WRONG_SLOT_NUMBER;
-			$this->error = ChangerCommandError::ERROR_CHANGER_COMMAND_WRONG_SLOT_NUMBER;
+			$this->output = DeviceError::MSG_ERROR_DEVICE_WRONG_SLOT_NUMBER;
+			$this->error = DeviceError::ERROR_DEVICE_WRONG_SLOT_NUMBER;
 			return;
 		}
 

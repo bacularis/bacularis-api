@@ -30,8 +30,6 @@
 namespace Bacularis\API\Modules;
 
 use Prado\Data\ActiveRecord\TActiveRecordCriteria;
-use Bacularis\API\Modules\APIModule;
-use Bacularis\API\Modules\FileSetRecord;
 
 /**
  * FileSet manager module.

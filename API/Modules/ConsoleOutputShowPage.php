@@ -29,8 +29,6 @@
 
 namespace Bacularis\API\Modules;
 
-use Bacularis\API\Modules\ConsoleOutputPage;
-
 /**
  * Get console output for 'show' type commands.
  *

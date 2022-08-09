@@ -29,9 +29,6 @@
 
 namespace Bacularis\API\Modules;
 
-use Bacularis\API\Modules\APIModule;
-use Bacularis\API\Modules\LogRecord;
-
 /**
  * Log manager module.
  *

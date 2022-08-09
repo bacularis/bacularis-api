@@ -29,8 +29,6 @@
 
 namespace Bacularis\API\Modules;
 
-use Bacularis\API\Modules\APIModule;
-
 /**
  * Base abstract class to inherit commonly used method
  * in work with component status.

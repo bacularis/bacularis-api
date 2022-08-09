@@ -37,10 +37,7 @@ use Bacularis\Common\Modules\Errors\AuthenticationError;
 use Bacularis\Common\Modules\Errors\AuthorizationError;
 use Bacularis\Common\Modules\OAuth2;
 use Bacularis\Common\Modules\Logging;
-use Bacularis\API\Modules\BAPIException;
-use Bacularis\API\Modules\Bconsole;
 use Bacularis\API\Modules\OAuth2\TokenRecord;
-use Bacularis\API\Modules\APIServer;
 
 /**
  * Abstract module from which inherits each of API module.
@@ -181,7 +178,6 @@ abstract class BaculumAPIServer extends TPage
 	 *
 	 * @access public
 	 * @param mixed $params onInit action params
-	 * @return none
 	 */
 	public function onInit($params)
 	{
@@ -209,7 +205,6 @@ abstract class BaculumAPIServer extends TPage
 	 * Run requested resource.
 	 * It sets output and error values.
 	 *
-	 * @return none
 	 */
 	private function runResource()
 	{
@@ -258,7 +253,6 @@ abstract class BaculumAPIServer extends TPage
 	 * Initialize auth parameters.
 	 *
 	 * @param array $auth token params stored in TokenRecord session
-	 * @return none
 	 */
 	private function initAuthParams(array $auth)
 	{
@@ -307,7 +301,6 @@ abstract class BaculumAPIServer extends TPage
 	 *
 	 * @access public
 	 * @param mixed $params onInit action params
-	 * @return none
 	 */
 	public function onLoad($params)
 	{

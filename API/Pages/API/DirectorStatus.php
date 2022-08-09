@@ -29,6 +29,7 @@
 
 use Bacularis\Common\Modules\Errors\BconsoleError;
 use Bacularis\API\Modules\ConsoleOutputPage;
+use Bacularis\Common\Modules\Errors\GenericError;
 
 /**
  * Director status command endpoint.

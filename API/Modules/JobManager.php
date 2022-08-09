@@ -30,9 +30,6 @@
 namespace Bacularis\API\Modules;
 
 use Prado\Data\ActiveRecord\TActiveRecordCriteria;
-use Bacularis\API\Modules\APIModule;
-use Bacularis\API\Modules\JobRecord;
-use Bacularis\API\Modules\Database;
 
 /**
  * Job manager module.
@@ -244,7 +241,8 @@ WHERE JobMedia.MediaId='$mediaid' $jobs_criteria";
 	 */
 	public function getJobsForClient($clientid, $allowed_jobs = [])
 	{
-		$where = '';
+		$where = ['params' => []];
+		$wh = '';
 		if (count($allowed_jobs) > 0) {
 			$criteria = [
 				'Job.Name' => [
@@ -253,7 +251,6 @@ WHERE JobMedia.MediaId='$mediaid' $jobs_criteria";
 				]
 			];
 			$where = Database::getWhere($criteria, true);
-			$wh = '';
 			if (count($where['params']) > 0) {
 				$wh = ' AND ' . $where['where'];
 			}

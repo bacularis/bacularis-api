@@ -29,8 +29,6 @@
 
 namespace Bacularis\API\Modules;
 
-use Bacularis\API\Modules\BAPIException;
-
 /**
  * API catalog exception class.
  *

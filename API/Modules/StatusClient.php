@@ -29,7 +29,7 @@
 
 namespace Bacularis\API\Modules;
 
-use Bacularis\API\Modules\ComponentStatusModule;
+use Bacularis\Common\Modules\Errors\GenericError;
 
 /**
  * Module used to get and parse client status output.

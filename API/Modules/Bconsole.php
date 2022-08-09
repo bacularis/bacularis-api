@@ -32,8 +32,6 @@ namespace Bacularis\API\Modules;
 use Prado\Prado;
 use Bacularis\Common\Modules\Errors\BconsoleError;
 use Bacularis\Common\Modules\Logging;
-use Bacularis\API\Modules\BAPIException;
-use Bacularis\API\Modules\APIModule;
 
 /**
  * Execute bconsole module.

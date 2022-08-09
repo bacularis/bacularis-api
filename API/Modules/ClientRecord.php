@@ -29,8 +29,6 @@
 
 namespace Bacularis\API\Modules;
 
-use Bacularis\API\Modules\APIDbModule;
-
 /**
  * Client active record module.
  *

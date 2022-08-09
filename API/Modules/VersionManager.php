@@ -29,8 +29,7 @@
 
 namespace Bacularis\API\Modules;
 
-use Bacularis\API\Modules\APIModule;
-use Bacularis\API\Modules\VersionRecord;
+use Prado\Data\ActiveRecord\TActiveRecordCriteria;
 
 /**
  * Version manager module.

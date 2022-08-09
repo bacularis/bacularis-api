@@ -29,8 +29,6 @@
 
 namespace Bacularis\API\Modules;
 
-use Bacularis\API\Modules\ComponentStatusModule;
-
 /**
  * Module used to get and parse storage status output.
  *

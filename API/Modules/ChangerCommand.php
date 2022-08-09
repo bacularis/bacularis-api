@@ -32,8 +32,6 @@ namespace Bacularis\API\Modules;
 use Prado\Prado;
 use Bacularis\Common\Modules\Errors\DeviceError;
 use Bacularis\Common\Modules\Logging;
-use Bacularis\API\Modules\DeviceConfig;
-use Bacularis\API\Modules\APIModule;
 
 /**
  * Execute changer command module.

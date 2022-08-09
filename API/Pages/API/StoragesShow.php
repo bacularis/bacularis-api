@@ -29,6 +29,7 @@
 
 use Bacularis\API\Modules\ConsoleOutputPage;
 use Bacularis\API\Modules\ConsoleOutputShowPage;
+use Bacularis\Common\Modules\Errors\StorageError;
 
 /**
  * Show storages command endpoint.

@@ -29,8 +29,6 @@
 
 namespace Bacularis\API\Modules;
 
-use Bacularis\API\Modules\APIModule;
-
 /**
  * Tools used to show list files command output.
  *

@@ -29,10 +29,6 @@
 
 namespace Bacularis\API\Modules;
 
-use Bacularis\API\Modules\APIModule;
-use Bacularis\API\Modules\VolumeRecord;
-use Bacularis\API\Modules\Database;
-
 /**
  * Volume manager module.
  *

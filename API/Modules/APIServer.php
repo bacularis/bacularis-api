@@ -56,7 +56,6 @@ class APIServer extends APIModule
 	 * Set API server instance.
 	 *
 	 * @param BaculumAPIServer $obj server object
-	 * @return none
 	 */
 	public function setServerObj($obj)
 	{

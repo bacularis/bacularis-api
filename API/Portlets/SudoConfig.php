@@ -27,7 +27,6 @@
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
 
-use Prado\Web\UI\JuiControls\TJuiDialog;
 use Bacularis\Common\Portlets\PortletTemplate;
 
 /**

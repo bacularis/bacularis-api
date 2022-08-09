@@ -75,7 +75,6 @@ class TokenManager extends APIModule
 	 * Delete expired tokens from database.
 	 *
 	 * @access public
-	 * @return none
 	 */
 	public function deleteExpiredTokens()
 	{

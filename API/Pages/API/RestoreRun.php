@@ -28,7 +28,6 @@
  */
 
 use Bacularis\Common\Modules\Errors\JobError;
-use Bacularis\API\Modules\APIDbModule;
 
 /**
  * Run restore command endpoint.

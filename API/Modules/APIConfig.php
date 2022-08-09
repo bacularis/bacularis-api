@@ -341,7 +341,6 @@ class APIConfig extends ConfigFileModule
 	 */
 	public function isActionConfigured($action_type)
 	{
-		$configured = false;
 		$config = $this->getActionsConfig();
 		return (key_exists($action_type, $config) && !empty($config[$action_type]));
 	}

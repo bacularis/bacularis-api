@@ -31,6 +31,7 @@ use Bacularis\Common\Modules\AuthBasic;
 use Bacularis\Common\Modules\AuthOAuth2;
 use Bacularis\API\Modules\BaculumAPIPage;
 use Bacularis\API\Modules\BAPIException;
+use Bacularis\API\Modules\Database;
 
 /**
  * API settings page.
@@ -305,7 +306,6 @@ class APISettings extends BaculumAPIPage
 
 	public function connectionBconsoleTest($sender, $param)
 	{
-		$emsg = '';
 		$result = $this->getModule('bconsole')->testBconsoleCommand(
 			['version'],
 			$this->BconsolePath->Text,

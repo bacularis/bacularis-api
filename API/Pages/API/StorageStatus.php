@@ -27,6 +27,7 @@
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
 
+use Bacularis\Common\Modules\Errors\GenericError;
 use Bacularis\Common\Modules\Errors\StorageError;
 use Bacularis\API\Modules\ConsoleOutputPage;
 
