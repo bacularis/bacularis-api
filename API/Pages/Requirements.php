@@ -27,6 +27,8 @@
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
 
+namespace Bacularis\API\Pages;
+
 use Bacularis\Common\Modules\GeneralRequirements;
 
 /**
@@ -67,5 +69,3 @@ class Requirements extends GeneralRequirements
 		parent::validateExtensions($this->req_exts);
 	}
 }
-$service_dir = dirname(__DIR__);
-new Requirements(APPLICATION_WEBROOT, APPLICATION_PROTECTED, $service_dir);
