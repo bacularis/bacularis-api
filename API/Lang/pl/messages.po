@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-04-07 04:40\n"
-"Project-Id-Version: b02f04a28aec0155df9503e3b78ae8cc\n"
+"PO-Revision-Date: 2022-08-18 04:06\n"
+"Project-Id-Version: bacularis\n"
 "POT-Creation-Date: \n"
 "Last-Translator: Marcin Haba <marcin.haba@bacula.pl>\n"
 "Language-Team: Polish\n"
@@ -11,11 +11,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Crowdin-Project: b02f04a28aec0155df9503e3b78ae8cc\n"
-"X-Crowdin-Project-ID: 1\n"
+"X-Crowdin-Project: bacularis\n"
+"X-Crowdin-Project-ID: 522050\n"
 "X-Crowdin-Language: pl\n"
-"X-Crowdin-File: /Baculum API/messages.po\n"
-"X-Crowdin-File-ID: 51\n"
+"X-Crowdin-File: /Bacularis API/messages.po\n"
+"X-Crowdin-File-ID: 33\n"
 
 msgid "Language:"
 msgstr "Język:"
@@ -276,10 +276,10 @@ msgid "Please enter Client ID."
 msgstr "Proszę wprowadzić Client ID."
 
 msgid "OAuth2 Client ID:"
-msgstr "OAuth2 Client ID:"
+msgstr "ID klienta OAuth2:"
 
 msgid "OAuth2 Client Secret:"
-msgstr "OAuth2 Client Secret:"
+msgstr "Hasło klienta OAuth2:"
 
 msgid "Please enter Client Secret."
 msgstr "Proszę wprowadzić Client Secret."
@@ -348,7 +348,7 @@ msgid "Welcome on the Bacularis API default page"
 msgstr "Witaj na stronie głównej Bacularis API"
 
 msgid "Bacularis API Client"
-msgstr "Klient API Bacularis"
+msgstr "Klient Bacularis API"
 
 msgid "Here you can try one from API commands"
 msgstr "Tutaj możesz wypróbować jedną z komend API"
@@ -366,7 +366,7 @@ msgid "Client ID"
 msgstr "ID klienta"
 
 msgid "Redirect URI"
-msgstr "Redirect URI"
+msgstr "Adres URI przekierowania"
 
 msgid "Scopes"
 msgstr "Zakresy"
@@ -687,52 +687,53 @@ msgid "Dedicated Bconsole config"
 msgstr "Dedykowana konfiguracja Bconsole"
 
 msgid "Step 1 - general options"
-msgstr "Step 1 - general options"
+msgstr "Krok 1 - opcje ogólne"
 
 msgid "Services:"
-msgstr "Services:"
+msgstr "Usługi:"
 
 msgid "Enable API instance"
-msgstr "Enable API instance"
+msgstr "Włącz instancję API"
 
 msgid "Enable web interface"
-msgstr "Enable web interface"
+msgstr "Włącz interfejs web"
 
 msgid "Welcome to the Bacularis install wizard"
-msgstr "Welcome to the Bacularis install wizard"
+msgstr "Witaj w kreatorze instalacyjnym Bacularis"
 
 msgid "Please select language."
-msgstr "Please select language."
+msgstr "Proszę wybrać język."
 
 msgid "What services would you like to enable for this installation?"
-msgstr "What services would you like to enable for this installation?"
+msgstr "Jakie usługi chciałbyś włączyć dla tej instalacji?"
 
 msgid "recommended"
-msgstr "recommended"
+msgstr "zalecane"
 
 msgid "Step 5 - authentication"
-msgstr "Step 5 - authentication"
+msgstr "Krok 5 - uwierzytelnianie"
 
 msgid "API authentication"
-msgstr "API authentication"
+msgstr "Uwierzytelnianie API"
 
 msgid "Use the same credentials for the API and for the web interface"
-msgstr "Use the same credentials for the API and for the web interface"
+msgstr "Użyj tych samych danych logowania do API i do interfejsu web"
 
 msgid "Advanced options"
-msgstr "Advanced options"
+msgstr "Opcje zaawansowane"
 
 msgid "Web interface settings"
-msgstr "Web interface settings"
+msgstr "Ustawienia interfejsu web"
 
 msgid "API IP Address/Hostname:"
-msgstr "API IP Address/Hostname:"
+msgstr "Adres IP/Nazwa hosta API:"
 
 msgid "Web interface authentication"
-msgstr "Web interface authentication"
+msgstr "Uwierzytelnianie interfejsu web"
 
 msgid "API Protocol:"
-msgstr "API Protocol:"
+msgstr "Protokół API:"
 
 msgid "API Port:"
-msgstr "API Port:"
+msgstr "Port API:"
+
