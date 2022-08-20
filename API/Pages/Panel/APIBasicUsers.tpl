@@ -9,7 +9,7 @@
 		<a href="javascript:void(0)" class="w3-button w3-green w3-margin-bottom" onclick="oAPIBasicUsers.show_new_user_window(true);">
 			<i class="fas fa-plus"></i> &nbsp;<%[ Add user ]%>
 		</a>
-		<table id="basic_user_list" class="w3-table w3-striped w3-hoverable w3-white w3-margin-bottom" style="width: 100%">
+		<table id="basic_user_list" class="w3-table w3-striped w3-hoverable w3-margin-bottom" style="width: 100%">
 			<thead>
 				<tr>
 					<th></th>

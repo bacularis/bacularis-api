@@ -13,7 +13,7 @@
 		<a href="javascript:void(0)" class="w3-button w3-green w3-margin-bottom" onclick="oAPIAutochangers.add_autochanger();">
 			<i class="fas fa-plus"></i> &nbsp;<%[ Add autochanger ]%>
 		</a>
-		<table id="autochanger_list" class="w3-table w3-striped w3-hoverable w3-white w3-margin-bottom" style="width: 100%">
+		<table id="autochanger_list" class="w3-table w3-striped w3-hoverable w3-margin-bottom" style="width: 100%">
 			<thead>
 				<tr>
 					<th></th>
@@ -480,7 +480,7 @@ $(function() {
 		<a href="javascript:void(0)" class="w3-button w3-green w3-margin-bottom" onclick="oAPIDevices.show_device_window(true);">
 			<i class="fas fa-plus"></i> &nbsp;<%[ Add device ]%>
 		</a>
-		<table id="device_list" class="w3-table w3-striped w3-hoverable w3-white w3-margin-bottom" style="width: 100%">
+		<table id="device_list" class="w3-table w3-striped w3-hoverable w3-margin-bottom" style="width: 100%">
 			<thead>
 				<tr>
 					<th></th>

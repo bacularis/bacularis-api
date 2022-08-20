@@ -3,7 +3,7 @@
 	<com:THead Title="Bacularis - Bacula Web Interface" ShortcutIcon="<%~ ../../../../../Common/Images/favicon.ico %>">
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 	</com:THead>
-	<body class="w3-light-grey">
+	<body>
 		<com:TForm>
 				<com:BClientScript ScriptUrl=<%~ ../../../../../Common/JavaScript/misc.js %> />
 				<com:TClientScript PradoScripts="effects" />

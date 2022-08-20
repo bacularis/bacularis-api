@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<link rel="icon" href="<%~ ../../../../../Common/Images/favicon.ico %>" type="image/x-icon" />
 	</com:THead>
-	<body class="w3-light-grey">
+	<body>
 		<com:TForm>
 			<com:TClientScript PradoScripts="ajax, effects" />
 			<com:BClientScript ScriptUrl=<%~ ../../../../../vendor/bower-asset/datatables.net/js/jquery.dataTables.min.js %> />
@@ -26,6 +26,14 @@
 				<button type="button" class="w3-bar-item w3-button w3-hover-none w3-hover-text-light-grey" onclick="W3SideBar.open();"><i class="fa fa-bars"></i>  Menu</button>
 				<img class="w3-bar-item w3-right" src="<%~ ../../../../../Common/Images/logo.png %>" alt="" style="margin-top: 3px" />
 			</div>
+			<span class="w3-right w3-padding-small w3-margin-top w3-margin-right">
+				<label><span class="w3-hide-small"><i class="fa-solid fa-sun"></i></span>
+					<label class="switch small" onclick="ThemeMode.toggle_mode();">
+						<input type="checkbox" id="theme_mode_switcher" />
+						<span class="slider small round"></span>
+					</label> <i class="fa-solid fa-moon"></i>
+				</label>
+			</span>
 			<com:Bacularis.API.Portlets.APISideBar />
 			<div class="w3-main page_main_el" id="page_main" style="margin-left: 250px; margin-top: 43px;">
 				<com:TContentPlaceHolder ID="Main" />
