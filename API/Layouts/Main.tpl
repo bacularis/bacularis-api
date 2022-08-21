@@ -27,7 +27,7 @@
 				<img class="w3-bar-item w3-right" src="<%~ ../../../../../Common/Images/logo.png %>" alt="" style="margin-top: 3px" />
 			</div>
 			<span class="w3-right w3-padding-small w3-margin-top w3-margin-right">
-				<label><span class="w3-hide-small"><i class="fa-solid fa-sun"></i></span>
+				<label><i class="fa-solid fa-sun"></i>
 					<label class="switch small" onclick="ThemeMode.toggle_mode();">
 						<input type="checkbox" id="theme_mode_switcher" />
 						<span class="slider small round"></span>
