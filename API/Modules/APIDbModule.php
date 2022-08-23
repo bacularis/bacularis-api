@@ -127,4 +127,15 @@ class APIDbModule extends TActiveRecord
 		$value = parent::getColumnValue($column_name);
 		return $value;
 	}
+
+	/**
+	 * Create new column properties dynamically.
+	 *
+	 * @param string $key property name
+	 * @param mixed $value property value
+	 */
+	public function __set($key, $value)
+	{
+		$this->{$key} = $value;
+	}
 }
