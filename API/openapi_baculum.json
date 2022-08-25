@@ -6072,20 +6072,36 @@
 					"description": "Scheduled time (YYY-MM-DD HH:MM:SS)",
 					"type": "string"
 				},
+				"schedtime_epoch": {
+					"description": "Scheduled time in Unix timestamp form",
+					"type": "integer"
+				},
 				"starttime": {
 					"description": "Start time (YYYY-MM-DD HH:M:SS)",
 					"type": "string"
+				},
+				"starttime_epoch": {
+					"description": "Start time in Unix timestamp form",
+					"type": "integer"
 				},
 				"endtime": {
 					"description": "End time (YYYY-MM-DD HH:M:SS)",
 					"type": "string"
 				},
+				"endtime_epoch": {
+					"description": "End time in Unix timestamp form",
+					"type": "integer"
+				},
 				"realendtime": {
 					"description": "Real end time (YYYY-MM-DD HH:M:SS)",
 					"type": "string"
 				},
+				"realendtime_epoch": {
+					"description": "Real end time in Unix timestamp form",
+					"type": "integer"
+				},
 				"jobtdate": {
-					"description": "Backup time/date in seconds",
+					"description": "Backup time/date in Unix timestamp form",
 					"type": "integer"
 				},
 				"volsessionid": {

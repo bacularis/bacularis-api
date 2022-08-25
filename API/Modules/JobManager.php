@@ -46,6 +46,7 @@ class JobManager extends APIModule
 		if ($db_params['type'] === Database::PGSQL_TYPE) {
 			$sort_col = strtolower($sort_col);
 		}
+
 		$order = ' ORDER BY ' . $sort_col . ' DESC';
 		$limit = '';
 		if (is_int($limit_val) && $limit_val > 0) {
@@ -54,10 +55,13 @@ class JobManager extends APIModule
 
 		$where = Database::getWhere($criteria);
 
+		$add_cols = $this->getAddCols();
+
 		$sql = 'SELECT Job.*, 
 Client.Name as client, 
 Pool.Name as pool, 
-FileSet.FileSet as fileset 
+FileSet.FileSet as fileset, 
+' . $add_cols . '
 FROM Job 
 LEFT JOIN Client USING (ClientId) 
 LEFT JOIN Pool USING (PoolId) 
@@ -65,6 +69,35 @@ LEFT JOIN FileSet USING (FilesetId)'
 . $where['where'] . $order . $limit;
 
 		return JobRecord::finder()->findAllBySql($sql, $where['params']);
+	}
+
+	private function getAddCols()
+	{
+		$add_cols = '';
+		$db_params = $this->getModule('api_config')->getConfig('db');
+		if ($db_params['type'] === Database::PGSQL_TYPE) {
+			$add_cols = '
+				CAST(EXTRACT(EPOCH FROM Job.SchedTime) AS INTEGER) AS schedtime_epoch,
+				CAST(EXTRACT(EPOCH FROM Job.StartTime) AS INTEGER) AS starttime_epoch,
+				CAST(EXTRACT(EPOCH FROM Job.EndTime) AS INTEGER) AS endtime_epoch,
+				CAST(EXTRACT(EPOCH FROM Job.RealEndTime) AS INTEGER) AS realendtime_epoch
+			';
+		} elseif ($db_params['type'] === Database::MYSQL_TYPE) {
+			$add_cols = '
+				UNIX_TIMESTAMP(Job.SchedTime) AS schedtime_epoch,
+				UNIX_TIMESTAMP(Job.StartTime) AS starttime_epoch,
+				UNIX_TIMESTAMP(Job.EndTime) AS endtime_epoch,
+				UNIX_TIMESTAMP(Job.RealEndTime) AS realendtime_epoch
+			';
+		} elseif ($db_params['type'] === Database::SQLITE_TYPE) {
+			$add_cols = '
+				strftime(\'%s\', Job.SchedTime) AS schedtime_epoch,
+				strftime(\'%s\', Job.StartTime) AS starttime_epoch,
+				strftime(\'%s\', Job.EndTime) AS endtime_epoch,
+				strftime(\'%s\', Job.RealEndTime) AS realendtime_epoch
+			';
+		}
+		return $add_cols;
 	}
 
 	public function getJobById($jobid)
@@ -219,10 +252,14 @@ LEFT JOIN FileSet USING (FilesetId)'
 			$jobs_sql = implode("', '", $allowed_jobs);
 			$jobs_criteria = " AND Job.Name IN ('" . $jobs_sql . "')";
 		}
+
+		$add_cols = $this->getAddCols();
+
 		$sql = "SELECT DISTINCT Job.*, 
 Client.Name as client, 
 Pool.Name as pool, 
-FileSet.FileSet as fileset 
+FileSet.FileSet as fileset, 
+$add_cols
 FROM Job 
 LEFT JOIN Client USING (ClientId) 
 LEFT JOIN Pool USING (PoolId) 
@@ -255,10 +292,14 @@ WHERE JobMedia.MediaId='$mediaid' $jobs_criteria";
 				$wh = ' AND ' . $where['where'];
 			}
 		}
+
+		$add_cols = $this->getAddCols();
+
 		$sql = "SELECT DISTINCT Job.*, 
 Client.Name as client, 
 Pool.Name as pool, 
-FileSet.FileSet as fileset 
+FileSet.FileSet as fileset, 
+$add_cols
 FROM Job 
 LEFT JOIN Client USING (ClientId) 
 LEFT JOIN Pool USING (PoolId) 
