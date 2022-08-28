@@ -1,11 +1,11 @@
 {
 	"openapi": "3.0.0",
 	"info": {
-		"title": "Baculum API",
-		"description": "This is the Baculum API documentation.",
+		"title": "Bacularis API",
+		"description": "This is the Bacularis API documentation.",
 		"contact": {
 			"name": "Marcin Haba",
-			"url": "https://www.bacula.org/11.0.x-manuals/en/console/Baculum_API_Web_GUI_Tools.html",
+			"url": "https://bacularis.app",
 			"email": "marcin.haba@bacula.pl"
 		},
 		"license": {
