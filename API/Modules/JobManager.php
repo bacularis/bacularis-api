@@ -83,12 +83,12 @@ LEFT JOIN FileSet USING (FilesetId)'
 				CAST(EXTRACT(EPOCH FROM Job.RealEndTime) AS INTEGER) AS realendtime_epoch
 			';
 		} elseif ($db_params['type'] === Database::MYSQL_TYPE) {
-			$add_cols = '
-				UNIX_TIMESTAMP(Job.SchedTime) AS schedtime_epoch,
-				UNIX_TIMESTAMP(Job.StartTime) AS starttime_epoch,
-				UNIX_TIMESTAMP(Job.EndTime) AS endtime_epoch,
-				UNIX_TIMESTAMP(Job.RealEndTime) AS realendtime_epoch
-			';
+			$add_cols = "
+				TIMESTAMPDIFF(SECOND, '1970-01-01 00:00:00', Job.SchedTime) AS schedtime_epoch,
+				TIMESTAMPDIFF(SECOND, '1970-01-01 00:00:00', Job.StartTime) AS starttime_epoch,
+				TIMESTAMPDIFF(SECOND, '1970-01-01 00:00:00', Job.EndTime) AS endtime_epoch,
+				TIMESTAMPDIFF(SECOND, '1970-01-01 00:00:00', Job.RealEndTime) AS realendtime_epoch
+			";
 		} elseif ($db_params['type'] === Database::SQLITE_TYPE) {
 			$add_cols = '
 				strftime(\'%s\', Job.SchedTime) AS schedtime_epoch,
