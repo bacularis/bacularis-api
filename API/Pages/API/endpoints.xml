@@ -107,6 +107,13 @@
 	<!-- Basic user endpoints -->
 	<url ServiceParameter="BasicUsers" pattern="api/v2/basic/users/" />
 	<url ServiceParameter="BasicUser" pattern="api/v2/basic/users/{id}/" parameters.id="[a-zA-Z0-9]+" />
+	<!-- Software management endpoints -->
+	<url ServiceParameter="SoftwareManagementInstall" pattern="api/v2/software/{component}/install" parameters.component="(director|storage|client|console)" />
+	<url ServiceParameter="SoftwareManagementUpgrade" pattern="api/v2/software/{component}/upgrade" parameters.component="(director|storage|client|console)" />
+	<url ServiceParameter="SoftwareManagementRemove" pattern="api/v2/software/{component}/remove" parameters.component="(director|storage|client|console)" />
+	<url ServiceParameter="SoftwareManagementInfo" pattern="api/v2/software/{component}/info" parameters.component="(director|storage|client|console)" />
+	<url ServiceParameter="SoftwareManagementEnable" pattern="api/v2/software/{component}/enable" parameters.component="(director|storage|client)" />
+
 
 	<!-- API v1 -->
 	<!-- general endpoint -->

@@ -12,6 +12,7 @@
 		<button type="button" id="btn_settings_config" class="w3-bar-item w3-button tab_btn" onclick="W3Tabs.open(this.id, 'settings_config');"><%[ Config ]%></button>
 		<button type="button" id="btn_settings_actions" class="w3-bar-item w3-button tab_btn" onclick="W3Tabs.open(this.id, 'settings_actions');"><%[ Actions ]%></button>
 		<button type="button" id="btn_settings_authentication" class="w3-bar-item w3-button tab_btn" onclick="W3Tabs.open(this.id, 'settings_authentication');"><%[ Authentication ]%></button>
+		<button type="button" id="btn_software_management" class="w3-bar-item w3-button tab_btn" onclick="W3Tabs.open(this.id, 'software_management');"><%[ Software management ]%></button>
 	</div>
 	<div class="w3-container tab_item" id="settings_general">
 		<div class="w3-row w3-section">
@@ -1233,6 +1234,736 @@
 			</div>
 		</div>
 	</div>
+	<div class="w3-container tab_item" id="software_management" style="display: none">
+		<div class="w3-row w3-section">
+			<div class="w3-col w3-quarter"><com:TLabel ForControl="SoftwareManagementEnabled" Text="<%[ Enabled: ]%>" /></div>
+			<div class="w3-col w3-threequarter">
+				<com:TActiveCheckBox
+					ID="SoftwareManagementEnabled"
+					CssClass="w3-check"
+					Attributes.onclick="$('#software_management_container').slideToggle('fast')"
+				/>
+			</div>
+		</div>
+		<div id="software_management_container" style="display: <%=$this->SoftwareManagementEnabled->Checked ? 'block' : 'none'%>">
+			<div class="w3-row w3-section w3-right" style="width: 540px">
+				<div class="w3-col w3-half"><%[ Get pre-defined commands: ]%></div>
+				<div class="w3-col w3-half">
+					<com:TActiveDropDownList
+						ID="SoftwareManagementLoadDefaultValues"
+						CssClass="w3-select w3-border"
+						Width="200px"
+						OnCallback="setSoftwareManagementDefaultValues"
+					>
+						<com:TListItem Value="none" Text="<%[ Select OS type ]%>" />
+						<com:TListItem Value="rpm" Text="<%[ RPM-based system ]%>" />
+						<com:TListItem Value="deb" Text="<%[ DEB-based system ]%>" />
+					</com:TActiveDropDownList>
+				</div>
+			</div>
+			<div class="w3-clear"></div>
+			<fieldset>
+				<legend><%[ General configuration ]%></legend>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="SoftwareManagementUseSudo"
+							Text="<%[ Use sudo: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TCheckBox
+							ID="SoftwareManagementUseSudo"
+							CssClass="w3-check"
+						/> &nbsp;<a href="javascript:void(0)" onclick="oSudoConfig.get_config('software_management');"><%[ Get sudo configuration ]%></a>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend>Director</legend>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="DirInstallCmd"
+							Text="<%[ Director installation command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="DirInstallCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="DirUpgradeCmd"
+							Text="<%[ Director upgrade command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="DirUpgradeCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="DirRemoveCmd"
+							Text="<%[ Director removal command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="DirRemoveCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="DirInfoCmd"
+							Text="<%[ Director info command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="DirInfoCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="DirEnableCmd"
+							Text="<%[ Director enable command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="DirEnableCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="DirPreInstallCmd"
+							Text="<%[ Director pre-installation command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="DirPreInstallCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="DirPreUpgradeCmd"
+							Text="<%[ Director pre-upgrade command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="DirPreUpgradeCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="DirPreRemoveCmd"
+							Text="<%[ Director pre-removal command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="DirPreRemoveCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="DirPostInstallCmd"
+							Text="<%[ Director post-installation command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="DirPostInstallCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="DirPostUpgradeCmd"
+							Text="<%[ Director post-upgrade command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="DirPostUpgradeCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="DirPostRemoveCmd"
+							Text="<%[ Director post-removal command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="DirPostRemoveCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend>Storage Daemon</legend>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="SdInstallCmd"
+							Text="<%[ Storage Daemon installation command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="SdInstallCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="SdUpgradeCmd"
+							Text="<%[ Storage upgrade command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="SdUpgradeCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="SdRemoveCmd"
+							Text="<%[ Storage removal command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="SdRemoveCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="SdInfoCmd"
+							Text="<%[ Storage info command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="SdInfoCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="SdEnableCmd"
+							Text="<%[ Storage enable command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="SdEnableCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="SdPreInstallCmd"
+							Text="<%[ Storage pre-installation command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="SdPreInstallCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="SdPreUpgradeCmd"
+							Text="<%[ Storage pre-upgrade command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="SdPreUpgradeCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="SdPreRemoveCmd"
+							Text="<%[ Storage pre-removal command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="SdPreRemoveCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="SdPostInstallCmd"
+							Text="<%[ Storage post-installation command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="SdPostInstallCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="SdPostUpgradeCmd"
+							Text="<%[ Storage post-upgrade command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="SdPostUpgradeCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="SdPostRemoveCmd"
+							Text="<%[ Storage post-removal command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="SdPostRemoveCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend>File Daemon/Client</legend>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="FdInstallCmd"
+							Text="<%[ Client installation command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="FdInstallCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="FdUpgradeCmd"
+							Text="<%[ Client upgrade command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="FdUpgradeCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="FdRemoveCmd"
+							Text="<%[ Client removal command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="FdRemoveCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="FdInfoCmd"
+							Text="<%[ Client info command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="FdInfoCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="FdEnableCmd"
+							Text="<%[ Client enable command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="FdEnableCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="FdPreInstallCmd"
+							Text="<%[ Client pre-installation command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="FdPreInstallCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="FdPreUpgradeCmd"
+							Text="<%[ Client pre-upgrade command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="FdPreUpgradeCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="FdPreRemoveCmd"
+							Text="<%[ Client pre-removal command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="FdPreRemoveCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="FdPostInstallCmd"
+							Text="<%[ Client post-installation command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="FdPostInstallCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="FdPostUpgradeCmd"
+							Text="<%[ Client post-upgrade command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="FdPostUpgradeCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="FdPostRemoveCmd"
+							Text="<%[ Client post-removal command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="FdPostRemoveCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend>Bconsole</legend>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="BconsInstallCmd"
+							Text="<%[ Bconsole installation command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="BconsInstallCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="BconsUpgradeCmd"
+							Text="<%[ Bconsole upgrade command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="BconsUpgradeCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="BconsRemoveCmd"
+							Text="<%[ Bconsole removal command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="BconsRemoveCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="BconsInfoCmd"
+							Text="<%[ Bconsole info command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="BconsInfoCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="BconsEnableCmd"
+							Text="<%[ Bconsole enable command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="BconsEnableCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="BconsPreInstallCmd"
+							Text="<%[ Bconsole pre-installation command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="BconsPreInstallCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="BconsPreUpgradeCmd"
+							Text="<%[ Bconsole pre-upgrade command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="BconsPreUpgradeCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="BconsPreRemoveCmd"
+							Text="<%[ Bconsole pre-removal command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="BconsPreRemoveCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="BconsPostInstallCmd"
+							Text="<%[ Bconsole post-installation command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="BconsPostInstallCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="BconsPostUpgradeCmd"
+							Text="<%[ Bconsole post-upgrade command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="BconsPostUpgradeCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="BconsPostRemoveCmd"
+							Text="<%[ Bconsole post-removal command: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TActiveTextBox
+							ID="BconsPostRemoveCmd"
+							CssClass="w3-input w3-border w3-show-inline-block"
+							Width="370px"
+						/>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+		<div class="w3-row w3-section">
+			<div class="w3-col w3-center">
+				<com:TActiveLinkButton
+					ID="SoftwareManagementSave"
+					CssClass="w3-button w3-green"
+					OnCallback="saveSoftwareManagement"
+				>
+					<i class="fas fa-save"></i> &nbsp;<%[ Save ]%>
+				</com:TActiveLinkButton>
+			</div>
+		</div>
+	</div>
 	<com:Bacularis.API.Portlets.SudoConfig ID="SudoConfig" />
 <script>
 var bin_fields = {
@@ -1255,6 +1986,52 @@ var bin_fields = {
 		'<%=$this->FdStartAction->ClientID%>',
 		'<%=$this->FdStopAction->ClientID%>',
 		'<%=$this->FdRestartAction->ClientID%>'
+	],
+	software_management: [
+		'<%=$this->DirInstallCmd->ClientID%>',
+		'<%=$this->DirUpgradeCmd->ClientID%>',
+		'<%=$this->DirRemoveCmd->ClientID%>',
+		'<%=$this->DirInfoCmd->ClientID%>',
+		'<%=$this->DirEnableCmd->ClientID%>',
+		'<%=$this->DirPreInstallCmd->ClientID%>',
+		'<%=$this->DirPreUpgradeCmd->ClientID%>',
+		'<%=$this->DirPreRemoveCmd->ClientID%>',
+		'<%=$this->DirPostInstallCmd->ClientID%>',
+		'<%=$this->DirPostUpgradeCmd->ClientID%>',
+		'<%=$this->DirPostRemoveCmd->ClientID%>',
+		'<%=$this->SdInstallCmd->ClientID%>',
+		'<%=$this->SdUpgradeCmd->ClientID%>',
+		'<%=$this->SdRemoveCmd->ClientID%>',
+		'<%=$this->SdInfoCmd->ClientID%>',
+		'<%=$this->SdEnableCmd->ClientID%>',
+		'<%=$this->SdPreInstallCmd->ClientID%>',
+		'<%=$this->SdPreUpgradeCmd->ClientID%>',
+		'<%=$this->SdPreRemoveCmd->ClientID%>',
+		'<%=$this->SdPostInstallCmd->ClientID%>',
+		'<%=$this->SdPostUpgradeCmd->ClientID%>',
+		'<%=$this->SdPostRemoveCmd->ClientID%>',
+		'<%=$this->FdInstallCmd->ClientID%>',
+		'<%=$this->FdUpgradeCmd->ClientID%>',
+		'<%=$this->FdRemoveCmd->ClientID%>',
+		'<%=$this->FdInfoCmd->ClientID%>',
+		'<%=$this->FdEnableCmd->ClientID%>',
+		'<%=$this->FdPreInstallCmd->ClientID%>',
+		'<%=$this->FdPreUpgradeCmd->ClientID%>',
+		'<%=$this->FdPreRemoveCmd->ClientID%>',
+		'<%=$this->FdPostInstallCmd->ClientID%>',
+		'<%=$this->FdPostUpgradeCmd->ClientID%>',
+		'<%=$this->FdPostRemoveCmd->ClientID%>',
+		'<%=$this->BconsInstallCmd->ClientID%>',
+		'<%=$this->BconsUpgradeCmd->ClientID%>',
+		'<%=$this->BconsRemoveCmd->ClientID%>',
+		'<%=$this->BconsInfoCmd->ClientID%>',
+		'<%=$this->BconsEnableCmd->ClientID%>',
+		'<%=$this->BconsPreInstallCmd->ClientID%>',
+		'<%=$this->BconsPreUpgradeCmd->ClientID%>',
+		'<%=$this->BconsPreRemoveCmd->ClientID%>',
+		'<%=$this->BconsPostInstallCmd->ClientID%>',
+		'<%=$this->BconsPostUpgradeCmd->ClientID%>',
+		'<%=$this->BconsPostRemoveCmd->ClientID%>'
 	]
 };
 oSudoConfig.set_bin_fields(bin_fields);

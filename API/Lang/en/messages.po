@@ -730,3 +730,150 @@ msgstr "API Protocol:"
 
 msgid "API Port:"
 msgstr "API Port:"
+
+msgid "Select OS type"
+msgstr "Select OS type"
+
+msgid "RPM-based system"
+msgstr "RPM-based system"
+
+msgid "DEB-based system"
+msgstr "DEB-based system"
+
+msgid "Director installation command:"
+msgstr "Director installation command:"
+
+msgid "Director upgrade command:"
+msgstr "Director upgrade command:"
+
+msgid "Director removal command:"
+msgstr "Director removal command:"
+
+msgid "Director info command:"
+msgstr "Director info command:"
+
+msgid "Director enable command:"
+msgstr "Director enable command:"
+
+msgid "Director pre-installation command:"
+msgstr "Director pre-installation command:"
+
+msgid "Director pre-upgrade command:"
+msgstr "Director pre-upgrade command:"
+
+msgid "Director pre-removal command:"
+msgstr "Director pre-removal command:"
+
+msgid "Director post-installation command:"
+msgstr "Director post-installation command:"
+
+msgid "Director post-upgrade command:"
+msgstr "Director post-upgrade command:"
+
+msgid "Director post-removal command:"
+msgstr "Director post-removal command:"
+
+msgid "Storage Daemon installation command:"
+msgstr "Storage Daemon installation command:"
+
+msgid "Storage upgrade command:"
+msgstr "Storage upgrade command:"
+
+msgid "Storage removal command:"
+msgstr "Storage removal command:"
+
+msgid "Storage info command:"
+msgstr "Storage info command:"
+
+msgid "Storage enable command:"
+msgstr "Storage enable command:"
+
+msgid "Storage pre-installation command:"
+msgstr "Storage pre-installation command:"
+
+msgid "Storage pre-upgrade command:"
+msgstr "Storage pre-upgrade command:"
+
+msgid "Storage pre-removal command:"
+msgstr "Storage pre-removal command:"
+
+msgid "Storage post-installation command:"
+msgstr "Storage post-installation command:"
+
+msgid "Storage post-upgrade command:"
+msgstr "Storage post-upgrade command:"
+
+msgid "Storage post-removal command:"
+msgstr "Storage post-removal command:"
+
+msgid "Client installation command:"
+msgstr "Client installation command:"
+
+msgid "Client upgrade command:"
+msgstr "Client upgrade command:"
+
+msgid "Client removal command:"
+msgstr "Client removal command:"
+
+msgid "Client info command:"
+msgstr "Client info command:"
+
+msgid "Client enable command:"
+msgstr "Client enable command:"
+
+msgid "Client pre-installation command:"
+msgstr "Client pre-installation command:"
+
+msgid "Client pre-upgrade command:"
+msgstr "Client pre-upgrade command:"
+
+msgid "Client pre-removal command:"
+msgstr "Client pre-removal command:"
+
+msgid "Client post-installation command:"
+msgstr "Client post-installation command:"
+
+msgid "Client post-upgrade command:"
+msgstr "Client post-upgrade command:"
+
+msgid "Client post-removal command:"
+msgstr "Client post-removal command:"
+
+msgid "Bconsole installation command:"
+msgstr "Bconsole installation command:"
+
+msgid "Bconsole upgrade command:"
+msgstr "Bconsole upgrade command:"
+
+msgid "Bconsole removal command:"
+msgstr "Bconsole removal command:"
+
+msgid "Bconsole info command:"
+msgstr "Bconsole info command:"
+
+msgid "Bconsole enable command:"
+msgstr "Bconsole enable command:"
+
+msgid "Bconsole pre-installation command:"
+msgstr "Bconsole pre-installation command:"
+
+msgid "Bconsole pre-upgrade command:"
+msgstr "Bconsole pre-upgrade command:"
+
+msgid "Bconsole pre-removal command:"
+msgstr "Bconsole pre-removal command:"
+
+msgid "Bconsole post-installation command:"
+msgstr "Bconsole post-installation command:"
+
+msgid "Bconsole post-upgrade command:"
+msgstr "Bconsole post-upgrade command:"
+
+msgid "Bconsole post-removal command:"
+msgstr "Bconsole post-removal command:"
+
+msgid "Software management"
+msgstr "Software management"
+
+msgid "Get pre-defined commands:"
+msgstr "Get pre-defined commands:"

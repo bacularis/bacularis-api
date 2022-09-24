@@ -53,6 +53,49 @@ class APISettings extends BaculumAPIPage
 	public const DEFAULT_ACTION_FD_STOP = '/usr/bin/systemctl stop bacula-fd';
 	public const DEFAULT_ACTION_FD_RESTART = '/usr/bin/systemctl restart bacula-fd';
 
+	public const DEFAULT_SM_RPM_DIR_INSTALL = '/usr/bin/dnf -y install bacula-director';
+	public const DEFAULT_SM_RPM_DIR_UPGRADE = '/usr/bin/dnf -y update bacula-director';
+	public const DEFAULT_SM_RPM_DIR_REMOVE = '/usr/bin/dnf -y remove bacula-director';
+	public const DEFAULT_SM_RPM_DIR_INFO = '/usr/bin/dnf list installed bacula-director';
+	public const DEFAULT_SM_RPM_DIR_ENABLE = '/usr/bin/systemctl enable bacula-dir';
+	public const DEFAULT_SM_RPM_SD_INSTALL = '/usr/bin/dnf -y install bacula-storage';
+	public const DEFAULT_SM_RPM_SD_UPGRADE = '/usr/bin/dnf -y update bacula-storage';
+	public const DEFAULT_SM_RPM_SD_REMOVE = '/usr/bin/dnf -y remove bacula-storage';
+	public const DEFAULT_SM_RPM_SD_INFO = '/usr/bin/dnf list installed bacula-storage';
+	public const DEFAULT_SM_RPM_SD_ENABLE = '/usr/bin/systemctl enable bacula-sd';
+	public const DEFAULT_SM_RPM_FD_INSTALL = '/usr/bin/dnf -y install bacula-client';
+	public const DEFAULT_SM_RPM_FD_UPGRADE = '/usr/bin/dnf -y update bacula-client';
+	public const DEFAULT_SM_RPM_FD_REMOVE = '/usr/bin/dnf -y remove bacula-client';
+	public const DEFAULT_SM_RPM_FD_INFO = '/usr/bin/dnf list installed bacula-client';
+	public const DEFAULT_SM_RPM_FD_ENABLE = '/usr/bin/systemctl enable bacula-sd';
+	public const DEFAULT_SM_RPM_BCONS_INSTALL = '/usr/bin/dnf -y install bacula-console';
+	public const DEFAULT_SM_RPM_BCONS_UPGRADE = '/usr/bin/dnf -y update bacula-console';
+	public const DEFAULT_SM_RPM_BCONS_REMOVE = '/usr/bin/dnf -y remove bacula-console';
+	public const DEFAULT_SM_RPM_BCONS_INFO = '/usr/bin/dnf -y remove bacula-console';
+
+	public const DEFAULT_SM_DEB_DIR_INSTALL = '/usr/bin/apt -y install bacula-director';
+	public const DEFAULT_SM_DEB_DIR_UPGRADE = '/usr/bin/apt -y install --only-upgrade bacula-director';
+	public const DEFAULT_SM_DEB_DIR_REMOVE = '/usr/bin/apt -y remove --purge bacula-director';
+	public const DEFAULT_SM_DEB_DIR_INFO = '/usr/bin/dpkg -l bacula-director';
+	public const DEFAULT_SM_DEB_DIR_ENABLE = '/usr/bin/systemctl enable bacula-dir';
+	public const DEFAULT_SM_DEB_SD_INSTALL = '/usr/bin/apt -y install bacula-sd';
+	public const DEFAULT_SM_DEB_SD_UPGRADE = '/usr/bin/apt -y install --only-upgrade bacula-sd';
+	public const DEFAULT_SM_DEB_SD_REMOVE = '/usr/bin/apt -y remove --purge bacula-sd';
+	public const DEFAULT_SM_DEB_SD_INFO = '/usr/bin/dpkg -l bacula-sd';
+	public const DEFAULT_SM_DEB_SD_ENABLE = '/usr/bin/systemctl enable bacula-sd';
+	public const DEFAULT_SM_DEB_FD_INSTALL = '/usr/bin/apt -y install bacula-client';
+	public const DEFAULT_SM_DEB_FD_UPGRADE = '/usr/bin/apt -y install --only-upgrade bacula-client';
+	public const DEFAULT_SM_DEB_FD_REMOVE = '/usr/bin/apt -y remove --purge bacula-client';
+	public const DEFAULT_SM_DEB_FD_INFO = '/usr/bin/dpkg -l bacula-client';
+	public const DEFAULT_SM_DEB_FD_ENABLE = '/usr/bin/systemctl enable bacula-fd';
+	public const DEFAULT_SM_DEB_BCONS_INSTALL = '/usr/bin/apt -y install bacula-console';
+	public const DEFAULT_SM_DEB_BCONS_UPGRADE = '/usr/bin/apt -y install --only-upgrade bacula-console';
+	public const DEFAULT_SM_DEB_BCONS_REMOVE = '/usr/bin/apt -y remove --purge bacula-console';
+	public const DEFAULT_SM_DEB_BCONS_INFO = '/usr/bin/dpkg -l bacula-console';
+
+	public const DEFAULT_SM_RPM_POST_INSTALL = '/usr/share/bacularis/protected/tools/set_bacula_perm.sh /etc/bacula apache';
+	public const DEFAULT_SM_DEB_POST_INSTALL = '/usr/share/bacularis/protected/tools/set_bacula_perm.sh /etc/bacula www-data';
+
 	public function onInit($param)
 	{
 		parent::onInit($param);
@@ -64,6 +107,7 @@ class APISettings extends BaculumAPIPage
 		$this->loadConfigSettings();
 		$this->loadActionsSettings();
 		$this->loadAuthSettings();
+		$this->loadSoftwareManagementSettings();
 	}
 
 	private function loadGeneralSettings()
@@ -203,6 +247,60 @@ class APISettings extends BaculumAPIPage
 		} elseif ($this->config['api']['auth_type'] === AuthOAuth2::NAME) {
 			$this->AuthOAuth2->Checked = true;
 		}
+	}
+
+	private function loadSoftwareManagementSettings()
+	{
+		if ($this->IsPostBack || $this->IsCallBack || !isset($this->config['software_management'])) {
+			return;
+		}
+
+		$smcfg = $this->config['software_management'];
+		$this->SoftwareManagementEnabled->Checked = $smcfg['enabled'] == 1;
+		$this->SoftwareManagementUseSudo->Checked = $smcfg['use_sudo'] == 1;
+		$this->DirInstallCmd->Text = $smcfg['dir_install'];
+		$this->DirUpgradeCmd->Text = $smcfg['dir_upgrade'];
+		$this->DirRemoveCmd->Text = $smcfg['dir_remove'];
+		$this->DirInfoCmd->Text = $smcfg['dir_info'];
+		$this->DirEnableCmd->Text = $smcfg['dir_enable'];
+		$this->DirPreInstallCmd->Text = $smcfg['dir_pre_install_cmd'];
+		$this->DirPreUpgradeCmd->Text = $smcfg['dir_pre_upgrade_cmd'];
+		$this->DirPreRemoveCmd->Text = $smcfg['dir_pre_remove_cmd'];
+		$this->DirPostInstallCmd->Text = $smcfg['dir_post_install_cmd'];
+		$this->DirPostUpgradeCmd->Text = $smcfg['dir_post_upgrade_cmd'];
+		$this->DirPostRemoveCmd->Text = $smcfg['dir_post_remove_cmd'];
+		$this->SdInstallCmd->Text = $smcfg['sd_install'];
+		$this->SdUpgradeCmd->Text = $smcfg['sd_upgrade'];
+		$this->SdRemoveCmd->Text = $smcfg['sd_remove'];
+		$this->SdInfoCmd->Text = $smcfg['sd_info'];
+		$this->SdEnableCmd->Text = $smcfg['sd_enable'];
+		$this->SdPreInstallCmd->Text = $smcfg['sd_pre_install_cmd'];
+		$this->SdPreUpgradeCmd->Text = $smcfg['sd_pre_upgrade_cmd'];
+		$this->SdPreRemoveCmd->Text = $smcfg['sd_pre_remove_cmd'];
+		$this->SdPostInstallCmd->Text = $smcfg['sd_post_install_cmd'];
+		$this->SdPostUpgradeCmd->Text = $smcfg['sd_post_upgrade_cmd'];
+		$this->SdPostRemoveCmd->Text = $smcfg['sd_post_remove_cmd'];
+		$this->FdInstallCmd->Text = $smcfg['fd_install'];
+		$this->FdUpgradeCmd->Text = $smcfg['fd_upgrade'];
+		$this->FdRemoveCmd->Text = $smcfg['fd_remove'];
+		$this->FdInfoCmd->Text = $smcfg['fd_info'];
+		$this->FdEnableCmd->Text = $smcfg['fd_enable'];
+		$this->FdPreInstallCmd->Text = $smcfg['fd_pre_install_cmd'];
+		$this->FdPreUpgradeCmd->Text = $smcfg['fd_pre_upgrade_cmd'];
+		$this->FdPreRemoveCmd->Text = $smcfg['fd_pre_remove_cmd'];
+		$this->FdPostInstallCmd->Text = $smcfg['fd_post_install_cmd'];
+		$this->FdPostUpgradeCmd->Text = $smcfg['fd_post_upgrade_cmd'];
+		$this->FdPostRemoveCmd->Text = $smcfg['fd_post_remove_cmd'];
+		$this->BconsInstallCmd->Text = $smcfg['bcons_install'];
+		$this->BconsUpgradeCmd->Text = $smcfg['bcons_upgrade'];
+		$this->BconsRemoveCmd->Text = $smcfg['bcons_remove'];
+		$this->BconsInfoCmd->Text = $smcfg['bcons_info'];
+		$this->BconsPreInstallCmd->Text = $smcfg['bcons_pre_install_cmd'];
+		$this->BconsPreUpgradeCmd->Text = $smcfg['bcons_pre_upgrade_cmd'];
+		$this->BconsPreRemoveCmd->Text = $smcfg['bcons_pre_remove_cmd'];
+		$this->BconsPostInstallCmd->Text = $smcfg['bcons_post_install_cmd'];
+		$this->BconsPostUpgradeCmd->Text = $smcfg['bcons_post_upgrade_cmd'];
+		$this->BconsPostRemoveCmd->Text = $smcfg['bcons_post_remove_cmd'];
 	}
 
 	public function setDBType($sender, $param)
@@ -498,5 +596,111 @@ class APISettings extends BaculumAPIPage
 		}
 		$this->config['api']['auth_type'] = $auth_type;
 		$this->getModule('api_config')->setConfig($this->config);
+	}
+
+	public function setSoftwareManagementDefaultValues($sender, $param) {
+		$os_type = $this->SoftwareManagementLoadDefaultValues->SelectedValue;
+		if ($os_type == 'rpm') {
+			$this->DirInstallCmd->Text = self::DEFAULT_SM_RPM_DIR_INSTALL;
+			$this->DirUpgradeCmd->Text = self::DEFAULT_SM_RPM_DIR_UPGRADE;
+			$this->DirRemoveCmd->Text = self::DEFAULT_SM_RPM_DIR_REMOVE;
+			$this->DirInfoCmd->Text = self::DEFAULT_SM_RPM_DIR_INFO;
+			$this->DirEnableCmd->Text = self::DEFAULT_SM_RPM_DIR_ENABLE;
+			$this->DirPostInstallCmd->Text = self::DEFAULT_SM_RPM_POST_INSTALL;
+			$this->SdInstallCmd->Text = self::DEFAULT_SM_RPM_SD_INSTALL;
+			$this->SdUpgradeCmd->Text = self::DEFAULT_SM_RPM_SD_UPGRADE;
+			$this->SdRemoveCmd->Text = self::DEFAULT_SM_RPM_SD_REMOVE;
+			$this->SdInfoCmd->Text =  self::DEFAULT_SM_RPM_SD_INFO;
+			$this->SdEnableCmd->Text = self::DEFAULT_SM_RPM_SD_ENABLE;
+			$this->SdPostInstallCmd->Text = self::DEFAULT_SM_RPM_POST_INSTALL;
+			$this->FdInstallCmd->Text = self::DEFAULT_SM_RPM_FD_INSTALL;
+			$this->FdUpgradeCmd->Text = self::DEFAULT_SM_RPM_FD_UPGRADE;
+			$this->FdRemoveCmd->Text = self::DEFAULT_SM_RPM_FD_REMOVE;
+			$this->FdInfoCmd->Text = self::DEFAULT_SM_RPM_FD_INFO;
+			$this->FdEnableCmd->Text = self::DEFAULT_SM_RPM_FD_ENABLE;
+			$this->FdPostInstallCmd->Text = self::DEFAULT_SM_RPM_POST_INSTALL;
+			$this->BconsInstallCmd->Text = self::DEFAULT_SM_RPM_BCONS_INSTALL;
+			$this->BconsUpgradeCmd->Text = self::DEFAULT_SM_RPM_BCONS_UPGRADE;
+			$this->BconsRemoveCmd->Text = self::DEFAULT_SM_RPM_BCONS_REMOVE;
+			$this->BconsInfoCmd->Text = self::DEFAULT_SM_RPM_BCONS_INFO;
+			$this->BconsPostInstallCmd->Text = self::DEFAULT_SM_RPM_POST_INSTALL;
+		} elseif ($os_type == 'deb') {
+			$this->DirInstallCmd->Text = self::DEFAULT_SM_DEB_DIR_INSTALL;
+			$this->DirUpgradeCmd->Text = self::DEFAULT_SM_DEB_DIR_UPGRADE;
+			$this->DirRemoveCmd->Text = self::DEFAULT_SM_DEB_DIR_REMOVE;
+			$this->DirInfoCmd->Text = self::DEFAULT_SM_DEB_DIR_INFO;
+			$this->DirEnableCmd->Text = self::DEFAULT_SM_DEB_DIR_ENABLE;
+			$this->DirPostInstallCmd->Text = self::DEFAULT_SM_DEB_POST_INSTALL;
+			$this->SdInstallCmd->Text = self::DEFAULT_SM_DEB_SD_INSTALL;
+			$this->SdUpgradeCmd->Text = self::DEFAULT_SM_DEB_SD_UPGRADE;
+			$this->SdRemoveCmd->Text = self::DEFAULT_SM_DEB_SD_REMOVE;
+			$this->SdInfoCmd->Text =  self::DEFAULT_SM_DEB_SD_INFO;
+			$this->SdEnableCmd->Text = self::DEFAULT_SM_DEB_SD_ENABLE;
+			$this->SdPostInstallCmd->Text = self::DEFAULT_SM_DEB_POST_INSTALL;
+			$this->FdInstallCmd->Text = self::DEFAULT_SM_DEB_FD_INSTALL;
+			$this->FdUpgradeCmd->Text = self::DEFAULT_SM_DEB_FD_UPGRADE;
+			$this->FdRemoveCmd->Text = self::DEFAULT_SM_DEB_FD_REMOVE;
+			$this->FdInfoCmd->Text = self::DEFAULT_SM_DEB_FD_INFO;
+			$this->FdEnableCmd->Text = self::DEFAULT_SM_DEB_FD_ENABLE;
+			$this->FdPostInstallCmd->Text = self::DEFAULT_SM_DEB_POST_INSTALL;
+			$this->BconsInstallCmd->Text = self::DEFAULT_SM_DEB_BCONS_INSTALL;
+			$this->BconsUpgradeCmd->Text = self::DEFAULT_SM_DEB_BCONS_UPGRADE;
+			$this->BconsRemoveCmd->Text = self::DEFAULT_SM_DEB_BCONS_REMOVE;
+			$this->BconsInfoCmd->Text = self::DEFAULT_SM_DEB_BCONS_INFO;
+			$this->BconsPostInstallCmd->Text = self::DEFAULT_SM_DEB_POST_INSTALL;
+		}
+	}
+
+	public function saveSoftwareManagement($sender, $param) {
+		$config = [
+			'enabled' => $this->SoftwareManagementEnabled->Checked ? '1' : '0',
+			'use_sudo' => $this->SoftwareManagementUseSudo->Checked ? '1' : '0',
+			'dir_install' => $this->DirInstallCmd->Text,
+			'dir_upgrade' => $this->DirUpgradeCmd->Text,
+			'dir_remove' => $this->DirRemoveCmd->Text,
+			'dir_info' => $this->DirInfoCmd->Text,
+			'dir_enable' => $this->DirEnableCmd->Text,
+			'dir_pre_install_cmd' => $this->DirPreInstallCmd->Text,
+			'dir_pre_upgrade_cmd' => $this->DirPreUpgradeCmd->Text,
+			'dir_pre_remove_cmd' => $this->DirPreRemoveCmd->Text,
+			'dir_post_install_cmd' => $this->DirPostInstallCmd->Text,
+			'dir_post_upgrade_cmd' => $this->DirPostUpgradeCmd->Text,
+			'dir_post_remove_cmd' => $this->DirPostRemoveCmd->Text,
+			'sd_install' => $this->SdInstallCmd->Text,
+			'sd_upgrade' => $this->SdUpgradeCmd->Text,
+			'sd_remove' => $this->SdRemoveCmd->Text,
+			'sd_info' => $this->SdInfoCmd->Text,
+			'sd_enable' => $this->SdEnableCmd->Text,
+			'sd_pre_install_cmd' => $this->SdPreInstallCmd->Text,
+			'sd_pre_upgrade_cmd' => $this->SdPreUpgradeCmd->Text,
+			'sd_pre_remove_cmd' => $this->SdPreRemoveCmd->Text,
+			'sd_post_install_cmd' => $this->SdPostInstallCmd->Text,
+			'sd_post_upgrade_cmd' => $this->SdPostUpgradeCmd->Text,
+			'sd_post_remove_cmd' => $this->SdPostRemoveCmd->Text,
+			'fd_install' => $this->FdInstallCmd->Text,
+			'fd_upgrade' => $this->FdUpgradeCmd->Text,
+			'fd_remove' => $this->FdRemoveCmd->Text,
+			'fd_info' => $this->FdInfoCmd->Text,
+			'fd_enable' => $this->FdEnableCmd->Text,
+			'fd_pre_install_cmd' => $this->FdPreInstallCmd->Text,
+			'fd_pre_upgrade_cmd' => $this->FdPreUpgradeCmd->Text,
+			'fd_pre_remove_cmd' => $this->FdPreRemoveCmd->Text,
+			'fd_post_install_cmd' => $this->FdPostInstallCmd->Text,
+			'fd_post_upgrade_cmd' => $this->FdPostUpgradeCmd->Text,
+			'fd_post_remove_cmd' => $this->FdPostRemoveCmd->Text,
+			'bcons_install' => $this->BconsInstallCmd->Text,
+			'bcons_upgrade' => $this->BconsUpgradeCmd->Text,
+			'bcons_remove' => $this->BconsRemoveCmd->Text,
+			'bcons_info' => $this->BconsInfoCmd->Text,
+			'bcons_pre_install_cmd' => $this->BconsPreInstallCmd->Text,
+			'bcons_pre_upgrade_cmd' => $this->BconsPreUpgradeCmd->Text,
+			'bcons_pre_remove_cmd' => $this->BconsPreRemoveCmd->Text,
+			'bcons_post_install_cmd' => $this->BconsPostInstallCmd->Text,
+			'bcons_post_upgrade_cmd' => $this->BconsPostUpgradeCmd->Text,
+			'bcons_post_remove_cmd' => $this->BconsPostRemoveCmd->Text,
+		];
+		$api_config = $this->getModule('api_config');
+		$this->config['software_management'] = $config;
+		$api_config->setConfig($this->config);
 	}
 }

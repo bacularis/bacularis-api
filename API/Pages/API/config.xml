@@ -53,5 +53,7 @@
 		<module id="list" class="Bacularis\API\Modules\BList" />
 		<!-- changer command modules -->
 		<module id="changer_command" class="Bacularis\API\Modules\ChangerCommand" />
+		<!-- software management modules -->
+		<module id="software_mgmt" class="Bacularis\API\Modules\SoftwareManagement" />
 	</modules>
 </configuration>

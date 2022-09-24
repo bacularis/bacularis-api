@@ -77,6 +77,74 @@ class APIConfig extends ConfigFileModule
 	public const ACTION_FD_RESTART = 'fd_restart';
 
 	/**
+	 * Software management commands.
+	 */
+	public const SOFTWARE_MANAGEMENT_BACULARIS_INSTALL = 'bacularis_install';
+	public const SOFTWARE_MANAGEMENT_BACULARIS_UPGRADE = 'bacularis_upgrade';
+	public const SOFTWARE_MANAGEMENT_BACULARIS_REMOVE = 'bacularis_remove';
+	public const SOFTWARE_MANAGEMENT_BACULARIS_INFO = 'bacularis_info';
+	public const SOFTWARE_MANAGEMENT_BACULARIS_ENABLE = 'bacularis_enable';
+	public const SOFTWARE_MANAGEMENT_PRE_BACULARIS_INSTALL = 'bacularis_pre_install_cmd';
+	public const SOFTWARE_MANAGEMENT_PRE_BACULARIS_UPGRADE = 'bacularis_pre_upgrade_cmd';
+	public const SOFTWARE_MANAGEMENT_PRE_BACULARIS_REMOVE = 'bacularis_pre_remove_cmd';
+	public const SOFTWARE_MANAGEMENT_PRE_BACULARIS_INFO = 'bacularis_pre_info_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_BACULARIS_INSTALL = 'bacularis_post_install_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_BACULARIS_UPGRADE = 'bacularis_post_upgrade_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_BACULARIS_REMOVE = 'bacularis_post_remove_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_BACULARIS_INFO = 'bacularis_post_info_cmd';
+	public const SOFTWARE_MANAGEMENT_DIR_INSTALL = 'dir_install';
+	public const SOFTWARE_MANAGEMENT_DIR_UPGRADE = 'dir_upgrade';
+	public const SOFTWARE_MANAGEMENT_DIR_REMOVE = 'dir_remove';
+	public const SOFTWARE_MANAGEMENT_DIR_INFO = 'dir_info';
+	public const SOFTWARE_MANAGEMENT_DIR_ENABLE = 'dir_enable';
+	public const SOFTWARE_MANAGEMENT_PRE_DIR_INSTALL = 'dir_pre_install_cmd';
+	public const SOFTWARE_MANAGEMENT_PRE_DIR_UPGRADE = 'dir_pre_upgrade_cmd';
+	public const SOFTWARE_MANAGEMENT_PRE_DIR_REMOVE = 'dir_pre_remove_cmd';
+	public const SOFTWARE_MANAGEMENT_PRE_DIR_INFO = 'dir_pre_info_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_DIR_INSTALL = 'dir_post_install_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_DIR_UPGRADE = 'dir_post_upgrade_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_DIR_REMOVE = 'dir_post_remove_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_DIR_INFO = 'dir_post_info_cmd';
+	public const SOFTWARE_MANAGEMENT_SD_INSTALL = 'sd_install';
+	public const SOFTWARE_MANAGEMENT_SD_UPGRADE = 'sd_upgrade';
+	public const SOFTWARE_MANAGEMENT_SD_REMOVE = 'sd_remove';
+	public const SOFTWARE_MANAGEMENT_SD_INFO = 'sd_info';
+	public const SOFTWARE_MANAGEMENT_SD_ENABLE = 'sd_enable';
+	public const SOFTWARE_MANAGEMENT_PRE_SD_INSTALL = 'sd_pre_install_cmd';
+	public const SOFTWARE_MANAGEMENT_PRE_SD_UPGRADE = 'sd_pre_upgrade_cmd';
+	public const SOFTWARE_MANAGEMENT_PRE_SD_REMOVE = 'sd_pre_remove_cmd';
+	public const SOFTWARE_MANAGEMENT_PRE_SD_INFO = 'sd_pre_info_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_SD_INSTALL = 'sd_post_install_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_SD_UPGRADE = 'sd_post_upgrade_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_SD_REMOVE = 'sd_post_remove_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_SD_INFO = 'sd_post_info_cmd';
+	public const SOFTWARE_MANAGEMENT_FD_INSTALL = 'fd_install';
+	public const SOFTWARE_MANAGEMENT_FD_UPGRADE = 'fd_upgrade';
+	public const SOFTWARE_MANAGEMENT_FD_REMOVE = 'fd_remove';
+	public const SOFTWARE_MANAGEMENT_FD_INFO = 'fd_info';
+	public const SOFTWARE_MANAGEMENT_FD_ENABLE = 'fd_enable';
+	public const SOFTWARE_MANAGEMENT_PRE_FD_INSTALL = 'fd_pre_install_cmd';
+	public const SOFTWARE_MANAGEMENT_PRE_FD_UPGRADE = 'fd_pre_upgrade_cmd';
+	public const SOFTWARE_MANAGEMENT_PRE_FD_REMOVE = 'fd_pre_remove_cmd';
+	public const SOFTWARE_MANAGEMENT_PRE_FD_INFO = 'fd_pre_info_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_FD_INSTALL = 'fd_post_install_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_FD_UPGRADE = 'fd_post_upgrade_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_FD_REMOVE = 'fd_post_remove_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_FD_INFO = 'fd_post_info_cmd';
+	public const SOFTWARE_MANAGEMENT_BCONS_INSTALL = 'bcons_install';
+	public const SOFTWARE_MANAGEMENT_BCONS_UPGRADE = 'bcons_upgrade';
+	public const SOFTWARE_MANAGEMENT_BCONS_REMOVE = 'bcons_remove';
+	public const SOFTWARE_MANAGEMENT_BCONS_INFO = 'bcons_info';
+	public const SOFTWARE_MANAGEMENT_PRE_BCONS_INSTALL = 'bcons_pre_install_cmd';
+	public const SOFTWARE_MANAGEMENT_PRE_BCONS_UPGRADE = 'bcons_pre_upgrade_cmd';
+	public const SOFTWARE_MANAGEMENT_PRE_BCONS_REMOVE = 'bcons_pre_remove_cmd';
+	public const SOFTWARE_MANAGEMENT_PRE_BCONS_INFO = 'bcons_pre_info_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_BCONS_INSTALL = 'bcons_post_install_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_BCONS_UPGRADE = 'bcons_post_upgrade_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_BCONS_REMOVE = 'bcons_post_remove_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_BCONS_INFO = 'bcons_post_info_cmd';
+
+	/**
 	 * These options are obligatory for API config.
 	 */
 	private $required_options = [
@@ -408,5 +476,168 @@ class APIConfig extends ConfigFileModule
 			}
 		}
 		return $actions;
+	}
+
+	/**
+	 * Check if software management is configured for application.
+	 *
+	 * @return bool true if software management is configured, otherwise false
+	 */
+	public function isSoftwareManagementConfigured()
+	{
+		$config = $this->getConfig();
+		return key_exists('software_management', $config);
+	}
+
+	/**
+	 * Check if single software management command is configured for application.
+	 *
+	 * @param mixed $command
+	 * @return bool true if single action is configured, otherwise false
+	 */
+	public function isSoftwareManagementCommandConfigured($command)
+	{
+		$config = $this->getSoftwareManagementConfig();
+		return (key_exists($command, $config) && !empty($config[$command]));
+	}
+
+	/**
+	 * Check if software management support is enabled.
+	 *
+	 * @return bool true if software management support is enabled, otherwise false
+	 */
+	public function isSoftwareManagementEnabled()
+	{
+		$enabled = false;
+		if ($this->isSoftwareManagementConfigured() === true) {
+			$config = $this->getConfig();
+			$enabled = ($config['software_management']['enabled'] == 1);
+		}
+		return $enabled;
+	}
+
+	/**
+	 * Get software management config parameters.
+	 *
+	 * @return array software management config parameters
+	 */
+	public function getSoftwareManagementConfig()
+	{
+		$cfg = [];
+		if ($this->isSoftwareManagementConfigured() === true) {
+			$config = $this->getConfig();
+			$cfg = $config['software_management'];
+		}
+		return $cfg;
+	}
+
+	/**
+	 * Get single software management command and sudo option.
+	 *
+	 * @param string $command command (dir_install, dir_upgrade ...etc.)
+	 * @return array command and sudo option state
+	 */
+	public function getSoftwareManagementCommandConfig($command)
+	{
+		$cmd = ['cmd' => '', 'use_sudo' => false];
+		$sm = $this->getSupportedSoftwareManagementCommands();
+		$config = $this->getSoftwareManagementConfig();
+		if (in_array($command, $sm) && $this->isSoftwareManagementCommandConfigured($command) === true) {
+			$cmd['cmd'] = $config[$command];
+			$cmd['use_sudo'] = ($config['use_sudo'] == 1);
+		}
+		return $cmd;
+	}
+
+	/**
+	 * Get supported software management commands defined in API config.
+	 *
+	 * @return array supported software management commands
+	 */
+	public function getSupportedSoftwareManagementCommands()
+	{
+		$commands = [];
+		$types = $this->getSoftwareManagementCommandTypes();
+		for ($i = 0; $i < count($types); $i++) {
+			if ($this->isSoftwareManagementCommandConfigured($types[$i]) === true) {
+				array_push($commands, $types[$i]);
+			}
+		}
+		return $commands;
+	}
+
+	/**
+	 * Get software management command types.
+	 *
+	 * @return array command types
+	 */
+	public function getSoftwareManagementCommandTypes()
+	{
+		return [
+			self::SOFTWARE_MANAGEMENT_BACULARIS_INSTALL,
+			self::SOFTWARE_MANAGEMENT_BACULARIS_UPGRADE,
+			self::SOFTWARE_MANAGEMENT_BACULARIS_REMOVE,
+			self::SOFTWARE_MANAGEMENT_BACULARIS_INFO,
+			self::SOFTWARE_MANAGEMENT_BACULARIS_ENABLE,
+			self::SOFTWARE_MANAGEMENT_PRE_BACULARIS_INSTALL,
+			self::SOFTWARE_MANAGEMENT_PRE_BACULARIS_UPGRADE,
+			self::SOFTWARE_MANAGEMENT_PRE_BACULARIS_REMOVE,
+			self::SOFTWARE_MANAGEMENT_PRE_BACULARIS_INFO,
+			self::SOFTWARE_MANAGEMENT_POST_BACULARIS_INSTALL,
+			self::SOFTWARE_MANAGEMENT_POST_BACULARIS_UPGRADE,
+			self::SOFTWARE_MANAGEMENT_POST_BACULARIS_REMOVE,
+			self::SOFTWARE_MANAGEMENT_POST_BACULARIS_INFO,
+			self::SOFTWARE_MANAGEMENT_DIR_INSTALL,
+			self::SOFTWARE_MANAGEMENT_DIR_UPGRADE,
+			self::SOFTWARE_MANAGEMENT_DIR_REMOVE,
+			self::SOFTWARE_MANAGEMENT_DIR_INFO,
+			self::SOFTWARE_MANAGEMENT_DIR_ENABLE,
+			self::SOFTWARE_MANAGEMENT_PRE_DIR_INSTALL,
+			self::SOFTWARE_MANAGEMENT_PRE_DIR_UPGRADE,
+			self::SOFTWARE_MANAGEMENT_PRE_DIR_REMOVE,
+			self::SOFTWARE_MANAGEMENT_PRE_DIR_INFO,
+			self::SOFTWARE_MANAGEMENT_POST_DIR_INSTALL,
+			self::SOFTWARE_MANAGEMENT_POST_DIR_UPGRADE,
+			self::SOFTWARE_MANAGEMENT_POST_DIR_REMOVE,
+			self::SOFTWARE_MANAGEMENT_POST_DIR_INFO,
+			self::SOFTWARE_MANAGEMENT_SD_INSTALL,
+			self::SOFTWARE_MANAGEMENT_SD_UPGRADE,
+			self::SOFTWARE_MANAGEMENT_SD_REMOVE,
+			self::SOFTWARE_MANAGEMENT_SD_INFO,
+			self::SOFTWARE_MANAGEMENT_SD_ENABLE,
+			self::SOFTWARE_MANAGEMENT_PRE_SD_INSTALL,
+			self::SOFTWARE_MANAGEMENT_PRE_SD_UPGRADE,
+			self::SOFTWARE_MANAGEMENT_PRE_SD_REMOVE,
+			self::SOFTWARE_MANAGEMENT_PRE_SD_INFO,
+			self::SOFTWARE_MANAGEMENT_POST_SD_INSTALL,
+			self::SOFTWARE_MANAGEMENT_POST_SD_UPGRADE,
+			self::SOFTWARE_MANAGEMENT_POST_SD_REMOVE,
+			self::SOFTWARE_MANAGEMENT_POST_SD_INFO,
+			self::SOFTWARE_MANAGEMENT_FD_INSTALL,
+			self::SOFTWARE_MANAGEMENT_FD_UPGRADE,
+			self::SOFTWARE_MANAGEMENT_FD_REMOVE,
+			self::SOFTWARE_MANAGEMENT_FD_INFO,
+			self::SOFTWARE_MANAGEMENT_FD_ENABLE,
+			self::SOFTWARE_MANAGEMENT_PRE_FD_INSTALL,
+			self::SOFTWARE_MANAGEMENT_PRE_FD_UPGRADE,
+			self::SOFTWARE_MANAGEMENT_PRE_FD_REMOVE,
+			self::SOFTWARE_MANAGEMENT_PRE_FD_INFO,
+			self::SOFTWARE_MANAGEMENT_POST_FD_INSTALL,
+			self::SOFTWARE_MANAGEMENT_POST_FD_UPGRADE,
+			self::SOFTWARE_MANAGEMENT_POST_FD_REMOVE,
+			self::SOFTWARE_MANAGEMENT_POST_FD_INFO,
+			self::SOFTWARE_MANAGEMENT_BCONS_INSTALL,
+			self::SOFTWARE_MANAGEMENT_BCONS_UPGRADE,
+			self::SOFTWARE_MANAGEMENT_BCONS_REMOVE,
+			self::SOFTWARE_MANAGEMENT_BCONS_INFO,
+			self::SOFTWARE_MANAGEMENT_PRE_BCONS_INSTALL,
+			self::SOFTWARE_MANAGEMENT_PRE_BCONS_UPGRADE,
+			self::SOFTWARE_MANAGEMENT_PRE_BCONS_REMOVE,
+			self::SOFTWARE_MANAGEMENT_PRE_BCONS_INFO,
+			self::SOFTWARE_MANAGEMENT_POST_BCONS_INSTALL,
+			self::SOFTWARE_MANAGEMENT_POST_BCONS_UPGRADE,
+			self::SOFTWARE_MANAGEMENT_POST_BCONS_REMOVE,
+			self::SOFTWARE_MANAGEMENT_POST_BCONS_INFO
+		];
 	}
 }
