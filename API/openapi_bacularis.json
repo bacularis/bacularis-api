@@ -1915,6 +1915,25 @@
 						}
 					},
 					{
+						"name": "restoreclientid",
+						"in": "body",
+						"description": "Restore client identifier (can be used instead of restoreclient)",
+						"required": false,
+						"schema": {
+							"type": "integer"
+						}
+					},
+					{
+						"name": "restoreclient",
+						"in": "body",
+						"description": "Restore client name (can be used instead of restoreclientid)",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"pattern": "[a-zA-Z0-9:.-_ ]+"
+						}
+					},
+					{
 						"name": "restorejob",
 						"in": "body",
 						"description": "Restore job name",
