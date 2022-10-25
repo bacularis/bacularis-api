@@ -50,6 +50,15 @@ class RestoreRun extends BaculumAPIServer
 			$client = $params->client;
 		}
 
+		$restoreclient = null;
+		if (property_exists($params, 'restoreclientid')) {
+			$restoreclientid = (int) ($params->restoreclientid);
+			$restoreclient_row = $this->getModule('client')->getClientById($restoreclientid);
+			$restoreclient = is_object($restoreclient_row) ? $restoreclient_row->name : null;
+		} elseif (property_exists($params, 'restoreclient') && $misc->isValidName($params->restoreclient)) {
+			$restoreclient = $params->restoreclient;
+		}
+
 		$fileset = null;
 		if (property_exists($params, 'filesetid')) {
 			$filesetid = (int) ($params->filesetid);
@@ -125,6 +134,9 @@ class RestoreRun extends BaculumAPIServer
 
 		if (is_string($replace)) {
 			$command[] = 'replace="' . $replace . '"';
+		}
+		if (is_string($restoreclient)) {
+			$command[] = 'restoreclient="' . $restoreclient . '"';
 		}
 		if (is_string($restorejob)) {
 			$command[] = 'restorejob="' . $restorejob . '"';
