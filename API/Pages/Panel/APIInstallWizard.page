@@ -149,7 +149,8 @@
 							ClientSide.OnComplete="location.reload();"
 						>
 							<com:TListItem Value="en" Text="English" />
-							<!--com:TListItem Value="fr" Text="French" /-->
+							<com:TListItem Value="fr" Text="French" />
+							<com:TListItem Value="ko" Text="Korean" />
 							<com:TListItem Value="pl" Text="Polish" />
 							<com:TListItem Value="pt" Text="Portuguese" />
 							<com:TListItem Value="ru" Text="Russian" />
