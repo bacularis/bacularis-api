@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-08-18 04:06\n"
+"PO-Revision-Date: 2022-10-27 03:17\n"
 "Project-Id-Version: bacularis\n"
 "POT-Creation-Date: \n"
 "Last-Translator: Marcin Haba <marcin.haba@bacula.pl>\n"
@@ -737,150 +737,150 @@ msgstr "Protokół API:"
 msgid "API Port:"
 msgstr "Port API:"
 
-
 msgid "Select OS type"
-msgstr "Select OS type"
+msgstr "Wybierz typ systemu operacyjnego"
 
 msgid "RPM-based system"
-msgstr "RPM-based system"
+msgstr "System bazujący na RPM"
 
 msgid "DEB-based system"
-msgstr "DEB-based system"
+msgstr "System bazujący na DEB"
 
 msgid "Director installation command:"
-msgstr "Director installation command:"
+msgstr "Komenda instalacji Zarządcy:"
 
 msgid "Director upgrade command:"
-msgstr "Director upgrade command:"
+msgstr "Komenda aktualizacji Zarządcy:"
 
 msgid "Director removal command:"
-msgstr "Director removal command:"
+msgstr "Komenda usuwania Zarządcy:"
 
 msgid "Director info command:"
-msgstr "Director info command:"
+msgstr "Komenda informacji Zarządcy:"
 
 msgid "Director enable command:"
-msgstr "Director enable command:"
+msgstr "Komenda włączania Zarządcy:"
 
 msgid "Director pre-installation command:"
-msgstr "Director pre-installation command:"
+msgstr "Komenda preinstalacji Zarządcy:"
 
 msgid "Director pre-upgrade command:"
-msgstr "Director pre-upgrade command:"
+msgstr "Komenda postinstalacji Zarządcy:"
 
 msgid "Director pre-removal command:"
-msgstr "Director pre-removal command:"
+msgstr "Komenda preusuwania Zarządcy:"
 
 msgid "Director post-installation command:"
-msgstr "Director post-installation command:"
+msgstr "Komenda postusuwania Zarządcy:"
 
 msgid "Director post-upgrade command:"
-msgstr "Director post-upgrade command:"
+msgstr "Komenda postaktualizacji Zarządcy:"
 
 msgid "Director post-removal command:"
-msgstr "Director post-removal command:"
+msgstr "Komenda postusuwania Zarządcy:"
 
 msgid "Storage Daemon installation command:"
-msgstr "Storage Daemon installation command:"
+msgstr "Komenda instalacji Magazynu:"
 
 msgid "Storage upgrade command:"
-msgstr "Storage upgrade command:"
+msgstr "Komenda aktualizacji Magazynu:"
 
 msgid "Storage removal command:"
-msgstr "Storage removal command:"
+msgstr "Komenda usuwania Magazynu:"
 
 msgid "Storage info command:"
-msgstr "Storage info command:"
+msgstr "Komenda informacji Magazynu:"
 
 msgid "Storage enable command:"
-msgstr "Storage enable command:"
+msgstr "Komenda włączania Magazynu:"
 
 msgid "Storage pre-installation command:"
-msgstr "Storage pre-installation command:"
+msgstr "Komenda preinstalacji Magazynu:"
 
 msgid "Storage pre-upgrade command:"
-msgstr "Storage pre-upgrade command:"
+msgstr "Komenda preaktualizacji Magazynu:"
 
 msgid "Storage pre-removal command:"
-msgstr "Storage pre-removal command:"
+msgstr "Komenda preusuwania Magazynu:"
 
 msgid "Storage post-installation command:"
-msgstr "Storage post-installation command:"
+msgstr "Komenda postinstalacji Magazynu:"
 
 msgid "Storage post-upgrade command:"
-msgstr "Storage post-upgrade command:"
+msgstr "Komenda postaktualizacji Magazynu:"
 
 msgid "Storage post-removal command:"
-msgstr "Storage post-removal command:"
+msgstr "Komenda postusuwania Magazynu:"
 
 msgid "Client installation command:"
-msgstr "Client installation command:"
+msgstr "Komenda instalacji Klienta:"
 
 msgid "Client upgrade command:"
-msgstr "Client upgrade command:"
+msgstr "Komenda aktualizacji Klienta:"
 
 msgid "Client removal command:"
-msgstr "Client removal command:"
+msgstr "Komenda usuwania Klienta:"
 
 msgid "Client info command:"
-msgstr "Client info command:"
+msgstr "Komenda informacji Klienta:"
 
 msgid "Client enable command:"
-msgstr "Client enable command:"
+msgstr "Komenda włączania Klienta:"
 
 msgid "Client pre-installation command:"
-msgstr "Client pre-installation command:"
+msgstr "Komenda preinstalacji Klienta:"
 
 msgid "Client pre-upgrade command:"
-msgstr "Client pre-upgrade command:"
+msgstr "Komenda preaktualizacji Klienta:"
 
 msgid "Client pre-removal command:"
-msgstr "Client pre-removal command:"
+msgstr "Komenda preusuwania Klienta:"
 
 msgid "Client post-installation command:"
-msgstr "Client post-installation command:"
+msgstr "Komenda postinstalacji Klienta:"
 
 msgid "Client post-upgrade command:"
-msgstr "Client post-upgrade command:"
+msgstr "Komenda postaktualizacji Klienta:"
 
 msgid "Client post-removal command:"
-msgstr "Client post-removal command:"
+msgstr "Komenda postusuwania Klienta:"
 
 msgid "Bconsole installation command:"
-msgstr "Bconsole installation command:"
+msgstr "Komenda instalacji Bconsole:"
 
 msgid "Bconsole upgrade command:"
-msgstr "Bconsole upgrade command:"
+msgstr "Komenda aktualizacji Bconsole:"
 
 msgid "Bconsole removal command:"
-msgstr "Bconsole removal command:"
+msgstr "Komenda usuwania Bconsole:"
 
 msgid "Bconsole info command:"
-msgstr "Bconsole info command:"
+msgstr "Komenda informacji Bconsole:"
 
 msgid "Bconsole enable command:"
-msgstr "Bconsole enable command:"
+msgstr "Komenda włączania Bconsole:"
 
 msgid "Bconsole pre-installation command:"
-msgstr "Bconsole pre-installation command:"
+msgstr "Komenda preinstalacji Bconsole:"
 
 msgid "Bconsole pre-upgrade command:"
-msgstr "Bconsole pre-upgrade command:"
+msgstr "Komenda preaktualizacji Bconsole:"
 
 msgid "Bconsole pre-removal command:"
-msgstr "Bconsole pre-removal command:"
+msgstr "Komenda preusuwania Bconsole:"
 
 msgid "Bconsole post-installation command:"
-msgstr "Bconsole post-installation command:"
+msgstr "Komenda postinstalacji Bconsole:"
 
 msgid "Bconsole post-upgrade command:"
-msgstr "Bconsole post-upgrade command:"
+msgstr "Komenda postaktualizacji Bconsole:"
 
 msgid "Bconsole post-removal command:"
-msgstr "Bconsole post-removal command:"
+msgstr "Komenda postusuwania Bconsole:"
 
 msgid "Software management"
-msgstr "Software management"
+msgstr "Zarządzanie oprogramowaniem"
 
 msgid "Get pre-defined commands:"
-msgstr "Get pre-defined commands:"
+msgstr "Użyj predefiniowanych komend:"
+
