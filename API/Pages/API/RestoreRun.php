@@ -127,7 +127,6 @@ class RestoreRun extends BaculumAPIServer
 			// Full restore all files
 			$command[] = 'jobid="' . $jobid . '"';
 			$command[] = 'fileset="' . $fileset . '"';
-			$command[] = 'select';
 			$command[] = 'all';
 			$command[] = 'done';
 		}
