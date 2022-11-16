@@ -289,7 +289,7 @@ oSudoConfig.set_bin_opts(bin_opts);
 							ControlCssClass="field_invalid"
 							Display="Dynamic"
 						/>
-						<p class="w3-text-black" style="margin-top: 8px;"><%[ Use CTRL + left-click to multiple item selection ]%></p>
+						<p style="margin-top: 8px;"><%[ Use CTRL + left-click to multiple item selection ]%></p>
 					</div> &nbsp;<i id="device_required" class="fa fa-asterisk w3-text-red opt_req" style="display none"></i>
 				</div>
 				<footer class="w3-container w3-center">
