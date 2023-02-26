@@ -141,12 +141,14 @@ LEFT JOIN Storage USING (StorageId)
 
 	private function setWhenExpire(&$volume)
 	{
+		$whenexpire = 'no date';
 		$volstatus = strtolower($volume->volstatus);
 		if ($volstatus == 'full' || $volstatus == 'used') {
-			$whenexpire = strtotime($volume->lastwritten) + $volume->volretention;
-			$whenexpire = date('Y-m-d H:i:s', $whenexpire);
-		} else {
-			$whenexpire = 'no date';
+			$lwt = strtotime($volume->lastwritten);
+			if (is_int($lwt) && $lwt >= 0) {
+				$whenexpire = $lwt + $volume->volretention;
+				$whenexpire = date('Y-m-d H:i:s', $whenexpire);
+			}
 		}
 		$volume->whenexpire = $whenexpire;
 	}
