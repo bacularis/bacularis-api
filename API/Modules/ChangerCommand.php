@@ -348,8 +348,10 @@ class ChangerCommand extends APIModule
 	{
 		$pattern = null;
 		switch ($ptype) {
-			case self::PTYPE_FG_CMD: $pattern = self::CHANGER_COMMAND_FG_PATTERN; break;
-			case self::PTYPE_BG_CMD: $pattern = self::CHANGER_COMMAND_BG_PATTERN; break;
+			case self::PTYPE_FG_CMD: $pattern = self::CHANGER_COMMAND_FG_PATTERN;
+			break;
+			case self::PTYPE_BG_CMD: $pattern = self::CHANGER_COMMAND_BG_PATTERN;
+			break;
 			default: $pattern = self::CHANGER_COMMAND_FG_PATTERN;
 		}
 		return $pattern;

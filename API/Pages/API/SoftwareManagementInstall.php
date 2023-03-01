@@ -24,7 +24,8 @@ use Bacularis\Common\Modules\Errors\SoftwareManagementError;
  */
 class SoftwareManagementInstall extends BaculumAPIServer
 {
-	public function get() {
+	public function get()
+	{
 		$output = [];
 		$exitcode = 0;
 

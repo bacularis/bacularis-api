@@ -24,7 +24,8 @@ use Bacularis\Common\Modules\Errors\SoftwareManagementError;
  */
 class SoftwareManagementEnable extends BaculumAPIServer
 {
-	public function get() {
+	public function get()
+	{
 		$component = $this->Request->contains('component') ? $this->Request['component'] : '';
 		$software_mgmt = $this->getModule('software_mgmt');
 		$cmd = '';

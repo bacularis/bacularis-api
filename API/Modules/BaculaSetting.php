@@ -585,10 +585,14 @@ class BaculaSetting extends APIModule
 	{
 		$tool_type = null;
 		switch ($component_type) {
-			case self::COMPONENT_DIR_TYPE: $tool_type = APIConfig::JSON_TOOL_DIR_TYPE; break;
-			case self::COMPONENT_SD_TYPE: $tool_type = APIConfig::JSON_TOOL_SD_TYPE; break;
-			case self::COMPONENT_FD_TYPE: $tool_type = APIConfig::JSON_TOOL_FD_TYPE; break;
-			case self::COMPONENT_BCONS_TYPE: $tool_type = APIConfig::JSON_TOOL_BCONS_TYPE; break;
+			case self::COMPONENT_DIR_TYPE: $tool_type = APIConfig::JSON_TOOL_DIR_TYPE;
+			break;
+			case self::COMPONENT_SD_TYPE: $tool_type = APIConfig::JSON_TOOL_SD_TYPE;
+			break;
+			case self::COMPONENT_FD_TYPE: $tool_type = APIConfig::JSON_TOOL_FD_TYPE;
+			break;
+			case self::COMPONENT_BCONS_TYPE: $tool_type = APIConfig::JSON_TOOL_BCONS_TYPE;
+			break;
 		}
 		return $tool_type;
 	}

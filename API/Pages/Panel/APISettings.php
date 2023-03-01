@@ -492,15 +492,24 @@ class APISettings extends BaculumAPIPage
 		$action = $param->CommandParameter;
 		$cmd = '';
 		switch ($action) {
-			case 'dir_start': $cmd = $this->DirStartAction->Text; break;
-			case 'dir_stop': $cmd = $this->DirStopAction->Text; break;
-			case 'dir_restart': $cmd = $this->DirRestartAction->Text; break;
-			case 'sd_start': $cmd = $this->SdStartAction->Text; break;
-			case 'sd_stop': $cmd = $this->SdStopAction->Text; break;
-			case 'sd_restart': $cmd = $this->SdRestartAction->Text; break;
-			case 'fd_start': $cmd = $this->FdStartAction->Text; break;
-			case 'fd_stop': $cmd = $this->FdStopAction->Text; break;
-			case 'fd_restart': $cmd = $this->FdRestartAction->Text; break;
+			case 'dir_start': $cmd = $this->DirStartAction->Text;
+			break;
+			case 'dir_stop': $cmd = $this->DirStopAction->Text;
+			break;
+			case 'dir_restart': $cmd = $this->DirRestartAction->Text;
+			break;
+			case 'sd_start': $cmd = $this->SdStartAction->Text;
+			break;
+			case 'sd_stop': $cmd = $this->SdStopAction->Text;
+			break;
+			case 'sd_restart': $cmd = $this->SdRestartAction->Text;
+			break;
+			case 'fd_start': $cmd = $this->FdStartAction->Text;
+			break;
+			case 'fd_stop': $cmd = $this->FdStopAction->Text;
+			break;
+			case 'fd_restart': $cmd = $this->FdRestartAction->Text;
+			break;
 		};
 		$result = $this->getModule('comp_actions')->execCommand($cmd, $this->ActionsUseSudo->Checked);
 		$this->getCallbackClient()->callClientFunction('set_action_command_output', [$action, (array) $result]);
@@ -598,7 +607,8 @@ class APISettings extends BaculumAPIPage
 		$this->getModule('api_config')->setConfig($this->config);
 	}
 
-	public function setSoftwareManagementDefaultValues($sender, $param) {
+	public function setSoftwareManagementDefaultValues($sender, $param)
+	{
 		$os_type = $this->SoftwareManagementLoadDefaultValues->SelectedValue;
 		if ($os_type == 'rpm') {
 			$this->DirInstallCmd->Text = self::DEFAULT_SM_RPM_DIR_INSTALL;
@@ -610,7 +620,7 @@ class APISettings extends BaculumAPIPage
 			$this->SdInstallCmd->Text = self::DEFAULT_SM_RPM_SD_INSTALL;
 			$this->SdUpgradeCmd->Text = self::DEFAULT_SM_RPM_SD_UPGRADE;
 			$this->SdRemoveCmd->Text = self::DEFAULT_SM_RPM_SD_REMOVE;
-			$this->SdInfoCmd->Text =  self::DEFAULT_SM_RPM_SD_INFO;
+			$this->SdInfoCmd->Text = self::DEFAULT_SM_RPM_SD_INFO;
 			$this->SdEnableCmd->Text = self::DEFAULT_SM_RPM_SD_ENABLE;
 			$this->SdPostInstallCmd->Text = self::DEFAULT_SM_RPM_POST_INSTALL;
 			$this->FdInstallCmd->Text = self::DEFAULT_SM_RPM_FD_INSTALL;
@@ -634,7 +644,7 @@ class APISettings extends BaculumAPIPage
 			$this->SdInstallCmd->Text = self::DEFAULT_SM_DEB_SD_INSTALL;
 			$this->SdUpgradeCmd->Text = self::DEFAULT_SM_DEB_SD_UPGRADE;
 			$this->SdRemoveCmd->Text = self::DEFAULT_SM_DEB_SD_REMOVE;
-			$this->SdInfoCmd->Text =  self::DEFAULT_SM_DEB_SD_INFO;
+			$this->SdInfoCmd->Text = self::DEFAULT_SM_DEB_SD_INFO;
 			$this->SdEnableCmd->Text = self::DEFAULT_SM_DEB_SD_ENABLE;
 			$this->SdPostInstallCmd->Text = self::DEFAULT_SM_DEB_POST_INSTALL;
 			$this->FdInstallCmd->Text = self::DEFAULT_SM_DEB_FD_INSTALL;
@@ -651,7 +661,8 @@ class APISettings extends BaculumAPIPage
 		}
 	}
 
-	public function saveSoftwareManagement($sender, $param) {
+	public function saveSoftwareManagement($sender, $param)
+	{
 		$config = [
 			'enabled' => $this->SoftwareManagementEnabled->Checked ? '1' : '0',
 			'use_sudo' => $this->SoftwareManagementUseSudo->Checked ? '1' : '0',

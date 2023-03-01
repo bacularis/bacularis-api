@@ -388,10 +388,14 @@ WHERE Client.ClientId='$clientid' $wh";
 	{
 		$type_crit = '';
 		switch ($type) {
-			case 'saved': $type_crit = ' AND FileIndex > 0 '; break;
-			case 'deleted': $type_crit = ' AND FileIndex <= 0 '; break;
-			case 'all': $type_crit = ''; break;
-			default: $type_crit = ' AND FileIndex > 0 '; break;
+			case 'saved': $type_crit = ' AND FileIndex > 0 ';
+			break;
+			case 'deleted': $type_crit = ' AND FileIndex <= 0 ';
+			break;
+			case 'all': $type_crit = '';
+			break;
+			default: $type_crit = ' AND FileIndex > 0 ';
+			break;
 		}
 
 		$db_params = $this->getModule('api_config')->getConfig('db');
