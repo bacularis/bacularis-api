@@ -29,7 +29,9 @@
 
 namespace Bacularis\API\Modules;
 
+use PDO;
 use Prado\Data\TDbConnection;
+use Prado\Data\Common\TDbCommandBuilder;
 use Prado\Exceptions\TDbException;
 use Bacularis\Common\Modules\Logging;
 use Bacularis\Common\Modules\Errors\DatabaseError;
@@ -181,13 +183,27 @@ class Database extends APIModule
 				$vals = [];
 				$kval = str_replace('.', '_', $key);
 				if (is_array($value['vals'])) {
-					for ($i = 0; $i < count($value['vals']); $i++) {
-						$cond[] = "{$key} = :{$kval}{$i}";
-						$vals[":{$kval}{$i}"] = $value['vals'][$i];
+					if ($value['operator'] == 'IN') {
+						$in_vals = [];
+						for ($i = 0; $i < count($value['vals']); $i++) {
+							$in_vals[] = ":{$kval}{$i}";
+							$vals[":{$kval}{$i}"] = $value['vals'][$i];
+						}
+						$cond[] = "{$key} {$value['operator']} (" . implode(',', $in_vals) . ')';
+					} else {
+						for ($i = 0; $i < count($value['vals']); $i++) {
+							$cond[] = "{$key} = :{$kval}{$i}";
+							$vals[":{$kval}{$i}"] = $value['vals'][$i];
+						}
 					}
 				} else {
-					$cond[] = "$key = :$kval";
-					$vals[":$kval"] = $value['vals'];
+					if ($value['operator'] == 'LIKE') {
+						$cond[] = "$key LIKE :$kval";
+						$vals[":$kval"] = $value['vals'];
+					} else {
+						$cond[] = "$key = :$kval";
+						$vals[":$kval"] = $value['vals'];
+					}
 				}
 				$condition[] = implode(' ' . $value['operator'] . ' ', $cond);
 				foreach ($vals as $pkey => $pval) {
@@ -202,5 +218,34 @@ class Database extends APIModule
 			}
 		}
 		return ['where' => $where, 'params' => $parameters];
+	}
+
+	/**
+	 * Find all database query results by SQL query.
+	 *
+	 * @param string $sql SQL query
+	 * @param array $params SQL query parameters
+	 * @param int $fetch_opts PDO fetch options
+	 * @return array with results or empty array if no result
+	 */
+	public static function findAllBySql($sql, $params, $fetch_opts = null)
+	{
+		if (is_null($fetch_opts)) {
+			$fetch_opts = PDO::FETCH_OBJ;
+		}
+		$connection = JobRecord::finder()->getDbConnection();
+		$pdo = $connection->getPdoInstance();
+		if (count($params) > 0) {
+			$statement = $pdo->prepare($sql);
+			foreach($params as $param => $value) {
+				$key = $param[0] === ':' ? $param : ':' . $param;
+				$type = TDbCommandBuilder::getPdoType($value);
+				$statement->bindValue($key, $value, $type);
+			}
+			$statement->execute();
+		} else {
+			$statement = $pdo->query($sql);
+		}
+		return $statement->fetchAll($fetch_opts);
 	}
 }

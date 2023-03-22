@@ -43,6 +43,13 @@ use Prado\Data\ActiveRecord\TActiveRecord;
 class APIDbModule extends TActiveRecord
 {
 	/**
+	 * Connection to database.
+	 *
+	 * @var resource
+	 */
+	private static $db_conn;
+
+	/**
 	 * Get Data Source Name (DSN).
 	 *
 	 * For SQLite params are:
@@ -78,10 +85,12 @@ class APIDbModule extends TActiveRecord
 
 	public function getDbConnection()
 	{
-		$config = new APIConfig();
-		$db_params = $config->getConfig('db');
-		$db_connection = self::getAPIDbConnection($db_params);
-		return $db_connection;
+		if (is_null(self::$db_conn)) {
+			$config = new APIConfig();
+			$db_params = $config->getConfig('db');
+			self::$db_conn = self::getAPIDbConnection($db_params);
+		}
+		return self::$db_conn;
 	}
 
 	/**

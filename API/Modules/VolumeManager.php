@@ -66,7 +66,7 @@ LEFT JOIN Pool AS pool2 ON Media.ScratchPoolId = pool2.PoolId
 LEFT JOIN Pool AS pool3 ON Media.RecyclePoolId = pool3.PoolId 
 LEFT JOIN Storage USING (StorageId) 
 ' . $where['where'] . $order . $limit;
-		$volumes = VolumeRecord::finder()->findAllBySql($sql, $where['params']);
+		$volumes = Database::findAllBySql($sql, $where['params']);
 		$this->setExtraVariables($volumes);
 		return $volumes;
 	}

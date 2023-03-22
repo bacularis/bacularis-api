@@ -29,6 +29,7 @@
 
 namespace Bacularis\API\Modules;
 
+use PDO;
 use Prado\Data\ActiveRecord\TActiveRecordCriteria;
 
 /**
@@ -68,7 +69,7 @@ LEFT JOIN Pool USING (PoolId)
 LEFT JOIN FileSet USING (FilesetId)'
 . $where['where'] . $order . $limit;
 
-		return JobRecord::finder()->findAllBySql($sql, $where['params']);
+		return Database::findAllBySql($sql, $where['params']);
 	}
 
 	private function getAddCols()
@@ -247,12 +248,19 @@ LEFT JOIN FileSet USING (FilesetId)'
 	 */
 	public function getJobsOnVolume($mediaid, $allowed_jobs = [])
 	{
-		$jobs_criteria = '';
+		$criteria = [
+			'JobMedia.MediaId' => [
+				'vals' => $mediaid,
+				'operator' => 'AND'
+			]
+		];
 		if (count($allowed_jobs) > 0) {
-			$jobs_sql = implode("', '", $allowed_jobs);
-			$jobs_criteria = " AND Job.Name IN ('" . $jobs_sql . "')";
+			$criteria['Job.Name'] = [
+				'vals' => $allowed_jobs,
+				'operator' => 'IN'
+			];
 		}
-
+		$where = Database::getWhere($criteria, true);
 		$add_cols = $this->getAddCols();
 
 		$sql = "SELECT DISTINCT Job.*, 
@@ -265,8 +273,8 @@ LEFT JOIN Client USING (ClientId)
 LEFT JOIN Pool USING (PoolId) 
 LEFT JOIN FileSet USING (FilesetId) 
 LEFT JOIN JobMedia USING (JobId) 
-WHERE JobMedia.MediaId='$mediaid' $jobs_criteria";
-		return JobRecord::finder()->findAllBySql($sql);
+WHERE {$where['where']}";
+		return Database::findAllBySql($sql, $where['params']);
 	}
 
 	/**
@@ -278,20 +286,20 @@ WHERE JobMedia.MediaId='$mediaid' $jobs_criteria";
 	 */
 	public function getJobsForClient($clientid, $allowed_jobs = [])
 	{
-		$where = ['params' => []];
-		$wh = '';
+
+		$criteria = [
+			'Client.ClientId' => [
+				'vals' => $clientid,
+				'operator' => 'AND'
+			]
+		];
 		if (count($allowed_jobs) > 0) {
-			$criteria = [
-				'Job.Name' => [
-					'vals' => $allowed_jobs,
-					'operator' => 'OR'
-				]
+			$criteria['Job.Name'] = [
+				'vals' => $allowed_jobs,
+				'operator' => 'IN'
 			];
-			$where = Database::getWhere($criteria, true);
-			if (count($where['params']) > 0) {
-				$wh = ' AND ' . $where['where'];
-			}
 		}
+		$where = Database::getWhere($criteria, true);
 
 		$add_cols = $this->getAddCols();
 
@@ -304,8 +312,8 @@ FROM Job
 LEFT JOIN Client USING (ClientId) 
 LEFT JOIN Pool USING (PoolId) 
 LEFT JOIN FileSet USING (FilesetId) 
-WHERE Client.ClientId='$clientid' $wh";
-		return JobRecord::finder()->findAllBySql($sql, $where['params']);
+WHERE {$where['where']}";
+		return Database::findAllBySql($sql, $where['params']);
 	}
 
 	/**
@@ -320,19 +328,32 @@ WHERE Client.ClientId='$clientid' $wh";
 	 */
 	public function getJobsByFilename($clientid, $filename, $strict_mode = false, $path = '', $allowed_jobs = [])
 	{
-		$jobs_criteria = '';
+		$criteria = [];
 		if (count($allowed_jobs) > 0) {
-			$jobs_sql = implode("', '", $allowed_jobs);
-			$jobs_criteria = " AND Job.Name IN ('" . $jobs_sql . "')";
+			$criteria['Job.Name'] = [
+				'vals' => $allowed_jobs,
+				'operator' => 'IN'
+			];
 		}
 
 		if ($strict_mode === false) {
 			$filename = '%' . $filename . '%';
 		}
+		$criteria['File.Filename'] = [
+			'vals' => $filename,
+			'operator' => 'LIKE'
+		];
 
-		$path_criteria = '';
 		if (!empty($path)) {
-			$path_criteria = ' AND Path.Path = :path ';
+			$criteria['Path.Path'] = [
+				'vals' => $path,
+				'operator' => 'AND'
+			];
+		}
+		$where = Database::getWhere($criteria, true);
+		$wh = '';
+		if (!empty($where['where'])) {
+			$wh = ' AND ' . $where['where'];
 		}
 
 		$fname_col = 'Path.Path || File.Filename';
@@ -353,24 +374,13 @@ WHERE Client.ClientId='$clientid' $wh";
                                Job.JobBytes AS jobbytes 
                       FROM Client, Job, File, Path 
                       WHERE Client.ClientId='$clientid' 
-                            AND Client.ClientId=Job.ClientId 
-                            AND Job.JobId=File.JobId 
-                            AND File.FileIndex > 0 
-                            AND Path.PathId=File.PathId 
-                            AND File.Filename LIKE :filename 
-		      $jobs_criteria 
-		      $path_criteria 
+				AND Client.ClientId=Job.ClientId 
+				AND Job.JobId=File.JobId 
+				AND File.FileIndex > 0 
+				AND Path.PathId=File.PathId 
+				$wh
 		      ORDER BY starttime DESC";
-		$connection = JobRecord::finder()->getDbConnection();
-		$connection->setActive(true);
-		$pdo = $connection->getPdoInstance();
-		$sth = $pdo->prepare($sql);
-		$sth->bindParam(':filename', $filename, \PDO::PARAM_STR, 200);
-		if (!empty($path)) {
-			$sth->bindParam(':path', $path, \PDO::PARAM_STR, 400);
-		}
-		$sth->execute();
-		return $sth->fetchAll(\PDO::FETCH_ASSOC);
+		return Database::findAllBySql($sql, $where['params']);
 	}
 
 	/**
@@ -452,16 +462,11 @@ WHERE Client.ClientId='$clientid' $wh";
                         WHERE File.FileId = F.FileId AND Path.PathId = F.PathId 
                         $search_crit 
 			$limit_sql $offset_sql";
-		$connection = JobRecord::finder()->getDbConnection();
-		$connection->setActive(true);
-		$pdo = $connection->getPdoInstance();
-		$sth = $pdo->prepare($sql);
-		$sth->execute();
 		$result = [];
 		if ($fetch_group) {
-			$result = $sth->fetchAll(\PDO::FETCH_COLUMN);
+			$result = Database::findAllBySql($sql, [], PDO::FETCH_COLUMN);
 		} else {
-			$result = $sth->fetchAll(\PDO::FETCH_ASSOC);
+			$result = Database::findAllBySql($sql, [], PDO::FETCH_ASSOC);
 
 			// decode LStat value
 			if (is_array($result)) {
