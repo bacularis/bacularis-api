@@ -74,24 +74,27 @@ LEFT JOIN FileSet USING (FilesetId)'
 
 	private function getAddCols()
 	{
-		$add_cols = '';
+		$add_cols = '
+			(SELECT Media.VolumeName FROM JobMedia JOIN Media ON JobMedia.MediaId=Media.MediaId WHERE JobMedia.JobId=Job.JobId ORDER BY JobMediaId LIMIT 1) AS firstvol,
+			(SELECT COUNT(DISTINCT MediaId) FROM JobMedia WHERE JobMedia.JobId=Job.JobId) AS volcount,
+		';
 		$db_params = $this->getModule('api_config')->getConfig('db');
 		if ($db_params['type'] === Database::PGSQL_TYPE) {
-			$add_cols = '
+			$add_cols .= '
 				CAST(EXTRACT(EPOCH FROM Job.SchedTime) AS INTEGER) AS schedtime_epoch,
 				CAST(EXTRACT(EPOCH FROM Job.StartTime) AS INTEGER) AS starttime_epoch,
 				CAST(EXTRACT(EPOCH FROM Job.EndTime) AS INTEGER) AS endtime_epoch,
 				CAST(EXTRACT(EPOCH FROM Job.RealEndTime) AS INTEGER) AS realendtime_epoch
 			';
 		} elseif ($db_params['type'] === Database::MYSQL_TYPE) {
-			$add_cols = "
+			$add_cols .= "
 				TIMESTAMPDIFF(SECOND, '1970-01-01 00:00:00', Job.SchedTime) AS schedtime_epoch,
 				TIMESTAMPDIFF(SECOND, '1970-01-01 00:00:00', Job.StartTime) AS starttime_epoch,
 				TIMESTAMPDIFF(SECOND, '1970-01-01 00:00:00', Job.EndTime) AS endtime_epoch,
 				TIMESTAMPDIFF(SECOND, '1970-01-01 00:00:00', Job.RealEndTime) AS realendtime_epoch
 			";
 		} elseif ($db_params['type'] === Database::SQLITE_TYPE) {
-			$add_cols = '
+			$add_cols .= '
 				strftime(\'%s\', Job.SchedTime) AS schedtime_epoch,
 				strftime(\'%s\', Job.StartTime) AS starttime_epoch,
 				strftime(\'%s\', Job.EndTime) AS endtime_epoch,
