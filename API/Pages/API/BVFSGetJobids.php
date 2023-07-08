@@ -40,28 +40,14 @@ class BVFSGetJobids extends BaculumAPIServer
 	public function get()
 	{
 		$jobid = $this->Request->contains('jobid') ? (int) ($this->Request['jobid']) : 0;
-		$inc_copy_job = $this->Request->contains('inc_copy_job') ? (int) ($this->Request['inc_copy_job']) : 0;
 		if ($jobid > 0) {
-			$result = [];
-			$error = BVFSError::ERROR_NO_ERRORS;
-			if ($inc_copy_job == 1) {
-				/**
-				 * To use copy jobs to restore here is used Baculum own method to get
-				 * all compositional jobs. It is because of a bug in .bvfs_get_jobids command
-				 * reported here:
-				 * http://bugs.bacula.org/view.php?id=2500
-				 */
-				$jobids = $this->getModule('job')->getJobidsToRestore($jobid);
-				$jobids_str = implode(',', $jobids); // implode to be compatible with Bvfs output
-				if (!empty($jobids_str)) {
-					$result = [$jobids_str];
-				}
-			} else {
-				$cmd = ['.bvfs_get_jobids', 'jobid="' . $jobid . '"'];
-				$jobids = $this->getModule('bconsole')->bconsoleCommand($this->director, $cmd);
-				$result = $jobids->output;
-				$error = $jobids->exitcode;
-			}
+			$cmd = ['.bvfs_get_jobids', 'jobid="' . $jobid . '"'];
+			$jobids = $this->getModule('bconsole')->bconsoleCommand(
+				$this->director,
+				$cmd
+			);
+			$result = $jobids->exitcode !== 0 ? BVFSError::MSG_ERROR_WRONG_EXITCODE . 'ExitCode=' . $jobids->exitcode : $jobids->output;
+			$error = $jobids->exitcode !== 0 ? BVFSError::ERROR_WRONG_EXITCODE : BVFSError::ERROR_NO_ERRORS;
 			$this->output = $result;
 			$this->error = $error;
 		} else {
