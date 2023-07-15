@@ -40,7 +40,8 @@ class Jobs extends BaculumAPIServer
 	public function get()
 	{
 		$misc = $this->getModule('misc');
-		$limit = $this->Request->contains('limit') ? (int) ($this->Request['limit']) : 0;
+		$limit = $this->Request->contains('limit') && $misc->isValidInteger($this->Request['limit']) ? (int) ($this->Request['limit']) : 0;
+		$age = $this->Request->contains('age') && $misc->isValidInteger($this->Request['age']) ? (int) ($this->Request['age']) : 0;
 		$jobstatus = $this->Request->contains('jobstatus') ? $this->Request['jobstatus'] : '';
 		$level = $this->Request->contains('level') && $misc->isValidJobLevel($this->Request['level']) ? $this->Request['level'] : '';
 		$type = $this->Request->contains('type') && $misc->isValidJobType($this->Request['type']) ? $this->Request['type'] : '';
@@ -79,7 +80,6 @@ class Jobs extends BaculumAPIServer
 			$params['Job.Type']['operator'] = '';
 			$params['Job.Type']['vals'] = $type;
 		}
-		$allowed = [];
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
 			['.jobs'],
@@ -100,7 +100,7 @@ class Jobs extends BaculumAPIServer
 				return;
 			}
 
-			$params['Job.Name']['operator'] = 'OR';
+			$params['Job.Name']['operator'] = 'IN';
 			$params['Job.Name']['vals'] = $vals;
 
 			$error = false;
@@ -128,6 +128,11 @@ class Jobs extends BaculumAPIServer
 					$this->output = $result->output;
 					$this->error = $result->exitcode;
 				}
+			}
+			if ($age > 0) {
+				$t = time() - $age;
+				$params['Job.StartTime']['operator'] = '>=';
+				$params['Job.StartTime']['vals'] = date('Y-m-d H:i:s', $t);
 			}
 
 			if ($error === false) {
