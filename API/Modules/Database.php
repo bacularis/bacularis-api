@@ -200,6 +200,9 @@ class Database extends APIModule
 					if ($value['operator'] == 'LIKE') {
 						$cond[] = "$key LIKE :$kval";
 						$vals[":$kval"] = $value['vals'];
+					} elseif (in_array($value['operator'], ['>', '<', '>=', '<='])) {
+                                                $cond[] = "{$key} {$value['operator']} :{$kval}";
+                                                $vals[":{$kval}"] = $value['vals'];
 					} else {
 						$cond[] = "$key = :$kval";
 						$vals[":$kval"] = $value['vals'];
