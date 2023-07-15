@@ -221,24 +221,89 @@ LEFT JOIN FileSet USING (FilesetId)'
 		return $jobids;
 	}
 
-	public function getJobTotals($allowed_jobs = [])
+	public function getJobTotals($criteria = [])
 	{
-		$jobtotals = ['bytes' => 0, 'files' => 0];
-		$connection = JobRecord::finder()->getDbConnection();
-		$connection->setActive(true);
+		$jobtotals = [
+			'job_count' => 0,
+			'most_occupied_client' => 0,
+			'most_occupied_client_count' => 0,
+			'most_occupied_job' => 0,
+			'most_occupied_job_count' => 0,
+			'most_occupied_pool' => 0,
+			'most_occupied_pool_count' => 0,
+			'bytes' => 0,
+			'files' => 0
+		];
+		$where = Database::getWhere($criteria);
 
-		$where = '';
-		if (count($allowed_jobs) > 0) {
-			$where = " WHERE name='" . implode("' OR name='", $allowed_jobs) . "'";
+		/**
+		 * NOTE: All SQL queries could be provided in one query.
+		 * It could speed up the loading but there is risk that
+		 * the query can be too long (many jobs in where clause).
+		 * Safely the queries are provided separately.
+		 */
+
+		// Job count and total bytes
+		$sql = "SELECT
+				COUNT(1)          AS job_count,
+				SUM(Job.JobFiles) AS files,
+				SUM(Job.JobBytes) AS bytes
+			FROM
+				Job
+			{$where['where']}";
+
+		$ret = Database::findAllBySql($sql, $where['params'], PDO::FETCH_ASSOC);
+		if (count($ret) == 1) {
+			$jobtotals = array_merge($jobtotals, $ret[0]);
 		}
 
-		$sql = "SELECT sum(JobFiles) AS files, sum(JobBytes) AS bytes FROM Job $where";
-		$pdo = $connection->getPdoInstance();
-		$result = $pdo->query($sql);
-		$ret = $result->fetch();
-		$jobtotals['bytes'] = $ret['bytes'];
-		$jobtotals['files'] = $ret['files'];
-		$pdo = null;
+		// The most occupied client job stats
+		$sql = "SELECT
+				Client.Name       AS most_occupied_client,
+				COUNT(1)          AS most_occupied_client_count
+			FROM
+				Job
+				JOIN Client USING (ClientId)
+			{$where['where']}
+			GROUP BY Client.Name
+			ORDER BY most_occupied_client_count DESC
+			LIMIT 1";
+		$ret = Database::findAllBySql($sql, $where['params'], PDO::FETCH_ASSOC);
+		if (count($ret) == 1) {
+			$jobtotals = array_merge($jobtotals, $ret[0]);
+		}
+
+		// The most occupied job stats
+		$sql = "SELECT
+				Name     AS most_occupied_job,
+				COUNT(1) AS most_occupied_job_count
+			FROM
+				Job
+			{$where['where']}
+			GROUP BY Name
+			ORDER BY most_occupied_job_count DESC
+			LIMIT 1";
+		$ret = Database::findAllBySql($sql, $where['params'], PDO::FETCH_ASSOC);
+		if (count($ret) == 1) {
+			$jobtotals = array_merge($jobtotals, $ret[0]);
+		}
+
+		// The most occupied pool job stats
+		$sql = "SELECT
+				Pool.Name AS most_occupied_pool,
+				COUNT(1)  AS most_occupied_pool_count
+			FROM
+				Job
+				JOIN Pool USING (PoolId)
+			{$where['where']}
+			GROUP BY Pool.Name
+			ORDER BY most_occupied_pool_count DESC
+			LIMIT 1";
+		$ret = Database::findAllBySql($sql, $where['params'], PDO::FETCH_ASSOC);
+		if (count($ret) == 1) {
+			$jobtotals = array_merge($jobtotals, $ret[0]);
+		}
+
 		return $jobtotals;
 	}
 

@@ -62,7 +62,11 @@ class JobTotals extends BaculumAPIServer
 		}
 
 		if ($error === false) {
-			$jobtotals = $this->getModule('job')->getJobTotals($allowed);
+			$params = ['Job.Name' => [
+				'operator' => 'IN',
+				'vals' => $allowed
+			]];
+			$jobtotals = $this->getModule('job')->getJobTotals($params);
 			$this->output = $jobtotals;
 			$this->error = JobError::ERROR_NO_ERRORS;
 		}
