@@ -118,6 +118,9 @@ class APIDbModule extends TActiveRecord
 			if ($db_params['type'] === Database::MYSQL_TYPE) {
 				$db_connection->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
 			}
+			// It is to not convert non-string types into strings
+			$db_connection->setAttribute(\PDO::ATTR_STRINGIFY_FETCHES, false);
+
 			$db_connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 			$db_connection->setAttribute(\PDO::ATTR_CASE, \PDO::CASE_LOWER);
 		} else {
