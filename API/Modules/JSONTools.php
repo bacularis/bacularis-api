@@ -57,7 +57,10 @@ class JSONTools extends APIModule
 		$output_txt = implode('', $output);
 		$out = json_decode($output_txt, true);
 		if (!is_array($out)) {
-			$this->getModule('logging')->log('Parse output', $output_txt, Logging::CATEGORY_EXTERNAL, __FILE__, __LINE__);
+			Logging::log(
+				Logging::CATEGORY_EXTERNAL,
+				'PARSED OUTPUT: ' . $output_txt
+			);
 			$out = null;
 		}
 		return $out;
@@ -126,7 +129,10 @@ class JSONTools extends APIModule
 		}
 		$cmd = sprintf($cmd_pattern, $sudo, $bin, $cfg, $options);
 		exec($cmd, $output, $exitcode);
-		$this->getModule('logging')->log($cmd, $output, Logging::CATEGORY_EXECUTE, __FILE__, __LINE__);
+		Logging::log(
+			Logging::CATEGORY_EXECUTE,
+			Logging::prepareCommand($cmd, $output)
+		);
 		if (!empty($config)) {
 			unlink($cfg);
 			if ($exitcode === 0) {

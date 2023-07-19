@@ -128,12 +128,9 @@ class OAuth2Config extends ConfigFileModule
 			if (!key_exists($this->required_options[$i], $config)) {
 				$is_valid = false;
 				$emsg = 'Invalid OAuth2 config. Missing ' . $this->required_options[$i] . ' option.';
-				$this->getModule('logging')->log(
-					__FUNCTION__,
-					$emsg,
+				Logging::log(
 					Logging::CATEGORY_APPLICATION,
-					__FILE__,
-					__LINE__
+					$emsg
 				);
 				break;
 			}

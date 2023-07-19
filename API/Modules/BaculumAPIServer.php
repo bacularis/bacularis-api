@@ -232,12 +232,9 @@ abstract class BaculumAPIServer extends TPage
 				}
 			}
 		} catch (TException $e) {
-			$this->getModule('logging')->log(
-				__FUNCTION__,
-				"Method: {$_SERVER['REQUEST_METHOD']} $e",
+			Logging::log(
 				Logging::CATEGORY_APPLICATION,
-				__FILE__,
-				__LINE__
+				"Method: {$_SERVER['REQUEST_METHOD']} $e"
 			);
 			if ($e instanceof BAPIException) {
 				$this->output = $e->getErrorMessage();

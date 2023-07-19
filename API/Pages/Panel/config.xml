@@ -24,8 +24,8 @@
 			<translation type="gettext" source="Application.API.Lang" marker="@@" autosave="false" cache="false" DefaultCulture="en" />
 		</module>
 		<!-- logging modules -->
-		<module id="log" class="System.Util.TLogRouter">
-			<route class="TFileLogRoute"  Categories="Execute, External, Application, General, Security" LogPath="Application.API.Logs" LogFile="bacularis-api.log" MaxFileSize="1000" MaxLogFiles="5" />
+		<module id="log" class="System\Util\TLogRouter">
+			<route class="Bacularis\Common\Modules\BFileLogRoute"  Categories="Execute, External, Application, General, Security" LogPath="Bacularis\API\Logs" LogFile="bacularis-api.log" MaxFileSize="1000" MaxLogFiles="5" />
 		</module>
 		<!-- auth modules -->
 		<module id="basic_apiuser" class="Bacularis\API\Modules\BasicAPIUserConfig" />

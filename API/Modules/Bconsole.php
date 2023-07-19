@@ -249,12 +249,9 @@ class Bconsole extends APIModule
 				$result = $this->prepareResult($output, $exitcode, $bconsole_command);
 			}
 		}
-		$this->Application->getModule('logging')->log(
-			$cmd['cmd'],
-			$output,
+		Logging::log(
 			Logging::CATEGORY_EXECUTE,
-			__FILE__,
-			__LINE__
+			Logging::prepareCommand($cmd['cmd'], $output)
 		);
 
 		return $result;

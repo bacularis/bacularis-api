@@ -395,12 +395,9 @@ class BaculaSetting extends APIModule
 			}
 		} else {
 			// It shouldn't happen.
-			$this->getModule('logging')->log(
-				__FUNCTION__,
-				"Attemp to update resource with different resource types.",
+			Logging::log(
 				Logging::CATEGORY_APPLICATION,
-				__FILE__,
-				__LINE__
+				'Attemp to update resource with different resource types.'
 			);
 			$resource = $resource_orig;
 		}
@@ -511,13 +508,13 @@ class BaculaSetting extends APIModule
 			}
 			$directive_value = $dvalues;
 		} else {
-			$emsg = sprintf("Attemp to format a directive value with not supported value type '%s'.", gettype($value));
-			$this->getModule('logging')->log(
-				__FUNCTION__,
-				$emsg,
+			$emsg = sprintf(
+				"Attemp to format a directive value with not supported value type '%s'.",
+				gettype($value)
+			);
+			Logging::log(
 				Logging::CATEGORY_APPLICATION,
-				__FILE__,
-				__LINE__
+				$emsg
 			);
 		}
 		return $directive_value;

@@ -110,12 +110,9 @@ class SoftwareManagement extends APIModule
 		$cmd = sprintf($cmd_pattern, $sudo, $bin);
 		exec($cmd, $output, $exitcode);
 		array_unshift($output, $cmd);
-		$this->getModule('logging')->log(
-			$cmd,
-			$output,
+		Logging::log(
 			Logging::CATEGORY_EXECUTE,
-			__FILE__,
-			__LINE__
+			Logging::prepareCommand($cmd, $output)
 		);
 		$result = $this->prepareResult($output, $exitcode);
 		return $result;

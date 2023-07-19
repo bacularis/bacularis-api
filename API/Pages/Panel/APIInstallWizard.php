@@ -335,12 +335,9 @@ class APIInstallWizard extends BaculumAPIPage
 						);
 					} elseif (!$ret) {
 						$emsg = 'Error while saving web basic user config.';
-						$this->getModule('logging')->log(
-							__FUNCTION__,
-							$emsg,
+						Logging::log(
 							Logging::CATEGORY_APPLICATION,
-							__FILE__,
-							__LINE__
+							$emsg
 						);
 					}
 
@@ -355,23 +352,17 @@ class APIInstallWizard extends BaculumAPIPage
 						$ret = $user_config->setUserConfig($this->WebLogin->Text, $new_user_prop);
 						if (!$ret) {
 							$emsg = 'Error while saving web user config.';
-							$this->getModule('logging')->log(
-								__FUNCTION__,
-								$emsg,
+							Logging::log(
 								Logging::CATEGORY_APPLICATION,
-								__FILE__,
-								__LINE__
+								$emsg
 							);
 						}
 					}
 				} else {
 					$emsg = 'Error while saving auth host config.';
-					$this->getModule('logging')->log(
-						__FUNCTION__,
-						$emsg,
+					Logging::log(
 						Logging::CATEGORY_APPLICATION,
-						__FILE__,
-						__LINE__
+						$emsg
 					);
 				}
 			} else {

@@ -13,6 +13,7 @@
  * terms pursuant to its AGPLv3 Section 7.
  */
 
+use Bacularis\API\Modules\BaculumAPIServer;
 use Bacularis\API\Modules\APIConfig;
 use Bacularis\Common\Modules\Errors\SoftwareManagementError;
 

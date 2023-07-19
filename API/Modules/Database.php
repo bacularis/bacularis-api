@@ -84,13 +84,15 @@ class Database extends APIModule
 		}
 
 		$logmsg = 'DBParams=%s, Connection=%s, TablesFormat=%s';
-		$msg = sprintf($logmsg, print_r($db_params, true), var_export($is_connection, true), var_export($tables_format, true));
-		$this->getModule('logging')->log(
-			__FUNCTION__,
-			$msg,
+		$msg = sprintf(
+			$logmsg,
+			print_r($db_params, true),
+			var_export($is_connection, true),
+			var_export($tables_format, true)
+		);
+		Logging::log(
 			Logging::CATEGORY_APPLICATION,
-			__FILE__,
-			__LINE__
+			$msg
 		);
 		return $is_connection;
 	}

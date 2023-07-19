@@ -27,6 +27,8 @@
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
 
+use Bacularis\API\Modules\BaculumAPIServer;
+
 /**
  * BVFS clear cache.
  *

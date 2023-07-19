@@ -308,12 +308,9 @@ class ChangerCommand extends APIModule
 	public function execCommand($cmd, $ptype = null)
 	{
 		exec($cmd['cmd'], $output, $exitcode);
-		$this->getModule('logging')->log(
-			$cmd['cmd'],
-			$output,
+		Logging::log(
 			Logging::CATEGORY_EXECUTE,
-			__FILE__,
-			__LINE__
+			Logging::prepareCommand($cmd['cmd'], $output)
 		);
 		if ($ptype === self::PTYPE_BG_CMD) {
 			$output = [
