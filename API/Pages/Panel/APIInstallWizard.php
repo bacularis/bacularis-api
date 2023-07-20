@@ -392,11 +392,11 @@ class APIInstallWizard extends BaculumAPIPage
 		$db_name = null;
 		switch ($type) {
 			case Database::PGSQL_TYPE: $db_name = 'PostgreSQL';
-			break;
+				break;
 			case Database::MYSQL_TYPE: $db_name = 'MySQL';
-			break;
+				break;
 			case Database::SQLITE_TYPE: $db_name = 'SQLite';
-			break;
+				break;
 		}
 		return $db_name;
 	}

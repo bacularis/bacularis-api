@@ -354,7 +354,6 @@ WHERE {$where['where']}";
 	 */
 	public function getJobsForClient($clientid, $allowed_jobs = [])
 	{
-
 		$criteria = [
 			'Client.ClientId' => [
 				'vals' => $clientid,
@@ -467,13 +466,13 @@ WHERE {$where['where']}";
 		$type_crit = '';
 		switch ($type) {
 			case 'saved': $type_crit = ' AND FileIndex > 0 ';
-			break;
+				break;
 			case 'deleted': $type_crit = ' AND FileIndex <= 0 ';
-			break;
+				break;
 			case 'all': $type_crit = '';
-			break;
+				break;
 			default: $type_crit = ' AND FileIndex > 0 ';
-			break;
+				break;
 		}
 
 		$db_params = $this->getModule('api_config')->getConfig('db');

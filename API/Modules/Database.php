@@ -203,8 +203,8 @@ class Database extends APIModule
 						$cond[] = "$key LIKE :$kval";
 						$vals[":$kval"] = $value['vals'];
 					} elseif (in_array($value['operator'], ['>', '<', '>=', '<='])) {
-                                                $cond[] = "{$key} {$value['operator']} :{$kval}";
-                                                $vals[":{$kval}"] = $value['vals'];
+						$cond[] = "{$key} {$value['operator']} :{$kval}";
+						$vals[":{$kval}"] = $value['vals'];
 					} else {
 						$cond[] = "$key = :$kval";
 						$vals[":$kval"] = $value['vals'];
@@ -242,7 +242,7 @@ class Database extends APIModule
 		$pdo = $connection->getPdoInstance();
 		if (count($params) > 0) {
 			$statement = $pdo->prepare($sql);
-			foreach($params as $param => $value) {
+			foreach ($params as $param => $value) {
 				$key = $param[0] === ':' ? $param : ':' . $param;
 				$type = TDbCommandBuilder::getPdoType($value);
 				$statement->bindValue($key, $value, $type);

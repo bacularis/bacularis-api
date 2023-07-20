@@ -294,13 +294,13 @@ class Bconsole extends APIModule
 		$pattern = null;
 		switch ($ptype) {
 			case self::PTYPE_API_CMD: $pattern = self::BCONSOLE_API_COMMAND_PATTERN;
-			break;
+				break;
 			case self::PTYPE_BG_CMD: $pattern = self::BCONSOLE_BG_COMMAND_PATTERN;
-			break;
+				break;
 			case self::PTYPE_CONFIRM_YES_CMD: $pattern = self::BCONSOLE_CONFIRM_YES_COMMAND_PATTERN;
-			break;
+				break;
 			case self::PTYPE_CONFIRM_YES_BG_CMD: $pattern = self::BCONSOLE_CONFIRM_YES_BG_COMMAND_PATTERN;
-			break;
+				break;
 			default: $pattern = self::BCONSOLE_COMMAND_PATTERN;
 		}
 		return $pattern;
