@@ -115,7 +115,12 @@ class APIDbModule extends TActiveRecord
 				$db_connection = new TDbConnection($dsn);
 			}
 			$db_connection->setActive(true);
-			if ($db_params['type'] === Database::MYSQL_TYPE) {
+			if ($db_params['type'] === Database::MYSQL_TYPE && version_compare(PHP_VERSION, '8.1.0', '<')) {
+				/**
+				 * Since PHP PDO MySQL 8.1 disabling emulated prepared statements is no longer needed
+				 * to get simple type values not as string but as the type values.
+				 * @see https://github.com/php/php-src/blob/php-8.1.0RC1/UPGRADING#L130
+				 */
 				$db_connection->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
 			}
 			// It is to not convert non-string types into strings
