@@ -56,20 +56,41 @@ class JobManager extends APIModule
 
 		$where = Database::getWhere($criteria);
 
+		$criteria_pn  = $criteria;
+		if (key_exists('Job.JobId', $criteria_pn)) {
+			unset($criteria_pn['Job.JobId']);
+		}
+		$where_pn = Database::getWhere($criteria_pn, false, 1);
+
 		$add_cols = $this->getAddCols();
 
 		$sql = 'SELECT Job.*, 
+pn.prev_jobid AS prev_jobid, 
+pn.next_jobid AS next_jobid, 
 Client.Name as client, 
 Pool.Name as pool, 
 FileSet.FileSet as fileset, 
 ' . $add_cols . '
-FROM Job 
-LEFT JOIN Client USING (ClientId) 
-LEFT JOIN Pool USING (PoolId) 
-LEFT JOIN FileSet USING (FilesetId)'
-. $where['where'] . $order . $limit;
-
-		return Database::findAllBySql($sql, $where['params']);
+FROM Job
+LEFT JOIN (
+	SELECT
+		JobId AS jobid,
+		LAG(JobId) OVER (ORDER BY JobId) AS prev_jobid,
+		LEAD(JobId) OVER (ORDER BY JobId) AS next_jobid
+	FROM Job
+	LEFT JOIN Client ON Client.ClientId=Job.ClientId 
+	LEFT JOIN Pool ON Pool.PoolId=Job.PoolId 
+	LEFT JOIN FileSet ON FileSet.FilesetId=Job.FilesetId '
+	. $where_pn['where'] . '
+) AS pn ON Job.JobId=pn.jobid
+LEFT JOIN Client ON Client.ClientId=Job.ClientId 
+LEFT JOIN Pool ON Pool.PoolId=Job.PoolId 
+LEFT JOIN FileSet ON FileSet.FilesetId=Job.FilesetId '
+. $where['where']
+. $order
+. $limit;
+		$wh_params = array_merge($where_pn['params'], $where['params']);
+		return Database::findAllBySql($sql, $wh_params);
 	}
 
 	private function getAddCols()
