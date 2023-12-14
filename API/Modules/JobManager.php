@@ -56,7 +56,7 @@ class JobManager extends APIModule
 
 		$where = Database::getWhere($criteria);
 
-		$criteria_pn  = $criteria;
+		$criteria_pn = $criteria;
 		if (key_exists('Job.JobId', $criteria_pn)) {
 			unset($criteria_pn['Job.JobId']);
 		}
