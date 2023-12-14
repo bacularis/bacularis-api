@@ -50,7 +50,13 @@ class VolumesRequired extends BaculumAPIServer
 			true
 		);
 		if ($result->exitcode === 0) {
-			$job = $this->getModule('job')->getJobById($jobid);
+			$params = [
+				'Job.Name' => [
+					'operator' => 'IN',
+					'vals' => $result->output
+				]
+			];
+			$job = $this->getModule('job')->getJobById($jobid, $params);
 			if (is_object($job) && in_array($job->name, $result->output)) {
 				$volumes = $this->getModule('volume')->getVolumesForJob($jobid, $fileid);
 				$this->output = $volumes;

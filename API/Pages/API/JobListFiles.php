@@ -57,7 +57,13 @@ class JobListFiles extends BaculumAPIServer
 			true
 		);
 		if ($result->exitcode === 0) {
-			$job = $this->getModule('job')->getJobById($jobid);
+			$params = [
+				'Job.Name' => [
+					'operator' => 'IN',
+					'vals' => $result->output
+				]
+			];
+			$job = $this->getModule('job')->getJobById($jobid, $params);
 			if (is_object($job) && in_array($job->name, $result->output)) {
 				if ($details) {
 					$result = $this->getDetailedOutput([

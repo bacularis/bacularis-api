@@ -125,14 +125,16 @@ LEFT JOIN FileSet ON FileSet.FilesetId=Job.FilesetId '
 		return $add_cols;
 	}
 
-	public function getJobById($jobid)
+	public function getJobById($jobid, $criteria = [])
 	{
-		$job = $this->getJobs([
+		$params = [
 			'Job.JobId' => [
 				'vals' => [$jobid],
 				'operator' => 'AND'
 			]
-		], 1);
+		];
+		$params = array_merge($params, $criteria);
+		$job = $this->getJobs($params, 1);
 		if (is_array($job) && count($job) > 0) {
 			$job = array_shift($job);
 		}
