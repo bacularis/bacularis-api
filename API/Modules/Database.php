@@ -174,7 +174,7 @@ class Database extends APIModule
 		return $dbsize;
 	}
 
-	public static function getWhere(array $params, $without_where = false)
+	public static function getWhere(array $params, $without_where = false, $vars_suffix = '')
 	{
 		$where = '';
 		$parameters = [];
@@ -183,7 +183,7 @@ class Database extends APIModule
 			foreach ($params as $key => $value) {
 				$cond = [];
 				$vals = [];
-				$kval = str_replace('.', '_', $key);
+				$kval = str_replace('.', '_', $key) . $vars_suffix;
 				if (is_array($value['vals'])) {
 					if ($value['operator'] == 'IN') {
 						$in_vals = [];
