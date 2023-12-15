@@ -70,7 +70,7 @@ class Volume extends BaculumAPIServer
 				$cmd[] = 'volretention="' . $params->volretention . '"';
 			}
 			if (property_exists($params, 'voluseduration') && $misc->isValidInteger($params->voluseduration)) {
-				$cmd[] = 'voluseduration="' . $params->voluseduration . '"';
+				$cmd[] = 'voluse="' . $params->voluseduration . '"';
 			}
 			if (property_exists($params, 'maxvoljobs') && $misc->isValidInteger($params->maxvoljobs)) {
 				$cmd[] = 'maxvoljobs="' . $params->maxvoljobs . '"';
