@@ -54,7 +54,7 @@ class JobManager extends APIModule
 			$limit = ' LIMIT ' . $limit_val;
 		}
 
-		$where = Database::getWhere($criteria);
+		$where = Database::getWhere($criteria, false, 2);
 
 		$criteria_pn = $criteria;
 		if (key_exists('Job.JobId', $criteria_pn)) {
