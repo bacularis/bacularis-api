@@ -70,8 +70,28 @@ pn.next_jobid AS next_jobid,
 Client.Name as client, 
 Pool.Name as pool, 
 FileSet.FileSet as fileset, 
+jm.volumename AS firstvol, 
+COALESCE(mi.volcount, 0) AS volcount, 
 ' . $add_cols . '
-FROM Job
+FROM Job 
+LEFT JOIN (
+	SELECT
+		JobMedia.JobId AS jobid,
+		Media.VolumeName AS volumename,
+		ROW_NUMBER() OVER (PARTITION BY JobMedia.JobId ORDER BY JobMedia.JobMediaId) AS jmi
+	FROM
+		Media
+	LEFT JOIN
+		JobMedia USING (MediaId)
+) AS jm ON jm.JobId=Job.JobId AND jm.jmi=1 
+LEFT JOIN (
+	SELECT
+		JobMedia.JobId AS jobid,
+		COUNT(DISTINCT MediaId) AS volcount
+	FROM
+		JobMedia
+	GROUP BY JobMedia.JobId
+) AS mi ON mi.JobId=Job.JobId 
 LEFT JOIN (
 	SELECT
 		JobId AS jobid,
@@ -86,7 +106,7 @@ LEFT JOIN (
 LEFT JOIN Client ON Client.ClientId=Job.ClientId 
 LEFT JOIN Pool ON Pool.PoolId=Job.PoolId 
 LEFT JOIN FileSet ON FileSet.FilesetId=Job.FilesetId '
-. $where['where']
+. $where['where'] 
 . $order
 . $limit;
 		$wh_params = array_merge($where_pn['params'], $where['params']);
@@ -95,10 +115,7 @@ LEFT JOIN FileSet ON FileSet.FilesetId=Job.FilesetId '
 
 	private function getAddCols()
 	{
-		$add_cols = '
-			(SELECT Media.VolumeName FROM JobMedia JOIN Media ON JobMedia.MediaId=Media.MediaId WHERE JobMedia.JobId=Job.JobId ORDER BY JobMediaId LIMIT 1) AS firstvol,
-			(SELECT COUNT(DISTINCT MediaId) FROM JobMedia WHERE JobMedia.JobId=Job.JobId) AS volcount,
-		';
+		$add_cols = '';
 		$db_params = $this->getModule('api_config')->getConfig('db');
 		if ($db_params['type'] === Database::PGSQL_TYPE) {
 			$add_cols .= '
