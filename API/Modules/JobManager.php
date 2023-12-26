@@ -106,7 +106,7 @@ LEFT JOIN (
 LEFT JOIN Client ON Client.ClientId=Job.ClientId 
 LEFT JOIN Pool ON Pool.PoolId=Job.PoolId 
 LEFT JOIN FileSet ON FileSet.FilesetId=Job.FilesetId '
-. $where['where'] 
+. $where['where']
 . $order
 . $limit;
 		$wh_params = array_merge($where_pn['params'], $where['params']);
