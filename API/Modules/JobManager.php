@@ -375,12 +375,32 @@ LEFT JOIN FileSet ON FileSet.FilesetId=Job.FilesetId '
 Client.Name as client, 
 Pool.Name as pool, 
 FileSet.FileSet as fileset, 
+jm.volumename AS firstvol, 
+COALESCE(mi.volcount, 0) AS volcount, 
 $add_cols
 FROM Job 
+LEFT JOIN (
+	SELECT
+		JobMedia.JobId AS jobid,
+		Media.VolumeName AS volumename,
+		ROW_NUMBER() OVER (PARTITION BY JobMedia.JobId ORDER BY JobMedia.JobMediaId) AS jmi
+	FROM
+		Media
+	LEFT JOIN
+		JobMedia USING (MediaId)
+) AS jm ON jm.JobId=Job.JobId AND jm.jmi=1 
+LEFT JOIN (
+	SELECT
+		JobMedia.JobId AS jobid,
+		COUNT(DISTINCT MediaId) AS volcount
+	FROM
+		JobMedia
+	GROUP BY JobMedia.JobId
+) AS mi ON mi.JobId=Job.JobId 
 LEFT JOIN Client USING (ClientId) 
 LEFT JOIN Pool USING (PoolId) 
 LEFT JOIN FileSet USING (FilesetId) 
-LEFT JOIN JobMedia USING (JobId) 
+LEFT JOIN JobMedia ON JobMedia.JobId=Job.JobId 
 WHERE {$where['where']}";
 		return Database::findAllBySql($sql, $where['params']);
 	}
@@ -414,8 +434,28 @@ WHERE {$where['where']}";
 Client.Name as client, 
 Pool.Name as pool, 
 FileSet.FileSet as fileset, 
+jm.volumename AS firstvol, 
+COALESCE(mi.volcount, 0) AS volcount, 
 $add_cols
 FROM Job 
+LEFT JOIN (
+	SELECT
+		JobMedia.JobId AS jobid,
+		Media.VolumeName AS volumename,
+		ROW_NUMBER() OVER (PARTITION BY JobMedia.JobId ORDER BY JobMedia.JobMediaId) AS jmi
+	FROM
+		Media
+	LEFT JOIN
+		JobMedia USING (MediaId)
+) AS jm ON jm.JobId=Job.JobId AND jm.jmi=1 
+LEFT JOIN (
+	SELECT
+		JobMedia.JobId AS jobid,
+		COUNT(DISTINCT MediaId) AS volcount
+	FROM
+		JobMedia
+	GROUP BY JobMedia.JobId
+) AS mi ON mi.JobId=Job.JobId 
 LEFT JOIN Client USING (ClientId) 
 LEFT JOIN Pool USING (PoolId) 
 LEFT JOIN FileSet USING (FilesetId) 
