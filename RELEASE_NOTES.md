@@ -1,7 +1,7 @@
 
-This is a bug fix release. We fixed a bug with displaying jobs that can
-experience MySQL/MariaDB users.
+This is a new improvements release. We optimized loading the job tables,
+so now they are loaded faster.
 
 Changes:
- - Fix invalid parameter number error for MySQL/MariaDB catalog database
- - Update API documentation
+ - Optmize loading jobs on volume and client jobs
+ - Significant job list optimization
