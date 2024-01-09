@@ -497,16 +497,22 @@ class BaculaSetting extends APIModule
 			}
 			$directive_value = $value;
 		} elseif (is_array($value)) {
-			// only simple numeric arrays
-			$dvalues = [];
-			for ($i = 0; $i < count($value); $i++) {
-				if (is_array($value[$i])) {
-					$dvalues[] = $this->updateSubResource($resource_type, $directive_name, $value[$i]);
-				} else {
-					$dvalues[] = $this->formatDirectiveValue($resource_type, $directive_name, $value[$i]);
+			$assoc_keys = array_filter(array_keys($value), 'is_string');
+			if (count($assoc_keys) > 0) {
+				// associative arrays (sub-resources)
+				$directive_value = $this->updateSubResource($resource_type, $directive_name, $value);
+			} else {
+				// only simple numeric arrays
+				$dvalues = [];
+				for ($i = 0; $i < count($value); $i++) {
+					if (is_array($value[$i])) {
+						$dvalues[] = $this->updateSubResource($resource_type, $directive_name, $value[$i]);
+					} else {
+						$dvalues[] = $this->formatDirectiveValue($resource_type, $directive_name, $value[$i]);
+					}
 				}
+				$directive_value = $dvalues;
 			}
-			$directive_value = $dvalues;
 		} else {
 			$emsg = sprintf(
 				"Attemp to format a directive value with not supported value type '%s'.",
