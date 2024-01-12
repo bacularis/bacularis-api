@@ -191,11 +191,13 @@ class BasicUser extends BaculumAPIServer
 		}
 
 		if (property_exists($params, 'password')) {
-			$password = $params->password;
-		} else {
-			$this->output = BasicUserError::MSG_ERROR_BASIC_USER_INVALID_PASSWORD;
-			$this->error = BasicUserError::ERROR_BASIC_USER_INVALID_PASSWORD;
-			return;
+			if (!empty($params['password'])) {
+				$password = $params->password;
+			} else {
+				$this->output = BasicUserError::MSG_ERROR_BASIC_USER_INVALID_PASSWORD;
+				$this->error = BasicUserError::ERROR_BASIC_USER_INVALID_PASSWORD;
+				return;
+			}
 		}
 
 		if (property_exists($params, 'bconsole_cfg_path')) {
