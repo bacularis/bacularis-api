@@ -191,7 +191,7 @@ class BasicUser extends BaculumAPIServer
 		}
 
 		if (property_exists($params, 'password')) {
-			if (!empty($params['password'])) {
+			if (!empty($params->password)) {
 				$password = $params->password;
 			} else {
 				$this->output = BasicUserError::MSG_ERROR_BASIC_USER_INVALID_PASSWORD;
