@@ -48,6 +48,15 @@ class FileSetManager extends APIModule
 		return FileSetRecord::finder()->findAll($criteria);
 	}
 
+	public function getFileSetsByJob($job)
+	{
+		$sql = "SELECT DISTINCT FileSet.*
+			FROM FileSet
+			INNER JOIN Job USING (FileSetId)
+			WHERE Job.Name = '$job'";
+		return Database::findAllBySql($sql, []);
+	}
+
 	public function getFileSetById($id)
 	{
 		return FileSetRecord::finder()->findByfilesetid($id);

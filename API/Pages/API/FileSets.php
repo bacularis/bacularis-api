@@ -29,6 +29,7 @@
 
 use Bacularis\API\Modules\BaculumAPIServer;
 use Bacularis\Common\Modules\Errors\FileSetError;
+use Bacularis\Common\Modules\Errors\JobError;
 
 /**
  * FileSets endpoint.
@@ -40,18 +41,43 @@ class FileSets extends BaculumAPIServer
 {
 	public function get()
 	{
+		$misc = $this->getModule('misc');
 		$limit = $this->Request->contains('limit') ? (int) ($this->Request['limit']) : 0;
-		$filesets = $this->getModule('fileset')->getFileSets($limit);
-		$result = $this->getModule('bconsole')->bconsoleCommand(
+		$job = $this->Request->contains('job') && $misc->isValidName($this->Request['job']) ? $this->Request['job'] : null;
+		$fss = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
-			['.fileset']
+			['.fileset'],
+			null,
+			true
 		);
-		if ($result->exitcode === 0) {
-			array_shift($result->output);
+		if ($fss->exitcode === 0) {
+			$filesets = [];
+			if (is_string($job)) {
+				// Get fileset by job name
+				$jobs = $this->getModule('bconsole')->bconsoleCommand(
+					$this->director,
+					['.jobs'],
+					null,
+					true
+				);
+				if ($jobs->exitcode === 0) {
+					if (in_array($job, $jobs->output)) {
+						$filesets = $this->getModule('fileset')->getFileSetsByJob($job);
+					} else {
+						$this->output = JobError::MSG_ERROR_JOB_DOES_NOT_EXISTS;
+						$this->error = JobError::ERROR_JOB_DOES_NOT_EXISTS;
+						return;
+						// END
+					}
+				}
+			} else {
+				// Get all filesets
+				$filesets = $this->getModule('fileset')->getFileSets($limit);
+			}
 			if (is_array($filesets)) {
 				$fs = [];
 				for ($i = 0; $i < count($filesets); $i++) {
-					if (in_array($filesets[$i]->fileset, $result->output)) {
+					if (in_array($filesets[$i]->fileset, $fss->output)) {
 						$fs[] = $filesets[$i];
 					}
 				}
@@ -62,8 +88,8 @@ class FileSets extends BaculumAPIServer
 				$this->error = FileSetError::ERROR_FILESET_DOES_NOT_EXISTS;
 			}
 		} else {
-			$this->output = $result->output;
-			$this->error = $result->exitcode;
+			$this->output = FileSetError::MSG_ERROR_WRONG_EXITCODE . 'ExitCode => ' . $fss->exitcode . ', Output => ' . var_export($fss->output, true);
+			$this->error = FileSetError::ERROR_WRONG_EXITCODE;
 		}
 	}
 }

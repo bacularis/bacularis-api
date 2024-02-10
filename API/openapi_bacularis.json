@@ -4359,9 +4359,21 @@
 						}
 					}
 				},
-				"parameters": [{
-					"$ref": "#/components/parameters/Limit"
-				}]
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/Limit"
+					},
+					{
+						"name": "job",
+						"in": "query",
+						"required": false,
+						"description": "Get all used filesets for given job name. Limit parameter does not apply to the results.",
+						"schema": {
+							"type": "string",
+							"pattern": "[a-zA-Z0-9:.-_ ]+"
+						}
+					}
+				]
 			}
 		},
 		"/api/v2/filesets/{filesetid}": {
