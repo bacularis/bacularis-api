@@ -93,6 +93,10 @@ class StatusClient extends ComponentStatusModule
 					$opts = [];
 				}
 			} else {
+				if (preg_match('/^(error|errmsg)=/', $output[$i]) === 1) {
+					// skip key/value items that are not client status
+					continue;
+				}
 				$line = $this->parseLine($output[$i]);
 				if (is_array($line)) {
 					$opts[$line['key']] = $line['value'];

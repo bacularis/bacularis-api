@@ -87,8 +87,10 @@ class StatusStorage extends ComponentStatusModule
 		$ach_dev = [];
 		$empty_lines = 0;
 		for ($i = 0; $i < count($output); $i++) {
-			if (empty($output[$i])) {
-				$empty_lines++;
+			if (empty($output[$i]) || ($output[$i] == ']' && count($ach_dev) == 2)) {
+				if (empty($output[$i])) {
+					$empty_lines++;
+				}
 				if (count($part) > 10) {
 					$result[] = $part;
 					$part = [];
@@ -97,7 +99,8 @@ class StatusStorage extends ComponentStatusModule
 					$autochangers[$autochanger]['devices'][] = $ach_dev;
 					$ach_dev = [];
 				}
-				if ($empty_lines == 4 && $autochanger) {
+				if (($empty_lines == 4 || $output[$i] == ']') && $autochanger) {
+					// close autochanger section in SD < 15.0.0
 					$autochanger = null;
 				}
 			} else {

@@ -82,9 +82,13 @@ class ScheduleStatus extends BaculumAPIServer
 			$cmd[] = 'time="' . $this->Request['time'] . '"';
 		}
 
-		$result = $this->getModule('bconsole')->bconsoleCommand($this->director, $cmd, Bconsole::PTYPE_API_CMD);
+		$result = $this->getModule('bconsole')->bconsoleCommand(
+			$this->director,
+			$cmd,
+			Bconsole::PTYPE_API_CMD,
+			true
+		);
 		if ($result->exitcode === 0) {
-			array_shift($result->output);
 			$this->output = $this->formatSchedules($result->output);
 			$this->error = PoolError::ERROR_NO_ERRORS;
 		} else {
@@ -97,6 +101,10 @@ class ScheduleStatus extends BaculumAPIServer
 	{
 		$items = $item = [];
 		for ($i = 0; $i < count($output); $i++) {
+			if (preg_match('/^(limit|error|errmsg)=/', $output[$i]) === 1) {
+				// skip key/value items that are not schedule status
+				continue;
+			}
 			if (preg_match('/^(?P<key>\w+)=(?P<val>[\s\S]*)$/', $output[$i], $match) === 1) {
 				$item[$match['key']] = $match['val'];
 			} elseif (empty($output[$i]) && count($item) > 0) {

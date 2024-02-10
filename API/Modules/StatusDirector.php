@@ -97,20 +97,34 @@ class StatusDirector extends ComponentStatusModule
 		$line = null;
 		$types = [
 			self::OUTPUT_TYPE_HEADER . ':',
+			self::OUTPUT_TYPE_SCHEDULED . ':',
 			self::OUTPUT_TYPE_RUNNING . ':',
 			self::OUTPUT_TYPE_TERMINATED . ':'
 		];
 		$opts = [];
+		$old_status13 = false;
 		for ($i = 0; $i < count($output); $i++) {
+			if (preg_match('/^(error|errmsg)=/', $output[$i]) === 1) {
+				// skip key/value items that are not director status
+				continue;
+			}
 			if (in_array($output[$i], $types)) { // check if type
 				$type = rtrim($output[$i], ':');
-			} elseif ($type === self::OUTPUT_TYPE_HEADER && count($opts) == 0 && $output[$i] === '') {
+			} elseif ($old_status13 == true && $type === self::OUTPUT_TYPE_HEADER && count($opts) == 0 && $output[$i] === '') {
 				/**
 				 * special treating 'scheduled' type because this type
 				 * is missing in the api status dir output.
 				 */
 				$type = self::OUTPUT_TYPE_SCHEDULED;
 			} elseif (!empty($type)) {
+				if ($type === self::OUTPUT_TYPE_HEADER) {
+					/**
+					 * In version 15.0.0 the status output has changed. There was added 'schedule' section
+					 * and efore and after each section there is empty line.
+					 * Detect old >= 13 version status to be backward compatible.
+					 */
+					$old_status13 = true;
+				}
 				$line = $this->parseLine($output[$i]);
 				if (is_array($line)) { // check if line
 					if (!key_exists($type, $result)) {
