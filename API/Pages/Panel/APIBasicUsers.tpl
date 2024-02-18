@@ -6,7 +6,7 @@
 		</h5>
 	</header>
 	<div class="w3-container">
-		<a href="javascript:void(0)" class="w3-button w3-green w3-margin-bottom" onclick="oAPIBasicUsers.show_new_user_window(true);">
+		<a href="javascript:void(0)" class="w3-button w3-green w3-margin-bottom" onclick="oAPIBasicUsers.new_user();">
 			<i class="fas fa-plus"></i> &nbsp;<%[ Add user ]%>
 		</a>
 		<table id="basic_user_list" class="w3-table w3-striped w3-hoverable w3-margin-bottom" style="width: 100%">
@@ -181,6 +181,7 @@ var oBasicUserList = {
 		</div>
 	</div>
 <com:TCallback ID="LoadUsers" OnCallback="loadBasicUsers" />
+<com:TCallback ID="LoadNewUser" OnCallback="loadNewBasicUser" />
 <com:TCallback ID="DeleteUser" OnCallback="deleteBasicUser" />
 <script>
 var oAPIBasicUsers = {
@@ -223,6 +224,15 @@ var oAPIBasicUsers = {
 	load_basic_users_cb: function(users) {
 		oBasicUserList.data = users;
 		oBasicUserList.init();
+	},
+	new_user: function() {
+		const cb = <%=$this->LoadNewUser->ActiveControl->Javascript%>;
+		cb.dispatch();
+	},
+	new_user_cb: function(props) {
+		oAPIBasicUsers.new_obj.clear_basic_fields();
+		oAPIBasicUsers.new_obj.set_basic_props(props);
+		oAPIBasicUsers.show_new_user_window(true);
 	},
 	edit_user: function(username) {
 		this.edit_obj.clear_basic_fields();

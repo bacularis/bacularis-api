@@ -44,13 +44,9 @@ class BasicUser extends BaculumAPIServer
 		$basic_apiuser = $this->getModule('basic_apiuser');
 		$username = $basic_apiuser->validateUsername($user) ? $user : null;
 		if (is_string($username)) {
-			$basic_config = $this->getModule('basic_config')->getConfig($username);
 			$basic_cfg = $basic_apiuser->getUserCfg($username);
 			if (count($basic_cfg) > 0) {
-				$this->output = array_merge([
-					'username' => $username,
-					'bconsole_cfg_path' => ''
-				], $basic_config);
+				$this->output = $this->getModule('basic_config')->getUsers($username);
 				$this->error = BasicUserError::ERROR_NO_ERRORS;
 			} else {
 				$this->output = BasicUserError::MSG_ERROR_BASIC_USER_DOES_NOT_EXIST;
@@ -92,6 +88,19 @@ class BasicUser extends BaculumAPIServer
 			$this->output = BasicUserError::MSG_ERROR_BASIC_USER_INVALID_PASSWORD;
 			$this->error = BasicUserError::ERROR_BASIC_USER_INVALID_PASSWORD;
 			return;
+		}
+
+		if (property_exists($params, 'dir_res_perm')) {
+			$props['dir_res_perm'] = (array) $params->dir_res_perm;
+		}
+		if (property_exists($params, 'sd_res_perm')) {
+			$props['sd_res_perm'] = (array) $params->sd_res_perm;
+		}
+		if (property_exists($params, 'fd_res_perm')) {
+			$props['fd_res_perm'] = (array) $params->fd_res_perm;
+		}
+		if (property_exists($params, 'bcons_res_perm')) {
+			$props['bcons_res_perm'] = (array) $params->bcons_res_perm;
 		}
 
 		if (property_exists($params, 'bconsole_cfg_path')) {
@@ -199,6 +208,20 @@ class BasicUser extends BaculumAPIServer
 				return;
 			}
 		}
+
+		if (property_exists($params, 'dir_res_perm')) {
+			$props['dir_res_perm'] = (array) $params->dir_res_perm;
+		}
+		if (property_exists($params, 'sd_res_perm')) {
+			$props['sd_res_perm'] = (array) $params->sd_res_perm;
+		}
+		if (property_exists($params, 'fd_res_perm')) {
+			$props['fd_res_perm'] = (array) $params->fd_res_perm;
+		}
+		if (property_exists($params, 'bcons_res_perm')) {
+			$props['bcons_res_perm'] = (array) $params->bcons_res_perm;
+		}
+
 
 		if (property_exists($params, 'bconsole_cfg_path')) {
 			if ($misc->isValidPath($params->bconsole_cfg_path)) {

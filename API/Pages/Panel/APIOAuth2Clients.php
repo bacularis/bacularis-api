@@ -53,13 +53,30 @@ class APIOAuth2Clients extends BaculumAPIPage
 
 	public function loadOAuth2Clients($sender, $param)
 	{
+		$misc = $this->getModule('misc');
 		$oauth2_cfg = $this->getModule('oauth2_config')->getConfig();
 		$clients = array_values($oauth2_cfg);
+		$clients = array_map(function ($item) use ($misc) {
+			return [
+				...$item,
+				...$misc->prepareResourcePermissionsConfig($item)
+			];
+		}, $clients);
 		$this->getCallbackClient()->callClientFunction(
 			'oAPIOAuth2Clients.load_oauth2_clients_cb',
 			[$clients]
 		);
 		$this->hideOAuth2ClientWindow($sender);
+	}
+
+	public function loadNewOAuth2Client($sender, $param)
+	{
+		$misc = $this->getModule('misc');
+		$props = $misc->prepareResourcePermissionsConfig([]);
+		$this->getCallbackClient()->callClientFunction(
+			'oAPIOAuth2Clients.new_client_cb',
+			[$props]
+		);
 	}
 
 	public function cancelOAuth2ClientWindow($sender, $param)

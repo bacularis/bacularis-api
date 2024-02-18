@@ -69,11 +69,9 @@ abstract class BaculumAPIServer extends TPage
 	protected $director;
 
 	/**
-	 * Web interface User name that sent request to API.
-	 * Null value means administrator, any other value means normal user
-	 * (non-admin user).
+	 * Authorization information for current user/client.
 	 */
-	protected $user;
+	protected $auth;
 
 	/**
 	 * Endpoints available for every authenticated client.
@@ -257,6 +255,10 @@ abstract class BaculumAPIServer extends TPage
 		if (key_exists('bconsole_cfg_path', $auth) && !empty($auth['bconsole_cfg_path'])) {
 			Bconsole::setCfgPath($auth['bconsole_cfg_path'], true);
 		}
+		if (key_exists('client_id', $auth)) {
+			$auth = $this->getModule('oauth2_config')->getConfig($auth['client_id']);
+		}
+		$this->auth = $auth;
 	}
 
 	/**

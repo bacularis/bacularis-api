@@ -145,24 +145,51 @@ class BasicConfig extends ConfigFileModule
 	 * NOTE: User list bases on basic password file.
 	 * @see BasicAPIUserConfig
 	 *
+	 * @param string $username username to get user config
 	 * @return array basic user list
 	 */
-	public function getUsers()
+	public function getUsers($username = null)
 	{
 		$basic_users = [];
 		$basic_apiuser = $this->getModule('basic_apiuser')->getUsers();
 		$basic_config = $this->getConfig();
 		foreach ($basic_apiuser as $user => $pwd) {
 			$bconsole_cfg_path = '';
-			if (key_exists($user, $basic_config) && key_exists('bconsole_cfg_path', $basic_config[$user])) {
-				$bconsole_cfg_path = $basic_config[$user]['bconsole_cfg_path'];
+			$dir_res_perm = [];
+			$sd_res_perm = [];
+			$fd_res_perm = [];
+			$bcons_res_perm = [];
+			if (key_exists($user, $basic_config)) {
+				if (key_exists('bconsole_cfg_path', $basic_config[$user])) {
+					$bconsole_cfg_path = $basic_config[$user]['bconsole_cfg_path'];
+				}
+				if (key_exists('dir_res_perm', $basic_config[$user])) {
+					$dir_res_perm = $basic_config[$user]['dir_res_perm'];
+				}
+				if (key_exists('sd_res_perm', $basic_config[$user])) {
+					$sd_res_perm = $basic_config[$user]['sd_res_perm'];
+				}
+				if (key_exists('fd_res_perm', $basic_config[$user])) {
+					$fd_res_perm = $basic_config[$user]['fd_res_perm'];
+				}
+				if (key_exists('bcons_res_perm', $basic_config[$user])) {
+					$bcons_res_perm = $basic_config[$user]['bcons_res_perm'];
+				}
 			}
-			$basic_users[] = [
+			$basic_users[$user] = [
 				'username' => $user,
-				'bconsole_cfg_path' => $bconsole_cfg_path
+				'bconsole_cfg_path' => $bconsole_cfg_path,
+				'dir_res_perm' => $dir_res_perm,
+				'sd_res_perm' => $sd_res_perm,
+				'fd_res_perm' => $fd_res_perm,
+				'bcons_res_perm' => $bcons_res_perm
 			];
 		}
-		return $basic_users;
+		$ret = array_values($basic_users);
+		if (is_string($username) && key_exists($username, $basic_users)) {
+			$ret = $basic_users[$username];
+		}
+		return $ret;
 	}
 
 	/**

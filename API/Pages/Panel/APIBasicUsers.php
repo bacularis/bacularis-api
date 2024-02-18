@@ -53,12 +53,29 @@ class APIBasicUsers extends BaculumAPIPage
 
 	public function loadBasicUsers($sender, $param)
 	{
+		$misc = $this->getModule('misc');
 		$users = $this->getModule('basic_config')->getUsers();
+		$users = array_map(function ($item) use ($misc) {
+			return [
+				...$item,
+				...$misc->prepareResourcePermissionsConfig($item)
+			];
+		}, $users);
 		$this->getCallbackClient()->callClientFunction(
 			'oAPIBasicUsers.load_basic_users_cb',
 			[$users]
 		);
 		$this->hideBasicUserWindow($sender);
+	}
+
+	public function loadNewBasicUser($sender, $param)
+	{
+		$misc = $this->getModule('misc');
+		$props = $misc->prepareResourcePermissionsConfig([]);
+		$this->getCallbackClient()->callClientFunction(
+			'oAPIBasicUsers.new_user_cb',
+			[$props]
+		);
 	}
 
 	public function cancelBasicUserWindow($sender, $param)

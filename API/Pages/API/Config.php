@@ -50,6 +50,20 @@ class Config extends BaculumAPIServer
 			$opts['apply_jobdefs'] = $apply_jobdefs;
 		}
 
+		// Check if user is allowed to read resource type
+		$rtype = strtolower($resource_type);
+		$perm_key = sprintf('%s_res_perm', $component_type);
+		if (key_exists($perm_key, $this->auth)) {
+			$auth = array_change_key_case($this->auth[$perm_key]);
+			if (isset($auth[$rtype])) {
+				if (!in_array($auth[$rtype], ['ro', 'rw'])) {
+					$this->output = BaculaConfigError::MSG_ERROR_USER_NOT_ALLOWED_TO_READ_RESOURCE_CONFIG;
+					$this->error = BaculaConfigError::ERROR_USER_NOT_ALLOWED_TO_READ_RESOURCE_CONFIG;
+					return;
+				}
+			}
+		}
+
 		$config = $this->getModule('bacula_setting')->getConfig($component_type, $resource_type, $resource_name, $opts);
 		$this->output = $config['output'];
 		$this->error = $config['exitcode'];
@@ -76,6 +90,20 @@ class Config extends BaculumAPIServer
 		$component_type = $this->Request->contains('component_type') ? $this->Request['component_type'] : null;
 		$resource_type = $this->Request->contains('resource_type') ? $this->Request['resource_type'] : null;
 		$resource_name = $this->Request->contains('resource_name') ? $this->Request['resource_name'] : null;
+
+		// Check if user is allowed to write resource type
+		$rtype = strtolower($resource_type);
+		$perm_key = sprintf('%s_res_perm', $component_type);
+		if (key_exists($perm_key, $this->auth)) {
+			$auth = array_change_key_case($this->auth[$perm_key]);
+			if (isset($auth[$rtype])) {
+				if (!in_array($auth[$rtype], ['rw'])) {
+					$this->output = BaculaConfigError::MSG_ERROR_USER_NOT_ALLOWED_TO_WRITE_RESOURCE_CONFIG;
+					$this->error = BaculaConfigError::ERROR_USER_NOT_ALLOWED_TO_WRITE_RESOURCE_CONFIG;
+					return;
+				}
+			}
+		}
 
 		$result = $this->getModule('bacula_setting')->setConfig($config, $component_type, $resource_type, $resource_name);
 		if ($result['save_result'] === true) {

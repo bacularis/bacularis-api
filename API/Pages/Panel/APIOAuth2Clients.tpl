@@ -6,7 +6,7 @@
 		</h5>
 	</header>
 	<div class="w3-container">
-		<a href="javascript:void(0)" class="w3-button w3-green w3-margin-bottom" onclick="oAPIOAuth2Clients.show_new_client_window(true);">
+		<a href="javascript:void(0)" class="w3-button w3-green w3-margin-bottom" onclick="oAPIOAuth2Clients.new_client();">
 			<i class="fas fa-plus"></i> &nbsp;<%[ Add OAuth2 client ]%>
 		</a>
 		<table id="oauth2_client_list" class="w3-table w3-striped w3-hoverable w3-margin-bottom" style="width: 100%">
@@ -156,6 +156,7 @@ var oOAuth2ClientList = {
 		</div>
 	</div>
 <com:TCallback ID="LoadClients" OnCallback="loadOAuth2Clients" />
+<com:TCallback ID="LoadNewClient" OnCallback="loadNewOAuth2Client" />
 <com:TCallback ID="DeleteClient" OnCallback="deleteOAuth2Client" />
 <script>
 var oAPIOAuth2Clients = {
@@ -209,6 +210,15 @@ var oAPIOAuth2Clients = {
 			}
 		}
 		return client;
+	},
+	new_client: function() {
+		const cb = <%=$this->LoadNewClient->ActiveControl->Javascript%>;
+		cb.dispatch();
+	},
+	new_client_cb: function(props) {
+		oAPIOAuth2Clients.new_obj.clear_oauth2_fields();
+		oAPIOAuth2Clients.new_obj.set_oauth2_props(props);
+		oAPIOAuth2Clients.show_new_client_window(true);
 	},
 	edit_client: function(client_id) {
 		this.edit_obj.clear_oauth2_fields();
