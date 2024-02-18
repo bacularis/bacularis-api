@@ -222,7 +222,6 @@ class BasicUser extends BaculumAPIServer
 			$props['bcons_res_perm'] = (array) $params->bcons_res_perm;
 		}
 
-
 		if (property_exists($params, 'bconsole_cfg_path')) {
 			if ($misc->isValidPath($params->bconsole_cfg_path)) {
 				$props['bconsole_cfg_path'] = $params->bconsole_cfg_path;

@@ -102,6 +102,19 @@ class OAuth2Client extends BaculumAPIServer
 			return;
 		}
 
+		if (property_exists($params, 'dir_res_perm')) {
+			$oauth2_cfg[$params->client_id]['dir_res_perm'] = (array) $params->dir_res_perm;
+		}
+		if (property_exists($params, 'sd_res_perm')) {
+			$oauth2_cfg[$params->client_id]['sd_res_perm'] = (array) $params->sd_res_perm;
+		}
+		if (property_exists($params, 'fd_res_perm')) {
+			$oauth2_cfg[$params->client_id]['fd_res_perm'] = (array) $params->fd_res_perm;
+		}
+		if (property_exists($params, 'bcons_res_perm')) {
+			$oauth2_cfg[$params->client_id]['bcons_res_perm'] = (array) $params->bcons_res_perm;
+		}
+
 		if (property_exists($params, 'bconsole_cfg_path')) {
 			if ($misc->isValidPath($params->bconsole_cfg_path)) {
 				$oauth2_cfg[$params->client_id]['bconsole_cfg_path'] = $params->bconsole_cfg_path;
@@ -234,6 +247,20 @@ class OAuth2Client extends BaculumAPIServer
 				return;
 			}
 		}
+
+		if (property_exists($params, 'dir_res_perm')) {
+			$oauth2_cfg[$params->client_id]['dir_res_perm'] = (array) $params->dir_res_perm;
+		}
+		if (property_exists($params, 'sd_res_perm')) {
+			$oauth2_cfg[$params->client_id]['sd_res_perm'] = (array) $params->sd_res_perm;
+		}
+		if (property_exists($params, 'fd_res_perm')) {
+			$oauth2_cfg[$params->client_id]['fd_res_perm'] = (array) $params->fd_res_perm;
+		}
+		if (property_exists($params, 'bcons_res_perm')) {
+			$oauth2_cfg[$params->client_id]['bcons_res_perm'] = (array) $params->bcons_res_perm;
+		}
+
 		if (property_exists($params, 'bconsole_cfg_path')) {
 			if ($misc->isValidPath($params->bconsole_cfg_path)) {
 				$oauth2_cfg[$client_id]['bconsole_cfg_path'] = $params->bconsole_cfg_path;
