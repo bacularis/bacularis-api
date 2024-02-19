@@ -56,10 +56,8 @@ class APIBasicUsers extends BaculumAPIPage
 		$misc = $this->getModule('misc');
 		$users = $this->getModule('basic_config')->getUsers();
 		$users = array_map(function ($item) use ($misc) {
-			return [
-				...$item,
-				...$misc->prepareResourcePermissionsConfig($item)
-			];
+			$perms = $misc->prepareResourcePermissionsConfig($item);
+			return array_merge($item, $perms);
 		}, $users);
 		$this->getCallbackClient()->callClientFunction(
 			'oAPIBasicUsers.load_basic_users_cb',
