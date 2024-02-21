@@ -933,6 +933,25 @@
 					"type": "integer"
 				}
 			},
+			"OrderBy": {
+				"name": "order_by",
+				"in": "query",
+				"description": "Sort by given name",
+				"required": false,
+				"schema": {
+					"type": "string"
+				}
+			},
+			"OrderType": {
+				"name": "order_type",
+				"in": "query",
+				"description": "Sort by ascending or descending order type",
+				"required": false,
+				"schema": {
+					"type": "string",
+					"enum": ["asc", "desc"]
+				}
+			},
 			"ClientId": {
 				"name": "clientid",
 				"in": "path",
@@ -1198,9 +1217,17 @@
 						}
 					}
 				},
-				"parameters": [{
-					"$ref": "#/components/parameters/Limit"
-				}]
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/Limit"
+					},
+					{
+						"$ref": "#/components/parameters/OrderBy"
+					},
+					{
+						"$ref": "#/components/parameters/OrderType"
+					}
+				]
 			}
 		},
 		"/api/v2/clients/{clientid}": {

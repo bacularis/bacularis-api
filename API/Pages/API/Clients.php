@@ -27,7 +27,9 @@
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
 
+use ReflectionClass;
 use Bacularis\API\Modules\BaculumAPIServer;
+use Bacularis\API\Modules\ClientRecord;
 use Bacularis\Common\Modules\Errors\ClientError;
 
 /**
@@ -40,16 +42,44 @@ class Clients extends BaculumAPIServer
 {
 	public function get()
 	{
-		$limit = $this->Request->contains('limit') ? (int) ($this->Request['limit']) : 0;
-		$result = $this->getModule('bconsole')->bconsoleCommand($this->director, ['.client']);
+		$misc = $this->getModule('misc');
+		$limit = $this->Request->contains('limit') && $misc->isValidInteger($this->Request['limit']) ? (int) ($this->Request['limit']) : 0;
+		$order_by = $this->Request->contains('order_by') && $misc->isValidName($this->Request['order_by']) ? $this->Request['order_by'] : '';
+		$order_type = $this->Request->contains('order_type') && $misc->isValidOrderType($this->Request['order_type']) ? $this->Request['order_type'] : 'asc';
+		$result = $this->getModule('bconsole')->bconsoleCommand(
+			$this->director,
+			['.client'],
+			null,
+			true
+		);
 		if ($result->exitcode === 0) {
-			$clients = $this->getModule('client')->getClients($limit);
-			array_shift($result->output);
+			if (!empty($order_by)) {
+				$cr = new ReflectionClass('Bacularis\API\Modules\ClientRecord');
+				$order_by_lc = strtolower($order_by);
+				if (!$cr->hasProperty($order_by_lc)) {
+					$this->error = ClientError::ERROR_INVALID_COMMAND;
+					$this->output = ClientError::MSG_ERROR_INVALID_COMMAND . ' Column: ' . $order_by;
+					return;
+				}
+			}
+			$clients = $this->getModule('client')->getClients(
+				0,
+				$order_by,
+				$order_type
+			);
 			$clients_output = [];
 			foreach ($clients as $client) {
 				if (in_array($client->name, $result->output)) {
 					$clients_output[] = $client;
 				}
+			}
+			if ($limit > 0) {
+				/**
+				 * Limit in PHP instead database because in the database can exists
+				 * clients that are not available in the configuration. It would cause
+				 * results inconsistency.
+				 */
+				array_splice($clients_output, $limit);
 			}
 			$this->output = $clients_output;
 			$this->error = ClientError::ERROR_NO_ERRORS;
