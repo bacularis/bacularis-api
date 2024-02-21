@@ -39,7 +39,7 @@ use Prado\Data\ActiveRecord\TActiveRecordCriteria;
  */
 class ClientManager extends APIModule
 {
-	public function getClients(int $limit = 0, string $order_by = '', string $order_type = 'asc') : array
+	public function getClients(int $limit = 0, string $order_by = '', string $order_type = 'asc'): array
 	{
 		$criteria = new TActiveRecordCriteria();
 		if ($limit > 0) {
