@@ -1,5 +1,10 @@
 
-We fixed support for PHP 7.4 and 8.0 that has been broken in 2.5.0.
+This is a bug fix release. We fixed a couple of minor problems.
 
 Changes:
- - Fix support for PHP 7.4 and 8.0
+ - Fix PHP warning on PHP 7.4 about use statement
+ - Fix displaying items in list client files/dirs
+ - Fix limit parameter in clients endpoint and add sorting parameters
+ - Update actions/cache to version 4
+ - Update actions/checkout to version 4
+
