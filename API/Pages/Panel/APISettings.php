@@ -144,6 +144,8 @@ class APISettings extends BaculumAPIPage
 		$this->BconsolePath->Text = $this->config['bconsole']['bin_path'];
 		$this->BconsoleConfigPath->Text = $this->config['bconsole']['cfg_path'];
 		$this->BconsoleUseSudo->Checked = ($this->config['bconsole']['use_sudo'] == 1);
+		$this->BconsoleSudoRunAsUser->Text = $this->config['bconsole']['sudo_user'] ?? '';
+		$this->BconsoleSudoRunAsGroup->Text = $this->config['bconsole']['sudo_group'] ?? '';
 	}
 
 	private function loadConfigSettings()
@@ -181,6 +183,12 @@ class APISettings extends BaculumAPIPage
 		}
 		if (key_exists('bcons_cfg_path', $this->config['jsontools'])) {
 			$this->BconsCfgPath->Text = $this->config['jsontools']['bcons_cfg_path'];
+		}
+		if (key_exists('sudo_user', $this->config['jsontools'])) {
+			$this->BConfigSudoRunAsUser->Text = $this->config['jsontools']['sudo_user'];
+		}
+		if (key_exists('sudo_group', $this->config['jsontools'])) {
+			$this->BConfigSudoRunAsGroup->Text = $this->config['jsontools']['sudo_group'];
 		}
 	}
 
@@ -235,6 +243,12 @@ class APISettings extends BaculumAPIPage
 		if (key_exists('fd_restart', $this->config['actions'])) {
 			$this->FdRestartAction->Text = $this->config['actions']['fd_restart'];
 		}
+		if (key_exists('sudo_user', $this->config['actions'])) {
+			$this->ActionsSudoRunAsUser->Text = $this->config['actions']['sudo_user'];
+		}
+		if (key_exists('sudo_group', $this->config['actions'])) {
+			$this->ActionsSudoRunAsGroup->Text = $this->config['actions']['sudo_group'];
+		}
 	}
 
 	private function loadAuthSettings()
@@ -258,6 +272,8 @@ class APISettings extends BaculumAPIPage
 		$smcfg = $this->config['software_management'];
 		$this->SoftwareManagementEnabled->Checked = $smcfg['enabled'] == 1;
 		$this->SoftwareManagementUseSudo->Checked = $smcfg['use_sudo'] == 1;
+		$this->SoftwareManagementSudoRunAsUser->Text = $smcfg['sudo_user'] ?? '';
+		$this->SoftwareManagementSudoRunAsGroup->Text = $smcfg['sudo_group'] ?? '';
 		$this->DirInstallCmd->Text = $smcfg['dir_install'];
 		$this->DirUpgradeCmd->Text = $smcfg['dir_upgrade'];
 		$this->DirRemoveCmd->Text = $smcfg['dir_remove'];
@@ -408,7 +424,11 @@ class APISettings extends BaculumAPIPage
 			['version'],
 			$this->BconsolePath->Text,
 			$this->BconsoleConfigPath->Text,
-			$this->BconsoleUseSudo->Checked
+			[
+				'use_sudo' => $this->BconsoleUseSudo->Checked,
+				'user' => $this->BconsoleSudoRunAsUser->Text,
+				'group' => $this->BconsoleSudoRunAsGroup->Text
+			]
 		);
 		$is_validate = ($result->exitcode === 0);
 		if (!$is_validate) {
@@ -453,13 +473,17 @@ class APISettings extends BaculumAPIPage
 				'error_el' => $this->BBconsJSONPathTestErr
 			]
 		];
-		$use_sudo = $this->BJSONUseSudo->Checked;
+		$sudo = [
+			'use_sudo' => $this->BJSONUseSudo->Checked,
+			'user' => $this->BConfigSudoRunAsUser->Text,
+			'group' => $this->BConfigSudoRunAsGroup->Text
+		];
 
 		foreach ($jsontools as $type => $config) {
 			$config['ok_el']->Display = 'None';
 			$config['error_el']->Display = 'None';
 			if (!empty($config['path']) && !empty($config['cfg'])) {
-				$result = (object) $this->getModule('json_tools')->testJSONTool($config['path'], $config['cfg'], $use_sudo);
+				$result = (object) $this->getModule('json_tools')->testJSONTool($config['path'], $config['cfg'], $sudo);
 				if ($result->exitcode === 0) {
 					// test passed
 					$config['ok_el']->Display = 'Dynamic';
@@ -511,7 +535,12 @@ class APISettings extends BaculumAPIPage
 			case 'fd_restart': $cmd = $this->FdRestartAction->Text;
 				break;
 		};
-		$result = $this->getModule('comp_actions')->execCommand($cmd, $this->ActionsUseSudo->Checked);
+		$sudo = [
+			'use_sudo' => $this->ActionsUseSudo->Checked,
+			'user' => $this->ActionsSudoRunAsUser->Text,
+			'group' => $this->ActionsSudoRunAsGroup->Text
+		];
+		$result = $this->getModule('comp_actions')->execCommand($cmd, $sudo);
 		$this->getCallbackClient()->callClientFunction('set_action_command_output', [$action, (array) $result]);
 	}
 
@@ -551,7 +580,9 @@ class APISettings extends BaculumAPIPage
 			'enabled' => ($this->BconsoleEnabled->Checked ? 1 : 0),
 			'bin_path' => $this->BconsolePath->Text,
 			'cfg_path' => $this->BconsoleConfigPath->Text,
-			'use_sudo' => ($this->BconsoleUseSudo->Checked ? 1 : 0)
+			'use_sudo' => ($this->BconsoleUseSudo->Checked ? 1 : 0),
+			'sudo_user' => $this->BconsoleSudoRunAsUser->Text,
+			'sudo_group' => $this->BconsoleSudoRunAsGroup->Text
 		];
 		$this->config['bconsole'] = $cfg;
 		$this->getModule('api_config')->setConfig($this->config);
@@ -562,6 +593,8 @@ class APISettings extends BaculumAPIPage
 		$cfg = [
 			'enabled' => ($this->ConfigEnabled->Checked ? 1 : 0),
 			'use_sudo' => ($this->BJSONUseSudo->Checked ? 1 : 0),
+			'sudo_user' => $this->BConfigSudoRunAsUser->Text,
+			'sudo_group' => $this->BConfigSudoRunAsGroup->Text,
 			'bconfig_dir' => $this->BConfigDir->Text,
 			'bdirjson_path' => $this->BDirJSONPath->Text,
 			'dir_cfg_path' => $this->DirCfgPath->Text,
@@ -581,6 +614,8 @@ class APISettings extends BaculumAPIPage
 		$cfg = [
 			'enabled' => ($this->ActionsEnabled->Checked ? 1 : 0),
 			'use_sudo' => ($this->ActionsUseSudo->Checked ? 1 : 0),
+			'sudo_user' => $this->ActionsSudoRunAsUser->Text,
+			'sudo_group' => $this->ActionsSudoRunAsGroup->Text,
 			'dir_start' => $this->DirStartAction->Text,
 			'dir_stop' => $this->DirStopAction->Text,
 			'dir_restart' => $this->DirRestartAction->Text,
@@ -666,6 +701,8 @@ class APISettings extends BaculumAPIPage
 		$config = [
 			'enabled' => $this->SoftwareManagementEnabled->Checked ? '1' : '0',
 			'use_sudo' => $this->SoftwareManagementUseSudo->Checked ? '1' : '0',
+			'sudo_user' => $this->SoftwareManagementSudoRunAsUser->Text,
+			'sudo_group' => $this->SoftwareManagementSudoRunAsGroup->Text,
 			'dir_install' => $this->DirInstallCmd->Text,
 			'dir_upgrade' => $this->DirUpgradeCmd->Text,
 			'dir_remove' => $this->DirRemoveCmd->Text,

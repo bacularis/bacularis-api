@@ -318,6 +318,41 @@
 					/> &nbsp;<a href="javascript:void(0)" onclick="oSudoConfig.get_config('bconsole');"><%[ Get sudo configuration ]%></a>
 				</div>
 			</div>
+			<i class="fa-solid fa-wrench"></i> <a href="javascript:void(0)" onclick="$('#bconsole_advanced_settings').toggle('fast');"><%[ Advanced options ]%></a>
+			<div id="bconsole_advanced_settings" style="display: none;">
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="BconsoleSudoRunAsUser"
+							Text="<%[ Sudo Runas user: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TTextBox
+							ID="BconsoleSudoRunAsUser"
+							CssClass="w3-input w3-border"
+							CausesValidation="false"
+							Width="170px"
+						/>
+					</div>
+				</div>
+				<div class="w3-row w3-section">
+					<div class="w3-col w3-quarter">
+						<com:TLabel
+							ForControl="BconsoleSudoRunAsGroup"
+							Text="<%[ Sudo Runas group: ]%>"
+						/>
+					</div>
+					<div class="w3-col w3-threequarter">
+						<com:TTextBox
+							ID="BconsoleSudoRunAsGroup"
+							CssClass="w3-input w3-border"
+							CausesValidation="false"
+							Width="170px"
+						/>
+					</div>
+				</div>
+			</div>
 			<div class="w3-row w3-section">
 				<div class="w3-col w3-quarter">
 					<com:TLabel
@@ -451,6 +486,41 @@
 							ID="BJSONUseSudo"
 							CssClass="w3-check"
 						/> &nbsp;<a href="javascript:void(0)" onclick="oSudoConfig.get_config('config');"><%[ Get sudo configuration ]%></a>
+					</div>
+				</div>
+				<i class="fa-solid fa-wrench"></i> <a href="javascript:void(0)" onclick="$('#config_advanced_settings').toggle('fast');"><%[ Advanced options ]%></a>
+				<div id="config_advanced_settings" style="display: none;">
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-quarter">
+							<com:TLabel
+								ForControl="BConfigSudoRunAsUser"
+								Text="<%[ Sudo Runas user: ]%>"
+							/>
+						</div>
+						<div class="w3-col w3-threequarter">
+							<com:TTextBox
+								ID="BConfigSudoRunAsUser"
+								CssClass="w3-input w3-border"
+								CausesValidation="false"
+								Width="170px"
+							/>
+						</div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-quarter">
+							<com:TLabel
+								ForControl="BConfigSudoRunAsGroup"
+								Text="<%[ Sudo Runas group: ]%>"
+							/>
+						</div>
+						<div class="w3-col w3-threequarter">
+							<com:TTextBox
+								ID="BConfigSudoRunAsGroup"
+								CssClass="w3-input w3-border"
+								CausesValidation="false"
+								Width="170px"
+							/>
+						</div>
 					</div>
 				</div>
 			</fieldset>
@@ -776,6 +846,41 @@
 							ID="ActionsUseSudo"
 							CssClass="w3-check"
 						/> &nbsp;<a href="javascript:void(0)" onclick="oSudoConfig.get_config('actions');"><%[ Get sudo configuration ]%></a>
+					</div>
+				</div>
+				<i class="fa-solid fa-wrench"></i> <a href="javascript:void(0)" onclick="$('#actions_advanced_settings').toggle('fast');"><%[ Advanced options ]%></a>
+				<div id="actions_advanced_settings" style="display: none;">
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-quarter">
+							<com:TLabel
+								ForControl="ActionsSudoRunAsUser"
+								Text="<%[ Sudo Runas user: ]%>"
+							/>
+						</div>
+						<div class="w3-col w3-threequarter">
+							<com:TTextBox
+								ID="ActionsSudoRunAsUser"
+								CssClass="w3-input w3-border"
+								CausesValidation="false"
+								Width="170px"
+							/>
+						</div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-quarter">
+							<com:TLabel
+								ForControl="ActionsSudoRunAsGroup"
+								Text="<%[ Sudo Runas group: ]%>"
+							/>
+						</div>
+						<div class="w3-col w3-threequarter">
+							<com:TTextBox
+								ID="ActionsSudoRunAsGroup"
+								CssClass="w3-input w3-border"
+								CausesValidation="false"
+								Width="170px"
+							/>
+						</div>
 					</div>
 				</div>
 			</fieldset>
@@ -1277,6 +1382,41 @@
 							ID="SoftwareManagementUseSudo"
 							CssClass="w3-check"
 						/> &nbsp;<a href="javascript:void(0)" onclick="oSudoConfig.get_config('software_management');"><%[ Get sudo configuration ]%></a>
+					</div>
+				</div>
+				<i class="fa-solid fa-wrench"></i> <a href="javascript:void(0)" onclick="$('#software_management_advanced_settings').toggle('fast');"><%[ Advanced options ]%></a>
+				<div id="software_management_advanced_settings" style="display: none;">
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-quarter">
+							<com:TLabel
+								ForControl="SoftwareManagementSudoRunAsUser"
+								Text="<%[ Sudo Runas user: ]%>"
+							/>
+						</div>
+						<div class="w3-col w3-threequarter">
+							<com:TTextBox
+								ID="SoftwareManagementSudoRunAsUser"
+								CssClass="w3-input w3-border"
+								CausesValidation="false"
+								Width="170px"
+							/>
+						</div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-quarter">
+							<com:TLabel
+								ForControl="SoftwareManagementSudoRunAsGroup"
+								Text="<%[ Sudo Runas group: ]%>"
+							/>
+						</div>
+						<div class="w3-col w3-threequarter">
+							<com:TTextBox
+								ID="SoftwareManagementSudoRunAsGroup"
+								CssClass="w3-input w3-border"
+								CausesValidation="false"
+								Width="170px"
+							/>
+						</div>
 					</div>
 				</div>
 			</fieldset>
@@ -2036,6 +2176,25 @@ var bin_fields = {
 	]
 };
 oSudoConfig.set_bin_fields(bin_fields);
+const bin_ownership = {
+	bconsole: {
+		user: '<%=$this->BconsoleSudoRunAsUser->ClientID%>',
+		group: '<%=$this->BconsoleSudoRunAsGroup->ClientID%>'
+	},
+	config: {
+		user: '<%=$this->BConfigSudoRunAsUser->ClientID%>',
+		group: '<%=$this->BConfigSudoRunAsGroup->ClientID%>'
+	},
+	actions: {
+		user: '<%=$this->ActionsSudoRunAsUser->ClientID%>',
+		group: '<%=$this->ActionsSudoRunAsGroup->ClientID%>'
+	},
+	software_management: {
+		user: '<%=$this->SoftwareManagementSudoRunAsUser->ClientID%>',
+		group: '<%=$this->SoftwareManagementSudoRunAsGroup->ClientID%>'
+	}
+};
+oSudoConfig.set_bin_ownership(bin_ownership);
 
 var bjsontools_fields = {
 	General: {

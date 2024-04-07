@@ -121,7 +121,11 @@ class APIInstallWizard extends BaculumAPIPage
 			$this->ConsoleYes->Checked = true;
 			$this->ConfigYes->Checked = true;
 			$this->UseSudo->Checked = true;
+			$this->BconsoleSudoRunAsUser->Text = '';
+			$this->BconsoleSudoRunAsGroup->Text = '';
 			$this->BJSONUseSudo->Checked = true;
+			$this->BConfigSudoRunAsUser->Text = '';
+			$this->BConfigSudoRunAsGroup->Text = '';
 			$this->BConfigDir->Text = dirname(__DIR__, 2) . '/Config';
 			$this->APIHost->Text = 'localhost';
 		} else {
@@ -152,7 +156,9 @@ class APIInstallWizard extends BaculumAPIPage
 			}
 			$this->BconsolePath->Text = $this->config['bconsole']['bin_path'];
 			$this->BconsoleConfigPath->Text = $this->config['bconsole']['cfg_path'];
-			$this->UseSudo->Checked = $this->getPage()->config['bconsole']['use_sudo'] == 1;
+			$this->UseSudo->Checked = $this->config['bconsole']['use_sudo'] == 1;
+			$this->BconsoleSudoRunAsUser->Text = $this->config['bconsole']['sudo_user'] ?? '';
+			$this->BconsoleSudoRunAsGroup->Text = $this->config['bconsole']['sudo_group'] ?? '';
 
 			$api_config = $this->getModule('api_config');
 
@@ -166,6 +172,8 @@ class APIInstallWizard extends BaculumAPIPage
 			}
 			$this->BConfigDir->Text = $this->config['jsontools']['bconfig_dir'];
 			$this->BJSONUseSudo->Checked = ($this->config['jsontools']['use_sudo'] == 1);
+			$this->BConfigSudoRunAsUser->Text = $this->config['jsontools']['sudo_user'] ?? '';
+			$this->BConfigSudoRunAsGroup->Text = $this->config['jsontools']['sudo_group'] ?? '';
 			$this->BDirJSONPath->Text = $this->config['jsontools']['bdirjson_path'];
 			$this->DirCfgPath->Text = $this->config['jsontools']['dir_cfg_path'];
 			$this->BSdJSONPath->Text = $this->config['jsontools']['bsdjson_path'];
@@ -239,8 +247,12 @@ class APIInstallWizard extends BaculumAPIPage
 		$cfg_data['bconsole']['bin_path'] = $this->BconsolePath->Text;
 		$cfg_data['bconsole']['cfg_path'] = $this->BconsoleConfigPath->Text;
 		$cfg_data['bconsole']['use_sudo'] = (int) ($this->UseSudo->Checked === true);
+		$cfg_data['bconsole']['sudo_user'] = $this->BconsoleSudoRunAsUser->Text;
+		$cfg_data['bconsole']['sudo_group'] = $this->BconsoleSudoRunAsGroup->Text;
 		$cfg_data['jsontools']['enabled'] = (int) ($this->ConfigYes->Checked === true);
 		$cfg_data['jsontools']['use_sudo'] = (int) ($this->BJSONUseSudo->Checked === true);
+		$cfg_data['jsontools']['sudo_user'] = $this->BConfigSudoRunAsUser->Text;
+		$cfg_data['jsontools']['sudo_group'] = $this->BConfigSudoRunAsGroup->Text;
 		$cfg_data['jsontools']['bconfig_dir'] = $this->BConfigDir->Text;
 		$cfg_data['jsontools']['bdirjson_path'] = $this->BDirJSONPath->Text;
 		$cfg_data['jsontools']['dir_cfg_path'] = $this->DirCfgPath->Text;
@@ -527,7 +539,11 @@ class APIInstallWizard extends BaculumAPIPage
 			['version'],
 			$this->BconsolePath->Text,
 			$this->BconsoleConfigPath->Text,
-			$this->UseSudo->Checked
+			[
+				'use_sudo' => $this->UseSudo->Checked,
+				'user' => $this->BconsoleSudoRunAsUser->Text,
+				'group' => $this->BconsoleSudoRunAsGroup->Text
+			]
 		);
 		$is_validate = ($result->exitcode === 0);
 		if (!$is_validate) {
@@ -572,13 +588,17 @@ class APIInstallWizard extends BaculumAPIPage
 				'error_el' => $this->BBconsJSONPathTestErr
 			]
 		];
-		$use_sudo = $this->BJSONUseSudo->Checked;
+		$sudo = [
+			'use_sudo' => $this->BJSONUseSudo->Checked,
+			'user' => $this->BConfigSudoRunAsUser->Text,
+			'group' => $this->BConfigSudoRunAsGroup->Text
+		];
 
 		foreach ($jsontools as $type => $config) {
 			$config['ok_el']->Display = 'None';
 			$config['error_el']->Display = 'None';
 			if (!empty($config['path']) && !empty($config['cfg'])) {
-				$result = (object) $this->getModule('json_tools')->testJSONTool($config['path'], $config['cfg'], $use_sudo);
+				$result = (object) $this->getModule('json_tools')->testJSONTool($config['path'], $config['cfg'], $sudo);
 				if ($result->exitcode === 0) {
 					// test passed
 					$config['ok_el']->Display = 'Dynamic';

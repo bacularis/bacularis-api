@@ -29,6 +29,7 @@
 
 namespace Bacularis\API\Modules;
 
+use Prado\Prado;
 use Bacularis\Common\Modules\Logging;
 use Bacularis\Common\Modules\Errors\JSONToolsError;
 
@@ -40,7 +41,10 @@ use Bacularis\Common\Modules\Errors\JSONToolsError;
  */
 class JSONTools extends APIModule
 {
-	public const SUDO = 'sudo';
+	/**
+	 * Sudo object.
+	 */
+	private $sudo;
 
 	/**
 	 * JSON tool command pattern - standard version.
@@ -75,13 +79,17 @@ class JSONTools extends APIModule
 		return $result;
 	}
 
-	private function getSudo($use_sudo)
+	/**
+	 * Set sudo setting for command.
+	 *
+	 * @param array $prop sudo properties
+	 */
+	private function setSudo(array $prop): void
 	{
-		$sudo = '';
-		if ($use_sudo === true) {
-			$sudo = self::SUDO . ' ';
-		}
-		return $sudo;
+		$this->sudo = Prado::createComponent(
+			'Bacularis\API\Modules\Sudo',
+			$prop
+		);
 	}
 
 	public function execCommand($component_type, $params = [], $config = '')
@@ -90,7 +98,7 @@ class JSONTools extends APIModule
 		if ($this->isJSONToolsEnabled() === true) {
 			$tool_type = $this->getModule('bacula_setting')->getJSONToolTypeByComponentType($component_type);
 			$tool = $this->getTool($tool_type);
-			$result = $this->execTool($tool['bin'], $tool['cfg'], $tool['use_sudo'], $params, $config);
+			$result = $this->execTool($tool['bin'], $tool['cfg'], $tool['sudo'], $params, $config);
 			$output = $result['output'];
 			$exitcode = $result['exitcode'];
 			if ($exitcode === 0) {
@@ -115,18 +123,18 @@ class JSONTools extends APIModule
 
 	private function getTool($tool_type)
 	{
-		$tool = $this->getModule('api_config')->getJSONToolConfig($tool_type);
-		return $tool;
+		return $this->getModule('api_config')->getJSONToolConfig($tool_type);
 	}
 
-	private function execTool($bin, $cfg, $use_sudo, $params = [], $config = '')
+	private function execTool($bin, $cfg, $sudo_prop, $params = [], $config = '')
 	{
-		$sudo = $this->getSudo($use_sudo);
+		$this->setSudo($sudo_prop);
 		$options = $this->getOptions($params);
 		$cmd_pattern = $this->getCmdPattern($params);
 		if (!empty($config)) {
 			$cfg = $this->prepareConfig($config);
 		}
+		$sudo = $this->sudo->getSudoCmd();
 		$cmd = sprintf($cmd_pattern, $sudo, $bin, $cfg, $options);
 		exec($cmd, $output, $exitcode);
 		Logging::log(
@@ -186,8 +194,8 @@ class JSONTools extends APIModule
 		return $opts;
 	}
 
-	public function testJSONTool($bin, $cfg, $use_sudo)
+	public function testJSONTool($bin, $cfg, $sudo_prop)
 	{
-		return $this->execTool($bin, $cfg, $use_sudo);
+		return $this->execTool($bin, $cfg, $sudo_prop);
 	}
 }

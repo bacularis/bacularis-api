@@ -43,7 +43,10 @@ use Bacularis\Common\Modules\Logging;
  */
 class ChangerCommand extends APIModule
 {
-	public const SUDO = 'sudo';
+	/**
+	 * Sudo object.
+	 */
+	private $sudo;
 
 	/**
 	 * Types to determine how changer command is executed (foreground, background...)
@@ -108,18 +111,16 @@ class ChangerCommand extends APIModule
 	}
 
 	/**
-	 * Get sudo command.
+	 * Set sudo setting for command.
 	 *
-	 * @param bool $use_sudo sudo option state
-	 * @return string sudo command
+	 * @param array $prop sudo properties
 	 */
-	private function getSudo($use_sudo)
+	private function setSudo(array $prop): void
 	{
-		$sudo = '';
-		if ($use_sudo === true) {
-			$sudo = self::SUDO;
-		}
-		return $sudo;
+		$this->sudo = Prado::createComponent(
+			'Bacularis\API\Modules\Sudo',
+			$prop
+		);
 	}
 
 	/**
@@ -173,7 +174,12 @@ class ChangerCommand extends APIModule
 		$changer_device = $this->config[$changer]['device'];
 		$archive_device = is_string($device) ? $this->config[$device]['device'] : '';
 		$drive_index = is_string($device) ? $this->config[$device]['index'] : '';
-		$use_sudo = ($this->config[$changer]['use_sudo'] == 1);
+		$sudo_prop = [
+			'use_sudo' => ($this->config[$changer]['use_sudo'] == 1),
+			'user' => ($this->config[$changer]['sudo_user'] ?? ''),
+			'group' => ($this->config[$changer]['sudo_group'] ?? '')
+		];
+		$this->setSudo($sudo_prop);
 
 		if ($command === 'transfer') {
 			// in transfer command in place archive device is given destination slot
@@ -189,7 +195,8 @@ class ChangerCommand extends APIModule
 			$drive_index
 		);
 		$pattern = $this->getCmdPattern($ptype);
-		$cmd = $this->getCommand($pattern, $use_sudo, $command);
+		$sudo = $this->sudo->getSudoCmd();
+		$cmd = $this->getCommand($pattern, $sudo, $command);
 		$result = $this->execCommand($cmd, $ptype);
 		if ($result->error !== 0) {
 			$emsg = PHP_EOL . ' Output:' . implode(PHP_EOL, $result->output);
@@ -228,16 +235,15 @@ class ChangerCommand extends APIModule
 	 * Get changer command to execute.
 	 *
 	 * @param string $pattern changer command pattern (@see PTYPE_ constants)
-	 * @param bool $use_sudo information about using sudo
+	 * @param array $sudo sudo command
 	 * @param string $bin changer command
 	 * @return array changer command (and output id if selected pattern to
 	 * move command to background)
 	 */
-	private function getCommand($pattern, $use_sudo, $bin)
+	private function getCommand($pattern, $sudo, $bin)
 	{
 		$command = ['cmd' => null, 'out_id' => null];
 		$misc = $this->getModule('misc');
-		$sudo = $this->getSudo($use_sudo);
 
 		if ($pattern === self::CHANGER_COMMAND_BG_PATTERN) {
 			$file = $this->prepareOutputFile();
@@ -358,7 +364,7 @@ class ChangerCommand extends APIModule
 	 * Check changer command parameters.
 	 * Used to test parameters.
 	 *
-	 * @param bool $use_sudo information about using sudo
+	 * @param array $sudo_prop information about using sudo
 	 * @param string $changer_command full changer command
 	 * @param string $changer_device changer device name
 	 * @param string $command changer command (load, unload ...etc.)
@@ -367,7 +373,7 @@ class ChangerCommand extends APIModule
 	 * @param string $drive_index archive device index (autochanger drive index)
 	 * @return StdClass executed command output and error code
 	 */
-	public function testChangerCommand($use_sudo, $changer_command, $changer_device, $command, $slot, $archive_device, $drive_index)
+	public function testChangerCommand($sudo_prop, $changer_command, $changer_device, $command, $slot, $archive_device, $drive_index)
 	{
 		$command = $this->prepareChangerCommand(
 			$changer_command,
@@ -377,8 +383,10 @@ class ChangerCommand extends APIModule
 			$archive_device,
 			$drive_index
 		);
+		$this->setSudo($sudo_prop);
 		$pattern = $this->getCmdPattern(self::PTYPE_FG_CMD);
-		$cmd = $this->getCommand($pattern, $use_sudo, $command);
+		$sudo = $this->sudo->getSudoCmd();
+		$cmd = $this->getCommand($pattern, $sudo, $command);
 		$result = $this->execCommand($cmd, self::PTYPE_FG_CMD);
 		return $result;
 	}

@@ -935,3 +935,9 @@ msgstr "Resource permissions"
 
 msgid "By default, all resources have read-write permissions."
 msgstr "By default, all resources have read-write permissions."
+
+msgid "Sudo Runas user:"
+msgstr "Sudo Runas user:"
+
+msgid "Sudo Runas group:"
+msgstr "Sudo Runas group:"

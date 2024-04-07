@@ -437,6 +437,41 @@
 
 						</div>
 					</div>
+					<i class="fa-solid fa-wrench"></i> <a href="javascript:void(0)" onclick="$('#bconsole_advanced_settings').toggle('fast');"><%[ Advanced options ]%></a>
+					<div id="bconsole_advanced_settings" style="display: none;">
+						<div class="w3-row w3-section">
+							<div class="w3-col w3-quarter">
+								<com:TLabel
+									ForControl="BconsoleSudoRunAsUser"
+									Text="<%[ Sudo Runas user: ]%>"
+								/>
+							</div>
+							<div class="w3-col w3-threequarter">
+								<com:TTextBox
+									ID="BconsoleSudoRunAsUser"
+									CssClass="w3-input w3-border"
+									CausesValidation="false"
+									Width="170px"
+								/>
+							</div>
+						</div>
+						<div class="w3-row w3-section">
+							<div class="w3-col w3-quarter">
+								<com:TLabel
+									ForControl="BconsoleSudoRunAsGroup"
+									Text="<%[ Sudo Runas group: ]%>"
+								/>
+							</div>
+							<div class="w3-col w3-threequarter">
+								<com:TTextBox
+									ID="BconsoleSudoRunAsGroup"
+									CssClass="w3-input w3-border"
+									CausesValidation="false"
+									Width="170px"
+								/>
+							</div>
+						</div>
+					</div>
 					<div class="w3-row w3-section">
 						<div class="w3-col w3-third">
 							<com:TLabel
@@ -579,6 +614,41 @@
 									ID="BJSONUseSudo"
 									CssClass="w3-check"
 								/> &nbsp;<a href="javascript:void(0)" onclick="oSudoConfig.get_config('config');"><%[ Get sudo configuration ]%></a>
+							</div>
+						</div>
+						<i class="fa-solid fa-wrench"></i> <a href="javascript:void(0)" onclick="$('#config_advanced_settings').toggle('fast');"><%[ Advanced options ]%></a>
+						<div id="config_advanced_settings" style="display: none;">
+							<div class="w3-row w3-section">
+								<div class="w3-col w3-quarter">
+									<com:TLabel
+										ForControl="BConfigSudoRunAsUser"
+										Text="<%[ Sudo Runas user: ]%>"
+									/>
+								</div>
+								<div class="w3-col w3-threequarter">
+									<com:TTextBox
+										ID="BConfigSudoRunAsUser"
+										CssClass="w3-input w3-border"
+										CausesValidation="false"
+										Width="170px"
+									/>
+								</div>
+							</div>
+							<div class="w3-row w3-section">
+								<div class="w3-col w3-quarter">
+									<com:TLabel
+										ForControl="BConfigSudoRunAsGroup"
+										Text="<%[ Sudo Runas group: ]%>"
+									/>
+								</div>
+								<div class="w3-col w3-threequarter">
+									<com:TTextBox
+										ID="BConfigSudoRunAsGroup"
+										CssClass="w3-input w3-border"
+										CausesValidation="false"
+										Width="170px"
+									/>
+								</div>
 							</div>
 						</div>
 					</fieldset>
@@ -1436,6 +1506,14 @@ var oConfigWizardStep4 = {
 							<div class="w3-col w3-third"><%[ Use sudo for bconsole requests: ]%></div>
 							<div class="w3-col w3-third"><strong><%=($this->UseSudo->Checked === true) ? 'yes' : 'no'%></strong></div>
 						</div>
+						<div class="w3-row w3-section" style="display: <%=(!empty($this->BconsoleSudoRunAsUser->Text) ? 'block' : 'none')%>">
+							<div class="w3-col w3-third"><%[ Sudo Runas user: ]%></div>
+							<div class="w3-col w3-third"><strong><%=$this->BconsoleSudoRunAsUser->Text%></strong></div>
+						</div>
+						<div class="w3-row w3-section" style="display: <%=(!empty($this->BconsoleSudoRunAsGroup->Text) ? 'block' : 'none')%>">
+							<div class="w3-col w3-third"><%[ Sudo Runas group: ]%></div>
+							<div class="w3-col w3-third"><strong><%=$this->BconsoleSudoRunAsGroup->Text%></strong></div>
+						</div>
 					</div>
 					<div style="display: <%=($this->ConsoleNo->Checked ? 'block' : 'none')%>">
 						<div class="w3-row w3-section">
@@ -1454,6 +1532,14 @@ var oConfigWizardStep4 = {
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ Use sudo for Bacula JSON tools: ]%></div>
 							<div class="w3-col w3-third"><strong><%=($this->BJSONUseSudo->Checked === true) ? 'yes' : 'no'%></strong></div>
+						</div>
+						<div class="w3-row w3-section" style="display: <%=(!empty($this->BConfigSudoRunAsUser->Text) ? 'block' : 'none')%>">
+							<div class="w3-col w3-third"><%[ Sudo Runas user: ]%></div>
+							<div class="w3-col w3-third"><strong><%=$this->BConfigSudoRunAsUser->Text%></strong></div>
+						</div>
+						<div class="w3-row w3-section" style="display: <%=(!empty($this->BConfigSudoRunAsGroup->Text) ? 'block' : 'none')%>">
+							<div class="w3-col w3-third"><%[ Sudo Runas group: ]%></div>
+							<div class="w3-col w3-third"><strong><%=$this->BConfigSudoRunAsGroup->Text%></strong></div>
 						</div>
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ bdirjson binary file path: ]%></div>
@@ -1689,5 +1775,16 @@ var bin_fields = {
 	]
 };
 oSudoConfig.set_bin_fields(bin_fields);
+const bin_ownership = {
+	bconsole: {
+		user: '<%=$this->BconsoleSudoRunAsUser->ClientID%>',
+		group: '<%=$this->BconsoleSudoRunAsGroup->ClientID%>'
+	},
+	config: {
+		user: '<%=$this->BConfigSudoRunAsUser->ClientID%>',
+		group: '<%=$this->BConfigSudoRunAsGroup->ClientID%>'
+	}
+};
+oSudoConfig.set_bin_ownership(bin_ownership);
 </script>
 </com:TContent>

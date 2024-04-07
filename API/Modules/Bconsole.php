@@ -41,8 +41,6 @@ use Bacularis\Common\Modules\Logging;
  */
 class Bconsole extends APIModule
 {
-	public const SUDO = 'sudo';
-
 	/**
 	 * Pattern types used to prepare command.
 	 */
@@ -107,7 +105,10 @@ class Bconsole extends APIModule
 
 	private $config;
 
-	private $use_sudo;
+	/**
+	 * Sudo object.
+	 */
+	private $sudo;
 
 	private static $cmd_path;
 
@@ -117,15 +118,36 @@ class Bconsole extends APIModule
 	{
 		$this->config = $this->getModule('api_config')->getConfig('bconsole');
 		if (count($this->config) > 0) {
-			$use_sudo = ((int) $this->config['use_sudo'] === 1);
+			$sudo_prop = [
+				'use_sudo' => ((int) $this->config['use_sudo'] === 1),
+				'user' => $this->config['sudo_user'] ?? '',
+				'group' => $this->config['sudo_group'] ?? ''
+			];
 			$cmd_path = $this->config['bin_path'];
 			$custom_cfg_path = self::getCfgPath();
 			$cfg_path = $custom_cfg_path ?? $this->config['cfg_path'];
-			$this->setEnvironmentParams($cmd_path, $cfg_path, $use_sudo);
+			$this->setEnvironmentParams($cmd_path, $cfg_path, $sudo_prop);
 		}
 	}
 
-	public static function setCmdPath($path, $force = false)
+	/**
+	 * Set sudo setting for command.
+	 *
+	 * @param array $prop sudo properties
+	 * @param bool $force force set sudo even it if is already set
+	 */
+	private function setSudo(array $prop, bool $force = false): void
+	{
+		// set it only once or force
+		if (is_null($this->sudo) || $force) {
+			$this->sudo = Prado::createComponent(
+				'Bacularis\API\Modules\Sudo',
+				$prop
+			);
+		}
+	}
+
+	public static function setCmdPath(string $path, bool $force = false): void
 	{
 		// possible to set only once
 		if (is_null(self::$cmd_path) || $force) {
@@ -138,7 +160,7 @@ class Bconsole extends APIModule
 		return self::$cmd_path;
 	}
 
-	public static function setCfgPath($path, $force = false)
+	public static function setCfgPath(string $path, bool $force = false): void
 	{
 		// possible to set only once
 		if (is_null(self::$cfg_path) || $force) {
@@ -151,24 +173,11 @@ class Bconsole extends APIModule
 		return self::$cfg_path;
 	}
 
-	public function setUseSudo($use_sudo, $force)
-	{
-		// possible to set only once
-		if (is_null($this->use_sudo) || $force) {
-			$this->use_sudo = $use_sudo;
-		}
-	}
-
-	public function getUseSudo()
-	{
-		return $this->use_sudo;
-	}
-
-	private function setEnvironmentParams($cmd_path, $cfg_path, $use_sudo, $force = false)
+	private function setEnvironmentParams(string $cmd_path, string $cfg_path, array $sudo_prop, bool $force = false): void
 	{
 		self::setCmdPath($cmd_path, $force);
 		self::setCfgPath($cfg_path, $force);
-		$this->setUseSudo($use_sudo, $force);
+		$this->setSudo($sudo_prop, $force);
 	}
 
 	private function isCommandValid($command)
@@ -227,11 +236,15 @@ class Bconsole extends APIModule
 			);
 		} else {
 			$dir = is_null($director) ? '' : '-D ' . $director;
-			$sudo = ($this->getUseSudo() === true) ? self::SUDO . ' ' : '';
+			$sudo = $this->sudo->getSudoCmd();
 			$bconsole_command = implode(' ', $command);
 			$pattern = $this->getCmdPattern($ptype);
 			$cmd = $this->getCommand($pattern, $sudo, $dir, $bconsole_command);
 			exec($cmd['cmd'], $output, $exitcode);
+			Logging::log(
+				Logging::CATEGORY_EXECUTE,
+				Logging::prepareCommand($cmd['cmd'], $output)
+			);
 			if ($exitcode != 0) {
 				$emsg = ' Output=>' . implode("\n", $output) . ', Exitcode=>' . $exitcode;
 				throw new BConsoleException(
@@ -249,11 +262,6 @@ class Bconsole extends APIModule
 				$result = $this->prepareResult($output, $exitcode, $bconsole_command);
 			}
 		}
-		Logging::log(
-			Logging::CATEGORY_EXECUTE,
-			Logging::prepareCommand($cmd['cmd'], $output)
-		);
-
 		return $result;
 	}
 
@@ -308,7 +316,7 @@ class Bconsole extends APIModule
 
 	public function getDirectors()
 	{
-		$sudo = ($this->getUseSudo() === true) ? self::SUDO . ' ' : '';
+		$sudo = $this->sudo->getSudoCmd();
 		$cmd = sprintf(
 			self::BCONSOLE_DIRECTORS_PATTERN,
 			$sudo,
@@ -317,6 +325,10 @@ class Bconsole extends APIModule
 		);
 		$cmd = $this->getModule('misc')->escapeCharsToConsole($cmd);
 		exec($cmd, $output, $exitcode);
+		Logging::log(
+			Logging::CATEGORY_EXECUTE,
+			Logging::prepareCommand($cmd, $output)
+		);
 		if ($exitcode != 0) {
 			$emsg = ' Output=>' . implode("\n", $output) . ', Exitcode=>' . $exitcode;
 			throw new BConsoleException(
@@ -359,9 +371,9 @@ class Bconsole extends APIModule
 		return $output;
 	}
 
-	public function testBconsoleCommand(array $command, $cmd_path, $cfg_path, $use_sudo)
+	public function testBconsoleCommand(array $command, $cmd_path, $cfg_path, $sudo_prop)
 	{
-		$this->setEnvironmentParams($cmd_path, $cfg_path, $use_sudo, true);
+		$this->setEnvironmentParams($cmd_path, $cfg_path, $sudo_prop, true);
 		$director = '';
 		$result = null;
 		try {

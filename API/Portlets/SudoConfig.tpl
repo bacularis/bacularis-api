@@ -2,11 +2,17 @@
 var oSudoConfig = {
 	bin_fields: {},
 	bin_opts: {},
+	bin_ownership: {},
 	ids: {
 		dialog: '<%=$this->SudoConfigPopup->ClientID%>'
 	},
+	def_user: 'root',
+	def_group: '',
 	set_bin_fields: function(bin_fields) {
 		this.bin_fields = bin_fields;
+	},
+	set_bin_ownership: function(bin_ownership) {
+		this.bin_ownership = bin_ownership;
 	},
 	set_bin_opts: function(bin_opts) {
 		this.bin_opts = bin_opts;
@@ -16,6 +22,7 @@ var oSudoConfig = {
 		var cfg = '';
 		var users = ['apache_nginx_lighttpd', 'www-data'];
 		var fields = this.bin_fields.hasOwnProperty(type) ? this.bin_fields[type] : [];
+		const runas = this.get_runas_user_group(type);
 		for (var i = 0; i < users.length; i++) {
 			var pre = document.getElementById('sudo_config_' + users[i].replace(/-/g, '_'));
 			if (users[i] == 'apache_nginx_lighttpd') {
@@ -31,11 +38,44 @@ var oSudoConfig = {
 					}
 				}
 				if (val) {
-					pre.textContent += users[i] + ' ALL = (root) NOPASSWD: ' + val + "\n";
+					pre.textContent += users[i] + ' ALL = (' + runas + ') NOPASSWD: ' + val + "\n";
 				}
 			}
 		}
 		$('#' + this.ids.dialog).dialog('open');
+	},
+	get_runas_user_group: function(type) {
+		let user = this.def_user;
+		let group = this.def_group;
+		let us, gr;
+		if (this.bin_ownership.hasOwnProperty(type)) {
+			if (this.bin_ownership[type].hasOwnProperty('user')) {
+				us = document.getElementById(this.bin_ownership[type].user).value.trim();
+				if (us) {
+					user = us;
+				}
+			}
+			if (this.bin_ownership[type].hasOwnProperty('group')) {
+				gr = document.getElementById(this.bin_ownership[type].group).value.trim();
+				if (gr) {
+					group = gr;
+				}
+			}
+		}
+		const runas = [];
+		if (user) {
+			runas.push(user);
+		}
+		if (group) {
+			runas.push(group);
+		}
+		let ret = '';
+		if (!us && group) {
+			ret = ':' + group;
+		} else {
+			ret = runas.join(' : ');
+		}
+		return ret;
 	}
 };
 </script>

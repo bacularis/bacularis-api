@@ -282,14 +282,26 @@ class APIConfig extends ConfigFileModule
 
 	public function getJSONToolConfig($tool_type)
 	{
-		$tool = ['bin' => '', 'cfg' => '', 'use_sudo' => false];
+		$tool = [
+			'bin' => '',
+			'cfg' => '',
+			'sudo' => [
+				'use_sudo' => false,
+				'user' => '',
+				'group' => ''
+			]
+		];
 		$tools = $this->getSupportedJSONTools();
 		$config = $this->getJSONToolsConfig();
 		if (in_array($tool_type, $tools)) {
 			$opt = $this->getJSONToolOptions($tool_type);
 			$tool['bin'] = $config[$opt['bin']];
 			$tool['cfg'] = $config[$opt['cfg']];
-			$tool['use_sudo'] = ($config['use_sudo'] == 1);
+			$tool['sudo'] = [
+				'use_sudo' => ((int) $config['use_sudo'] === 1),
+				'user' => $config['sudo_user'] ?? '',
+				'group' => $config['sudo_group'] ?? ''
+			];
 		}
 		return $tool;
 	}
@@ -451,12 +463,23 @@ class APIConfig extends ConfigFileModule
 	 */
 	public function getActionConfig($action_type)
 	{
-		$action = ['cmd' => '', 'use_sudo' => false];
+		$action = [
+			'cmd' => '',
+			'sudo' => [
+				'use_sudo' => false,
+				'user' => '',
+				'group' => ''
+			]
+		];
 		$actions = $this->getSupportedActions();
 		$config = $this->getActionsConfig();
 		if (in_array($action_type, $actions) && $this->isActionConfigured($action_type) === true) {
 			$action['cmd'] = $config[$action_type];
-			$action['use_sudo'] = ($config['use_sudo'] == 1);
+			$action['sudo'] = [
+				'use_sudo' => ((int) $config['use_sudo'] === 1),
+				'user' => ($config['sudo_user'] ?? ''),
+				'group' => ($config['sudo_group'] ?? '')
+			];
 		}
 		return $action;
 	}
@@ -539,12 +562,23 @@ class APIConfig extends ConfigFileModule
 	 */
 	public function getSoftwareManagementCommandConfig($command)
 	{
-		$cmd = ['cmd' => '', 'use_sudo' => false];
+		$cmd = [
+			'cmd' => '',
+			'sudo' => [
+				'use_sudo' => false,
+				'user' => '',
+				'group' => ''
+			]
+		];
 		$sm = $this->getSupportedSoftwareManagementCommands();
 		$config = $this->getSoftwareManagementConfig();
 		if (in_array($command, $sm) && $this->isSoftwareManagementCommandConfigured($command) === true) {
 			$cmd['cmd'] = $config[$command];
-			$cmd['use_sudo'] = ($config['use_sudo'] == 1);
+			$cmd['sudo'] = [
+				'use_sudo' => ((int) $config['use_sudo'] === 1),
+				'user' => ($config['sudo_user'] ?? ''),
+				'group' => ($config['sudo_group'] ?? '')
+			];
 		}
 		return $cmd;
 	}

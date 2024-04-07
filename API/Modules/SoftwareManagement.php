@@ -15,6 +15,7 @@
 
 namespace Bacularis\API\Modules;
 
+use Prado\Prado;
 use Bacularis\Common\Modules\Logging;
 use Bacularis\Common\Modules\Errors\SoftwareManagementError;
 
@@ -27,9 +28,9 @@ use Bacularis\Common\Modules\Errors\SoftwareManagementError;
 class SoftwareManagement extends APIModule
 {
 	/**
-	 * Sudo command.
+	 * Sudo object.
 	 */
-	public const SUDO = 'sudo';
+	private $sudo;
 
 	/**
 	 * Software management command pattern used to execute command.
@@ -48,18 +49,16 @@ class SoftwareManagement extends APIModule
 	}
 
 	/**
-	 * Get sudo command.
+	 * Set sudo setting for command.
 	 *
-	 * @param bool $use_sudo sudo option state
-	 * @return string sudo command
+	 * @param array $prop sudo properties
 	 */
-	private function getSudo($use_sudo)
+	private function setSudo(array $prop): void
 	{
-		$sudo = '';
-		if ($use_sudo === true) {
-			$sudo = self::SUDO . ' ';
-		}
-		return $sudo;
+		$this->sudo = Prado::createComponent(
+			'Bacularis\API\Modules\Sudo',
+			$prop
+		);
 	}
 
 	/**
@@ -77,7 +76,7 @@ class SoftwareManagement extends APIModule
 		if ($api_config->isSoftwareManagementCommandConfigured($command) === true) {
 			if ($api_config->isSoftwareManagementEnabled() === true) {
 				$command = $api_config->getSoftwareManagementCommandConfig($command);
-				$result = $this->execCommand($command['cmd'], $command['use_sudo']);
+				$result = $this->execCommand($command['cmd'], $command['sudo']);
 				if ($result->error !== 0) {
 					$emsg = PHP_EOL . ' Output:' . implode(PHP_EOL, $result->output);
 					$output = SoftwareManagementError::MSG_ERROR_SOFTWARE_MANAGEMENT_WRONG_EXITCODE . $emsg;
@@ -101,12 +100,13 @@ class SoftwareManagement extends APIModule
 	 * Execute software management command.
 	 *
 	 * @param string $bin command
-	 * @param bool $use_sudo use sudo
+	 * @param array $sudo_prop sudo properties
 	 */
-	public function execCommand($bin, $use_sudo)
+	public function execCommand($bin, $sudo_prop)
 	{
-		$sudo = $this->getSudo($use_sudo);
+		$this->setSudo($sudo_prop);
 		$cmd_pattern = $this->getCmdPattern();
+		$sudo = $this->sudo->getSudoCmd();
 		$cmd = sprintf($cmd_pattern, $sudo, $bin);
 		exec($cmd, $output, $exitcode);
 		array_unshift($output, $cmd);

@@ -106,6 +106,8 @@ class APIDevices extends BaculumAPIPage
 			$this->ChangerDevice->Text = $ach['device'];
 			$this->ChangerCommand->Text = $ach['command'];
 			$this->ChangerCommandUseSudo->Checked = ($ach['use_sudo'] == 1);
+			$this->ChangerCommandSudoRunAsUser->Text = $ach['sudo_user'] ?? '';
+			$this->ChangerCommandSudoRunAsGroup->Text = $ach['sudo_group'] ?? '';
 			$drives = explode(',', $ach['drives']);
 			$ach_drives = $this->getAutochangerDrives();
 			$disabled_indices = [];
@@ -148,6 +150,8 @@ class APIDevices extends BaculumAPIPage
 			'device' => $this->ChangerDevice->Text,
 			'command' => $this->ChangerCommand->Text,
 			'use_sudo' => $this->ChangerCommandUseSudo->Checked ? '1' : '0',
+			'sudo_user' => $this->ChangerCommandSudoRunAsUser->Text,
+			'sudo_group' => $this->ChangerCommandSudoRunAsGroup->Text,
 			'drives' => implode(',', $drives)
 		];
 		$this->config[$this->AutochangerName->Text] = $autochanger;
@@ -175,7 +179,11 @@ class APIDevices extends BaculumAPIPage
 
 	public function testChangerCommand($sender, $param)
 	{
-		$use_sudo = $this->ChangerCommandUseSudo->Checked;
+		$sudo = [
+			'use_sudo' => $this->ChangerCommandUseSudo->Checked,
+			'user' => $this->ChangerCommandSudoRunAsUser->Text,
+			'group' => $this->ChangerCommandSudoRunAsGroup->Text
+		];
 		$changer_command = $this->ChangerCommand->Text;
 		$changer_device = $this->ChangerDevice->Text;
 		$command = 'listall';
@@ -186,7 +194,7 @@ class APIDevices extends BaculumAPIPage
 		$is_validate = false;
 		if (!empty($changer_command) && !empty($changer_device)) {
 			$result = $this->getModule('changer_command')->testChangerCommand(
-				$use_sudo,
+				$sudo,
 				$changer_command,
 				$changer_device,
 				$command,

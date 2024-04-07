@@ -132,8 +132,15 @@ var bin_opts = {
 		base_path: true
 	}
 };
+const bin_ownership = {
+	changer_command: {
+		user: '<%=$this->ChangerCommandSudoRunAsUser->ClientID%>',
+		group: '<%=$this->ChangerCommandSudoRunAsGroup->ClientID%>'
+	}
+};
 oSudoConfig.set_bin_fields(bin_fields);
 oSudoConfig.set_bin_opts(bin_opts);
+oSudoConfig.set_bin_ownership(bin_ownership);
 </script>
 	<div id="autochanger_window" class="w3-modal">
 		<div class="w3-modal-content w3-animate-top w3-card-4">
@@ -227,6 +234,41 @@ oSudoConfig.set_bin_opts(bin_opts);
 							ID="ChangerCommandUseSudo"
 							CssClass="w3-check"
 						/> &nbsp;<a href="javascript:void(0)" onclick="oSudoConfig.get_config('changer_command');"><%[ Get sudo configuration ]%></a>
+					</div>
+				</div>
+				<i class="fa-solid fa-wrench"></i> <a href="javascript:void(0)" onclick="$('#bconsole_advanced_settings').toggle('fast');"><%[ Advanced options ]%></a>
+				<div id="bconsole_advanced_settings" style="display: none;">
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-quarter">
+							<com:TLabel
+								ForControl="ChangerCommandSudoRunAsUser"
+								Text="<%[ Sudo Runas user: ]%>"
+							/>
+						</div>
+						<div class="w3-col w3-threequarter">
+							<com:TTextBox
+								ID="ChangerCommandSudoRunAsUser"
+								CssClass="w3-input w3-border"
+								CausesValidation="false"
+								Width="170px"
+							/>
+						</div>
+					</div>
+					<div class="w3-row w3-section">
+						<div class="w3-col w3-quarter">
+							<com:TLabel
+								ForControl="ChangerCommandSudoRunAsGroup"
+								Text="<%[ Sudo Runas group: ]%>"
+							/>
+						</div>
+						<div class="w3-col w3-threequarter">
+							<com:TTextBox
+								ID="ChangerCommandSudoRunAsGroup"
+								CssClass="w3-input w3-border"
+								CausesValidation="false"
+								Width="170px"
+							/>
+						</div>
 					</div>
 				</div>
 				<div class="w3-row w3-section">

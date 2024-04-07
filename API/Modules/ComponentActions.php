@@ -29,6 +29,7 @@
 
 namespace Bacularis\API\Modules;
 
+use Prado\Prado;
 use Bacularis\Common\Modules\Logging;
 use Bacularis\Common\Modules\Errors\ActionsError;
 
@@ -41,9 +42,9 @@ use Bacularis\Common\Modules\Errors\ActionsError;
 class ComponentActions extends APIModule
 {
 	/**
-	 * Sudo command.
+	 * Sudo object.
 	 */
-	public const SUDO = 'sudo';
+	private $sudo;
 
 	/**
 	 * Action command pattern used to execute command.
@@ -62,18 +63,16 @@ class ComponentActions extends APIModule
 	}
 
 	/**
-	 * Get sudo command.
+	 * Set sudo setting for command.
 	 *
-	 * @param bool $use_sudo sudo option state
-	 * @return string sudo command
+	 * @param array $prop sudo properties
 	 */
-	private function getSudo($use_sudo)
+	private function setSudo(array $prop): void
 	{
-		$sudo = '';
-		if ($use_sudo === true) {
-			$sudo = self::SUDO . ' ';
-		}
-		return $sudo;
+		$this->sudo = Prado::createComponent(
+			'Bacularis\API\Modules\Sudo',
+			$prop
+		);
 	}
 
 	/**
@@ -91,7 +90,7 @@ class ComponentActions extends APIModule
 		if ($api_config->isActionConfigured($action_type) === true) {
 			if ($api_config->isActionsEnabled() === true) {
 				$action = $api_config->getActionConfig($action_type);
-				$result = $this->execCommand($action['cmd'], $action['use_sudo']);
+				$result = $this->execCommand($action['cmd'], $action['sudo']);
 				if ($result->error !== 0) {
 					$emsg = PHP_EOL . ' Output:' . implode(PHP_EOL, $result->output);
 					$output = ActionsError::MSG_ERROR_ACTIONS_WRONG_EXITCODE . $emsg;
@@ -115,12 +114,14 @@ class ComponentActions extends APIModule
 	 * Execute action command.
 	 *
 	 * @param string $bin command
-	 * @param bool $use_sudo use sudo
+	 * @param array $sudo_prop sudo properties
+	 * @return StdClass result output and error code
 	 */
-	public function execCommand($bin, $use_sudo)
+	public function execCommand($bin, $sudo_prop)
 	{
-		$sudo = $this->getSudo($use_sudo);
+		$this->setSudo($sudo_prop);
 		$cmd_pattern = $this->getCmdPattern();
+		$sudo = $this->sudo->getSudoCmd();
 		$cmd = sprintf($cmd_pattern, $sudo, $bin);
 		exec($cmd, $output, $exitcode);
 		Logging::log(
