@@ -31,6 +31,7 @@ namespace Bacularis\API\Modules;
 
 use Bacularis\Common\Modules\AuthBasic;
 use Bacularis\Common\Modules\BaculumPage;
+use Bacularis\Common\Modules\Logging;
 
 /**
  * Main API pages class.
@@ -63,6 +64,7 @@ class BaculumAPIPage extends BaculumPage
 			// without config there is no way to use API panel
 			return;
 		}
+		Logging::$debug_enabled = (key_exists('debug', $config) && $config['debug'] == 1);
 		$lang = key_exists('lang', $config) ? $config['lang'] : APIConfig::DEF_LANG;
 		$this->Application->getGlobalization()->Culture = $lang;
 	}
