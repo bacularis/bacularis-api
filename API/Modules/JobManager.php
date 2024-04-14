@@ -31,6 +31,7 @@ namespace Bacularis\API\Modules;
 
 use PDO;
 use Prado\Data\ActiveRecord\TActiveRecordCriteria;
+use Bacularis\Common\Modules\Miscellaneous;
 
 /**
  * Job manager module.
@@ -40,6 +41,12 @@ use Prado\Data\ActiveRecord\TActiveRecordCriteria;
  */
 class JobManager extends APIModule
 {
+	/**
+	 * List of allowed properties to use to sort file list.
+	 * @see JobManager::getJobFiles()
+	 */
+	public const ORDER_BY_FILE_LIST_PROPS = ['file', 'size', 'mtime'];
+
 	public function getJobs($criteria = [], $limit_val = null)
 	{
 		$sort_col = 'JobId';
@@ -537,11 +544,12 @@ WHERE {$where['where']}";
 	 * @param string $type file list type: saved, deleted or all.
 	 * @param int $offset SQL query offset
 	 * @param int $limit SQL query limit
+	 * @param array $order sort order properties in form [order_by, order_type]
 	 * @param string $search search file keyword
 	 * @param mixed $fetch_group
 	 * @return array jobs job list
 	 */
-	public function getJobFiles($jobid, $type, $offset = 0, $limit = 100, $search = null, $fetch_group = false)
+	public function getJobFiles($jobid, $type, $offset = 0, $limit = 100, $order = [], $search = null, $fetch_group = false)
 	{
 		$type_crit = '';
 		switch ($type) {
@@ -583,6 +591,18 @@ WHERE {$where['where']}";
 			$offset_sql = ' OFFSET ' . $offset;
 		}
 
+		$sort_sql = '';
+		$sort_comp = [];
+		if (is_array($order) && count($order) == 2) {
+			if ($order[0] == 'file') {
+				$sort_sql = " ORDER BY {$order[0]} {$order[1]} ";
+			} else {
+				$sort_comp = $order;
+				$limit_sql = '';
+				$offset_sql = '';
+			}
+		}
+
 		$sql = "SELECT $fname_col  AS file, 
                                F.lstat     AS lstat, 
                                F.fileindex AS fileindex 
@@ -608,7 +628,7 @@ WHERE {$where['where']}";
                         ) AS F, File, Path 
                         WHERE File.FileId = F.FileId AND Path.PathId = F.PathId 
                         $search_crit 
-			$limit_sql $offset_sql";
+			$sort_sql $limit_sql $offset_sql";
 		$result = [];
 		if ($fetch_group) {
 			$result = Database::findAllBySql($sql, [], PDO::FETCH_COLUMN);
@@ -621,6 +641,10 @@ WHERE {$where['where']}";
 				$result_len = count($result);
 				for ($i = 0; $i < $result_len; $i++) {
 					$result[$i]['lstat'] = $blstat->lstat_human($result[$i]['lstat']);
+				}
+				if (count($sort_comp) == 2) {
+					Miscellaneous::sortByProperty($result, $sort_comp[0], $sort_comp[1], 'lstat');
+					$result = array_slice($result, $offset, $limit);
 				}
 			}
 		}

@@ -30,7 +30,9 @@
 use Bacularis\API\Modules\BaculumAPIServer;
 use Bacularis\Common\Modules\Errors\GenericError;
 use Bacularis\Common\Modules\Errors\JobError;
+use Bacularis\Common\Modules\Miscellaneous;
 use Bacularis\API\Modules\APIServer;
+use Bacularis\API\Modules\JobManager;
 
 /**
  * List files from 'list files jobid=xx' bconsole command.
@@ -45,8 +47,10 @@ class JobListFiles extends BaculumAPIServer
 		$misc = $this->getModule('misc');
 		$jobid = $this->Request->contains('id') ? (int) ($this->Request['id']) : 0;
 		$type = $this->Request->contains('type') && $misc->isValidListFilesType($this->Request['type']) ? $this->Request['type'] : null;
-		$offset = $this->Request->contains('offset') ? (int) ($this->Request['offset']) : 0;
-		$limit = $this->Request->contains('limit') ? (int) ($this->Request['limit']) : 0;
+		$offset = $this->Request->contains('offset') && $misc->isValidInteger($this->Request['offset']) ? (int) ($this->Request['offset']) : 0;
+		$limit = $this->Request->contains('limit') && $misc->isValidInteger($this->Request['limit']) ? (int) ($this->Request['limit']) : 0;
+		$order_by = $this->Request->contains('order_by') && $misc->isValidName($this->Request['order_by']) ? $this->Request['order_by'] : '';
+		$order_type = $this->Request->contains('order_type') && $misc->isValidOrderType($this->Request['order_type']) ? $this->Request['order_type'] : Miscellaneous::ORDER_ASC;
 		$search = $this->Request->contains('search') && $misc->isValidPath($this->Request['search']) ? $this->Request['search'] : null;
 		$details = $this->Request->contains('details') && $misc->isValidBooleanTrue($this->Request['details']) ? $this->Request['details'] : false;
 
@@ -56,7 +60,17 @@ class JobListFiles extends BaculumAPIServer
 			null,
 			true
 		);
+		$order = [];
 		if ($result->exitcode === 0) {
+			if (!empty($order_by)) {
+				$order_by_lc = strtolower($order_by);
+				if (!in_array($order_by_lc, JobManager::ORDER_BY_FILE_LIST_PROPS)) {
+					$this->error = JobError::ERROR_INVALID_COMMAND;
+					$this->output = JobError::MSG_ERROR_INVALID_COMMAND . ' Column: ' . $order_by;
+					return;
+				}
+				$order = [$order_by, $order_type];
+			}
 			$params = [
 				'Job.Name' => [
 					'operator' => 'IN',
@@ -71,6 +85,7 @@ class JobListFiles extends BaculumAPIServer
 						'type' => $type,
 						'offset' => $offset,
 						'limit' => $limit,
+						'order' => $order,
 						'search' => $search
 					]);
 				} else {
@@ -79,6 +94,7 @@ class JobListFiles extends BaculumAPIServer
 						'type' => $type,
 						'offset' => $offset,
 						'limit' => $limit,
+						'order' => $order,
 						'search' => $search
 					]);
 					if (APIServer::getVersion() === 1) {
@@ -115,6 +131,7 @@ class JobListFiles extends BaculumAPIServer
 			$params['type'],
 			$params['offset'],
 			$params['limit'],
+			$params['order'],
 			$params['search'],
 			true
 		);
@@ -136,6 +153,7 @@ class JobListFiles extends BaculumAPIServer
 			$params['type'],
 			$params['offset'],
 			$params['limit'],
+			$params['order'],
 			$params['search']
 		);
 		return $result;

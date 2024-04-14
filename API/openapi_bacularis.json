@@ -1970,6 +1970,12 @@
 						}
 					},
 					{
+						"$ref": "#/components/parameters/OrderBy"
+					},
+					{
+						"$ref": "#/components/parameters/OrderType"
+					},
+					{
 						"name": "search",
 						"in": "query",
 						"description": "Search keyword in item list",
