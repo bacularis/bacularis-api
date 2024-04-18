@@ -1,8 +1,7 @@
 
-This is new function and bug fix release. We added the advanced sudo settings
-and we improved logging in API.
+This is a minor new feature release. It provides sorting parameters
+to backup files endpoint.
 
 Changes:
- - Add advanced sudo settings
- - Enable logging commands executed in API panel
+ - Add order by and order type parameters to /jobs/{jobid}/files endpoint
 
