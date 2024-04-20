@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-10-27 03:17\n"
+"PO-Revision-Date: 2024-04-20 14:08\n"
 "Project-Id-Version: bacularis\n"
 "POT-Creation-Date: \n"
 "Last-Translator: Marcin Haba <marcin.haba@bacula.pl>\n"
@@ -884,60 +884,60 @@ msgstr "Zarządzanie oprogramowaniem"
 msgid "Get pre-defined commands:"
 msgstr "Użyj predefiniowanych komend:"
 
-
 msgid "Director resource permissions"
-msgstr "Director resource permissions"
+msgstr "Uprawnienia do zasobów zarządcy"
 
 msgid "Storage resource permissions"
-msgstr "Storage resource permissions"
+msgstr "Uprawnienia do zasobów magazynu danych"
 
 msgid "Client resource permissions"
-msgstr "Client resource permissions"
+msgstr "Uprawnienia do zasobów klienta"
 
 msgid "Bconsole resource permissions"
-msgstr "Bconsole resource permissions"
+msgstr "Uprawnienia do zasobów bconsole"
 
 msgid "Resource"
-msgstr "Resource"
+msgstr "Zasób"
 
 msgid "Read-Only"
-msgstr "Read-Only"
+msgstr "Tylko do odczytu"
 
 msgid "Read-Write"
-msgstr "Read-Write"
+msgstr "Odczyt & Zapis"
 
 msgid "No access"
-msgstr "No access"
+msgstr "Brak dostępu"
 
 msgid "read only"
-msgstr "read only"
+msgstr "tylko do odczytu"
 
 msgid "read write"
-msgstr "read write"
+msgstr "odczyt/zapis"
 
 msgid "no access"
-msgstr "no access"
+msgstr "brak dostępu"
 
 msgid "Preview"
-msgstr "Preview"
+msgstr "Podgląd"
 
 msgid "All read-only"
-msgstr "All read-only"
+msgstr "Wszystkie tylko do odczytu"
 
 msgid "All read-write"
-msgstr "All read-write"
+msgstr "Wszystkie odczyt/zapis"
 
 msgid "All no access"
-msgstr "All no access"
+msgstr "Wszystkie brak dostępu"
 
 msgid "Resource permissions"
-msgstr "Resource permissions"
+msgstr "Uprawnienia zasobów"
 
 msgid "By default, all resources have read-write permissions."
-msgstr "By default, all resources have read-write permissions."
+msgstr "Domyślnie wszystkie zasoby mają uprawnienia do odczytu i zapisu."
 
 msgid "Sudo Runas user:"
-msgstr "Sudo Runas user:"
+msgstr "Użytkownik Sudo Runas:"
 
 msgid "Sudo Runas group:"
-msgstr "Sudo Runas group:"
+msgstr "Grupa Sudo Runas:"
+
