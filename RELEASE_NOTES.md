@@ -1,7 +1,6 @@
 
-This is a minor new feature release. It provides sorting parameters
-to backup files endpoint.
+This is a minor release. We updated Polish language translations.
 
 Changes:
- - Add order by and order type parameters to /jobs/{jobid}/files endpoint
+ - Update Polish translations
 
