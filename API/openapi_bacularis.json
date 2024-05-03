@@ -2122,6 +2122,96 @@
 				]
 			}
 		},
+		"/api/v2/jobs/{jobname}/{start_jobid}/{end_jobid}/diff": {
+			"get": {
+				"tags": ["jobs"],
+				"summary": "Show job files difference for selected jobs.",
+				"description": "Get job files difference for selected jobs.",
+				"responses": {
+					"200": {
+						"description": "Show job files difference.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "object",
+											"properties": {
+												"file with path": {
+													"type": "array",
+													"items": {
+														"type": "object",
+														"properties": {
+															"jobid": {
+																"type": "integer",
+																"description": "Job identifier"
+															},
+															"type": {
+																"type": "string",
+																"description": "File type: A or B"
+															},
+															"state": {
+																"type": "string",
+																"description": "File state: added or removed"
+															}
+														}
+													}
+												}
+											}
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 1, 2, 3, 4, 5, 6, 7, 11, 50, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"name": "jobname",
+						"in": "path",
+						"description": "Job name",
+						"required":  true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "start_jobid",
+						"in": "path",
+						"description": "A-type job identifier to prepare differences",
+						"required":  true,
+						"schema": {
+							"type": "integer"
+						}
+					},
+					{
+						"name": "end_jobid",
+						"in": "path",
+						"description": "B-type job identifier to prepare differences",
+						"required":  true,
+						"schema": {
+							"type": "integer"
+						}
+					},
+					{
+						"name": "method",
+						"in": "query",
+						"description": "Difference method",
+						"required":  true,
+						"schema": {
+							"type": "string",
+							"enum": ["a_and_b", "a_until_b", "b_until_a", "a_not_b", "b_not_a"]
+						}
+					}
+				]
+			}
+		},
 		"/api/v2/jobs/resnames": {
 			"get": {
 				"tags": ["jobs"],

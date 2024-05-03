@@ -69,6 +69,7 @@
 	<url ServiceParameter="JobCancel" pattern="api/v2/jobs/{id}/cancel/" parameters.id="\d+"/>
 	<url ServiceParameter="JobTotals" pattern="api/v2/jobs/totals/" />
 	<url ServiceParameter="JobListFiles" pattern="api/v2/jobs/{id}/files/" parameters.id="\d+" />
+	<url ServiceParameter="JobFileDiff" pattern="api/v2/jobs/{name}/{start_id}/{end_id}/diff/" parameters.name="[a-zA-Z0-9:.\-_ ]+" parameters.start_id="\d+" parameters.end_id="\d+" />
 	<url ServiceParameter="JobFiles" pattern="api/v2/jobs/files/" />
 	<url ServiceParameter="RestoreRun" pattern="api/v2/jobs/restore/" />
 	<!-- bvfs endpoints-->

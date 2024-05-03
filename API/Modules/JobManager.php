@@ -47,6 +47,16 @@ class JobManager extends APIModule
 	 */
 	public const ORDER_BY_FILE_LIST_PROPS = ['file', 'size', 'mtime'];
 
+	/**
+	 * List of diff methods allowed in diff method.
+	 * @see JobManager::getJobFileDiff()
+	 */
+	public const FILE_DIFF_METHOD_A_AND_B = 'a_and_b'; // full two job diff
+	public const FILE_DIFF_METHOD_A_UNTIL_B = 'a_until_b'; // job range
+	public const FILE_DIFF_METHOD_B_UNTIL_A = 'b_until_a'; // job range
+	public const FILE_DIFF_METHOD_A_NOT_B = 'a_not_b'; // in A but not in B
+	public const FILE_DIFF_METHOD_B_NOT_A = 'b_not_a'; // in B but not in A
+
 	public function getJobs($criteria = [], $limit_val = null)
 	{
 		$sort_col = 'JobId';
@@ -649,5 +659,142 @@ WHERE {$where['where']}";
 			}
 		}
 		return $result;
+	}
+
+	/**
+	 * Get two jobids file differences.
+	 *
+	 * @param string $method difference method
+	 * @param string $jobname job name
+	 * @param int $start_jobid first job identifier (oldest)
+	 * @param int $end_jobid last job identifier (newest)
+	 * @return array job file list with differences or empty array if no difference
+	 */
+	public function getJobFileDiff(string $method, string $jobname, int $start_jobid, int $end_jobid): array
+	{
+		$db_params = $this->getModule('api_config')->getConfig('db');
+		$fname_col = 'Path.Path || File.Filename';
+		if ($db_params['type'] === Database::MYSQL_TYPE) {
+			$fname_col = 'CONCAT(Path.Path, File.Filename)';
+		}
+
+		$sql = '';
+		switch ($method) {
+			case self::FILE_DIFF_METHOD_A_AND_B: {
+				$sql = "SELECT
+					$fname_col     	AS file, 
+					Job.JobId      	AS jobid,
+					'A'		AS type,
+					CASE
+						WHEN File.FileIndex < 0 THEN 'removed' ELSE 'added'
+					END state
+				FROM Job 
+				INNER JOIN File USING (JobId) 
+				INNER JOIN Path USING (PathId) 
+				WHERE 
+					Job.Name='$jobname' 
+					AND Job.JobId=$start_jobid 
+				UNION
+				SELECT
+					$fname_col     AS file, 
+					Job.JobId      AS jobid,
+					'B'		AS type,
+					CASE
+						WHEN File.FileIndex < 0 THEN 'removed' ELSE 'added'
+					END state
+				FROM Job 
+				INNER JOIN File USING (JobId) 
+				INNER JOIN Path USING (PathId) 
+				WHERE 
+					Job.Name='$jobname' 
+					AND Job.JobId=$end_jobid ";
+				break;
+			}
+			case self::FILE_DIFF_METHOD_A_UNTIL_B: {
+				$sql = "SELECT
+					$fname_col     	AS file, 
+					Job.JobId      	AS jobid,
+					'A'		AS type,
+					CASE
+						WHEN File.FileIndex < 0 THEN 'removed' ELSE 'added'
+					END state
+				FROM Job 
+				INNER JOIN File USING (JobId) 
+				INNER JOIN Path USING (PathId) 
+				WHERE 
+					Job.Name='$jobname' 
+					AND Job.JobId>=$start_jobid 
+					AND Job.JobId<=$end_jobid ";
+				break;
+			}
+			case self::FILE_DIFF_METHOD_B_UNTIL_A: {
+				$sql = "SELECT
+					$fname_col     	AS file, 
+					Job.JobId      	AS jobid,
+					'B'		AS type,
+					CASE
+						WHEN File.FileIndex < 0 THEN 'removed' ELSE 'added'
+					END state
+				FROM Job 
+				INNER JOIN File USING (JobId) 
+				INNER JOIN Path USING (PathId) 
+				WHERE 
+					Job.Name='$jobname' 
+					AND Job.JobId>=$end_jobid 
+					AND Job.JobId<=$start_jobid ";
+				break;
+			}
+			case self::FILE_DIFF_METHOD_A_NOT_B: {
+				$sql = "SELECT
+						$fname_col     	AS file, 
+						Job.JobId	AS jobid,
+						'A'		AS type,
+						CASE
+							WHEN File.FileIndex < 0 THEN 'removed' ELSE 'added'
+						END state
+					FROM Job 
+					INNER JOIN File USING (JobId) 
+					INNER JOIN Path USING (PathId) 
+					WHERE 
+						Job.Name='$jobname' 
+						AND Job.JobId=$start_jobid 
+						AND $fname_col NOT IN ( 
+							SELECT $fname_col AS file 
+							FROM Job 
+							INNER JOIN File USING (JobId) 
+							INNER JOIN Path USING (PathId) 
+							WHERE 
+								Job.Name='$jobname' 
+								AND Job.JobId=$end_jobid
+						) ";
+				break;
+			}
+			case self::FILE_DIFF_METHOD_B_NOT_A: {
+				$sql = "SELECT
+						$fname_col     	AS file, 
+						Job.JobId	AS jobid,
+						'B'		AS type,
+						CASE
+							WHEN File.FileIndex < 0 THEN 'removed' ELSE 'added'
+						END state
+					FROM Job 
+					INNER JOIN File USING (JobId) 
+					INNER JOIN Path USING (PathId) 
+					WHERE 
+						Job.Name='$jobname' 
+						AND Job.JobId=$end_jobid 
+						AND $fname_col NOT IN ( 
+							SELECT $fname_col AS file 
+							FROM Job 
+							INNER JOIN File USING (JobId) 
+							INNER JOIN Path USING (PathId) 
+							WHERE 
+								Job.Name='$jobname' 
+								AND Job.JobId=$start_jobid
+						) ";
+				break;
+			}
+		}
+		return Database::findAllBySql($sql, [], PDO::FETCH_GROUP | PDO::FETCH_ASSOC);
 	}
 }
