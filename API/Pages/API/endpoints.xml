@@ -114,6 +114,7 @@
 	<url ServiceParameter="SoftwareManagementRemove" pattern="api/v2/software/{component}/remove" parameters.component="(director|storage|client|console)" />
 	<url ServiceParameter="SoftwareManagementInfo" pattern="api/v2/software/{component}/info" parameters.component="(director|storage|client|console)" />
 	<url ServiceParameter="SoftwareManagementEnable" pattern="api/v2/software/{component}/enable" parameters.component="(director|storage|client)" />
+	<url ServiceParameter="SelfTestRun" pattern="api/v2/software/selftest" />
 
 
 	<!-- API v1 -->

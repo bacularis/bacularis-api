@@ -33,6 +33,7 @@
 		<module id="json_tools" class="Bacularis\API\Modules\JSONTools" />
 		<module id="bvfs" class="Bacularis\API\Modules\BVFS" />
 		<module id="blstat" class="Bacularis\API\Modules\BLStat" />
+		<module id="self_test" class="Bacularis\API\Modules\SelfTest" />
 		<!-- config modules -->
 		<module id="api_config" class="Bacularis\API\Modules\APIConfig" />
 		<module id="bacula_config" class="Bacularis\API\Modules\BaculaConfig" />
