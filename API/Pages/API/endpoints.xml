@@ -1,5 +1,120 @@
 <urls>
-	<!-- #### NEW API version 1 #### -->
+	<!-- API v3 -->
+	<!-- general endpoint -->
+	<url ServiceParameter="Welcome" pattern="api/v3/welcome/" />
+	<!-- bconsole endpoints -->
+	<url ServiceParameter="ConsoleCommand" pattern="api/v3/console/" />
+	<!-- database endpoints -->
+	<url ServiceParameter="Catalog" pattern="api/v3/catalog/" />
+	<url ServiceParameter="DbSize" pattern="api/v3/dbsize/" />
+	<!-- director endpoints -->
+	<url ServiceParameter="Directors" pattern="api/v3/directors/" />
+	<!-- clients (file daemons) endpoints -->
+	<url ServiceParameter="Clients" pattern="api/v3/clients/" />
+	<url ServiceParameter="Client" pattern="api/v3/clients/{id}/" parameters.id="\d+" />
+	<url ServiceParameter="ClientsShow" pattern="api/v3/clients/show/" />
+	<url ServiceParameter="ClientShow" pattern="api/v3/clients/{id}/show/" parameters.id="\d+" />
+	<url ServiceParameter="ClientStatus" pattern="api/v3/clients/{id}/status/" parameters.id="\d+" />
+	<url ServiceParameter="JobsForClient" pattern="api/v3/clients/{id}/jobs/" parameters.id="\d+" />
+	<url ServiceParameter="ClientLs" pattern="api/v3/clients/{id}/ls/" parameters.id="\d+" />
+	<url ServiceParameter="ClientBandwidthLimit" pattern="api/v3/clients/{id}/bandwidth/" parameters.id="\d+" />
+	<!-- storages (storage daemons) endpoints -->
+	<url ServiceParameter="Storages" pattern="api/v3/storages/" />
+	<url ServiceParameter="Storage" pattern="api/v3/storages/{id}/" parameters.id="\d+" />
+	<url ServiceParameter="StoragesShow" pattern="api/v3/storages/show/" />
+	<url ServiceParameter="StorageShow" pattern="api/v3/storages/{id}/show/" parameters.id="\d+" />
+	<url ServiceParameter="StorageStatus" pattern="api/v3/storages/{id}/status/" parameters.id="\d+" />
+	<url ServiceParameter="StorageMount" pattern="api/v3/storages/{id}/mount/" parameters.id="\d+" />
+	<url ServiceParameter="StorageUmount" pattern="api/v3/storages/{id}/umount/" parameters.id="\d+" />
+	<url ServiceParameter="StorageRelease" pattern="api/v3/storages/{id}/release/" parameters.id="\d+" />
+	<!-- devices endpoints -->
+	<url ServiceParameter="ChangerDriveLoad" pattern="api/v3/devices/{device_name}/load/" parameters.device_name="[a-zA-Z0-9:.\-_ ]+" />
+	<url ServiceParameter="ChangerDriveUnload" pattern="api/v3/devices/{device_name}/unload/" parameters.device_name="[a-zA-Z0-9:.\-_ ]+" />
+	<url ServiceParameter="ChangerDriveLoaded" pattern="api/v3/devices/{device_name}/loaded/" parameters.device_name="[a-zA-Z0-9:.\-_ ]+" />
+	<url ServiceParameter="ChangerList" pattern="api/v3/devices/{device_name}/list/" parameters.device_name="[a-zA-Z0-9:.\-_ ]+" />
+	<url ServiceParameter="ChangerListAll" pattern="api/v3/devices/{device_name}/listall/" parameters.device_name="[a-zA-Z0-9:.\-_ ]+" />
+	<url ServiceParameter="ChangerSlots" pattern="api/v3/devices/{device_name}/slots/" parameters.device_name="[a-zA-Z0-9:.\-_ ]+" />
+	<url ServiceParameter="ChangerSlotsTransfer" pattern="api/v3/devices/{device_name}/transfer/" parameters.device_name="[a-zA-Z0-9:.\-_ ]+" />
+	<!-- volumes (media) endpoints-->
+	<url ServiceParameter="Volumes" pattern="api/v3/volumes/" />
+	<url ServiceParameter="Volume" pattern="api/v3/volumes/{id}/" parameters.id="\d+" />
+	<url ServiceParameter="VolumePrune" pattern="api/v3/volumes/{id}/prune/" parameters.id="\d+" />
+	<url ServiceParameter="VolumePurge" pattern="api/v3/volumes/{id}/purge/" parameters.id="\d+" />
+	<url ServiceParameter="VolumesRequired" pattern="api/v3/volumes/required/{jobid}/{fileid}/" parameters.jobid="\d+" parameters.fileid="\d+" />
+	<url ServiceParameter="JobsOnVolume" pattern="api/v3/volumes/{id}/jobs/" parameters.id="\d+" />
+	<url ServiceParameter="VolumeLabel" pattern="api/v3/volumes/label/" />
+	<url ServiceParameter="VolumeLabelBarcodes" pattern="api/v3/volumes/label/barcodes/" />
+	<url ServiceParameter="SlotsUpdate" pattern="api/v3/volumes/update/" />
+	<url ServiceParameter="SlotsUpdate" pattern="api/v3/volumes/update/{barcodes}/" parameters.barcodes="barcodes" />
+	<!-- pools endpoints -->
+	<url ServiceParameter="Pools" pattern="api/v3/pools/" />
+	<url ServiceParameter="Pool" pattern="api/v3/pools/{id}/" parameters.id="\d+" />
+	<url ServiceParameter="VolumesInPool" pattern="api/v3/pools/{id}/volumes/" parameters.id="\d+" />
+	<url ServiceParameter="PoolUpdate" pattern="api/v3/pools/{id}/update/" parameters.id="\d+" />
+	<url ServiceParameter="PoolUpdateVolumes" pattern="api/v3/pools/{id}/update/volumes/" parameters.id="\d+" />
+	<url ServiceParameter="PoolsShow" pattern="api/v3/pools/show/" />
+	<url ServiceParameter="PoolShow" pattern="api/v3/pools/{id}/show/" parameters.id="\d+" />
+	<!-- jobs endpoints-->
+	<url ServiceParameter="Jobs" pattern="api/v3/jobs/" />
+	<url ServiceParameter="Job" pattern="api/v3/jobs/{id}/" parameters.id="\d+" />
+	<url ServiceParameter="JobResNames" pattern="api/v3/jobs/resnames/" />
+	<url ServiceParameter="JobsShow" pattern="api/v3/jobs/show/" />
+	<url ServiceParameter="JobShow" pattern="api/v3/jobs/{id}/show/" parameters.id="\d+" />
+	<url ServiceParameter="JobBandwidthLimit" pattern="api/v3/jobs/{id}/bandwidth/" parameters.id="\d+" />
+	<url ServiceParameter="JobsRecent" pattern="api/v3/jobs/recent/{name}/" parameters.name="[a-zA-Z0-9:.\-_ ]+" />
+	<url ServiceParameter="JobEstimate" pattern="api/v3/jobs/estimate/" />
+	<url ServiceParameter="JobRun" pattern="api/v3/jobs/run/" />
+	<url ServiceParameter="JobCancel" pattern="api/v3/jobs/{id}/cancel/" parameters.id="\d+"/>
+	<url ServiceParameter="JobTotals" pattern="api/v3/jobs/totals/" />
+	<url ServiceParameter="JobListFiles" pattern="api/v3/jobs/{id}/files/" parameters.id="\d+" />
+	<url ServiceParameter="JobFileDiff" pattern="api/v3/jobs/{name}/{start_id}/{end_id}/diff/" parameters.name="[a-zA-Z0-9:.\-_ ]+" parameters.start_id="\d+" parameters.end_id="\d+" />
+	<url ServiceParameter="JobFiles" pattern="api/v3/jobs/files/" />
+	<url ServiceParameter="RestoreRun" pattern="api/v3/jobs/restore/" />
+	<!-- bvfs endpoints-->
+	<url ServiceParameter="BVFSUpdate" pattern="api/v3/bvfs/update/" />
+	<url ServiceParameter="BVFSLsDirs" pattern="api/v3/bvfs/lsdirs/" />
+	<url ServiceParameter="BVFSLsFiles" pattern="api/v3/bvfs/lsfiles/" />
+	<url ServiceParameter="BVFSVersions" pattern="api/v3/bvfs/versions/" />
+	<url ServiceParameter="BVFSGetJobids" pattern="api/v3/bvfs/getjobids/" />
+	<url ServiceParameter="BVFSRestore" pattern="api/v3/bvfs/restore/" />
+	<url ServiceParameter="BVFSClearCache" pattern="api/v3/bvfs/clear/" />
+	<url ServiceParameter="BVFSCleanUp" pattern="api/v3/bvfs/cleanup/" />
+	<!-- joblog endpoints -->
+	<url ServiceParameter="JobLog" pattern="api/v3/joblog/{id}/" parameters.id="\d+" />
+	<!-- @TODO: Separate this endpoint outside 'joblog' -->
+	<url ServiceParameter="Messages" pattern="api/v3/joblog/messages" />
+	<!-- fileset endpoints -->
+	<url ServiceParameter="FileSets" pattern="api/v3/filesets/" />
+	<url ServiceParameter="FileSet" pattern="api/v3/filesets/{id}/" parameters.id="\d+" />
+	<url ServiceParameter="FileSetResNames" pattern="api/v3/filesets/resnames/" />
+	<!-- schedule endpoints -->
+	<url ServiceParameter="Schedules" pattern="api/v3/schedules/resnames/" />
+	<url ServiceParameter="ScheduleStatus" pattern="api/v3/schedules/status/" />
+	<!-- Bacula config module endpoints -->
+	<url ServiceParameter="Config" pattern="api/v3/config/" />
+	<url ServiceParameter="Config" pattern="api/v3/config/{component_type}/" parameters.component_type="[a-z]+" />
+	<url ServiceParameter="Config" pattern="api/v3/config/{component_type}/{resource_type}/" parameters.component_type="[a-z]+" parameters.resource_type="[a-zA-Z]+" />
+	<url ServiceParameter="Config" pattern="api/v3/config/{component_type}/{resource_type}/{resource_name}/" parameters.component_type="[a-z]+" parameters.resource_type="[a-zA-Z]+" parameters.resource_name="[a-zA-Z0-9:.\-_ ]+" />
+	<!-- director endpoints -->
+	<url ServiceParameter="DirectorShow" pattern="api/v3/directors/{name}/show/" parameters.name="[a-zA-Z0-9:.\-_ ]+" />
+	<url ServiceParameter="DirectorStatus" pattern="api/v3/directors/{name}/status/" parameters.name="[a-zA-Z0-9:.\-_ ]+" />
+	<!-- actions endpoints -->
+	<url ServiceParameter="Actions" pattern="api/v3/actions/{component}/{action}/" parameters.component="(director|storage|client)" parameters.action="(start|stop|restart)" />
+	<!-- OAuth2 client endpoints -->
+	<url ServiceParameter="OAuth2Clients" pattern="api/v3/oauth2/clients/" />
+	<url ServiceParameter="OAuth2Client" pattern="api/v3/oauth2/clients/{id}/" parameters.id="[a-zA-Z0-9\-_]{32}" />
+	<!-- Basic user endpoints -->
+	<url ServiceParameter="BasicUsers" pattern="api/v3/basic/users/" />
+	<url ServiceParameter="BasicUser" pattern="api/v3/basic/users/{id}/" parameters.id="[a-zA-Z0-9]+" />
+	<!-- Software management endpoints -->
+	<url ServiceParameter="SoftwareManagementInstall" pattern="api/v3/software/{component}/install" parameters.component="(director|storage|client|console)" />
+	<url ServiceParameter="SoftwareManagementUpgrade" pattern="api/v3/software/{component}/upgrade" parameters.component="(director|storage|client|console)" />
+	<url ServiceParameter="SoftwareManagementRemove" pattern="api/v3/software/{component}/remove" parameters.component="(director|storage|client|console)" />
+	<url ServiceParameter="SoftwareManagementInfo" pattern="api/v3/software/{component}/info" parameters.component="(director|storage|client|console)" />
+	<url ServiceParameter="SoftwareManagementEnable" pattern="api/v3/software/{component}/enable" parameters.component="(director|storage|client)" />
+	<url ServiceParameter="SelfTestRun" pattern="api/v3/software/selftest" />
+
+
 
 	<!-- API v2 -->
 	<!-- general endpoint -->
@@ -93,10 +208,10 @@
 	<url ServiceParameter="Schedules" pattern="api/v2/schedules/resnames/" />
 	<url ServiceParameter="ScheduleStatus" pattern="api/v2/schedules/status/" />
 	<!-- Bacula config module endpoints -->
-	<url ServiceParameter="Config" pattern="api/v2/config/" />
-	<url ServiceParameter="Config" pattern="api/v2/config/{component_type}/" parameters.component_type="[a-z]+" />
-	<url ServiceParameter="Config" pattern="api/v2/config/{component_type}/{resource_type}/" parameters.component_type="[a-z]+" parameters.resource_type="[a-zA-Z]+" />
-	<url ServiceParameter="Config" pattern="api/v2/config/{component_type}/{resource_type}/{resource_name}/" parameters.component_type="[a-z]+" parameters.resource_type="[a-zA-Z]+" parameters.resource_name="[a-zA-Z0-9:.\-_ ]+" />
+	<url ServiceParameter="ConfigV2" pattern="api/v2/config/" />
+	<url ServiceParameter="ConfigV2" pattern="api/v2/config/{component_type}/" parameters.component_type="[a-z]+" />
+	<url ServiceParameter="ConfigV2" pattern="api/v2/config/{component_type}/{resource_type}/" parameters.component_type="[a-z]+" parameters.resource_type="[a-zA-Z]+" />
+	<url ServiceParameter="ConfigV2" pattern="api/v2/config/{component_type}/{resource_type}/{resource_name}/" parameters.component_type="[a-z]+" parameters.resource_type="[a-zA-Z]+" parameters.resource_name="[a-zA-Z0-9:.\-_ ]+" />
 	<!-- director endpoints -->
 	<url ServiceParameter="DirectorShow" pattern="api/v2/directors/{name}/show/" parameters.name="[a-zA-Z0-9:.\-_ ]+" />
 	<url ServiceParameter="DirectorStatus" pattern="api/v2/directors/{name}/status/" parameters.name="[a-zA-Z0-9:.\-_ ]+" />

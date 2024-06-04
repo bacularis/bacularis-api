@@ -1190,7 +1190,7 @@
 	}
 	],
 	"paths": {
-		"/api/v2/clients": {
+		"/api/v3/clients": {
 			"get": {
 				"tags": ["clients"],
 				"summary": "Client list",
@@ -1230,7 +1230,7 @@
 				]
 			}
 		},
-		"/api/v2/clients/{clientid}": {
+		"/api/v3/clients/{clientid}": {
 			"get": {
 				"tags": ["clients"],
 				"summary": "Find client by ClientId",
@@ -1262,7 +1262,7 @@
 				}]
 			}
 		},
-		"/api/v2/clients/{clientid}/show": {
+		"/api/v3/clients/{clientid}/show": {
 			"get": {
 				"tags": ["clients"],
 				"summary": "Show client",
@@ -1357,7 +1357,7 @@
 				]
 			}
 		},
-		"/api/v2/clients/{clientid}/status": {
+		"/api/v3/clients/{clientid}/status": {
 			"get": {
 				"tags": ["clients"],
 				"summary": "Client status",
@@ -1407,7 +1407,7 @@
 				]
 			}
 		},
-		"/api/v2/clients/{clientid}/jobs": {
+		"/api/v3/clients/{clientid}/jobs": {
 			"get": {
 				"tags": ["clients"],
 				"summary": "Jobs for client",
@@ -1439,7 +1439,7 @@
 				}]
 			}
 		},
-		"/api/v2/clients/{clientid}/ls": {
+		"/api/v3/clients/{clientid}/ls": {
 			"get": {
 				"tags": ["clients"],
 				"summary": "List Client files/directories",
@@ -1487,7 +1487,7 @@
 				]
 			}
 		},
-		"/api/v2/clients/{clientid}/bandwidth": {
+		"/api/v3/clients/{clientid}/bandwidth": {
 			"put": {
 				"tags": ["clients"],
 				"summary": "Set Client bandwidth limit",
@@ -1534,7 +1534,7 @@
 				]
 			}
 		},
-		"/api/v2/clients/show": {
+		"/api/v3/clients/show": {
 			"get": {
 				"tags": ["clients"],
 				"summary": "Show clients",
@@ -1582,7 +1582,7 @@
 				]
 			}
 		},
-		"/api/v2/jobs": {
+		"/api/v3/jobs": {
 			"get": {
 				"tags": ["jobs"],
 				"summary": "Job list",
@@ -1680,7 +1680,7 @@
 				]
 			}
 		},
-		"/api/v2/jobs/{jobid}": {
+		"/api/v3/jobs/{jobid}": {
 			"get": {
 				"tags": ["jobs"],
 				"summary": "Find job by JobId",
@@ -1762,7 +1762,7 @@
 				]
 			}
 		},
-		"/api/v2/jobs/{jobid}/cancel": {
+		"/api/v3/jobs/{jobid}/cancel": {
 			"put": {
 				"tags": ["jobs"],
 				"summary": "Cancel job",
@@ -1806,7 +1806,7 @@
 				]
 			}
 		},
-		"/api/v2/jobs/{jobid}/show": {
+		"/api/v3/jobs/{jobid}/show": {
 			"get": {
 				"tags": ["jobs"],
 				"summary": "Show job",
@@ -1853,7 +1853,7 @@
 				]
 			}
 		},
-		"/api/v2/jobs/{jobid}/bandwidth": {
+		"/api/v3/jobs/{jobid}/bandwidth": {
 			"put": {
 				"tags": ["jobs"],
 				"summary": "Set Job bandwidth limit",
@@ -1900,7 +1900,7 @@
 				]
 			}
 		},
-		"/api/v2/jobs/{jobid}/files": {
+		"/api/v3/jobs/{jobid}/files": {
 			"get": {
 				"tags": ["jobs"],
 				"summary": "Show job files and directories",
@@ -1996,7 +1996,7 @@
 				]
 			}
 		},
-		"/api/v2/jobs/files": {
+		"/api/v3/jobs/files": {
 			"get": {
 				"tags": ["jobs"],
 				"summary": "Search jobs by file criteria",
@@ -2122,7 +2122,7 @@
 				]
 			}
 		},
-		"/api/v2/jobs/{jobname}/{start_jobid}/{end_jobid}/diff": {
+		"/api/v3/jobs/{jobname}/{start_jobid}/{end_jobid}/diff": {
 			"get": {
 				"tags": ["jobs"],
 				"summary": "Show job files difference for selected jobs.",
@@ -2212,7 +2212,7 @@
 				]
 			}
 		},
-		"/api/v2/jobs/resnames": {
+		"/api/v3/jobs/resnames": {
 			"get": {
 				"tags": ["jobs"],
 				"summary": "Job resource names",
@@ -2253,7 +2253,7 @@
 				]
 			}
 		},
-		"/api/v2/jobs/recent/{jobname}": {
+		"/api/v3/jobs/recent/{jobname}": {
 			"get": {
 				"tags": ["jobs"],
 				"summary": "Get most recent jobids for job to restore",
@@ -2335,7 +2335,7 @@
 				]
 			}
 		},
-		"/api/v2/jobs/estimate": {
+		"/api/v3/jobs/estimate": {
 			"get": {
 				"tags": ["jobs"],
 				"summary": "Get estimate output",
@@ -2468,7 +2468,7 @@
 				]
 			}
 		},
-		"/api/v2/jobs/run": {
+		"/api/v3/jobs/run": {
 			"post": {
 				"tags": ["jobs"],
 				"summary": "Run job",
@@ -2645,7 +2645,7 @@
 				]
 			}
 		},
-		"/api/v2/jobs/show": {
+		"/api/v3/jobs/show": {
 			"get": {
 				"tags": ["jobs"],
 				"summary": "Show jobs",
@@ -2693,7 +2693,7 @@
 				]
 			}
 		},
-		"/api/v2/jobs/totals": {
+		"/api/v3/jobs/totals": {
 			"get": {
 				"tags": ["jobs"],
 				"summary": "Show job total bytes and files",
@@ -2760,7 +2760,7 @@
 				}
 			}
 		},
-		"/api/v2/jobs/restore": {
+		"/api/v3/jobs/restore": {
 			"post": {
 				"tags": ["jobs"],
 				"summary": "Restore job",
@@ -2934,7 +2934,7 @@
 				]
 			}
 		},
-		"/api/v2/storages": {
+		"/api/v3/storages": {
 			"get": {
 				"tags": ["storages"],
 				"summary": "Storage list",
@@ -2966,7 +2966,7 @@
 				}]
 			}
 		},
-		"/api/v2/storages/{storageid}": {
+		"/api/v3/storages/{storageid}": {
 			"get": {
 				"tags": ["storages"],
 				"summary": "Find storage by StorageId",
@@ -2998,7 +2998,7 @@
 				}]
 			}
 		},
-		"/api/v2/storages/{storageid}/show": {
+		"/api/v3/storages/{storageid}/show": {
 			"get": {
 				"tags": ["storages"],
 				"summary": "Show storage",
@@ -3039,7 +3039,7 @@
 				]
 			}
 		},
-		"/api/v2/storages/{storageid}/status": {
+		"/api/v3/storages/{storageid}/status": {
 			"get": {
 				"tags": ["storages"],
 				"summary": "Storage status",
@@ -3089,7 +3089,7 @@
 				]
 			}
 		},
-		"/api/v2/storages/{storageid}/mount": {
+		"/api/v3/storages/{storageid}/mount": {
 			"get": {
 				"tags": ["storages"],
 				"summary": "Mount storage",
@@ -3136,7 +3136,7 @@
 				]
 			}
 		},
-		"/api/v2/storages/{storageid}/umount": {
+		"/api/v3/storages/{storageid}/umount": {
 			"get": {
 				"tags": ["storages"],
 				"summary": "Umount storage",
@@ -3180,7 +3180,7 @@
 				]
 			}
 		},
-		"/api/v2/storages/{storageid}/release": {
+		"/api/v3/storages/{storageid}/release": {
 			"get": {
 				"tags": ["storages"],
 				"summary": "Release storage",
@@ -3224,7 +3224,7 @@
 				]
 			}
 		},
-		"/api/v2/storages/show": {
+		"/api/v3/storages/show": {
 			"get": {
 				"tags": ["storages"],
 				"summary": "Show storages",
@@ -3272,7 +3272,7 @@
 				]
 			}
 		},
-		"/api/v2/pools": {
+		"/api/v3/pools": {
 			"get": {
 				"tags": ["pools"],
 				"summary": "Pool list",
@@ -3304,7 +3304,7 @@
 				}]
 			}
 		},
-		"/api/v2/pools/{poolid}": {
+		"/api/v3/pools/{poolid}": {
 			"get": {
 				"tags": ["pools"],
 				"summary": "Find pool by PoolId",
@@ -3336,7 +3336,7 @@
 				}]
 			}
 		},
-		"/api/v2/pools/{poolid}/volumes": {
+		"/api/v3/pools/{poolid}/volumes": {
 			"get": {
 				"tags": ["pools"],
 				"summary": "Get all volumes in pool",
@@ -3368,7 +3368,7 @@
 				}]
 			}
 		},
-		"/api/v2/pools/{poolid}/show": {
+		"/api/v3/pools/{poolid}/show": {
 			"get": {
 				"tags": ["pools"],
 				"summary": "Show pool",
@@ -3409,7 +3409,7 @@
 				]
 			}
 		},
-		"/api/v2/pools/{poolid}/update": {
+		"/api/v3/pools/{poolid}/update": {
 			"put": {
 				"tags": ["pools"],
 				"summary": "Update pool properties",
@@ -3445,7 +3445,7 @@
 				}]
 			}
 		},
-		"/api/v2/pools/{poolid}/update/volumes": {
+		"/api/v3/pools/{poolid}/update/volumes": {
 			"put": {
 				"tags": ["pools"],
 				"summary": "Update properties all volumes in pool",
@@ -3481,7 +3481,7 @@
 				}]
 			}
 		},
-		"/api/v2/pools/show": {
+		"/api/v3/pools/show": {
 			"get": {
 				"tags": ["pools"],
 				"summary": "Show pools",
@@ -3526,7 +3526,7 @@
 				]
 			}
 		},
-		"/api/v2/volumes": {
+		"/api/v3/volumes": {
 			"get": {
 				"tags": ["volumes"],
 				"summary": "Volume list",
@@ -3558,7 +3558,7 @@
 				}]
 			}
 		},
-		"/api/v2/volumes/{mediaid}": {
+		"/api/v3/volumes/{mediaid}": {
 			"get": {
 				"tags": ["volumes"],
 				"summary": "Find volume by MediaId",
@@ -3767,7 +3767,7 @@
 				]
 			}
 		},
-		"/api/v2/volumes/{mediaid}/prune": {
+		"/api/v3/volumes/{mediaid}/prune": {
 			"put": {
 				"tags": ["volumes"],
 				"summary": "Prune volume",
@@ -3805,7 +3805,7 @@
 				]
 			}
 		},
-		"/api/v2/volumes/{mediaid}/purge": {
+		"/api/v3/volumes/{mediaid}/purge": {
 			"put": {
 				"tags": ["volumes"],
 				"summary": "Purge volume",
@@ -3843,7 +3843,7 @@
 				]
 			}
 		},
-		"/api/v2/volumes/{mediaid}/jobs": {
+		"/api/v3/volumes/{mediaid}/jobs": {
 			"get": {
 				"tags": ["volumes"],
 				"summary": "Jobs on volume",
@@ -3875,7 +3875,7 @@
 				}]
 			}
 		},
-		"/api/v2/volumes/required/{jobid}/{fileid}": {
+		"/api/v3/volumes/required/{jobid}/{fileid}": {
 			"get": {
 				"tags": ["volumes"],
 				"summary": "Get volumes required to restore file",
@@ -3943,7 +3943,7 @@
 				]
 			}
 		},
-		"/api/v2/volumes/label": {
+		"/api/v3/volumes/label": {
 			"get": {
 				"tags": ["volumes"],
 				"summary": "Get label volume output",
@@ -4088,7 +4088,7 @@
 				]
 			}
 		},
-		"/api/v2/volumes/label/barcodes": {
+		"/api/v3/volumes/label/barcodes": {
 			"get": {
 				"tags": ["volumes"],
 				"summary": "Get label barcodes volume output",
@@ -4223,7 +4223,7 @@
 				]
 			}
 		},
-		"/api/v2/volumes/update": {
+		"/api/v3/volumes/update": {
 			"get": {
 				"tags": ["volumes"],
 				"summary": "Get update slots output",
@@ -4339,7 +4339,7 @@
 				]
 			}
 		},
-		"/api/v2/volumes/update/barcodes": {
+		"/api/v3/volumes/update/barcodes": {
 			"get": {
 				"tags": ["volumes"],
 				"summary": "Get update slots output using barcodes",
@@ -4455,7 +4455,7 @@
 				]
 			}
 		},
-		"/api/v2/filesets": {
+		"/api/v3/filesets": {
 			"get": {
 				"tags": ["filesets"],
 				"summary": "FileSet list",
@@ -4499,7 +4499,7 @@
 				]
 			}
 		},
-		"/api/v2/filesets/{filesetid}": {
+		"/api/v3/filesets/{filesetid}": {
 			"get": {
 				"tags": ["filesets"],
 				"summary": "Find FileSet by FileSetId",
@@ -4531,7 +4531,7 @@
 				}]
 			}
 		},
-		"/api/v2/filesets/resnames": {
+		"/api/v3/filesets/resnames": {
 			"get": {
 				"tags": ["filesets"],
 				"summary": "FileSet resource names",
@@ -4564,7 +4564,7 @@
 				}
 			}
 		},
-		"/api/v2/schedules/resnames": {
+		"/api/v3/schedules/resnames": {
 			"get": {
 				"tags": ["schedules"],
 				"summary": "Schedule resource names",
@@ -4597,7 +4597,7 @@
 				}
 			}
 		},
-		"/api/v2/schedules/status": {
+		"/api/v3/schedules/status": {
 			"get": {
 				"tags": ["schedules"],
 				"summary": "Schedule status",
@@ -4689,7 +4689,7 @@
 				]
 			}
 		},
-		"/api/v2/bvfs/update": {
+		"/api/v3/bvfs/update": {
 			"put": {
 				"tags": ["bvfs"],
 				"summary": "Update BVFS cache",
@@ -4722,7 +4722,7 @@
 				}
 			}
 		},
-		"/api/v2/bvfs/lsdirs": {
+		"/api/v3/bvfs/lsdirs": {
 			"get": {
 				"tags": ["bvfs"],
 				"summary": "BVFS list directories",
@@ -4805,7 +4805,7 @@
 				]
 			}
 		},
-		"/api/v2/bvfs/lsfiles": {
+		"/api/v3/bvfs/lsfiles": {
 			"get": {
 				"tags": ["bvfs"],
 				"summary": "BVFS list files",
@@ -4888,7 +4888,7 @@
 				]
 			}
 		},
-		"/api/v2/bvfs/versions": {
+		"/api/v3/bvfs/versions": {
 			"get": {
 				"tags": ["bvfs"],
 				"summary": "BVFS list file versions",
@@ -4981,7 +4981,7 @@
 				]
 			}
 		},
-		"/api/v2/bvfs/getjobids": {
+		"/api/v3/bvfs/getjobids": {
 			"get": {
 				"tags": ["bvfs"],
 				"summary": "BVFS get particular jobids to restore",
@@ -5025,7 +5025,7 @@
 				]
 			}
 		},
-		"/api/v2/bvfs/restore": {
+		"/api/v3/bvfs/restore": {
 			"post": {
 				"tags": ["bvfs"],
 				"summary": "Prepare BVFS restore",
@@ -5105,7 +5105,7 @@
 				]
 			}
 		},
-		"/api/v2/bvfs/clear": {
+		"/api/v3/bvfs/clear": {
 			"put": {
 				"tags": ["bvfs"],
 				"summary": "Clear BVFS cache",
@@ -5138,7 +5138,7 @@
 				}
 			}
 		},
-		"/api/v2/bvfs/cleanup": {
+		"/api/v3/bvfs/cleanup": {
 			"put": {
 				"tags": ["bvfs"],
 				"summary": "Cleanup BVFS (remove temporary table)",
@@ -5182,7 +5182,7 @@
 				]
 			}
 		},
-		"/api/v2/config": {
+		"/api/v3/config": {
 			"get": {
 				"tags": ["config"],
 				"summary": "Get components information",
@@ -5232,7 +5232,7 @@
 				}
 			}
 		},
-		"/api/v2/config/{component_type}": {
+		"/api/v3/config/{component_type}": {
 			"get": {
 				"tags": ["config"],
 				"summary": "Get component config",
@@ -5311,11 +5311,21 @@
 						"schema": {
 							"type": "string"
 						}
+					},
+					{
+						"name": "mode",
+						"in": "query",
+						"description": "Saving mode (save, simulate). Note: in the simulate mode returned is raw config resource in output property. Default is 'save' mode.",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": ["save", "simulate"]
+						}
 					}
 				]
 			}
 		},
-		"/api/v2/config/{component_type}/{resource_type}": {
+		"/api/v3/config/{component_type}/{resource_type}": {
 			"get": {
 				"tags": ["config"],
 				"summary": "Get component resources config",
@@ -5404,7 +5414,7 @@
 				]
 			}
 		},
-		"/api/v2/config/{component_type}/{resource_type}/{resource_name}": {
+		"/api/v3/config/{component_type}/{resource_type}/{resource_name}": {
 			"get": {
 				"tags": ["config"],
 				"summary": "Get component resource config",
@@ -5450,13 +5460,13 @@
 					}
 				]
 			},
-			"put": {
+			"post": {
 				"tags": ["config"],
-				"summary": "Set component resource config",
-				"description": "Set specific component resource config",
+				"summary": "Create component resource config",
+				"description": "Create specific component resource config",
 				"responses": {
 					"200": {
-						"description": "Set single resource config",
+						"description": "Create single resource config",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -5464,12 +5474,12 @@
 									"properties": {
 										"output": {
 											"type": "object",
-											"description": "Set resource config error message"
+											"description": "Create resource config error message"
 										},
 										"error": {
 											"type": "integer",
 											"description": "Error code",
-											"enum": [0, 1, 2, 3, 4, 5, 6, 7, 11, 80, 81, 82, 83, 84, 90, 91, 92, 93, 94, 1000]
+											"enum": [0, 1, 2, 3, 4, 5, 6, 7, 11, 80, 81, 82, 83, 84, 90, 91, 92, 93, 94, 98, 1000]
 										}
 									}
 								}
@@ -5497,9 +5507,95 @@
 						}
 					}
 				]
+			},
+			"put": {
+				"tags": ["config"],
+				"summary": "Set component resource config",
+				"description": "Set specific component resource config",
+				"responses": {
+					"200": {
+						"description": "Set single resource config",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "object",
+											"description": "Set resource config error message"
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 1, 2, 3, 4, 5, 6, 7, 11, 80, 81, 82, 83, 84, 90, 91, 92, 93, 94, 97, 98, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/ComponentType"
+					},
+					{
+						"$ref": "#/components/parameters/ResourceType"
+					},
+					{
+						"$ref": "#/components/parameters/ResourceName"
+					},
+					{
+						"name": "config",
+						"in": "header",
+						"description": "Config in JSON form to set",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "mode",
+						"in": "query",
+						"description": "Saving mode (save, simulate). Note: in the simulate mode returned is raw config resource in output property. Default is 'save' mode.",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": ["save", "simulate"]
+						}
+					}
+				]
+			},
+			"delete": {
+				"tags": ["config"],
+				"summary": "Delete component resource config",
+				"description": "Delete specific component resource config",
+				"responses": {
+					"200": {
+						"description": "Delete single resource config",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "object",
+											"description": "Delete resource config error message"
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 1, 2, 3, 4, 5, 6, 7, 11, 80, 81, 82, 83, 84, 90, 91, 92, 93, 94, 97, 99, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		},
-		"/api/v2/devices/{device_name}/load": {
+		"/api/v3/devices/{device_name}/load": {
 			"get": {
 				"tags": ["devices"],
 				"summary": "Get autochanger tape drive load output",
@@ -5603,7 +5699,7 @@
 				]
 			}
 		},
-		"/api/v2/devices/{device_name}/unload": {
+		"/api/v3/devices/{device_name}/unload": {
 			"get": {
 				"tags": ["devices"],
 				"summary": "Get autochanger tape drive unload output",
@@ -5707,7 +5803,7 @@
 				]
 			}
 		},
-		"/api/v2/devices/{device_name}/loaded": {
+		"/api/v3/devices/{device_name}/loaded": {
 			"get": {
 				"tags": ["devices"],
 				"summary": "Get loaded slot in given tape drive",
@@ -5755,7 +5851,7 @@
 				]
 			}
 		},
-		"/api/v2/devices/{device_name}/list": {
+		"/api/v3/devices/{device_name}/list": {
 			"get": {
 				"tags": ["devices"],
 				"summary": "List autochanger volume names (requires barcode reader)",
@@ -5802,7 +5898,7 @@
 				]
 			}
 		},
-		"/api/v2/devices/{device_name}/listall": {
+		"/api/v3/devices/{device_name}/listall": {
 			"get": {
 				"tags": ["devices"],
 				"summary": "List all autochanger slots and drives",
@@ -5859,7 +5955,7 @@
 				]
 			}
 		},
-		"/api/v2/devices/{device_name}/slots": {
+		"/api/v3/devices/{device_name}/slots": {
 			"get": {
 				"tags": ["devices"],
 				"summary": "Get how many slots has autochanger",
@@ -5899,7 +5995,7 @@
 				]
 			}
 		},
-		"/api/v2/devices/{device_name}/transfer": {
+		"/api/v3/devices/{device_name}/transfer": {
 			"get": {
 				"tags": ["devices"],
 				"summary": "Get output from transfering tape from source slot to destination slot",
@@ -6013,7 +6109,7 @@
 				]
 			}
 		},
-		"/api/v2/joblog/{jobid}": {
+		"/api/v3/joblog/{jobid}": {
 			"get": {
 				"tags": ["joblog"],
 				"summary": "Get job log for jobid",
@@ -6059,7 +6155,7 @@
 				}]
 			}
 		},
-		"/api/v2/joblog/messages": {
+		"/api/v3/joblog/messages": {
 			"get": {
 				"tags": ["joblog"],
 				"summary": "Get console messages log.",
@@ -6101,7 +6197,7 @@
 				}]
 			}
 		},
-		"/api/v2/directors/{director_name}/status": {
+		"/api/v3/directors/{director_name}/status": {
 			"get": {
 				"tags": ["directors"],
 				"summary": "Get director status",
@@ -6407,7 +6503,7 @@
 				]
 			}
 		},
-		"/api/v2/oauth2/clients": {
+		"/api/v3/oauth2/clients": {
 			"get": {
 				"tags": ["oauth2"],
 				"summary": "OAuth2 client account list",
@@ -6436,7 +6532,7 @@
 				}
 			}
 		},
-		"/api/v2/oauth2/clients/{client_id}": {
+		"/api/v3/oauth2/clients/{client_id}": {
 			"get": {
 				"tags": ["oauth2"],
 				"summary": "Specific OAuth2 client account config",
@@ -6720,7 +6816,7 @@
 				]
 			}
 		},
-		"/api/v2/basic/users": {
+		"/api/v3/basic/users": {
 			"get": {
 				"tags": ["basic"],
 				"summary": "Basic user list",
@@ -6749,7 +6845,7 @@
 				}
 			}
 		},
-		"/api/v2/basic/users/{username}": {
+		"/api/v3/basic/users/{username}": {
 			"get": {
 				"tags": ["basic"],
 				"summary": "Specific Basic user config",

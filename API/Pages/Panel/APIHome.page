@@ -70,12 +70,12 @@
 				auth_params_input: '<%=$this->AuthParamsInput->ClientID%>'
 			},
 			default_commands: {
-				storages: '/api/v2/storages/',
-				clients: '/api/v2/clients?limit=5',
-				volumes: '/api/v2/volumes?limit=4',
-				jobs: '/api/v2/jobs?limit=10',
-				joblog: '/api/v2/joblog/1/',
-				bvfs: '/api/v2/bvfs/lsdirs?jobids=1&path=&limit=8'
+				storages: '/api/v3/storages/',
+				clients: '/api/v3/clients?limit=5',
+				volumes: '/api/v3/volumes?limit=4',
+				jobs: '/api/v3/jobs?limit=10',
+				joblog: '/api/v3/joblog/1/',
+				bvfs: '/api/v3/bvfs/lsdirs?jobids=1&path=&limit=8'
 			},
 			token: null,
 			auth_params_cb: <%=$this->AuthParamsCallback->ActiveControl->Javascript%>,

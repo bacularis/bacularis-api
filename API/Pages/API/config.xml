@@ -17,6 +17,7 @@
 		<!-- API Server modules -->
 		<module id="api_server_v1" class="Bacularis\API\Modules\APIServerV1" />
 		<module id="api_server_v2" class="Bacularis\API\Modules\APIServerV2" />
+		<module id="api_server_v3" class="Bacularis\API\Modules\APIServerV3" />
 
 		<!-- database modules -->
 		<module id="db" class="Bacularis\API\Modules\Database" />

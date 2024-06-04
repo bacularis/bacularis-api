@@ -43,7 +43,7 @@ class APIServer extends APIModule
 	/**
 	 * Default API version if there was not possible to determine version.
 	 */
-	public const DEFAULT_VERSION = 2;
+	public const DEFAULT_VERSION = 3;
 
 	public const VERSION_PATTERN = '!/api/v(?P<version>\d+)/!';
 
