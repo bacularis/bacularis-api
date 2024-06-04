@@ -31,6 +31,7 @@ namespace Bacularis\API\Modules;
 
 use Bacularis\Common\Modules\Logging;
 use Bacularis\Common\Modules\ConfigFileModule;
+use Bacularis\API\Modules\BaculaSetting;
 
 /**
  * Manage Bacula configuration.
@@ -70,21 +71,28 @@ class BaculaConfig extends ConfigFileModule
 	 * @param string $component_type Bacula component type
 	 * @param array $config config
 	 * @param string $file config file path
+	 * @param bool $mode set config mode (simulate, save...)
 	 * @return array validation result, validation output and write to config result
 	 */
-	public function setConfig($component_type, array $config, $file = null)
+	public function setConfig($component_type, array $config, $file = null, $mode = null)
 	{
-		$result = ['is_valid' => false, 'save_result' => false, 'output' => null];
+		$result = ['is_valid' => false, 'save_result' => false, 'output' => null, 'config' => []];
 		$config_content = $this->prepareConfig($config, self::CONFIG_FILE_FORMAT);
 		$validation = $this->validateConfig($component_type, $config_content);
 		$result['is_valid'] = $validation['is_valid'];
 		$result['result'] = $validation['result'];
-		if ($result['is_valid'] === true) {
-			if (is_null($file)) {
-				$tool_config = $this->getModule('api_config')->getJSONToolConfig($component_type);
-				$file = $tool_config['cfg'];
+		if ($mode === BaculaSetting::MODE_SIMULATE) {
+			// this is simulation, so no config save. If it is valid, it is enough
+			$result['save_result'] = $result['is_valid'];
+			$result['config'] = $config;
+		} elseif ($mode === BaculaSetting::MODE_SAVE) {
+			if ($result['is_valid'] === true) {
+				if (is_null($file)) {
+					$tool_config = $this->getModule('api_config')->getJSONToolConfig($component_type);
+					$file = $tool_config['cfg'];
+				}
+				$result['save_result'] = $this->writeConfig($config, $file, self::CONFIG_FILE_FORMAT);
 			}
-			$result['save_result'] = $this->writeConfig($config, $file, self::CONFIG_FILE_FORMAT);
 		}
 		return $result;
 	}

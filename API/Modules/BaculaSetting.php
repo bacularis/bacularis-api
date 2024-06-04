@@ -47,6 +47,9 @@ class BaculaSetting extends APIModule
 	public const COMPONENT_FD_TYPE = 'fd';
 	public const COMPONENT_BCONS_TYPE = 'bcons';
 
+	public const MODE_SAVE = 'save';
+	public const MODE_SIMULATE = 'simulate';
+
 	/**
 	 * These string value directives cannot by defined in quotes.
 	 */
@@ -168,7 +171,7 @@ class BaculaSetting extends APIModule
 		return $result;
 	}
 
-	public function setConfig($config, $component_type, $resource_type = null, $resource_name = null)
+	public function setConfig($config, $component_type, $resource_type = null, $resource_name = null, $mode = BaculaSetting::MODE_SAVE)
 	{
 		$ret = ['is_valid' => false, 'save_result' => false, 'result' => null];
 		$this->checkConfigSupport($component_type);
@@ -187,21 +190,27 @@ class BaculaSetting extends APIModule
 				// Set whole config
 				$config_new = $config;
 			}
-			$ret = $this->saveConfig($config_orig, $config_new, $component_type, $resource_type, $resource_name);
+			$ret = $this->saveConfig($config_orig, $config_new, $component_type, $resource_type, $resource_name, $mode);
 		} else {
 			$ret['result'] = $result;
 		}
 		return $ret;
 	}
 
-	private function saveConfig(array $config_orig, array $config_new, $component_type, $resource_type = null, $resource_name = null)
+	private function saveConfig(array $config_orig, array $config_new, $component_type, $resource_type = null, $resource_name = null, $mode = null)
 	{
 		$config = [];
 
 		if (!is_null($resource_type) && !is_null($resource_name)) {
 			// Update single resource in config
 
-			$config = $this->updateConfigResource($config_orig, $config_new, $resource_type, $resource_name);
+			$config = $this->updateConfigResource(
+				$config_orig,
+				$config_new,
+				$component_type,
+				$resource_type,
+				$resource_name
+			);
 		} elseif (count($config_orig) > 0 && !is_null($resource_type)) {
 			// Update whole config
 			$config = $this->updateConfig($config_orig, $config_new);
@@ -214,7 +223,7 @@ class BaculaSetting extends APIModule
 			}
 		}
 		// Save config to file
-		return $this->getModule('bacula_config')->setConfig($component_type, $config);
+		return $this->getModule('bacula_config')->setConfig($component_type, $config, null, $mode);
 	}
 
 	private function updateConfig(array $config_orig, array $config_new)
@@ -258,9 +267,21 @@ class BaculaSetting extends APIModule
 		return $config;
 	}
 
-	private function updateConfigResource(array $config_orig, array $resource, $resource_type, $resource_name)
+	private function updateConfigResource(array $config_orig, array $resource, $component_type, $resource_type, $resource_name)
 	{
 		$config = [];
+
+		if ($resource[$resource_type]['Name'] !== $resource_name) {
+			// Resource rename
+			$this->updateResourceDependencies(
+				$config_orig,
+				$component_type,
+				$resource_type,
+				$resource_name,
+				$resource[$resource_type]['Name']
+			);
+		}
+
 		$is_update = false;
 		for ($i = 0; $i < count($config_orig); $i++) {
 			$resource_orig = $config_orig[$i];
@@ -524,6 +545,55 @@ class BaculaSetting extends APIModule
 			);
 		}
 		return $directive_value;
+	}
+
+	/**
+	 * Update resource dependencies.
+	 * Note, passing config by reference.
+	 *
+	 * @param array $config entire config
+	 * @param string $component_type component type
+	 * @param string $resource_type resource type to rename
+	 * @param string $resource_name resource name to rename
+	 * @param string $resource_name_new new resource name to set
+	 */
+	private function updateResourceDependencies(&$config, $component_type, $resource_type, $resource_name, $resource_name_new)
+	{
+		// Update dependencies if exist
+		$deps = $this->getModule('data_deps')->checkDependencies(
+			$component_type,
+			$resource_type,
+			$resource_name,
+			$config
+		);
+		if (count($deps) > 0) {
+			// Dependencies exist. Update them.
+			for ($i = 0; $i < count($config); $i++) {
+				foreach ($config[$i] as $rtype => $resource) {
+					for ($j = 0; $j < count($deps); $j++) {
+						if ($rtype === $deps[$j]['resource_type'] && $resource['Name'] === $deps[$j]['resource_name']) {
+							// special Schedule treating
+							if ($deps[$j]['resource_type'] === 'Schedule' && key_exists('Run', $resource)) {
+								for ($k = 0; $k < count($resource['Run']); $k++) {
+									$deps_directive = $deps[$j]['directive_name'];
+									if (key_exists($deps_directive, $resource['Run'][$k]) && $resource['Run'][$k][$deps_directive] === $resource_name) {
+										$config[$i][$rtype]['Run'][$k][$deps_directive] = $resource_name_new;
+									}
+								}
+							} else {
+								// rest directives
+								// Change resource name in dependent resources
+								$config[$i][$rtype][$deps[$j]['directive_name']] = $resource_name_new;
+							}
+						}
+					}
+					if ($rtype === $resource_type && $resource['Name'] === $resource_name) {
+						// Change resource name
+						$config[$i][$rtype]['Name'] = $resource_name_new;
+					}
+				}
+			}
+		}
 	}
 
 	/**
