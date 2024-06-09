@@ -73,8 +73,11 @@ class APIInstallWizard extends BaculumAPIPage
 	public function onPreInit($param)
 	{
 		parent::onPreInit($param);
-		if (isset($_SESSION['language'])) {
-			$this->Application->getGlobalization()->Culture = $_SESSION['language'];
+		$session = $this->Application->getSession();
+		// Open new session if no session exists
+		$session->open();
+		if ($session->contains('language')) {
+			$this->Application->getGlobalization()->Culture = $session->itemAt('language');
 		}
 	}
 
@@ -86,8 +89,9 @@ class APIInstallWizard extends BaculumAPIPage
 		$this->first_run = (count($this->config) === 0);
 		$oauth2_cfg = $this->getModule('oauth2_config')->getConfig();
 		$this->add_auth_params = (count($oauth2_cfg) === 0);
-		if (isset($_SESSION['language'])) {
-			$this->Lang->SelectedValue = $_SESSION['language'];
+		$session = $this->Application->getSession();
+		if ($session->contains('language')) {
+			$this->Lang->SelectedValue = $session->itemAt('language');
 		} elseif (!$this->first_run && isset($this->config['api']['lang'])) {
 			$this->Lang->SelectedValue = $this->config['api']['lang'];
 		}
@@ -233,8 +237,9 @@ class APIInstallWizard extends BaculumAPIPage
 		} elseif ($this->AuthOAuth2->Checked) {
 			$cfg_data['api']['auth_type'] = 'oauth2';
 		}
+		$session = $this->Application->getSession();
 		$cfg_data['api']['debug'] = $this->config['api']['debug'] ?? "0";
-		$cfg_data['api']['lang'] = $_SESSION['language'] ?? APIConfig::DEF_LANG;
+		$cfg_data['api']['lang'] = $session->itemAt('language') ?? APIConfig::DEF_LANG;
 		$cfg_data['db']['enabled'] = (int) ($this->DatabaseYes->Checked === true);
 		$cfg_data['db']['type'] = $this->DBType->SelectedValue;
 		$cfg_data['db']['name'] = $this->DBName->Text;
@@ -480,7 +485,8 @@ class APIInstallWizard extends BaculumAPIPage
 
 	public function setLang($sender, $param)
 	{
-		$_SESSION['language'] = $sender->SelectedValue;
+		$session = $this->Application->getSession();
+		$session->add('language', $sender->SelectedValue);
 	}
 
 	public function renderPanel($sender, $param)
