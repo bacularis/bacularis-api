@@ -74,7 +74,7 @@ class BaculaConfig extends ConfigFileModule
 	 * @param bool $mode set config mode (simulate, save...)
 	 * @return array validation result, validation output and write to config result
 	 */
-	public function setConfig($component_type, array $config, $file = null, $mode = null)
+	public function setConfig($component_type, array $config, $file = null, $mode = BaculaSetting::MODE_SAVE)
 	{
 		$result = ['is_valid' => false, 'save_result' => false, 'output' => null, 'config' => []];
 		$config_content = $this->prepareConfig($config, self::CONFIG_FILE_FORMAT);
