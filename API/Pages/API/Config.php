@@ -140,7 +140,13 @@ class Config extends BaculumAPIServer
 			}
 		} else {
 			// Config already exists
-			$this->output = BaculaConfigError::MSG_ERROR_CONFIG_ALREADY_EXISTS;
+			$emsg = sprintf(
+				' Component Type: %s, Resource Type: %s, Resource Name: %s',
+				$component_type ?? '',
+				$resource_type ?? '',
+				$resource_name ?? ''
+			);
+			$this->output = BaculaConfigError::MSG_ERROR_CONFIG_ALREADY_EXISTS . $emsg;
 			$this->error = BaculaConfigError::ERROR_CONFIG_ALREADY_EXISTS;
 		}
 	}
@@ -243,7 +249,13 @@ class Config extends BaculumAPIServer
 			}
 		} else {
 			// Config does not exist
-			$this->output = BaculaConfigError::MSG_ERROR_CONFIG_DOES_NOT_EXIST;
+			$emsg = sprintf(
+				' Component Type: %s, Resource Type: %s, Resource Name: %s',
+				$component_type ?? '',
+				$resource_type ?? '',
+				$resource_name ?? ''
+			);
+			$this->output = BaculaConfigError::MSG_ERROR_CONFIG_DOES_NOT_EXIST . $emsg;
 			$this->error = BaculaConfigError::ERROR_CONFIG_DOES_NOT_EXIST;
 		}
 	}
