@@ -437,7 +437,7 @@
 
 						</div>
 					</div>
-					<i class="fa-solid fa-wrench"></i> <a href="javascript:void(0)" onclick="$('#bconsole_advanced_settings').toggle('fast');"><%[ Advanced options ]%></a>
+					<i class="fa-solid fa-wrench"></i> <a id="bconsole_advanced_settings_btn" href="javascript:void(0)" onclick="$('#bconsole_advanced_settings').toggle('fast');"><%[ Advanced options ]%></a>
 					<div id="bconsole_advanced_settings" style="display: none;">
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-quarter">
