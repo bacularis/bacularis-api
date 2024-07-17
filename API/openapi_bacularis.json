@@ -2491,7 +2491,7 @@
 										"error": {
 											"type": "integer",
 											"description": "Error code",
-											"enum": [0, 1, 2, 3, 4, 5, 6, 7, 11, 50, 51, 52, 53, 1000]
+											"enum": [0, 1, 2, 3, 4, 5, 6, 7, 11, 50, 1000]
 										}
 									}
 								}
@@ -2523,7 +2523,7 @@
 						"name": "level",
 						"in": "header",
 						"description": "Job level",
-						"required": true,
+						"required": false,
 						"schema": {
 							"type": "string",
 							"enum": ["F","I", "D", "B", "f", "V", "C", "O", "d"]
@@ -2533,7 +2533,7 @@
 						"name": "clientid",
 						"in": "header",
 						"description": "Client identifier",
-						"required":  true,
+						"required":  false,
 						"schema": {
 							"type": "integer"
 						}
@@ -2542,7 +2542,7 @@
 						"name": "client",
 						"in": "header",
 						"description": "Client name (can be used instead clientid)",
-						"required":  true,
+						"required":  false,
 						"schema": {
 							"type": "string",
 							"pattern": "[a-zA-Z0-9:.-_ ]+"
@@ -2552,7 +2552,7 @@
 						"name": "storageid",
 						"in": "header",
 						"description": "Storage identifier",
-						"required":  true,
+						"required":  false,
 						"schema": {
 							"type": "integer"
 						}
@@ -2561,7 +2561,7 @@
 						"name": "storage",
 						"in": "header",
 						"description": "Storage name (can be used instead storageid)",
-						"required":  true,
+						"required":  false,
 						"schema": {
 							"type": "string",
 							"pattern": "[a-zA-Z0-9:.-_ ]+"
@@ -2571,7 +2571,7 @@
 						"name": "poolid",
 						"in": "header",
 						"description": "Pool identifier",
-						"required":  true,
+						"required":  false,
 						"schema": {
 							"type": "integer"
 						}
@@ -2580,7 +2580,7 @@
 						"name": "pool",
 						"in": "header",
 						"description": "Pool name (can be used instead poolid)",
-						"required":  true,
+						"required":  false,
 						"schema": {
 							"type": "string",
 							"pattern": "[a-zA-Z0-9:.-_ ]+"
@@ -2590,7 +2590,7 @@
 						"name": "filesetid",
 						"in": "header",
 						"description": "FileSet identifier",
-						"required":  true,
+						"required":  false,
 						"schema": {
 							"type": "integer"
 						}
@@ -2599,7 +2599,7 @@
 						"name": "fileset",
 						"in": "header",
 						"description": "FileSet name (can be used instead filesetid)",
-						"required": true,
+						"required": false,
 						"schema": {
 							"type": "string",
 							"pattern": "[a-zA-Z0-9:.-_ ]+"
