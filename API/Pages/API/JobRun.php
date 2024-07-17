@@ -69,7 +69,7 @@ class JobRun extends BaculumAPIServer
 			$client = $params->client;
 		}
 
-		$accurate = 'no';
+		$accurate = null;
 		if (property_exists($params, 'accurate')) {
 			$accurate_job = (int) ($params->accurate);
 			$accurate = $accurate_job === 1 ? 'yes' : 'no';
@@ -91,9 +91,9 @@ class JobRun extends BaculumAPIServer
 		} elseif (property_exists($params, 'pool') && $this->getModule('misc')->isValidName($params->pool)) {
 			$pool = $params->pool;
 		}
-		$priority = property_exists($params, 'priority') ? (int) ($params->priority) : 10; // default priority is set to 10
+		$priority = property_exists($params, 'priority') ? (int) ($params->priority) : null;
 
-		$jobid = property_exists($params, 'jobid') ? 'jobid="' . (int) ($params->jobid) . '"' : '';
+		$jobid = property_exists($params, 'jobid') ? 'jobid="' . (int) ($params->jobid) . '"' : null;
 		$verifyjob = null;
 		if (property_exists($params, 'verifyjob') && $this->getModule('misc')->isValidName($params->verifyjob)) {
 			$verifyjob = 'verifyjob="' . $params->verifyjob . '"';
@@ -123,52 +123,46 @@ class JobRun extends BaculumAPIServer
 			}
 		}
 
-		$is_valid_level = $this->getModule('misc')->isValidJobLevel($level);
+		$is_valid_level = is_null($level) || $this->getModule('misc')->isValidJobLevel($level);
 		if (!$is_valid_level) {
 			$this->output = JobError::MSG_ERROR_INVALID_JOBLEVEL;
 			$this->error = JobError::ERROR_INVALID_JOBLEVEL;
 			return;
 		}
 
-		if (is_null($fileset)) {
-			$this->output = JobError::MSG_ERROR_FILESET_DOES_NOT_EXISTS;
-			$this->error = JobError::ERROR_FILESET_DOES_NOT_EXISTS;
-			return;
-		}
-
-		if (is_null($client)) {
-			$this->output = JobError::MSG_ERROR_CLIENT_DOES_NOT_EXISTS;
-			$this->error = JobError::ERROR_CLIENT_DOES_NOT_EXISTS;
-			return;
-		}
-
-		if (is_null($storage)) {
-			$this->output = JobError::MSG_ERROR_STORAGE_DOES_NOT_EXISTS;
-			$this->error = JobError::ERROR_STORAGE_DOES_NOT_EXISTS;
-			return;
-		}
-
-		if (is_null($pool)) {
-			$this->output = JobError::MSG_ERROR_POOL_DOES_NOT_EXISTS;
-			$this->error = JobError::ERROR_POOL_DOES_NOT_EXISTS;
-			return;
-		}
-
 		$joblevels = $this->getModule('misc')->getJobLevels();
 		$command = [
 			'run',
-			'job="' . $job . '"',
-			'level="' . $joblevels[$level] . '"',
-			'fileset="' . $fileset . '"',
-			'client="' . $client . '"',
-			'storage="' . $storage . '"',
-			'pool="' . $pool . '"',
-			'priority="' . $priority . '"',
-			'accurate="' . $accurate . '"',
-			$jobid,
-			$verifyjob,
-			'yes'
+			'job="' . $job . '"'
 		];
+		if (key_exists($level, $joblevels)) {
+			$command[] = 'level="' . $joblevels[$level] . '"';
+		}
+		if (is_string($fileset)) {
+			$command[] = 'fileset="' . $fileset . '"';
+		}
+		if (is_string($client)) {
+			$command[] = 'client="' . $client . '"';
+		}
+		if (is_string($storage)) {
+			$command[] = 'storage="' . $storage . '"';
+		}
+		if (is_string($pool)) {
+			$command[] = 'pool="' . $pool . '"';
+		}
+		if (is_int($priority)) {
+			$command[] = 'priority="' . $priority . '"';
+		}
+		if (is_string($accurate)) {
+			$command[] = 'accurate="' . $accurate . '"';
+		}
+		if (is_string($jobid)) {
+			$command[] = $jobid;
+		}
+		if (is_string($verifyjob)) {
+			$command[] = $verifyjob;
+		}
+		$command[] = 'yes';
 		$run = $this->getModule('bconsole')->bconsoleCommand($this->director, $command);
 		$this->output = $run->output;
 		$this->error = $run->exitcode;
