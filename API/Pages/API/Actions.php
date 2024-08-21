@@ -28,8 +28,6 @@
  */
 
 use Bacularis\API\Modules\BaculumAPIServer;
-use Bacularis\API\Modules\APIConfig;
-use Bacularis\Common\Modules\Errors\ActionsError;
 
 /**
  * API actions support.
@@ -43,50 +41,8 @@ class Actions extends BaculumAPIServer
 	{
 		$component = $this->Request->contains('component') ? $this->Request['component'] : '';
 		$action = $this->Request->contains('action') ? $this->Request['action'] : '';
-		$action_type = null;
-
-		switch ($component) {
-			case 'director':
-				if ($action === 'start') {
-					$action_type = APIConfig::ACTION_DIR_START;
-				} elseif ($action === 'stop') {
-					$action_type = APIConfig::ACTION_DIR_STOP;
-				} elseif ($action === 'restart') {
-					$action_type = APIConfig::ACTION_DIR_RESTART;
-				}
-				break;
-			case 'storage':
-				if ($action === 'start') {
-					$action_type = APIConfig::ACTION_SD_START;
-				} elseif ($action === 'stop') {
-					$action_type = APIConfig::ACTION_SD_STOP;
-				} elseif ($action === 'restart') {
-					$action_type = APIConfig::ACTION_SD_RESTART;
-				}
-				break;
-			case 'client':
-				if ($action === 'start') {
-					$action_type = APIConfig::ACTION_FD_START;
-				} elseif ($action === 'stop') {
-					$action_type = APIConfig::ACTION_FD_STOP;
-				} elseif ($action === 'restart') {
-					$action_type = APIConfig::ACTION_FD_RESTART;
-				}
-				break;
-		}
-
-		if (is_string($action_type)) {
-			$result = $this->getModule('comp_actions')->execAction($action_type);
-			if ($result->error === 0) {
-				$this->output = ActionsError::MSG_ERROR_NO_ERRORS;
-				$this->error = ActionsError::ERROR_NO_ERRORS;
-			} else {
-				$this->output = $result->output;
-				$this->error = $result->error;
-			}
-		} else {
-			$this->output = ActionsError::MSG_ERROR_ACTIONS_ACTION_DOES_NOT_EXIST;
-			$this->error = ActionsError::ERROR_ACTIONS_ACTION_DOES_NOT_EXIST;
-		}
+		$result = $this->getModule('comp_actions')->runComponentAction($component, $action);
+		$this->output = $result->output;
+		$this->error = $result->error;
 	}
 }

@@ -14,8 +14,6 @@
  */
 
 use Bacularis\API\Modules\BaculumAPIServer;
-use Bacularis\API\Modules\APIConfig;
-use Bacularis\Common\Modules\Errors\SoftwareManagementError;
 
 /**
  * Software management enable command support.
@@ -29,24 +27,8 @@ class SoftwareManagementEnable extends BaculumAPIServer
 	{
 		$component = $this->Request->contains('component') ? $this->Request['component'] : '';
 		$software_mgmt = $this->getModule('software_mgmt');
-		$cmd = '';
-		switch ($component) {
-			case 'director':
-				$cmd = APIConfig::SOFTWARE_MANAGEMENT_DIR_ENABLE;
-				break;
-			case 'storage':
-				$cmd = APIConfig::SOFTWARE_MANAGEMENT_SD_ENABLE;
-				break;
-			case 'client':
-				$cmd = APIConfig::SOFTWARE_MANAGEMENT_FD_ENABLE;
-				break;
-		}
-
-		// Install command
-		$ret = $software_mgmt->execSoftwareManagementCommand($cmd);
-
-		// Installation completed successfully
-		$this->output = $ret->output;
-		$this->error = $ret->error;
+		$result = $software_mgmt->enableComponent($component);
+		$this->output = $result->output;
+		$this->error = $result->error;
 	}
 }

@@ -35,6 +35,9 @@ class SoftwareManagementInfo extends BaculumAPIServer
 		$software_mgmt = $this->getModule('software_mgmt');
 		$cmd = '';
 		switch ($component) {
+			case 'catalog':
+				$cmd = APIConfig::SOFTWARE_MANAGEMENT_CAT_INFO;
+				break;
 			case 'director':
 				$cmd = APIConfig::SOFTWARE_MANAGEMENT_DIR_INFO;
 				break;

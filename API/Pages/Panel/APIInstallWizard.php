@@ -28,6 +28,8 @@
  */
 
 
+use Prado\Prado;
+use Prado\TPropertyValue;
 use Bacularis\Common\Modules\Logging;
 use Bacularis\API\Modules\APIConfig;
 use Bacularis\API\Modules\BAPIException;
@@ -35,6 +37,7 @@ use Bacularis\API\Modules\BaculumAPIPage;
 use Bacularis\API\Modules\Database;
 use Bacularis\Web\Modules\HostConfig;
 use Bacularis\Web\Modules\WebUserRoles;
+use Bacularis\Web\Modules\SSH;
 
 /**
  * API install wizard.
@@ -44,8 +47,6 @@ use Bacularis\Web\Modules\WebUserRoles;
  */
 class APIInstallWizard extends BaculumAPIPage
 {
-	public $first_run;
-	public $add_auth_params = false;
 	public $config;
 
 	public const DEFAULT_DB_NAME = 'bacula';
@@ -70,6 +71,20 @@ class APIInstallWizard extends BaculumAPIPage
 	public const DEFAULT_ACTION_FD_STOP = '/usr/bin/systemctl stop bacula-fd';
 	public const DEFAULT_ACTION_FD_RESTART = '/usr/bin/systemctl restart bacula-fd';
 
+	public const INSTALL_BACULA_STEPS_TXT = [
+		'add_sudo' => 'Add SUDO settings',
+		'configure_bacularis' => 'Configure Bacularis',
+		'install_catalog' => 'Install Catalog',
+		'install_director' => 'Install Director',
+		'install_storage' => 'Install Storage',
+		'install_client' => 'Install Client',
+		'install_console' => 'Install Bconsole'
+	];
+
+	private const FIRST_RUN = 'FirstRun';
+	private const ADD_AUTH_PARAMS = 'AddAuthParams';
+	private const BACULA_INSTALLED = 'BaculaInstalled';
+
 	public function onPreInit($param)
 	{
 		parent::onPreInit($param);
@@ -86,13 +101,17 @@ class APIInstallWizard extends BaculumAPIPage
 		parent::onInit($param);
 		$config = $this->getModule('api_config');
 		$this->config = $config->getConfig();
-		$this->first_run = (count($this->config) === 0);
-		$oauth2_cfg = $this->getModule('oauth2_config')->getConfig();
-		$this->add_auth_params = (count($oauth2_cfg) === 0);
+		if (!$this->IsPostBack && !$this->IsCallBack) {
+			$first_run = (count($this->config) === 0);
+			$this->setFirstRun($first_run);
+			$oauth2_cfg = $this->getModule('oauth2_config')->getConfig();
+			$add_auth_params = (count($oauth2_cfg) === 0);
+			$this->setAddAuthParams($add_auth_params);
+		}
 		$session = $this->Application->getSession();
 		if ($session->contains('language')) {
 			$this->Lang->SelectedValue = $session->itemAt('language');
-		} elseif (!$this->first_run && isset($this->config['api']['lang'])) {
+		} elseif (!$this->getFirstRun() && isset($this->config['api']['lang'])) {
 			$this->Lang->SelectedValue = $this->config['api']['lang'];
 		}
 	}
@@ -101,11 +120,11 @@ class APIInstallWizard extends BaculumAPIPage
 	{
 		parent::onLoad($param);
 		$this->Port->setViewState('port', $this->Port->Text);
-		if ($this->IsPostBack || $this->IsCallBack) {
+		if (($this->IsPostBack || $this->IsCallBack) && $this->BaculaInstalled->Checked) {
 			return;
 		}
 
-		if ($this->first_run === true) {
+		if ($this->getFirstRun() === true && $this->BaculaInstalled->Checked) {
 			$this->DBName->Text = self::DEFAULT_DB_NAME;
 			$this->Login->Text = self::DEFAULT_DB_LOGIN;
 			$this->BconsolePath->Text = self::DEFAULT_BCONSOLE_BIN;
@@ -132,7 +151,10 @@ class APIInstallWizard extends BaculumAPIPage
 			$this->BConfigSudoRunAsGroup->Text = '';
 			$this->BConfigDir->Text = dirname(__DIR__, 2) . '/Config';
 			$this->APIHost->Text = 'localhost';
-		} else {
+			$this->APIProtocol->SelectedValue = !empty($_SERVER['HTTPS']) ? 'https' : 'http';
+
+			$this->setOSProfileList();
+		} elseif (count($this->config) > 0) {
 			// Database param settings
 			if ($this->config['db']['enabled'] == 1) {
 				$this->DatabaseYes->Checked = true;
@@ -199,6 +221,40 @@ class APIInstallWizard extends BaculumAPIPage
 		}
 	}
 
+	public function setFirstRun($first_run)
+	{
+		$first_run = TPropertyValue::ensureBoolean($first_run);
+		$this->setViewState(self::FIRST_RUN, $first_run);
+	}
+
+	public function getFirstRun()
+	{
+		return $this->getViewState(self::FIRST_RUN, false);
+	}
+
+	public function setAddAuthParams($add_auth_params)
+	{
+		$add_auth_params = TPropertyValue::ensureBoolean($add_auth_params);
+		$this->setViewState(self::ADD_AUTH_PARAMS, $add_auth_params);
+	}
+
+	public function setBaculaInstalled($installed)
+	{
+		$installed = TPropertyValue::ensureBoolean($installed);
+		$this->setViewState(self::BACULA_INSTALLED, $installed);
+	}
+
+	public function getBaculaInstalled()
+	{
+		return $this->getViewState(self::BACULA_INSTALLED, false);
+	}
+
+	public function getAddAuthParams()
+	{
+		return $this->getViewState(self::ADD_AUTH_PARAMS, false);
+	}
+
+
 	public function NextStep($sender, $param)
 	{
 	}
@@ -210,8 +266,10 @@ class APIInstallWizard extends BaculumAPIPage
 	public function wizardNext($sender, $param)
 	{
 		if ($param->CurrentStepIndex === 0) {
-			if ($this->first_run && !$this->EnableAPI->Checked && $this->EnableWeb->Checked) {
+			if ($this->getFirstRun() && !$this->EnableAPI->Checked && $this->EnableWeb->Checked) {
 				$this->Response->redirect('/web');
+			} elseif ($this->BaculaNotInstalled->Checked) {
+				$this->InstallWizard->ActiveStepIndex = 4;
 			}
 		}
 	}
@@ -223,54 +281,65 @@ class APIInstallWizard extends BaculumAPIPage
 
 	public function wizardCompleted($sender, $param)
 	{
+		$cfg_data = [];
 		/****
 		 * SAVE API CONFIG
 		 */
-		$cfg_data = [
-			'api' => [],
-			'db' => [],
-			'bconsole' => [],
-			'jsontools' => []
-		];
-		if ($this->AuthBasic->Checked) {
-			$cfg_data['api']['auth_type'] = 'basic';
-		} elseif ($this->AuthOAuth2->Checked) {
-			$cfg_data['api']['auth_type'] = 'oauth2';
+		if ($this->getBaculaInstalled() == false) {
+			// Traditional API wizard flow without installing Bacula
+			$cfg_data = [
+				'api' => [],
+				'db' => [],
+				'bconsole' => [],
+				'jsontools' => []
+			];
+			if ($this->AuthBasic->Checked) {
+				$cfg_data['api']['auth_type'] = 'basic';
+			} elseif ($this->AuthOAuth2->Checked) {
+				$cfg_data['api']['auth_type'] = 'oauth2';
+			}
+
+			$session = $this->Application->getSession();
+			$cfg_data['api']['debug'] = $this->config['api']['debug'] ?? "0";
+			$cfg_data['api']['lang'] = $session->itemAt('language') ?? APIConfig::DEF_LANG;
+			$cfg_data['db']['enabled'] = (int) ($this->DatabaseYes->Checked === true);
+			$cfg_data['db']['type'] = $this->DBType->SelectedValue;
+			$cfg_data['db']['name'] = $this->DBName->Text;
+			$cfg_data['db']['login'] = $this->Login->Text;
+			$cfg_data['db']['password'] = $this->Password->Text;
+			$cfg_data['db']['ip_addr'] = $this->IP->Text;
+			$cfg_data['db']['port'] = $this->Port->Text;
+			$cfg_data['db']['path'] = $this->isSQLiteType($cfg_data['db']['type']) ? $this->DBPath->Text : '';
+			$cfg_data['bconsole']['enabled'] = (int) ($this->ConsoleYes->Checked === true);
+			$cfg_data['bconsole']['bin_path'] = $this->BconsolePath->Text;
+			$cfg_data['bconsole']['cfg_path'] = $this->BconsoleConfigPath->Text;
+			$cfg_data['bconsole']['use_sudo'] = (int) ($this->UseSudo->Checked === true);
+			$cfg_data['bconsole']['sudo_user'] = $this->BconsoleSudoRunAsUser->Text;
+			$cfg_data['bconsole']['sudo_group'] = $this->BconsoleSudoRunAsGroup->Text;
+			$cfg_data['jsontools']['enabled'] = (int) ($this->ConfigYes->Checked === true);
+			$cfg_data['jsontools']['use_sudo'] = (int) ($this->BJSONUseSudo->Checked === true);
+			$cfg_data['jsontools']['sudo_user'] = $this->BConfigSudoRunAsUser->Text;
+			$cfg_data['jsontools']['sudo_group'] = $this->BConfigSudoRunAsGroup->Text;
+			$cfg_data['jsontools']['bconfig_dir'] = $this->BConfigDir->Text;
+			$cfg_data['jsontools']['bdirjson_path'] = $this->BDirJSONPath->Text;
+			$cfg_data['jsontools']['dir_cfg_path'] = $this->DirCfgPath->Text;
+			$cfg_data['jsontools']['bsdjson_path'] = $this->BSdJSONPath->Text;
+			$cfg_data['jsontools']['sd_cfg_path'] = $this->SdCfgPath->Text;
+			$cfg_data['jsontools']['bfdjson_path'] = $this->BFdJSONPath->Text;
+			$cfg_data['jsontools']['fd_cfg_path'] = $this->FdCfgPath->Text;
+			$cfg_data['jsontools']['bbconsjson_path'] = $this->BBconsJSONPath->Text;
+			$cfg_data['jsontools']['bcons_cfg_path'] = $this->BconsCfgPath->Text;
+		} else {
+			// API wizard flow with installing bacula - API config is set already through install process
+			$dbpassword = $this->getDbPasswordFromBacula();
+			// Update Bacula Catalog password in API config
+			$this->config['db']['password'] = $dbpassword;
+			$cfg_data = $this->config;
 		}
-		$session = $this->Application->getSession();
-		$cfg_data['api']['debug'] = $this->config['api']['debug'] ?? "0";
-		$cfg_data['api']['lang'] = $session->itemAt('language') ?? APIConfig::DEF_LANG;
-		$cfg_data['db']['enabled'] = (int) ($this->DatabaseYes->Checked === true);
-		$cfg_data['db']['type'] = $this->DBType->SelectedValue;
-		$cfg_data['db']['name'] = $this->DBName->Text;
-		$cfg_data['db']['login'] = $this->Login->Text;
-		$cfg_data['db']['password'] = $this->Password->Text;
-		$cfg_data['db']['ip_addr'] = $this->IP->Text;
-		$cfg_data['db']['port'] = $this->Port->Text;
-		$cfg_data['db']['path'] = $this->isSQLiteType($cfg_data['db']['type']) ? $this->DBPath->Text : '';
-		$cfg_data['bconsole']['enabled'] = (int) ($this->ConsoleYes->Checked === true);
-		$cfg_data['bconsole']['bin_path'] = $this->BconsolePath->Text;
-		$cfg_data['bconsole']['cfg_path'] = $this->BconsoleConfigPath->Text;
-		$cfg_data['bconsole']['use_sudo'] = (int) ($this->UseSudo->Checked === true);
-		$cfg_data['bconsole']['sudo_user'] = $this->BconsoleSudoRunAsUser->Text;
-		$cfg_data['bconsole']['sudo_group'] = $this->BconsoleSudoRunAsGroup->Text;
-		$cfg_data['jsontools']['enabled'] = (int) ($this->ConfigYes->Checked === true);
-		$cfg_data['jsontools']['use_sudo'] = (int) ($this->BJSONUseSudo->Checked === true);
-		$cfg_data['jsontools']['sudo_user'] = $this->BConfigSudoRunAsUser->Text;
-		$cfg_data['jsontools']['sudo_group'] = $this->BConfigSudoRunAsGroup->Text;
-		$cfg_data['jsontools']['bconfig_dir'] = $this->BConfigDir->Text;
-		$cfg_data['jsontools']['bdirjson_path'] = $this->BDirJSONPath->Text;
-		$cfg_data['jsontools']['dir_cfg_path'] = $this->DirCfgPath->Text;
-		$cfg_data['jsontools']['bsdjson_path'] = $this->BSdJSONPath->Text;
-		$cfg_data['jsontools']['sd_cfg_path'] = $this->SdCfgPath->Text;
-		$cfg_data['jsontools']['bfdjson_path'] = $this->BFdJSONPath->Text;
-		$cfg_data['jsontools']['fd_cfg_path'] = $this->FdCfgPath->Text;
-		$cfg_data['jsontools']['bbconsjson_path'] = $this->BBconsJSONPath->Text;
-		$cfg_data['jsontools']['bcons_cfg_path'] = $this->BconsCfgPath->Text;
 
 		$ret = $this->getModule('api_config')->setConfig($cfg_data);
 		if ($ret) {
-			if ($this->first_run && $this->AuthBasic->Checked && $this->getModule('basic_apiuser')->isUsersConfig()) {
+			if ($this->getFirstRun() && $this->AuthBasic->Checked && $this->getModule('basic_apiuser')->isUsersConfig()) {
 				// save basic auth user only on first run
 				$this->getModule('basic_apiuser')->setUsersConfig(
 					$this->APILogin->Text,
@@ -284,7 +353,7 @@ class APIInstallWizard extends BaculumAPIPage
 					['bconsole_cfg_path' => '']
 				);
 			}
-			if (($this->first_run || $this->add_auth_params) && $this->AuthOAuth2->Checked) {
+			if (($this->getFirstRun() || $this->getAddAuthParams()) && $this->AuthOAuth2->Checked) {
 				// save OAuth2 auth user on first run or when no OAuth2 client defined
 				$oauth2_cfg = $this->getModule('oauth2_config')->getConfig();
 				$oauth2_cfg[$this->APIOAuth2ClientId->Text] = [];
@@ -301,7 +370,7 @@ class APIInstallWizard extends BaculumAPIPage
 		/****
 		 * SAVE WEB CONFIG (for first run only)
 		 */
-		if ($this->first_run) {
+		if ($this->getFirstRun()) {
 			if ($this->EnableWeb->Checked) {
 				$host = HostConfig::MAIN_CATALOG_HOST;
 				$cfg_host = [
@@ -313,7 +382,11 @@ class APIInstallWizard extends BaculumAPIPage
 					'redirect_uri' => '',
 					'scope' => ''
 				];
-				$cfg_host['protocol'] = $this->APIProtocol->SelectedValue;
+				if ($this->BaculaNotInstalled->Checked) {
+					$cfg_host['protocol'] = !empty($_SERVER['HTTPS']) ? 'https' : 'http';
+				} else {
+					$cfg_host['protocol'] = $this->APIProtocol->SelectedValue;
+				}
 				$cfg_host['address'] = $this->APIHost->Text;
 				$cfg_host['port'] = $this->APIPort->Text;
 				$cfg_host['url_prefix'] = '';
@@ -341,7 +414,7 @@ class APIInstallWizard extends BaculumAPIPage
 					]);
 
 					$basic_webuser = $this->getModule('basic_webuser');
-					if ($this->first_run && $ret && $web_config->isAuthMethodLocal()) {
+					if ($this->getFirstRun() && $ret && $web_config->isAuthMethodLocal()) {
 						// set new user on first wizard run
 						$previous_user = parent::DEFAULT_AUTH_USER;
 						$ret = $basic_webuser->setUsersConfig(
@@ -358,7 +431,7 @@ class APIInstallWizard extends BaculumAPIPage
 						);
 					}
 
-					if ($this->first_run && $ret) {
+					if ($this->getFirstRun() && $ret) {
 						// create new Bacularis user on first wizard run
 						$user_config = $this->getModule('user_config');
 						$new_user_prop = $user_config->getUserConfigProps([
@@ -394,12 +467,291 @@ class APIInstallWizard extends BaculumAPIPage
 		}
 
 		// Go to default user page
-		if ($this->first_run && $this->EnableAPI->Checked && !$this->EnableWeb->Checked) {
+		if ($this->getFirstRun() && $this->EnableAPI->Checked && !$this->EnableWeb->Checked) {
 			// Only API configured, so go to API panel page
 			$this->Response->redirect('/panel');
 		} else {
 			// Go to default page
 			$this->Response->redirect('/');
+		}
+	}
+
+	private function getDbPasswordFromBacula()
+	{
+		$dbpassword = '';
+		$res = $this->getModule('json_tools')->execCommand(
+			'dir',
+			[
+				'resource_type' => 'Catalog',
+				'data_only' => true
+			]
+		);
+		if ($res['exitcode'] == 0) {
+			$dbpassword = $res['output'][0]['Password'];
+		}
+		return $dbpassword;
+	}
+
+
+	private function setOSProfileList()
+	{
+		$osprofile_config = $this->getModule('osprofile_config');
+		$osps = $osprofile_config->getConfig();
+		$osps_names = array_keys($osps);
+		$osprofiles = array_combine($osps_names, $osps_names);
+		$this->InstallBaculaOSProfile->DataSource = $osprofiles;
+		$this->InstallBaculaOSProfile->dataBind();
+	}
+
+	private function getInstallBaculaParams()
+	{
+		$params = [
+			'user' => $this->InstallBaculaAdminUser->Text,
+			'password' => $this->InstallBaculaAdminPassword->Text,
+			'use_sudo' => $this->InstallBaculaUseSudo->Checked
+		];
+		return $params;
+	}
+
+	private function getInstallBaculaOSProfile()
+	{
+		$osp = $this->InstallBaculaOSProfile->SelectedValue;
+		$osprofile = $this->getModule('osprofile_config')->getConfig($osp);
+
+		if (count($osprofile) == 0) {
+			// no OS profile, no installation
+			return;
+		}
+		return $osprofile;
+	}
+
+	public function installBaculaAddSUDOSettings($sender, $param)
+	{
+		$step_id = $param->getCallbackParameter();
+		$osprofile = $this->getInstallBaculaOSProfile();
+		$file = $this->getModule('deploy_api')->prepareSUDOFile($osprofile);
+		$ret = $this->installBaculaCopyStep($file);
+
+		$label = Prado::localize(self::INSTALL_BACULA_STEPS_TXT[$step_id]);
+		$this->displayRawOutput($label, $ret['output']);
+
+		$this->installBaculaLogOutput($step_id, null, $ret['exitcode']);
+	}
+
+	public function installBaculaConfigureBacularis($sender, $param)
+	{
+		$step_id = $param->getCallbackParameter();
+		$osprofile = $this->getInstallBaculaOSProfile();
+		$deploy_api = $this->getModule('deploy_api');
+		// Configure command
+		$file = $deploy_api->prepareConfigureFile($osprofile);
+		$ret = $this->installBaculaCopyStep($file);
+
+		$label = Prado::localize(self::INSTALL_BACULA_STEPS_TXT[$step_id]);
+		$this->displayRawOutput($label, $ret['output']);
+
+		$this->installBaculaLogOutput($step_id, null, $ret['exitcode']);
+	}
+
+	private function installBaculaInstallComponent(string $component, bool $enable = true, bool $start = true): array
+	{
+		$software_mgmt = $this->getModule('software_mgmt');
+		$result = $software_mgmt->installComponent($component);
+		$output = $result->output;
+		$error = $result->error;
+
+		if ($enable && $error == 0) {
+			// Enable service
+			$result = $software_mgmt->enableComponent($component);
+			if ($result->error != 0) {
+				$result->output = [$result->output];
+			}
+			$error = $result->error;
+			$output = array_merge($output, $result->output);
+		}
+		// Start service
+		if ($start && $error == 0) {
+			$comp_actions = $this->getModule('comp_actions');
+			$action_type = '';
+			if ($component == 'catalog') {
+				$action_type = APIConfig::ACTION_CAT_START;
+			} elseif ($component == 'director') {
+				$action_type = APIConfig::ACTION_DIR_START;
+			} elseif ($component == 'storage') {
+				$action_type = APIConfig::ACTION_SD_START;
+			} elseif ($component == 'client') {
+				$action_type = APIConfig::ACTION_FD_START;
+			}
+			if (!empty($action_type)) {
+				$result = $comp_actions->execAction($action_type);
+				if ($result->error != 0) {
+					$result->output = [$result->output];
+				}
+				$error = $result->error;
+				$output = array_merge($output, $result->output);
+			}
+		}
+		return [
+			'output' => $output,
+			'error' => $error
+		];
+	}
+
+	private function installBaculaInstallComponentInternal(string $component, string $step_id, bool $enable = true, bool $start = true): bool
+	{
+		$result = $this->installBaculaInstallComponent($component, $enable, $start);
+
+		$label = Prado::localize(self::INSTALL_BACULA_STEPS_TXT[$step_id]);
+		$this->displayRawOutput($label, $result['output']);
+
+		$this->installBaculaLogOutput($step_id, null, $result['error']);
+		return ($result['error'] == 0);
+	}
+
+	public function installBaculaInstallCatalog($sender, $param)
+	{
+		$step_id = $param->getCallbackParameter();
+		$this->installBaculaInstallComponentInternal('catalog', $step_id);
+	}
+
+	public function installBaculaInstallDirector($sender, $param)
+	{
+		$step_id = $param->getCallbackParameter();
+		$this->installBaculaInstallComponentInternal('director', $step_id);
+	}
+
+	public function installBaculaInstallStorage($sender, $param)
+	{
+		$step_id = $param->getCallbackParameter();
+		$this->installBaculaInstallComponentInternal('storage', $step_id);
+	}
+
+	public function installBaculaInstallClient($sender, $param)
+	{
+		$step_id = $param->getCallbackParameter();
+		$this->installBaculaInstallComponentInternal('client', $step_id);
+	}
+
+	public function installBaculaInstallConsole($sender, $param)
+	{
+		$step_id = $param->getCallbackParameter();
+		$result = $this->installBaculaInstallComponentInternal('console', $step_id, false, false);
+		$cb = $this->getCallbackClient();
+		if ($result) {
+			$this->setBaculaInstalled(true);
+			$cb->callClientFunction('show_start_next_btn', [true]);
+			$cb->show('bacula_installed_successfully');
+		}
+	}
+
+	private function installBaculaCopyStep($file)
+	{
+		$cp = $this->getModule('cp');
+		$params = $this->getInstallBaculaParams();
+		$ret = $cp->execCommand(
+			$file['src_file'],
+			$file['dst_file'],
+			$params
+		);
+		unlink($file['src_file']);
+
+		if ($ret['exitcode'] === 0) {
+			// set ownership
+			$ret_owner = $this->installBaculaSetOwnership($file);
+			$ret['output'] = array_merge($ret['output'], $ret_owner['output']);
+			$ret['exitcode'] = $ret_owner['exitcode'];
+		}
+
+		if ($ret['exitcode'] === 0) {
+			// set permissions
+			$ret_perm = $this->installBaculaSetPermissions($file);
+			$ret['output'] = array_merge($ret['output'], $ret_perm['output']);
+			$ret['exitcode'] = $ret_perm['exitcode'];
+		}
+
+		return $ret;
+	}
+
+	private function installBaculaSetOwnership($file)
+	{
+		$chown = $this->getModule('chown');
+		$params = $this->getInstallBaculaParams();
+		$user = $file['user'] ?? '';
+		$group = $file['group'] ?? '';
+		$ret = $chown->execCommand(
+			$file['dst_file'],
+			$user,
+			$group,
+			$params
+		);
+		return $ret;
+	}
+
+	private function installBaculaSetPermissions($file)
+	{
+		$chmod = $this->getModule('chmod');
+		$params = $this->getInstallBaculaParams();
+		$ret = $chmod->execCommand(
+			$file['dst_file'],
+			$file['perm'],
+			$params
+		);
+		return $ret;
+	}
+
+	private function displayRawOutput($label, $output = [])
+	{
+		if (count($output) == 0) {
+			return;
+		}
+		if ($label) {
+			$step = Prado::localize('Step');
+			$label = PHP_EOL . "===== {$step}: {$label} =====" . PHP_EOL;
+			array_unshift($output, $label);
+		}
+		$out = implode(PHP_EOL, $output);
+		$cbc = $this->getCallbackClient();
+		$cbc->appendContent('install_bacula_raw_output', htmlentities($out));
+	}
+
+	private function installBaculaLogOutput($step_id, $output_id, $exitcode = -1)
+	{
+		$cbc = $this->getCallbackClient();
+
+		if ($exitcode !== -1) {
+			if ($exitcode === 0) {
+				// Process finished successfully
+				$cbc->callClientFunction(
+					'oInstallBacula.run_step_cb_ok',
+					[$step_id, $output_id]
+				);
+			} else {
+				// Process finished with error
+				$cbc->callClientFunction(
+					'oInstallBacula.run_step_cb_err',
+					[$step_id]
+				);
+			}
+		} else {
+			// Process is pending
+			$cbc->callClientFunction(
+				'oInstallBacula.run_step_cb_ok',
+				[$step_id, $output_id]
+			);
+		}
+	}
+
+	public function getInstallBaculaOutput($sender, $param)
+	{
+		[$step_id, $output_id] = $param->getCallbackParameter();
+		if ($output_id) {
+			$ret = SSH::readOutputFile($output_id);
+			if (count($ret['output']) > 0) {
+				$label = Prado::localize(self::INSTALL_BACULA_STEPS_TXT[$step_id]);
+				$this->displayRawOutput($label, $ret['output']);
+				$output_id = null;
+			}
+			$this->installBaculaLogOutput($step_id, $output_id, $ret['exitcode']);
 		}
 	}
 

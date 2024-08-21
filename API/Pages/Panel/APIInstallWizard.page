@@ -1,6 +1,7 @@
 <%@ MasterClass="Bacularis\API\Layouts\Wizard" Theme="Baculum-v2"%>
 <com:TContent ID="Wizard">
-	<com:TWizard ID="InstallWizard"
+	<com:TWizard
+		ID="InstallWizard"
 		CssClass="wizard"
 		StepStyle.CssClass="w3-container"
 		HeaderStyle.CssClass="w3-container"
@@ -68,13 +69,14 @@
 				<com:TLinkButton
 					CommandName="Cancel"
 					CssClass="w3-button w3-red"
-					Visible="<%=$this->getPage()->first_run === false%>"
+					Visible="<%=$this->getPage()->getFirstRun() === false%>"
 				>
 					<i class="fa fa-times"></i> &nbsp;<%[ Cancel ]%>
 				</com:TLinkButton>
 				<com:TLinkButton
 					CommandName="NextStep"
 					CssClass="w3-button w3-green"
+					Attributes.rel="start_next_step"
 				>
 					<%[ Next ]%>&nbsp; <i class="fa fa-angle-right"></i>
 				</com:TLinkButton>
@@ -86,7 +88,7 @@
 				<com:TLinkButton
 					CommandName="Cancel"
 					CssClass="w3-button w3-red"
-					Visible="<%=$this->getPage()->first_run === false%>"
+					Visible="<%=$this->getPage()->getFirstRun() === false%>"
 				>
 					<i class="fa fa-times"></i> &nbsp;<%[ Cancel ]%>
 				</com:TLinkButton>
@@ -114,7 +116,7 @@
 				<com:TLinkButton
 					CommandName="Cancel"
 					CssClass="w3-button w3-red"
-					Visible="<%=$this->getPage()->first_run === false%>"
+					Visible="<%=$this->getPage()->getFirstRun() === false%>"
 				>
 					<i class="fa fa-times"></i> &nbsp;<%[ Cancel ]%>
 				</com:TLinkButton>
@@ -158,29 +160,377 @@
 						<com:TCompareValidator CssClass="validator-block" Display="Dynamic" ControlToValidate="Lang" DataType="String" ValueToCompare="none" Operator="NotEqual" Text="<%[ Please select language. ]%>" />
 					</div>
 				</div>
-				<com:TPanel Visible="<%=$this->first_run%>">
-					<p><%[ What services would you like to enable for this installation? ]%></p>
+				<com:TPanel Visible="<%=$this->getFirstRun()%>">
+					<p><%[ What services do you want to enable for this installation? ]%></p>
 					<div class="w3-container">
-						<div class="w3-third"><%[ Services: ]%></div>
-						<div class="w3-rest">
-							<div>
-								<com:TActiveCheckBox
-									ID="EnableAPI"
-									CssClass="w3-check"
-								/>
-								<label for="<%=$this->EnableAPI->ClientID%>"> &nbsp;<%[ Enable API instance ]%> (<%[ recommended ]%>)</label>
+						<div class="w3-container">
+							<com:TActiveCheckBox
+								ID="EnableAPI"
+								CssClass="w3-check"
+							/>
+							<label for="<%=$this->EnableAPI->ClientID%>"> &nbsp;<%[ Enable API instance ]%> (<%[ recommended ]%>)</label>
+						</div>
+						<div class="w3-container">
+							<com:TActiveCheckBox
+								ID="EnableWeb"
+								CssClass="w3-check"
+							/>
+							<label for="<%=$this->EnableWeb->ClientID%>"> &nbsp;<%[ Enable web interface ]%></label>
+						</div>
+					</div>
+					<p><%[ Do you have Bacula installed on this host? ]%></p>
+					<div class="w3-container">
+						<div>
+							<com:TActiveRadioButton
+								ID="BaculaInstalled"
+								GroupName="BaculaInstall"
+								CssClass="w3-check"
+								Checked="true"
+								Attributes.onclick="show_start_next_btn(true); $('#install_bacula_install').slideDown('fast');$('#install_bacula_not_install').slideUp('fast');"
+							/>
+							<label for="<%=$this->BaculaInstalled->ClientID%>"> &nbsp;<%[ Yes. I already have Bacula component(s) installed on this host. I would like to use Bacularis with them. ]%></label>
+						</div>
+						<div id="install_bacula_install" class="w3-container" style="display: <%=$this->BaculaInstalled->Checked ? 'block' : 'none'%>">
+						</div>
+						<div class="w3-margin-top">
+							<com:TActiveRadioButton
+								ID="BaculaNotInstalled"
+								GroupName="BaculaInstall"
+								CssClass="w3-check"
+								Attributes.onclick="show_start_next_btn(false); $('#install_bacula_install').slideUp('fast');$('#install_bacula_not_install').slideDown('fast');"
+							/>
+							<label for="<%=$this->BaculaNotInstalled->ClientID%>"> &nbsp;<%[ No. I do not have Bacula installed. I would like to install Bacula now and use Bacularis with it. ]%></label>
+						</div>
+						<div id="install_bacula_not_install" class="w3-container" style="display: <%=$this->BaculaNotInstalled->Checked ? 'block' : 'none'%>">
+							<div class="w3-container">
+								<p><%[ What is your operating system? ]%></p>
+								<div class="w3-container w3-margin-bottom">
+									<div class="w3-third"><%[ Operating system: ]%></div>
+									<div class="w3-rest">
+										<com:TActiveDropDownList
+											ID="InstallBaculaOSProfile"
+											Width="300px"
+											CssClass="w3-select w3-border"
+										/>
+									</div>
+								</div>
+								<p><%[ What are your system admin account credentials? ]%></p>
+								<div class="w3-container w3-margin-bottom">
+									<div class="w3-third"><%[ System admin login: ]%></div>
+									<div class="w3-rest">
+										<com:TActiveTextBox
+											ID="InstallBaculaAdminUser"
+											Width="300px"
+											CssClass="w3-input w3-border"
+										/>
+									</div>
+								</div>
+								<div class="w3-container w3-margin-bottom">
+									<div class="w3-third"><%[ System admin password: ]%></div>
+									<div class="w3-rest">
+										<com:TActiveTextBox
+											ID="InstallBaculaAdminPassword"
+											TextMode="Password"
+											PersistPassword="true"
+											Width="300px"
+											CssClass="w3-input w3-border"
+										/>
+									</div>
+								</div>
+								<div class="w3-container w3-margin-bottom">
+									<div class="w3-third"><%[ Use sudo: ]%></div>
+									<div class="w3-rest">
+										<com:TActiveCheckBox
+											ID="InstallBaculaUseSudo"
+											CssClass="w3-check"
+										/>
+									</div>
+								</div>
 							</div>
-							<div>
-								<com:TActiveCheckBox
-									ID="EnableWeb"
-									CssClass="w3-check"
-								/>
-								<label for="<%=$this->EnableWeb->ClientID%>"> &nbsp;<%[ Enable web interface ]%></label>
+							<div class="w3-panel w3-center">
+								<button type="button" id="install_bacula_locally_btn" class="w3-button w3-green" onclick="oInstallBaculaLocally.load_install_bacula_locally_window()"><i class="fa-solid fa-rocket"></i> &nbsp;<%[ Install Bacula ]%></button>
 							</div>
+							<p><%[ After clicking the install Bacula button, there will be installed on this host Catalog (PostgreSQL), Bacula Director, Client, Storage and Bconsole. ]%></p>
 						</div>
 					</div>
 				</com:TPanel>
 			</div>
+			<div id="install_bacula_locally_window" class="w3-modal">
+				<div class="w3-modal-content w3-animate-top w3-card-4 w3-padding-bottom">
+					<header class="w3-container w3-green">
+						<span onclick="document.getElementById('install_bacula_locally_window').style.display = 'none'; $('a[rel=start_next_step]:visible').click();" class="w3-button w3-display-topright">&times;</span>
+						<h2 id="install_bacula_locally_window_title_add"><%[ Install Bacula ]%></h2>
+					</header>
+					<div class="w3-container w3-margin-left w3-margin-right">
+						<div id="run_install_bacula_log_container" class="w3-container" style="display: none;">
+							<a href="javascript:void(0)" onclick="W3SubTabs.open('install_bacula_subtab_result', 'install_bacula_graphical_results', 'run_install_bacula_log_container');">
+								<div id="install_bacula_subtab_result" class="subtab_btn w3-half w3-bottombar w3-padding w3-border-red"><%[ Result ]%></div>
+							</a>
+							<a href="javascript:void(0)" onclick="W3SubTabs.open('install_bacula_subtab_raw_output', 'install_bacula_raw_results', 'run_install_bacula_log_container');">
+								<div id="install_bacula_subtab_raw_output" class="subtab_btn w3-half w3-bottombar w3-padding"><%[ Raw output ]%></div>
+							</a>
+							<div id="install_bacula_graphical_results" class="subtab_item w3-panel w3-card" style="max-height: 288px; overflow-x: auto; overflow-y: hidden;"></div>
+							<div id="install_bacula_raw_results" class="subtab_item w3-panel w3-card" style="display: none; max-height: 288px; overflow-x: auto;">
+								<div class="w3-code">
+									<pre><span id="install_bacula_raw_output"></span></pre>
+								</div>
+							</div>
+						</div>
+						<div class="w3-container w3-margin-bottom" id="bacula_installed_successfully" style="display: none">
+							<%[ Bacula has been installed successfully. You can close this window and go further. ]%>
+						</div>
+					</div>
+					<footer class="w3-container w3-center" style="padding-bottom: 16px">
+						<button type="button" class="w3-button w3-red" onclick="document.getElementById('install_bacula_locally_window').style.display = 'none'; $('a[rel=start_next_step]:visible').click();"><i class="fas fa-times"></i> &nbsp;<%[ Close ]%></button>
+					</footer>
+				</div>
+			</div>
+			<com:TCallback ID="InstallBaculaGetOutput" OnCallback="getInstallBaculaOutput" />
+			<com:TCallback ID="InstallBaculaAddSUDOSettings" OnCallback="installBaculaAddSUDOSettings" />
+			<com:TCallback ID="InstallBaculaConfigureBacularis" OnCallback="installBaculaConfigureBacularis" />
+			<com:TCallback ID="InstallBaculaInstallCatalog" OnCallback="installBaculaInstallCatalog" />
+			<com:TCallback ID="InstallBaculaInstallDirector" OnCallback="installBaculaInstallDirector" />
+			<com:TCallback ID="InstallBaculaInstallStorage" OnCallback="installBaculaInstallStorage" />
+			<com:TCallback ID="InstallBaculaInstallClient" OnCallback="installBaculaInstallClient" />
+			<com:TCallback ID="InstallBaculaInstallConsole" OnCallback="installBaculaInstallConsole" />
+			<script>
+
+var oSteps = {
+	add_step: function(step, container_id) {
+		const container = document.getElementById(container_id)
+
+		// div left
+		const div_left = document.createElement('DIV');
+		div_left.classList.add('w3-half');
+		div_left.textContent = step.desc;
+		div_left.style.padding = '3px 0';
+
+		// div right
+		const div_right = document.createElement('DIV');
+		div_right.id = step.id;
+		div_right.textContent = '-';
+		div_right.style.padding = '3px 0';
+
+		// append divs
+		container.appendChild(div_left);
+		container.appendChild(div_right);
+	},
+	mark_step_running: function(step_id) {
+		const step = document.getElementById(step_id);
+		step.removeChild(step.firstChild);
+		const icon = document.createElement('I');
+		icon.classList.add('fa-solid', 'fa-sync', 'w3-spin');
+		step.appendChild(icon);
+	},
+	mark_step_ok: function(step_id) {
+		const step = document.getElementById(step_id);
+		step.removeChild(step.firstChild);
+		const icon = document.createElement('I');
+		icon.classList.add('fa-solid', 'fa-check', 'w3-text-green');
+		step.appendChild(icon);
+	},
+	mark_step_err: function(step_id) {
+		const step = document.getElementById(step_id);
+		step.removeChild(step.firstChild);
+		const icon = document.createElement('I');
+		icon.classList.add('fa-solid', 'fa-times', 'w3-text-red');
+		step.appendChild(icon);
+	},
+	clear_steps: function(container_id) {
+		const container = document.getElementById(container_id);
+		while(container.firstChild) {
+			container.removeChild(container.firstChild);
+		}
+	}
+};
+var oInstallBaculaLocally = {
+	load_install_bacula_locally_window: function(name) {
+		oInstallBacula.run();
+		document.getElementById('install_bacula_locally_window').style.display = 'block';
+	}
+};
+var oInstallBacula = {
+	ids: {
+		log_container: 'run_install_bacula_log_container',
+		install_graphical_results: 'install_bacula_graphical_results',
+		install_raw_results: 'install_bacula_raw_results',
+		install_log: 'install_bacula_raw_output',
+		check_connection_loader: 'install_bacula_host_connection_check_loader',
+		check_connection_result_ok: 'install_bacula_host_connection_check_result_ok',
+		check_connection_result_error: 'install_bacula_host_connection_check_result_error',
+		check_connection_result_link: 'install_bacula_host_connection_check_result_link',
+		check_connection_loader_result_output: 'install_bacula_host_connection_check_result_output',
+		check_connection_loader_result_raw: 'install_bacula_host_connection_check_result_raw'
+	},
+	steps: [
+		{
+			id: 'add_sudo',
+			desc: '<%= Prado::localize(APIInstallWizard::INSTALL_BACULA_STEPS_TXT['add_sudo']) %>',
+			cb: <%=$this->InstallBaculaAddSUDOSettings->ActiveControl->Javascript%>
+		},
+		{
+			id: 'configure_bacularis',
+			desc: '<%= Prado::localize(APIInstallWizard::INSTALL_BACULA_STEPS_TXT['configure_bacularis']) %>',
+			cb: <%=$this->InstallBaculaConfigureBacularis->ActiveControl->Javascript%>
+		},
+		{
+			id: 'install_catalog',
+			desc: '<%= Prado::localize(APIInstallWizard::INSTALL_BACULA_STEPS_TXT['install_catalog']) %>',
+			cb: <%=$this->InstallBaculaInstallCatalog->ActiveControl->Javascript%>
+		},
+		{
+			id: 'install_director',
+			desc: '<%= Prado::localize(APIInstallWizard::INSTALL_BACULA_STEPS_TXT['install_director']) %>',
+			cb: <%=$this->InstallBaculaInstallDirector->ActiveControl->Javascript%>
+		},
+		{
+			id: 'install_storage',
+			desc: '<%= Prado::localize(APIInstallWizard::INSTALL_BACULA_STEPS_TXT['install_storage']) %>',
+			cb: <%=$this->InstallBaculaInstallStorage->ActiveControl->Javascript%>
+		},
+		{
+			id: 'install_client',
+			desc: '<%= Prado::localize(APIInstallWizard::INSTALL_BACULA_STEPS_TXT['install_client']) %>',
+			cb: <%=$this->InstallBaculaInstallClient->ActiveControl->Javascript%>
+		},
+		{
+			id: 'install_console',
+			desc: '<%= Prado::localize(APIInstallWizard::INSTALL_BACULA_STEPS_TXT['install_console']) %>',
+			cb: <%=$this->InstallBaculaInstallConsole->ActiveControl->Javascript%>
+		}
+	],
+	run: function() {
+		this.clear_steps();
+
+		// Add steps in results
+		for (const step of this.steps) {
+			oSteps.add_step(step, this.ids.install_graphical_results);
+		}
+
+		this.show_results(true);
+
+		// run particular steps
+		this.run_step(this.steps[0]);
+	},
+	run_step: function(step) {
+		oSteps.mark_step_running(step.id);
+		step.cb.setCallbackParameter(step.id);
+		step.cb.setRequestTimeOut(300000);
+		const error_f = step.cb.options.error;
+		step.cb.options.error = (request, textStatus, errorThrown) => {
+			oInstallBacula.run_step_cb_err(step.id);
+			return error_f(request, textStatus, errorThrown);
+		}
+		step.cb.dispatch();
+	},
+	run_step_cb_ok: function(step_id, output_id) {
+		if (output_id) {
+			setTimeout(() => {
+				oInstallBacula.get_install_output(step_id, output_id)
+			}, 1500);
+			return;
+		}
+		const step_len = oInstallBacula.steps.length;
+		for (let i = 0; i < step_len; i++) {
+			if (oInstallBacula.steps[i].id == step_id) {
+				// mark step as finished successfully
+				oSteps.mark_step_ok(step_id);
+
+				if ((i+1) < step_len) {
+					// run next step
+					oInstallBacula.run_step(oInstallBacula.steps[i+1]);
+				}
+				break;
+			}
+		}
+	},
+	run_step_cb_err: function(step_id) {
+		oSteps.mark_step_err(step_id);
+	},
+	get_install_output: function(step_id, output_id) {
+		const cb = <%=$this->InstallBaculaGetOutput->ActiveControl->Javascript%>;
+		cb.setCallbackParameter([step_id, output_id]);
+		cb.dispatch();
+	},
+	show_results: function(show) {
+		const container = document.getElementById(this.ids.log_container);
+		container.style.display = show ? 'block' : 'none';
+	},
+	clear_steps: function() {
+		this.clear_graphical_results();
+		this.clear_raw_results();
+	},
+	clear_graphical_results: function() {
+		oSteps.clear_steps(this.ids.install_graphical_results);
+	},
+	clear_raw_results: function() {
+		const container = document.getElementById(this.ids.install_log);
+		container.textContent = '';
+	},
+	clear_connection_check: function() {
+		this.show_host_connection_loader(false);
+
+		// clear state icons
+		const ok = document.getElementById(this.ids.check_connection_result_ok);
+		ok.style.display = 'none';
+		const error = document.getElementById(this.ids.check_connection_result_error);
+		error.style.display = 'none';
+
+		// clear output
+		const output = document.getElementById(this.ids.check_connection_loader_result_output);
+		output.style.display = 'none';
+		const raw = document.getElementById(this.ids.check_connection_loader_result_raw);
+		raw.textContent = '';
+		const link = document.getElementById(this.ids.check_connection_result_link);
+		link.style.display = 'none';
+		link.textContent = '<%[ Show result ]%>';
+	},
+	set_host_connection_result: function(state, result) {
+		const ok = document.getElementById(this.ids.check_connection_result_ok);
+		const error = document.getElementById(this.ids.check_connection_result_error);
+		const link = document.getElementById(this.ids.check_connection_result_link);
+		const raw = document.getElementById(this.ids.check_connection_loader_result_raw);
+		if (state) {
+			ok.style.display = 'inline-block';
+			error.style.display = 'none';
+		} else {
+			error.style.display = 'inline-block';
+			ok.style.display = 'none';
+		}
+		raw.innerHTML = result.join("<br />");
+		link.style.display = 'inline-block';
+	},
+	toggle_host_connection_result: function() {
+		const output = $('#' + this.ids.check_connection_loader_result_output);
+		const link = document.getElementById(this.ids.check_connection_result_link);
+		if (output.is(':hidden')) {
+			output.slideDown('fast');
+			link.textContent = '<%[ Hide result ]%>';
+		} else {
+			output.slideUp('fast');
+			link.textContent = '<%[ Show result ]%>';
+		}
+	},
+	show_host_connection_loader: function(show) {
+		const loader = document.getElementById(this.ids.check_connection_loader);
+		loader.style.display = show ? 'inline-block' : 'none';
+	},
+	check_host_connection_cb: function(result) {
+		const self = oInstallBacula;
+		self.show_host_connection_loader(false);
+		self.set_host_connection_result(result.success, result.output);
+	}
+};
+function show_start_next_btn(show) {
+	const next = document.querySelector('a[rel="start_next_step"]');
+	if (show || <%=$this->getBaculaInstalled() ? '1' : '0'%> == 1) {
+		next.style.display = 'inline-block';
+	} else {
+		next.style.display = 'none';
+	}
+}
+<%=$this->getBaculaInstalled() ? 'show_start_next_btn(true);' : ''%>
+			</script>
 		</com:TWizardStep>
 		<com:TWizardStep ID="Step2" Title="<%[ Step 2 - share the Bacula Catalog Database ]%>" StepType="Auto">
 			<div class="w3-half" style="float: none; margin: auto">
@@ -296,7 +646,7 @@
 						<com:TActivePanel
 							ID="DBPathField"
 							CssClass="w3-row w3-section"
-							Display="<%=$this->getPage()->first_run === false && !$this->IsCallBack && $this->getPage()->config['db']['type'] == 'sqlite' ? 'Fixed' : $this->DBPathField->Display%>">
+							Display="<%=$this->getPage()->getFirstRun() === false && !$this->IsCallBack && $this->getPage()->config['db']['type'] == 'sqlite' ? 'Fixed' : $this->DBPathField->Display%>">
 							<div class="w3-col w3-third"><com:TLabel ForControl="DBPath" Text="<%[ SQLite database path: ]%>" /></div>
 							<div class="w3-col w3-third">
 								<com:TActiveTextBox ID="DBPath" CssClass="w3-input w3-border" Enabled="false" />
@@ -1008,7 +1358,7 @@ var oConfigWizardStep4 = {
 		<com:TWizardStep ID="Step5" Title="<%[ Step 5 - authentication ]%>" StepType="Auto">
 			<div class="w3-half" style="float: none; margin: auto">
 				<h3><%[ API authentication ]%></h3>
-				<div class="w3-container w3-section">
+				<div class="w3-container w3-section" style="display: <%=$this->getBaculaInstalled() ? 'none' : 'block'%>">
 					<com:TRadioButton
 						ID="AuthOAuth2"
 						GroupName="SelectAuth"
@@ -1020,7 +1370,7 @@ var oConfigWizardStep4 = {
 						Text="<%[ Use OAuth2 for authorization and authentication ]%>"
 					/>
 				</div>
-				<div class="w3-container w3-section">
+				<div class="w3-container w3-section" style="display: <%=$this->getBaculaInstalled() ? 'none' : 'block'%>">
 					<com:TRadioButton
 						ID="AuthBasic"
 						GroupName="SelectAuth"
@@ -1034,7 +1384,7 @@ var oConfigWizardStep4 = {
 					/>
 				</div>
 				<div id="configure_basic_auth" style="display: <%=($this->AuthBasic->Checked === true) ? '' : 'none';%>">
-					<com:TPanel Visible="<%=$this->first_run%>">
+					<com:TPanel Visible="<%=$this->getFirstRun()%>">
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><com:TLabel ForControl="APILogin" Text="<%[ Administration login: ]%>" /></div>
 							<div class="w3-col w3-twothird">
@@ -1132,7 +1482,7 @@ var oConfigWizardStep4 = {
 					</com:TPanel>
 				</div>
 				<div id="configure_oauth2_auth" style="display: <%=$this->AuthOAuth2->Checked ? '' : 'none';%>">
-					<com:TPanel Visible="<%=($this->first_run || $this->add_auth_params)%>">
+					<com:TPanel Visible="<%=($this->getFirstRun() || $this->getAddAuthParams())%>">
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><com:TLabel ForControl="APIOAuth2ClientId" Text="<%[ OAuth2 Client ID: ]%>" /></div>
 							<div class="w3-col w3-twothird">
@@ -1258,9 +1608,9 @@ var oConfigWizardStep4 = {
 						</div>
 					</com:TPanel>
 				</div>
-				<h3 style="display: <%=$this->first_run ? 'block' : 'none'%>"><%[ Web interface settings ]%></h3>
+				<h3 style="display: <%=$this->getFirstRun() ? 'block' : 'none'%>"><%[ Web interface settings ]%></h3>
 				<div id="configure_web_auth" style="display: none">
-					<com:TPanel Visible="<%=$this->first_run%>">
+					<com:TPanel Visible="<%=$this->getFirstRun()%>">
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><com:TLabel ForControl="WebLogin" Text="<%[ Administration login: ]%>" /></div>
 							<div class="w3-col w3-twothird">
@@ -1356,9 +1706,9 @@ var oConfigWizardStep4 = {
 						</div>
 					</div>
 				</com:TPanel>
-				<a href="javascript:void(0)" onclick="$('#configure_web_auth_adv').slideToggle('fast');" style="display: <%=$this->first_run && $this->EnableWeb->Checked ? 'block' : 'none'%>"><%[ Advanced options ]%></a>
+				<a href="javascript:void(0)" onclick="$('#configure_web_auth_adv').slideToggle('fast');" style="display: <%=$this->getFirstRun() && $this->EnableWeb->Checked ? 'block' : 'none'%>"><%[ Advanced options ]%></a>
 				<div id="configure_web_auth_adv" style="display: none">
-					<com:TPanel Visible="<%=$this->first_run && $this->EnableWeb->Checked%>">
+					<com:TPanel Visible="<%=$this->getFirstRun() && $this->EnableWeb->Checked%>">
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><com:TLabel ForControl="APIProtocol" Text="<%[ API Protocol: ]%>" /></div>
 							<div class="w3-col w3-twothird">
@@ -1592,7 +1942,7 @@ var oConfigWizardStep4 = {
 							</strong>
 						</div>
 					</div>
-					<com:TPanel Visible="<%=$this->first_run%>">
+					<com:TPanel Visible="<%=$this->getFirstRun()%>">
 						<div style="display: <%=$this->AuthBasic->Checked ? 'block' : 'none'%>">
 							<div class="w3-row w3-section">
 								<div class="w3-col w3-third"><%[ Administration login: ]%></div>
@@ -1604,7 +1954,7 @@ var oConfigWizardStep4 = {
 							</div>
 						</div>
 					</com:TPanel>
-					<com:TPanel Visible="<%=($this->first_run || $this->add_auth_params)%>">
+					<com:TPanel Visible="<%=($this->getFirstRun() || $this->getAddAuthParams())%>">
 						<div style="display: <%=$this->AuthOAuth2->Checked ? 'block' : 'none'%>">
 							<div class="w3-row w3-section">
 								<div class="w3-col w3-third">Client ID:</div>
@@ -1629,7 +1979,7 @@ var oConfigWizardStep4 = {
 						</div>
 					</com:TPanel>
 				</fieldset>
-				<com:TPanel Visible="<%=$this->first_run && $this->EnableWeb->Checked%>">
+				<com:TPanel Visible="<%=$this->getFirstRun() && $this->EnableWeb->Checked%>">
 					<fieldset>
 						<legend><%[ Web interface authentication ]%></legend>
 						<div class="w3-row w3-section">

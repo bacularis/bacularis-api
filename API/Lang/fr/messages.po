@@ -941,3 +941,72 @@ msgstr "Sudo Runas user:"
 
 msgid "Sudo Runas group:"
 msgstr "Sudo Runas group:"
+
+msgid "What services do you want to enable for this installation?"
+msgstr "What services do you want to enable for this installation?"
+
+msgid "Do you have Bacula installed on this host?"
+msgstr "Do you have Bacula installed on this host?"
+
+msgid "Yes. I already have Bacula component(s) installed on this host. I would like to use Bacularis with them."
+msgstr "Yes. I already have Bacula component(s) installed on this host. I would like to use Bacularis with them."
+
+msgid "No. I do not have Bacula installed. I would like to install Bacula now and use Bacularis with it."
+msgstr "No. I do not have Bacula installed. I would like to install Bacula now and use Bacularis with it."
+
+msgid "What is your operating system?"
+msgstr "What is your operating system?"
+
+msgid "Operating system:"
+msgstr "Operating system:"
+
+msgid "What are your system admin account credentials?"
+msgstr "What are your system admin account credentials?"
+
+msgid "System admin login:"
+msgstr "System admin login:"
+
+msgid "System admin password:"
+msgstr "System admin password:"
+
+msgid "After clicking the install Bacula button, there will be installed on this host Catalog (PostgreSQL), Bacula Director, Client, Storage and Bconsole."
+msgstr "After clicking the install Bacula button, there will be installed on this host Catalog (PostgreSQL), Bacula Director, Client, Storage and Bconsole."
+
+msgid "Install Bacula"
+msgstr "Install Bacula"
+
+msgid "Bacula has been installed successfully. You can close this window and go further."
+msgstr "Bacula has been installed successfully. You can close this window and go further."
+
+msgid "Result"
+msgstr "Result"
+
+msgid "Raw output"
+msgstr "Raw output"
+
+msgid "Add SUDO settings"
+msgstr "Add SUDO settings"
+
+msgid "Configure Bacularis"
+msgstr "Configure Bacularis"
+
+msgid "Install Catalog"
+msgstr "Install Catalog"
+
+msgid "Install Director"
+msgstr "Install Director"
+
+msgid "Install Storage"
+msgstr "Install Storage"
+
+msgid "Install Client"
+msgstr "Install Client"
+
+msgid "Install Bconsole"
+msgstr "Install Bconsole"
+
+msgid "Step"
+msgstr "Step"
+
+msgid "Close"
+msgstr "Close"

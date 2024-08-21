@@ -34,6 +34,11 @@ class SoftwareManagementUpgrade extends BaculumAPIServer
 		$software_mgmt = $this->getModule('software_mgmt');
 		$pre_cmd = $cmd = $post_cmd = '';
 		switch ($component) {
+			case 'catalog':
+				$pre_cmd = APIConfig::SOFTWARE_MANAGEMENT_PRE_CAT_UPGRADE;
+				$cmd = APIConfig::SOFTWARE_MANAGEMENT_CAT_UPGRADE;
+				$post_cmd = APIConfig::SOFTWARE_MANAGEMENT_POST_CAT_UPGRADE;
+				break;
 			case 'director':
 				$pre_cmd = APIConfig::SOFTWARE_MANAGEMENT_PRE_DIR_UPGRADE;
 				$cmd = APIConfig::SOFTWARE_MANAGEMENT_DIR_UPGRADE;

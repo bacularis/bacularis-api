@@ -147,4 +147,71 @@ class ComponentActions extends APIModule
 		];
 		return $result;
 	}
+
+	/**
+	 * Run component action.
+	 *
+	 * @param string $component component name (director, storage, client)
+	 * @param string $action component action
+	 * @return array output and error code
+	 */
+	public function runComponentAction(string $component, string $action): object
+	{
+		$action_type = null;
+		switch ($component) {
+			case 'catalog':
+				if ($action === 'start') {
+					$action_type = APIConfig::ACTION_CAT_START;
+				} elseif ($action === 'stop') {
+					$action_type = APIConfig::ACTION_CAT_STOP;
+				} elseif ($action === 'restart') {
+					$action_type = APIConfig::ACTION_CAT_RESTART;
+				}
+				break;
+			case 'director':
+				if ($action === 'start') {
+					$action_type = APIConfig::ACTION_DIR_START;
+				} elseif ($action === 'stop') {
+					$action_type = APIConfig::ACTION_DIR_STOP;
+				} elseif ($action === 'restart') {
+					$action_type = APIConfig::ACTION_DIR_RESTART;
+				}
+				break;
+			case 'storage':
+				if ($action === 'start') {
+					$action_type = APIConfig::ACTION_SD_START;
+				} elseif ($action === 'stop') {
+					$action_type = APIConfig::ACTION_SD_STOP;
+				} elseif ($action === 'restart') {
+					$action_type = APIConfig::ACTION_SD_RESTART;
+				}
+				break;
+			case 'client':
+				if ($action === 'start') {
+					$action_type = APIConfig::ACTION_FD_START;
+				} elseif ($action === 'stop') {
+					$action_type = APIConfig::ACTION_FD_STOP;
+				} elseif ($action === 'restart') {
+					$action_type = APIConfig::ACTION_FD_RESTART;
+				}
+				break;
+		}
+
+		$output = [];
+		$error = 0;
+		if (is_string($action_type)) {
+			$result = $this->execAction($action_type);
+			if ($result->error === 0) {
+				$output = ActionsError::MSG_ERROR_NO_ERRORS;
+				$error = ActionsError::ERROR_NO_ERRORS;
+			} else {
+				$output = $result->output;
+				$error = $result->error;
+			}
+		} else {
+			$output = ActionsError::MSG_ERROR_ACTIONS_ACTION_DOES_NOT_EXIST;
+			$error = ActionsError::ERROR_ACTIONS_ACTION_DOES_NOT_EXIST;
+		}
+		return $this->prepareResult($output, $error);
+	}
 }

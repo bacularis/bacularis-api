@@ -9,6 +9,8 @@
 		<module id="host_config" class="Bacularis\Web\Modules\HostConfig" />
 		<module id="user_config" class="Bacularis\Web\Modules\WebUserConfig" />>
 		<module id="basic_webuser" class="Bacularis\Web\Modules\BasicWebUserConfig" />
+		<module id="osprofile_config" class="Bacularis\Web\Modules\OSProfileConfig" />
+		<module id="deploy_api" class="Bacularis\Web\Modules\DeployAPIHost" />
 
 		<!-- database modules -->
 		<module id="db" class="Bacularis\API\Modules\Database" />
@@ -35,5 +37,7 @@
 		<module id="comp_actions" class="Bacularis\API\Modules\ComponentActions" />
 		<!-- changer command modules -->
 		<module id="changer_command" class="Bacularis\API\Modules\ChangerCommand" />
+		<!-- software management modules -->
+		<module id="software_mgmt" class="Bacularis\API\Modules\SoftwareManagement" />
 	</modules>
 </configuration>

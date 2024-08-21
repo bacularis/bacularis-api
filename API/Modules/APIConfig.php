@@ -66,6 +66,9 @@ class APIConfig extends ConfigFileModule
 	/**
 	 * Action types
 	 */
+	public const ACTION_CAT_START = 'cat_start';
+	public const ACTION_CAT_STOP = 'cat_stop';
+	public const ACTION_CAT_RESTART = 'cat_restart';
 	public const ACTION_DIR_START = 'dir_start';
 	public const ACTION_DIR_STOP = 'dir_stop';
 	public const ACTION_DIR_RESTART = 'dir_restart';
@@ -92,6 +95,19 @@ class APIConfig extends ConfigFileModule
 	public const SOFTWARE_MANAGEMENT_POST_BACULARIS_UPGRADE = 'bacularis_post_upgrade_cmd';
 	public const SOFTWARE_MANAGEMENT_POST_BACULARIS_REMOVE = 'bacularis_post_remove_cmd';
 	public const SOFTWARE_MANAGEMENT_POST_BACULARIS_INFO = 'bacularis_post_info_cmd';
+	public const SOFTWARE_MANAGEMENT_CAT_INSTALL = 'cat_install';
+	public const SOFTWARE_MANAGEMENT_CAT_UPGRADE = 'cat_upgrade';
+	public const SOFTWARE_MANAGEMENT_CAT_REMOVE = 'cat_remove';
+	public const SOFTWARE_MANAGEMENT_CAT_INFO = 'cat_info';
+	public const SOFTWARE_MANAGEMENT_CAT_ENABLE = 'cat_enable';
+	public const SOFTWARE_MANAGEMENT_PRE_CAT_INSTALL = 'cat_pre_install_cmd';
+	public const SOFTWARE_MANAGEMENT_PRE_CAT_UPGRADE = 'cat_pre_upgrade_cmd';
+	public const SOFTWARE_MANAGEMENT_PRE_CAT_REMOVE = 'cat_pre_remove_cmd';
+	public const SOFTWARE_MANAGEMENT_PRE_CAT_INFO = 'cat_pre_info_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_CAT_INSTALL = 'cat_post_install_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_CAT_UPGRADE = 'cat_post_upgrade_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_CAT_REMOVE = 'cat_post_remove_cmd';
+	public const SOFTWARE_MANAGEMENT_POST_CAT_INFO = 'cat_post_info_cmd';
 	public const SOFTWARE_MANAGEMENT_DIR_INSTALL = 'dir_install';
 	public const SOFTWARE_MANAGEMENT_DIR_UPGRADE = 'dir_upgrade';
 	public const SOFTWARE_MANAGEMENT_DIR_REMOVE = 'dir_remove';
@@ -390,6 +406,9 @@ class APIConfig extends ConfigFileModule
 	public function getActionTypes()
 	{
 		return [
+			self::ACTION_CAT_START,
+			self::ACTION_CAT_STOP,
+			self::ACTION_CAT_RESTART,
 			self::ACTION_DIR_START,
 			self::ACTION_DIR_STOP,
 			self::ACTION_DIR_RESTART,
@@ -621,6 +640,19 @@ class APIConfig extends ConfigFileModule
 			self::SOFTWARE_MANAGEMENT_POST_BACULARIS_UPGRADE,
 			self::SOFTWARE_MANAGEMENT_POST_BACULARIS_REMOVE,
 			self::SOFTWARE_MANAGEMENT_POST_BACULARIS_INFO,
+			self::SOFTWARE_MANAGEMENT_CAT_INSTALL,
+			self::SOFTWARE_MANAGEMENT_CAT_UPGRADE,
+			self::SOFTWARE_MANAGEMENT_CAT_REMOVE,
+			self::SOFTWARE_MANAGEMENT_CAT_INFO,
+			self::SOFTWARE_MANAGEMENT_CAT_ENABLE,
+			self::SOFTWARE_MANAGEMENT_PRE_CAT_INSTALL,
+			self::SOFTWARE_MANAGEMENT_PRE_CAT_UPGRADE,
+			self::SOFTWARE_MANAGEMENT_PRE_CAT_REMOVE,
+			self::SOFTWARE_MANAGEMENT_PRE_CAT_INFO,
+			self::SOFTWARE_MANAGEMENT_POST_CAT_INSTALL,
+			self::SOFTWARE_MANAGEMENT_POST_CAT_UPGRADE,
+			self::SOFTWARE_MANAGEMENT_POST_CAT_REMOVE,
+			self::SOFTWARE_MANAGEMENT_POST_CAT_INFO,
 			self::SOFTWARE_MANAGEMENT_DIR_INSTALL,
 			self::SOFTWARE_MANAGEMENT_DIR_UPGRADE,
 			self::SOFTWARE_MANAGEMENT_DIR_REMOVE,

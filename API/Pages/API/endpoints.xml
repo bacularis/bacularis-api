@@ -99,7 +99,7 @@
 	<url ServiceParameter="DirectorShow" pattern="api/v3/directors/{name}/show/" parameters.name="[a-zA-Z0-9:.\-_ ]+" />
 	<url ServiceParameter="DirectorStatus" pattern="api/v3/directors/{name}/status/" parameters.name="[a-zA-Z0-9:.\-_ ]+" />
 	<!-- actions endpoints -->
-	<url ServiceParameter="Actions" pattern="api/v3/actions/{component}/{action}/" parameters.component="(director|storage|client)" parameters.action="(start|stop|restart)" />
+	<url ServiceParameter="Actions" pattern="api/v3/actions/{component}/{action}/" parameters.component="(catalog|director|storage|client)" parameters.action="(start|stop|restart)" />
 	<!-- OAuth2 client endpoints -->
 	<url ServiceParameter="OAuth2Clients" pattern="api/v3/oauth2/clients/" />
 	<url ServiceParameter="OAuth2Client" pattern="api/v3/oauth2/clients/{id}/" parameters.id="[a-zA-Z0-9\-_]{32}" />
@@ -107,11 +107,11 @@
 	<url ServiceParameter="BasicUsers" pattern="api/v3/basic/users/" />
 	<url ServiceParameter="BasicUser" pattern="api/v3/basic/users/{id}/" parameters.id="[a-zA-Z0-9]+" />
 	<!-- Software management endpoints -->
-	<url ServiceParameter="SoftwareManagementInstall" pattern="api/v3/software/{component}/install" parameters.component="(director|storage|client|console)" />
-	<url ServiceParameter="SoftwareManagementUpgrade" pattern="api/v3/software/{component}/upgrade" parameters.component="(director|storage|client|console)" />
-	<url ServiceParameter="SoftwareManagementRemove" pattern="api/v3/software/{component}/remove" parameters.component="(director|storage|client|console)" />
-	<url ServiceParameter="SoftwareManagementInfo" pattern="api/v3/software/{component}/info" parameters.component="(director|storage|client|console)" />
-	<url ServiceParameter="SoftwareManagementEnable" pattern="api/v3/software/{component}/enable" parameters.component="(director|storage|client)" />
+	<url ServiceParameter="SoftwareManagementInstall" pattern="api/v3/software/{component}/install" parameters.component="(catalog|director|storage|client|console)" />
+	<url ServiceParameter="SoftwareManagementUpgrade" pattern="api/v3/software/{component}/upgrade" parameters.component="(catalog|director|storage|client|console)" />
+	<url ServiceParameter="SoftwareManagementRemove" pattern="api/v3/software/{component}/remove" parameters.component="(catalog|director|storage|client|console)" />
+	<url ServiceParameter="SoftwareManagementInfo" pattern="api/v3/software/{component}/info" parameters.component="(catalog|director|storage|client|console)" />
+	<url ServiceParameter="SoftwareManagementEnable" pattern="api/v3/software/{component}/enable" parameters.component="(catalog|director|storage|client)" />
 	<url ServiceParameter="SelfTestRun" pattern="api/v3/software/selftest" />
 
 
