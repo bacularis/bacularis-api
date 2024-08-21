@@ -137,9 +137,8 @@
 		</prop:FinishNavigationTemplate>
 		<com:TWizardStep ID="Step1" Title="<%[ Step 1 - general options ]%>" StepType="Auto">
 			<div class="w3-half" style="float: none; margin: auto">
-				<h3><%[ Welcome to the Bacularis install wizard ]%></h3>
-				<p><%[ Please select language. ]%></p>
-				<div class="w3-container w3-margin-bottom">
+				<h2><%[ Welcome to the Bacularis install wizard ]%></h2>
+				<div class="w3-container w3-margin-bottom w3-margin-top">
 					<div class="w3-third"><com:TLabel ForControl="Lang" Text="<%[ Language: ]%>" /></div>
 					<div class="w3-third">
 						<com:TActiveDropDownList
@@ -161,7 +160,7 @@
 					</div>
 				</div>
 				<com:TPanel Visible="<%=$this->getFirstRun()%>">
-					<p><%[ What services do you want to enable for this installation? ]%></p>
+					<h5><%[ What services do you want to enable for this installation? ]%></h5>
 					<div class="w3-container">
 						<div class="w3-container">
 							<com:TActiveCheckBox
@@ -178,7 +177,7 @@
 							<label for="<%=$this->EnableWeb->ClientID%>"> &nbsp;<%[ Enable web interface ]%></label>
 						</div>
 					</div>
-					<p><%[ Do you have Bacula installed on this host? ]%></p>
+					<h5 class="w3-margin-top"><%[ Do you have Bacula installed on this host? ]%></h5>
 					<div class="w3-container">
 						<div>
 							<com:TActiveRadioButton
@@ -202,8 +201,8 @@
 							<label for="<%=$this->BaculaNotInstalled->ClientID%>"> &nbsp;<%[ No. I do not have Bacula installed. I would like to install Bacula now and use Bacularis with it. ]%></label>
 						</div>
 						<div id="install_bacula_not_install" class="w3-container" style="display: <%=$this->BaculaNotInstalled->Checked ? 'block' : 'none'%>">
-							<div class="w3-container">
-								<p><%[ What is your operating system? ]%></p>
+							<div class="w3-container w3-margin-top">
+								<h5><%[ What is your operating system? ]%></h5>
 								<div class="w3-container w3-margin-bottom">
 									<div class="w3-third"><%[ Operating system: ]%></div>
 									<div class="w3-rest">
@@ -214,7 +213,7 @@
 										/>
 									</div>
 								</div>
-								<p><%[ What are your system admin account credentials? ]%></p>
+								<h5><%[ What are your system admin account credentials? ]%></h5>
 								<div class="w3-container w3-margin-bottom">
 									<div class="w3-third"><%[ System admin login: ]%></div>
 									<div class="w3-rest">
@@ -247,10 +246,13 @@
 									</div>
 								</div>
 							</div>
-							<div class="w3-panel w3-center">
+							<div class="w3-container w3-center">
 								<button type="button" id="install_bacula_locally_btn" class="w3-button w3-green" onclick="oInstallBaculaLocally.load_install_bacula_locally_window()"><i class="fa-solid fa-rocket"></i> &nbsp;<%[ Install Bacula ]%></button>
+								<i class="fa-solid fa-info-circle help_icon w3-text-green" onclick="$(this).next().slideToggle('fast');"></i>
+								<div class="directive_help w3-padding" style="display: none;">
+									<dd><%[ After clicking the install Bacula button, there will be installed on this host Catalog (PostgreSQL), Bacula Director, Client, Storage and Bconsole. ]%></dd>
+								</div>
 							</div>
-							<p><%[ After clicking the install Bacula button, there will be installed on this host Catalog (PostgreSQL), Bacula Director, Client, Storage and Bconsole. ]%></p>
 						</div>
 					</div>
 				</com:TPanel>
@@ -534,7 +536,7 @@ function show_start_next_btn(show) {
 		</com:TWizardStep>
 		<com:TWizardStep ID="Step2" Title="<%[ Step 2 - share the Bacula Catalog Database ]%>" StepType="Auto">
 			<div class="w3-half" style="float: none; margin: auto">
-				<p><%[ Do you want to setup and to share the Bacula Catalog Database access for this API instance? ]%></p>
+				<h5><%[ Do you want to setup and to share the Bacula Catalog Database access for this API instance? ]%></h5>
 				<div class="w3-container w3-section">
 					<com:TRadioButton
 						ID="DatabaseNo"
@@ -715,7 +717,7 @@ function show_start_next_btn(show) {
 		</com:TWizardStep>
 		<com:TWizardStep ID="Step3" Title="<%[ Step 3 - share the Bacula Bconsole commands interface ]%>" StepType="Auto">
 			<div class="w3-half" style="float: none; margin: auto">
-				<p><%[ Do you want to setup and share the Bacula Bconsole interface to execute commands in this API instance? ]%></p>
+				<h5><%[ Do you want to setup and share the Bacula Bconsole interface to execute commands in this API instance? ]%></h5>
 				<div class="w3-container w3-section">
 					<com:TRadioButton
 						ID="ConsoleNo"
@@ -874,7 +876,7 @@ function show_start_next_btn(show) {
 		</com:TWizardStep>
 		<com:TWizardStep ID="Step4" Title="<%[ Step 4 - share the Bacula configuration interface ]%>" StepType="Auto">
 			<div class="w3-half" style="float: none; margin: auto">
-				<p><%[ Do you want to setup and share the Bacula configuration interface to configure Bacula components via this API instance? ]%></p>
+				<h5><%[ Do you want to setup and share the Bacula configuration interface to configure Bacula components via this API instance? ]%></h5>
 				<div class="w3-container w3-section">
 					<com:TRadioButton
 						ID="ConfigNo"
