@@ -1,8 +1,12 @@
 
-This is a minor bug fix release. We fixed bugs that were introduced in 3.2.0.
+This is a new major Bacularis release. It provides in the install wizard a new
+capability to install and configure complete Bacula environment to work
+with Bacularis.
 
-**Changes**
- - Fix create dedicated Bconsole config file option in add/edit basic user/oauth2 account endpoints
- - Fix language setting in installation wizard
- - Extend error messages in POST and PUT config endpoints
+Changes:
+ - Add to initial wizard capability to install and configure complete Bacula
+   environment to use with Bacularis
+ - Initial wizard visual improvements
+ - Make /jobs/run endpoint job parameters as optional
+ - Update API documentation
 
