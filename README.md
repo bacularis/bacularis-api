@@ -3,10 +3,10 @@
 Bacularis API is the main component of the Bacula programming interface.
 
 
-[![Latest Stable Version](http://poser.pugx.org/bacularis/bacularis-api/v)](https://packagist.org/packages/bacularis/bacularis-api)
-[![Total Downloads](http://poser.pugx.org/bacularis/bacularis-api/downloads)](https://packagist.org/packages/bacularis/bacularis-api)
-[![License](http://poser.pugx.org/bacularis/bacularis-api/license)](https://packagist.org/packages/bacularis/bacularis-api)
-[![PHP Version Require](http://poser.pugx.org/bacularis/bacularis-api/require/php)](https://packagist.org/packages/bacularis/bacularis-api)
+![GitHub Release](https://img.shields.io/github/v/release/bacularis/bacularis-api)
+![Packagist Downloads](https://img.shields.io/packagist/dt/bacularis/bacularis-api)
+![Packagist License](https://img.shields.io/packagist/l/bacularis/bacularis-api)
+![Packagist Dependency Version](https://img.shields.io/packagist/dependency-v/bacularis/bacularis-api/PHP)
 
 # Bacularis - The Bacula web interface
 
