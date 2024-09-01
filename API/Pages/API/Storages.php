@@ -40,8 +40,17 @@ class Storages extends BaculumAPIServer
 {
 	public function get()
 	{
+		$misc = $this->getModule('misc');
 		$limit = $this->Request->contains('limit') ? (int) ($this->Request['limit']) : 0;
-		$storages = $this->getModule('storage')->getStorages($limit);
+		$name = $this->Request->contains('name') && $misc->isValidName($this->Request['name']) ? $this->Request['name'] : '';
+
+		$params = [];
+		if ($name) {
+			$params['Storage.Name'] = [
+				'vals' => [$name]
+			];
+		}
+		$storages = $this->getModule('storage')->getStorages($limit, $params);
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
 			['.storage']

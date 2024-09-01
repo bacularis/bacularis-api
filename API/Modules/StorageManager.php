@@ -39,11 +39,16 @@ use Prado\Data\ActiveRecord\TActiveRecordCriteria;
  */
 class StorageManager extends APIModule
 {
-	public function getStorages($limit)
+	public function getStorages($limit, array $params = []): array
 	{
 		$criteria = new TActiveRecordCriteria();
 		if (is_int($limit) && $limit > 0) {
 			$criteria->Limit = $limit;
+		}
+		$condition = Database::getWhere($params, true);
+		if ($condition['params'] > 0) {
+			$criteria->Condition = $condition['where'];
+			$criteria->Parameters = $condition['params'];
 		}
 		return StorageRecord::finder()->findAll($criteria);
 	}

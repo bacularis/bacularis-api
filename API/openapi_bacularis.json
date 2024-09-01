@@ -2961,9 +2961,20 @@
 						}
 					}
 				},
-				"parameters": [{
-					"$ref": "#/components/parameters/Limit"
-				}]
+				"parameters": [
+					{
+						"name": "name",
+						"in": "query",
+						"description": "Storage name",
+						"schema": {
+							"type": "string",
+							"pattern": "[a-zA-Z0-9:.-_ ]+"
+						}
+					},
+					{
+						"$ref": "#/components/parameters/Limit"
+					}
+				]
 			}
 		},
 		"/api/v3/storages/{storageid}": {
