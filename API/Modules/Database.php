@@ -184,6 +184,7 @@ class Database extends APIModule
 				$cond = [];
 				$vals = [];
 				$kval = $vars_prefix . str_replace('.', '_', $key);
+				$value['operator'] ??= 'OR';
 				if (is_array($value['vals'])) {
 					if ($value['operator'] == 'IN') {
 						$in_vals = [];
