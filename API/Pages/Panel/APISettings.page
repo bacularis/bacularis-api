@@ -12,7 +12,8 @@
 		<button type="button" id="btn_settings_config" class="w3-bar-item w3-button tab_btn" onclick="W3Tabs.open(this.id, 'settings_config');"><%[ Config ]%></button>
 		<button type="button" id="btn_settings_actions" class="w3-bar-item w3-button tab_btn" onclick="W3Tabs.open(this.id, 'settings_actions');"><%[ Actions ]%></button>
 		<button type="button" id="btn_settings_authentication" class="w3-bar-item w3-button tab_btn" onclick="W3Tabs.open(this.id, 'settings_authentication');"><%[ Authentication ]%></button>
-		<button type="button" id="btn_software_management" class="w3-bar-item w3-button tab_btn" onclick="W3Tabs.open(this.id, 'software_management');"><%[ Software management ]%></button>
+		<button type="button" id="btn_settings_software_management" class="w3-bar-item w3-button tab_btn" onclick="W3Tabs.open(this.id, 'settings_software_management');"><%[ Software management ]%></button>
+		<button type="button" id="btn_settings_plugins" class="w3-bar-item w3-button tab_btn" onclick="W3Tabs.open(this.id, 'settings_plugins'); oPluginListSettings.table.responsive.recalc();"><%[ Plugins ]%></button>
 	</div>
 	<div class="w3-container tab_item" id="settings_general">
 		<div class="w3-row w3-section">
@@ -1340,7 +1341,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="w3-container tab_item" id="software_management" style="display: none">
+	<div class="w3-container tab_item" id="settings_software_management" style="display: none">
 		<div class="w3-row w3-section">
 			<div class="w3-col w3-quarter"><com:TLabel ForControl="SoftwareManagementEnabled" Text="<%[ Enabled: ]%>" /></div>
 			<div class="w3-col w3-threequarter">
@@ -2104,6 +2105,9 @@
 				</com:TActiveLinkButton>
 			</div>
 		</div>
+	</div>
+	<div class="w3-container tab_item" id="settings_plugins" style="display: none">
+		<com:Bacularis.Common.Portlets.PluginList />
 	</div>
 	<com:Bacularis.API.Portlets.SudoConfig ID="SudoConfig" />
 <script>

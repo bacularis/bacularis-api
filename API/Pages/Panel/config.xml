@@ -21,6 +21,7 @@
 		<module id="api_config" class="Bacularis\API\Modules\APIConfig" />
 		<module id="device_config" class="Bacularis\API\Modules\DeviceConfig" />
 		<module id="bacula_setting" class="Bacularis\API\Modules\BaculaSetting" />
+		<module id="plugin_config" class="Bacularis\API\Modules\PluginConfig" />
 		<!-- internalization modules -->
 		<module id="globalization" class="TGlobalization">
 			<translation type="gettext" source="Application.API.Lang" marker="@@" autosave="false" cache="false" DefaultCulture="en" />

@@ -36,10 +36,13 @@
 		<module id="blstat" class="Bacularis\API\Modules\BLStat" />
 		<module id="self_test" class="Bacularis\API\Modules\SelfTest" />
 		<!-- config modules -->
+		<module id="config_bacula" class="Bacularis\API\Modules\ConfigBacula" />
 		<module id="api_config" class="Bacularis\API\Modules\APIConfig" />
 		<module id="bacula_config" class="Bacularis\API\Modules\BaculaConfig" />
 		<module id="bacula_setting" class="Bacularis\API\Modules\BaculaSetting" />
 		<module id="device_config" class="Bacularis\API\Modules\DeviceConfig" />
+		<module id="plugin_config" class="Bacularis\API\Modules\PluginConfig" />
+		<module id="api_plugin" class="Bacularis\API\Modules\APIPluginManager" />
 		<!-- logging modules -->
 		<module id="log" class="System\Util\TLogRouter">
 			<route class="Bacularis\Common\Modules\BFileLogRoute"  Categories="Execute, External, Application, General, Security" LogPath="Bacularis\API\Logs" LogFile="bacularis-api.log" MaxFileSize="1000" MaxLogFiles="5" />

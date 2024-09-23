@@ -1010,3 +1010,45 @@ msgstr "Step"
 
 msgid "Close"
 msgstr "Close"
+
+msgid "Plugin settings"
+msgstr "Plugin settings"
+
+msgid "Installed plugins"
+msgstr "Installed plugins"
+
+msgid "Add plugin settings"
+msgstr "Add plugin settings"
+
+msgid "Plugin name"
+msgstr "Plugin name"
+
+msgid "Enabled"
+msgstr "Enabled"
+
+msgid "Type"
+msgstr "Type"
+
+msgid "Version"
+msgstr "Version"
+
+msgid "Select plugin"
+msgstr "Select plugin"
+
+msgid "Plugin"
+msgstr "Plugin"
+
+msgid "Edit plugin settings"
+msgstr "Edit plugin settings"
+
+msgid "Plugins"
+msgstr "Plugins"
+
+msgid "Tip: Use left-click to select table row. Use CTRL + left-click to multiple row selection. Use SHIFT + left-click to add a range of rows to selection."
+msgstr "Tip: Use left-click to select table row. Use CTRL + left-click to multiple row selection. Use SHIFT + left-click to add a range of rows to selection."
+
+msgid "Remove"
+msgstr "Remove"
+
+msgid "Plugin settings with the given name already exists."
+msgstr "Plugin settings with the given name already exists."

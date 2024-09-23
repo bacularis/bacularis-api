@@ -30,6 +30,7 @@
 use Bacularis\API\Modules\BaculumAPIServer;
 use Bacularis\API\Modules\BaculaSetting;
 use Bacularis\API\Modules\BaculaConfig;
+use Bacularis\Common\Modules\PluginConfigBase;
 use Bacularis\Common\Modules\Errors\BaculaConfigError;
 
 /**
@@ -66,7 +67,35 @@ class Config extends BaculumAPIServer
 			}
 		}
 
-		$config = $this->getModule('bacula_setting')->getConfig($component_type, $resource_type, $resource_name, $opts);
+		// Run plugin pre-read actions
+		$this->getModule('api_plugin')->callPluginAction(
+			PluginConfigBase::PLUGIN_TYPE_BACULA_CONFIGURATION,
+			'preConfigRead',
+			$component_type,
+			$resource_type,
+			$resource_name
+		);
+
+		// Read Bacula configuration
+		$config = $this->getModule('bacula_setting')->getConfig(
+			$component_type,
+			$resource_type,
+			$resource_name,
+			$opts
+		);
+
+		// Run plugin post-read actions
+		if ($config['exitcode'] == 0) {
+			$this->getModule('api_plugin')->callPluginAction(
+				PluginConfigBase::PLUGIN_TYPE_BACULA_CONFIGURATION,
+				'postConfigRead',
+				$component_type,
+				$resource_type,
+				$resource_name,
+				$config['output']
+			);
+		}
+
 		$this->output = $config['output'];
 		$this->error = $config['exitcode'];
 	}
@@ -104,6 +133,16 @@ class Config extends BaculumAPIServer
 			}
 		}
 
+		// Run plugin pre-create actions
+		$this->getModule('api_plugin')->callPluginAction(
+			PluginConfigBase::PLUGIN_TYPE_BACULA_CONFIGURATION,
+			'preConfigCreate',
+			$component_type,
+			$resource_type,
+			$resource_name,
+			$config
+		);
+
 		$rconfig = [];
 		if (is_string($component_type) && is_string($resource_type) && is_string($resource_name)) {
 			// Get existing resource config if exists
@@ -129,6 +168,16 @@ class Config extends BaculumAPIServer
 					$this->output = $this->getSimulatedResult($result['config'], $component_type, $resource_type, $config['Name']);
 				} else {
 					$this->output = BaculaConfigError::MSG_ERROR_NO_ERRORS;
+
+					// Run plugin post-create actions
+					$this->getModule('api_plugin')->callPluginAction(
+						PluginConfigBase::PLUGIN_TYPE_BACULA_CONFIGURATION,
+						'postConfigCreate',
+						$component_type,
+						$resource_type,
+						$resource_name,
+						$config
+					);
 				}
 				$this->error = BaculaConfigError::ERROR_NO_ERRORS;
 			} elseif ($result['is_valid'] === false) {
@@ -189,6 +238,16 @@ class Config extends BaculumAPIServer
 			}
 		}
 
+		// Run plugin pre-update actions
+		$this->getModule('api_plugin')->callPluginAction(
+			PluginConfigBase::PLUGIN_TYPE_BACULA_CONFIGURATION,
+			'preConfigUpdate',
+			$component_type,
+			$resource_type,
+			$resource_name,
+			$config
+		);
+
 		$rconfig = [];
 		if (is_string($component_type) && is_string($resource_type) && is_string($resource_name)) {
 			// Get existing resource config if exists
@@ -239,6 +298,16 @@ class Config extends BaculumAPIServer
 				} else {
 					// Config savesd successfully
 					$this->output = BaculaConfigError::MSG_ERROR_NO_ERRORS;
+
+					// Run plugin post-update actions
+					$this->getModule('api_plugin')->callPluginAction(
+						PluginConfigBase::PLUGIN_TYPE_BACULA_CONFIGURATION,
+						'postConfigUpdate',
+						$component_type,
+						$resource_type,
+						$resource_name,
+						$config
+					);
 				}
 			} elseif ($result['is_valid'] === false) {
 				$this->output = BaculaConfigError::MSG_ERROR_CONFIG_VALIDATION_ERROR . print_r($result['result'], true);
@@ -280,6 +349,15 @@ class Config extends BaculumAPIServer
 			}
 		}
 
+		// Run plugin pre-delete actions
+		$this->getModule('api_plugin')->callPluginAction(
+			PluginConfigBase::PLUGIN_TYPE_BACULA_CONFIGURATION,
+			'preConfigDelete',
+			$component_type,
+			$resource_type,
+			$resource_name
+		);
+
 		$config = [];
 		if (is_string($component_type) && is_string($resource_type) && is_string($resource_name)) {
 			$res = $this->getModule('bacula_setting')->getConfig(
@@ -319,6 +397,15 @@ class Config extends BaculumAPIServer
 					if ($result['save_result'] === true) {
 						$this->output = BaculaConfigError::MSG_ERROR_NO_ERRORS;
 						$this->error = BaculaConfigError::ERROR_NO_ERRORS;
+
+						// Run plugin post-delete actions
+						$this->getModule('api_plugin')->callPluginAction(
+							PluginConfigBase::PLUGIN_TYPE_BACULA_CONFIGURATION,
+							'postConfigDelete',
+							$component_type,
+							$resource_type,
+							$resource_name
+						);
 					} elseif ($result['is_valid'] === false) {
 						$this->output = BaculaConfigError::MSG_ERROR_CONFIG_VALIDATION_ERROR . print_r($result['result'], true);
 						$this->error = BaculaConfigError::ERROR_CONFIG_VALIDATION_ERROR;
