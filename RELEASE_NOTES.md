@@ -1,7 +1,10 @@
 
-This is a new feature release. We added a new name parameter to storage list endpoint.
+Bacularis 4.2.0 provides a new API plugin interface support.
+Bacularis users can now create own plugins in this layer in
+the same way as they could do in the web interface layer.
+We also prepared first API plugin for pre/post config actions.
 
 **Changes**
- - Add name parameter to /storages API endpoint
- - Add default operator for SQL query criterias
+ - Add API plugin support
+ - Add Bacula configuration plugin
 
