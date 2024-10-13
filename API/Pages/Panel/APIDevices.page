@@ -246,7 +246,7 @@ oSudoConfig.set_bin_ownership(bin_ownership);
 							/>
 						</div>
 						<div class="w3-col w3-threequarter">
-							<com:TTextBox
+							<com:TActiveTextBox
 								ID="ChangerCommandSudoRunAsUser"
 								CssClass="w3-input w3-border"
 								CausesValidation="false"
@@ -262,7 +262,7 @@ oSudoConfig.set_bin_ownership(bin_ownership);
 							/>
 						</div>
 						<div class="w3-col w3-threequarter">
-							<com:TTextBox
+							<com:TActiveTextBox
 								ID="ChangerCommandSudoRunAsGroup"
 								CssClass="w3-input w3-border"
 								CausesValidation="false"
