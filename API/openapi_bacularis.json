@@ -5606,6 +5606,321 @@
 				}
 			}
 		},
+		"/api/v3/devices/{device_name}": {
+			"get": {
+				"tags": ["devices"],
+				"summary": "Get device config",
+				"description": "Get device config.",
+				"responses": {
+					"200": {
+						"description": "Load device config",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "object",
+											"properties": {
+												"type": {
+													"type": "string",
+													"description": "Device type"
+												},
+												"device": {
+													"type": "string",
+													"description": "Device path"
+												},
+												"command": {
+													"type": "string",
+													"description": "Autochanger command"
+												},
+												"use_sudo": {
+													"type": "string",
+													"description": "Use sudo"
+												},
+												"sudo_user": {
+													"type": "string",
+													"description": "Sudo user"
+												},
+												"sudo_group": {
+													"type": "string",
+													"description": "Sudo group"
+												},
+												"drives": {
+													"type": "string",
+													"description": "Comma separated tape drive names"
+												},
+												"index": {
+													"type": "string",
+													"description": "Drive index"
+												}
+											}
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 130, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/DeviceName"
+					}
+				]
+			},
+			"put": {
+				"tags": ["devices"],
+				"summary": "Load device",
+				"description": "Update device config.",
+				"responses": {
+					"200": {
+						"description": "Update device config.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "string",
+											"description": "Error message"
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 9, 130, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/DeviceName"
+					},
+					{
+						"name": "type",
+						"in": "header",
+						"description": "Device type",
+						"required":  false,
+						"schema": {
+							"type": "string",
+							"enum": ["device", "autochanger"]
+						}
+					},
+					{
+						"name": "device",
+						"in": "header",
+						"description": "Autochanger device path",
+						"required":  false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "command",
+						"in": "header",
+						"description": "Autochanger command",
+						"required":  false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "use_sudo",
+						"in": "header",
+						"description": "Use sudo",
+						"required":  false,
+						"schema": {
+							"type": "integer",
+							"enum": [0, 1]
+						}
+					},
+					{
+						"name": "sudo_user",
+						"in": "header",
+						"description": "Sudo user",
+						"required":  false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "sudo_group",
+						"in": "header",
+						"description": "Sudo group",
+						"required":  false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "drives",
+						"in": "header",
+						"description": "Autochanger tape drives",
+						"required":  false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "index",
+						"in": "header",
+						"description": "Drive index",
+						"required":  false,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				]
+			},
+			"post": {
+				"tags": ["devices"],
+				"summary": "Create device",
+				"description": "Create device config.",
+				"responses": {
+					"200": {
+						"description": "Create device config.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "string",
+											"description": "Error message"
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 9, 136, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/DeviceName"
+					},
+					{
+						"name": "type",
+						"in": "header",
+						"description": "Device type",
+						"required":  true,
+						"schema": {
+							"type": "string",
+							"enum": ["device", "autochanger"]
+						}
+					},
+					{
+						"name": "device",
+						"in": "header",
+						"description": "Autochanger device path",
+						"required":  true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "command",
+						"in": "header",
+						"description": "Autochanger command",
+						"required":  true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "use_sudo",
+						"in": "header",
+						"description": "Use sudo",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"enum": [0, 1]
+						}
+					},
+					{
+						"name": "sudo_user",
+						"in": "header",
+						"description": "Sudo user",
+						"required":  false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "sudo_group",
+						"in": "header",
+						"description": "Sudo group",
+						"required":  false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "drives",
+						"in": "header",
+						"description": "Autochanger tape drives",
+						"required":  true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "index",
+						"in": "header",
+						"description": "Drive index (required only for tape drives)",
+						"required":  true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				]
+			},
+			"delete": {
+				"tags": ["devices"],
+				"summary": "Delete device",
+				"description": "Delete device config.",
+				"responses": {
+					"200": {
+						"description": "Create autochanger device config.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "string",
+											"description": "Error message"
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 9, 136, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/DeviceName"
+					}
+				]
+			}
+		},
 		"/api/v3/devices/{device_name}/load": {
 			"get": {
 				"tags": ["devices"],
@@ -6108,7 +6423,7 @@
 						}
 					},
 					{
-						"name": "destsrc",
+						"name": "slotdest",
 						"in": "query",
 						"description": "Destination slot number",
 						"required":  true,
