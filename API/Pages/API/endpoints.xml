@@ -28,6 +28,7 @@
 	<url ServiceParameter="StorageUmount" pattern="api/v3/storages/{id}/umount/" parameters.id="\d+" />
 	<url ServiceParameter="StorageRelease" pattern="api/v3/storages/{id}/release/" parameters.id="\d+" />
 	<!-- devices endpoints -->
+	<url ServiceParameter="Changer" pattern="api/v3/devices/{device_name}/" parameters.device_name="[a-zA-Z0-9:.\-_ ]+" />
 	<url ServiceParameter="ChangerDriveLoad" pattern="api/v3/devices/{device_name}/load/" parameters.device_name="[a-zA-Z0-9:.\-_ ]+" />
 	<url ServiceParameter="ChangerDriveUnload" pattern="api/v3/devices/{device_name}/unload/" parameters.device_name="[a-zA-Z0-9:.\-_ ]+" />
 	<url ServiceParameter="ChangerDriveLoaded" pattern="api/v3/devices/{device_name}/loaded/" parameters.device_name="[a-zA-Z0-9:.\-_ ]+" />
