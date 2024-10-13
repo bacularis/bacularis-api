@@ -120,6 +120,65 @@ class DeviceConfig extends ConfigFileModule
 
 
 	/**
+	 * Check if device config exists.
+	 *
+	 * @param string $name device name
+	 * @return bool true if device config exists, otherwise false
+	 */
+	public function deviceExists(string $name): bool
+	{
+		$devices = $this->getConfig();
+		return key_exists($name, $devices);
+	}
+
+	/**
+	 * Get device config.
+	 *
+	 * @param string $name device name
+	 * @return array device config or empty array if device does not exist
+	 */
+	public function getDevice(string $name): array
+	{
+		$device = [];
+		if ($this->deviceExists($name)) {
+			$devices = $this->getConfig();
+			$device = $devices[$name];
+		}
+		return $device;
+	}
+
+	/**
+	 * Set device config.
+	 *
+	 * @param string $name device name
+	 * @param array $config $device config
+	 * @return bool true if device saved successfully, otherwise false
+	 */
+	public function setDevice(string $name, array $config): bool
+	{
+		$devices = $this->getConfig();
+		$devices[$name] = $config;
+		return $this->setConfig($devices);
+	}
+
+	/**
+	 * Delete device config.
+	 *
+	 * @param string $name device name
+	 * @return bool true if device deleted successfully, otherwise false
+	 */
+	public function deleteDevice(string $name): bool
+	{
+		$result = false;
+		if ($this->deviceExists($name)) {
+			$devices = $this->getConfig();
+			unset($devices[$name]);
+			$result = $this->setConfig($devices);
+		}
+		return $result;
+	}
+
+	/**
 	 * Validate device config.
 	 * Config validation should be used as early as config data is available.
 	 * Validation is done in read/write config methods.
@@ -154,5 +213,20 @@ class DeviceConfig extends ConfigFileModule
 			}
 		}
 		return $drives;
+	}
+
+	/**
+	 * Check if given device type is valid.
+	 *
+	 * @param string $type device type
+	 * @return bool true if device type is valid, otherwise false
+	 */
+	public function isValidDevType(string $type): bool
+	{
+		$types = [
+			self::DEV_TYPE_DEVICE,
+			self::DEV_TYPE_AUTOCHANGER
+		];
+		return in_array($type, $types);
 	}
 }
