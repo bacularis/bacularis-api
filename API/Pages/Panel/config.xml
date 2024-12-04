@@ -6,7 +6,6 @@
 	<modules>
 		<!-- Web config modules -->
 		<module id="web_config" class="Bacularis\Web\Modules\WebConfig" />
-		<module id="host_config" class="Bacularis\Web\Modules\HostConfig" />
 		<module id="user_config" class="Bacularis\Web\Modules\WebUserConfig" />>
 		<module id="basic_webuser" class="Bacularis\Web\Modules\BasicWebUserConfig" />
 		<module id="osprofile_config" class="Bacularis\Web\Modules\OSProfileConfig" />
