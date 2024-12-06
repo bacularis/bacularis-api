@@ -1,11 +1,17 @@
 
-This is a new function and bug fix release. We extended the API endpoints
-for the device management. At the end we fixed the sudo runas user and group
-fields in the device settings window.
+This is a new feature and bug fix release. We prepared two new Bacularis plugins:
+MySQL and MariaDB database backup plugins. Using them there is possible to do
+the databases backup in various ways: dump backup (in three variants), binary physical
+online backup, backup for Point-in-Time Recovery (PITR), file backup for crucial
+database server files. This two plugin solution also introduces real incremental
+and differential database backups for the dump backup method. We are very glad
+that we provides these plugins for the Community. More information about
+the database plugins you can find in the Bacularis documentation.
+
+Besides new plugins, we also did some changes and small improvements in the
+deployment process. At the end we fixed a couple of bugs reported by the Community.
 
 **Changes**
- - Update API documentation
- - Add new endpoints to read/create/update/delete autochanger config
- - Add to device config module managing single device
- - Fix sudo runas user and runas group fields on devices page in API panel
+
+ * Move API plugin base part to common module
 
