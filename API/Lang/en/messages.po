@@ -1045,3 +1045,6 @@ msgstr "Remove"
 
 msgid "Plugin settings with the given name already exists."
 msgstr "Plugin settings with the given name already exists."
+
+msgid "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (SLES, openSUSE and others):"
+msgstr "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (SLES, openSUSE and others):"

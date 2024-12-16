@@ -20,7 +20,7 @@ var oSudoConfig = {
 	get_config: function(type) {
 		var val, pre;
 		var cfg = '';
-		var users = ['apache_nginx_lighttpd', 'www-data'];
+		var users = ['apache_nginx_lighttpd', 'www-data', 'wwwrun'];
 		var fields = this.bin_fields.hasOwnProperty(type) ? this.bin_fields[type] : [];
 		const runas = this.get_runas_user_group(type);
 		for (var i = 0; i < users.length; i++) {
@@ -92,4 +92,6 @@ var oSudoConfig = {
 	<pre id="sudo_config_apache_nginx_lighttpd"></pre>
 	<p><%[ Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (Debian, Ubuntu and others): ]%></p>
 	<pre id="sudo_config_www_data"></pre>
+	<p><%[ Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (SLES, openSUSE and others): ]%></p>
+	<pre id="sudo_config_wwwrun"></pre>
 </com:TJuiDialog>
