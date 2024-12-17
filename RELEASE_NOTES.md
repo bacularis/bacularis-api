@@ -1,17 +1,11 @@
 
-This is a new feature and bug fix release. We prepared two new Bacularis plugins:
-MySQL and MariaDB database backup plugins. Using them there is possible to do
-the databases backup in various ways: dump backup (in three variants), binary physical
-online backup, backup for Point-in-Time Recovery (PITR), file backup for crucial
-database server files. This two plugin solution also introduces real incremental
-and differential database backups for the dump backup method. We are very glad
-that we provides these plugins for the Community. More information about
-the database plugins you can find in the Bacularis documentation.
-
-Besides new plugins, we also did some changes and small improvements in the
-deployment process. At the end we fixed a couple of bugs reported by the Community.
+This is a bug fix release. We fixed bugs reported by Community. Apart from that
+we prepared changes to support openSUSE / SLES binary packages. At the end
+we did improvements in the deployment function and we updated the SELinux policy
+module.
 
 **Changes**
 
- * Move API plugin base part to common module
+ * Add example sudo setting for SLES/openSUSE
+ * Disable PHP-CS-Fixer rule for blank lines
 
