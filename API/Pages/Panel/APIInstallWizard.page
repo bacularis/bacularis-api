@@ -220,8 +220,19 @@
 										<com:TActiveTextBox
 											ID="InstallBaculaAdminUser"
 											Width="300px"
-											CssClass="w3-input w3-border"
-										/>
+											CssClass="w3-input w3-border w3-show-inline-block"
+										/> &nbsp;<i class="fa fa-asterisk w3-text-red opt_req" style="display none"></i>
+										<com:TRequiredFieldValidator
+											ValidationGroup="InstallBaculaGroup"
+											ControlToValidate="InstallBaculaAdminUser"
+											ErrorMessage="<%[ Field cannot be empty. ]%>"
+											ControlCssClass="field_invalid"
+											Display="Dynamic"
+										>
+											<prop:ClientSide.OnValidate>
+												sender.enabled = document.getElementById('<%=$this->BaculaNotInstalled->ClientID%>').checked;
+											</prop:ClientSide.OnValidate>
+										</com:TRequiredFieldValidator>
 									</div>
 								</div>
 								<div class="w3-container w3-margin-bottom">
@@ -232,8 +243,19 @@
 											TextMode="Password"
 											PersistPassword="true"
 											Width="300px"
-											CssClass="w3-input w3-border"
-										/>
+											CssClass="w3-input w3-border w3-show-inline-block"
+										/> &nbsp;<i class="fa fa-asterisk w3-text-red opt_req" style="display none"></i>
+										<com:TRequiredFieldValidator
+											ValidationGroup="InstallBaculaGroup"
+											ControlToValidate="InstallBaculaAdminPassword"
+											ErrorMessage="<%[ Field cannot be empty. ]%>"
+											ControlCssClass="field_invalid"
+											Display="Dynamic"
+										>
+											<prop:ClientSide.OnValidate>
+												sender.enabled = document.getElementById('<%=$this->BaculaNotInstalled->ClientID%>').checked;
+											</prop:ClientSide.OnValidate>
+										</com:TRequiredFieldValidator>
 									</div>
 								</div>
 								<div class="w3-container w3-margin-bottom">
@@ -252,6 +274,9 @@
 											ID="LoginCheck"
 											CssClass="w3-button w3-green w3-tiny"
 											OnCallback="installBaculaLoginTest"
+											ValidationGroup="InstallBaculGroup"
+											CausesValidation="true"
+											Attributes.onclick="return Prado.Validation.validate(Prado.Validation.getForm(), 'InstallBaculaGroup');"
 											ClientSide.OnLoading="oInstallBacula.clear_connection_check(); oInstallBacula.show_host_connection_loader(true);"
 										>
 											<i class="fa fa-play"></i> &nbsp; <%[ Test ]%>
@@ -267,7 +292,7 @@
 								</div>
 							</div>
 							<div class="w3-container w3-center">
-								<button type="button" id="install_bacula_locally_btn" class="w3-button w3-green" onclick="oInstallBaculaLocally.load_install_bacula_locally_window()"><i class="fa-solid fa-rocket"></i> &nbsp;<%[ Install Bacula ]%></button>
+								<button type="button" id="install_bacula_locally_btn" class="w3-button w3-green" onclick="if (Prado.Validation.validate(Prado.Validation.getForm(), 'InstallBaculaGroup')) { oInstallBaculaLocally.load_install_bacula_locally_window();}"><i class="fa-solid fa-rocket"></i> &nbsp;<%[ Install Bacula ]%></button>
 								<i class="fa-solid fa-info-circle help_icon w3-text-green" onclick="$(this).next().slideToggle('fast');"></i>
 								<div class="directive_help w3-padding" style="display: none;">
 									<dd><%[ After clicking the install Bacula button, there will be installed on this host Catalog (PostgreSQL), Bacula Director, Client, Storage and Bconsole. ]%></dd>
