@@ -525,6 +525,42 @@ class APIInstallWizard extends BaculumAPIPage
 		return $osprofile;
 	}
 
+	/**
+	 * Perform login credential test before installing Bacula.
+	 *
+	 * @param TActiveLinkButton $sender sender object
+	 * @param TCallbackEventParameter $param callback parameter
+	 */
+	public function installBaculaLoginTest($sender, $param)
+	{
+		$user = $this->InstallBaculaAdminUser->Text;
+		$password = $this->InstallBaculaAdminPassword->Text;
+		$use_sudo = $this->InstallBaculaUseSudo->Checked;
+		$cmd = ['ls', '/'];
+		if ($use_sudo) {
+			array_unshift($cmd, 'sudo -S');
+		}
+		array_unshift($cmd, 'LANG=C');
+		$su = $this->getModule('su');
+		$result = $su->execCommand(
+			$user,
+			$password,
+			[
+				'command' => implode(' ', $cmd),
+				'use_sudo' => $use_sudo
+			]
+		);
+		$this->getCallbackClient()->callClientFunction(
+			'oInstallBacula.check_host_connection_cb',
+			[
+				[
+					'output' => $result['output'],
+					'success' => ($result['exitcode'] === 0)
+				]
+			]
+		);
+	}
+
 	public function installBaculaAddSUDOSettings($sender, $param)
 	{
 		$step_id = $param->getCallbackParameter();

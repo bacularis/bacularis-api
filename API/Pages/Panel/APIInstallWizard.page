@@ -245,6 +245,26 @@
 										/>
 									</div>
 								</div>
+								<div class="w3-container w3-margin-bottom">
+									<div class="w3-third"><%[ Login test ]%>:</div>
+									<div class="w3-rest">
+										<com:TActiveLinkButton
+											ID="LoginCheck"
+											CssClass="w3-button w3-green w3-tiny"
+											OnCallback="installBaculaLoginTest"
+											ClientSide.OnLoading="oInstallBacula.clear_connection_check(); oInstallBacula.show_host_connection_loader(true);"
+										>
+											<i class="fa fa-play"></i> &nbsp; <%[ Test ]%>
+										</com:TActiveLinkButton> &nbsp;
+										<i id="check_connection_check_loader" class="fa-solid fa-sync w3-spin" style="display: none"></i>
+										<i id="check_connection_check_result_ok" class="fa-solid fa-check w3-text-green" style="display: none"></i>
+										<i id="check_connection_check_result_error" class="fa-solid fa-times w3-text-red" style="display: none"></i>
+										 &nbsp;<span id="check_connection_check_result_link" class="w3-tiny bold pointer" style="display: none" onclick="oInstallBacula.toggle_host_connection_result();"></span>
+										<div class="w3-code" id="check_connection_check_result_output" style="display: none">
+											<pre id="check_connection_check_result_raw"></pre>
+										</div>
+									</div>
+								</div>
 							</div>
 							<div class="w3-container w3-center">
 								<button type="button" id="install_bacula_locally_btn" class="w3-button w3-green" onclick="oInstallBaculaLocally.load_install_bacula_locally_window()"><i class="fa-solid fa-rocket"></i> &nbsp;<%[ Install Bacula ]%></button>
@@ -357,12 +377,12 @@ var oInstallBacula = {
 		install_graphical_results: 'install_bacula_graphical_results',
 		install_raw_results: 'install_bacula_raw_results',
 		install_log: 'install_bacula_raw_output',
-		check_connection_loader: 'install_bacula_host_connection_check_loader',
-		check_connection_result_ok: 'install_bacula_host_connection_check_result_ok',
-		check_connection_result_error: 'install_bacula_host_connection_check_result_error',
-		check_connection_result_link: 'install_bacula_host_connection_check_result_link',
-		check_connection_loader_result_output: 'install_bacula_host_connection_check_result_output',
-		check_connection_loader_result_raw: 'install_bacula_host_connection_check_result_raw'
+		check_connection_loader: 'check_connection_check_loader',
+		check_connection_result_ok: 'check_connection_check_result_ok',
+		check_connection_result_error: 'check_connection_check_result_error',
+		check_connection_result_link: 'check_connection_check_result_link',
+		check_connection_loader_result_output: 'check_connection_check_result_output',
+		check_connection_loader_result_raw: 'check_connection_check_result_raw'
 	},
 	steps: [
 		{

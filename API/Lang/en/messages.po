@@ -1048,3 +1048,15 @@ msgstr "Plugin settings with the given name already exists."
 
 msgid "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (SLES, openSUSE and others):"
 msgstr "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (SLES, openSUSE and others):"
+
+msgid "Login test"
+msgstr "Login test"
+
+msgid "Test"
+msgstr "Test"
+
+msgid "Show result"
+msgstr "Show result"
+
+msgid "Hide result"
+msgstr "Hide result"
