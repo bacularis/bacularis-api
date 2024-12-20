@@ -191,7 +191,9 @@ class SelfTest extends APIModule
 			'user' => $config['sudo_user'] ?? '',
 			'group' => $config['sudo_group'] ?? ''
 		];
+		$bcons_start = hrtime(true);
 		$ret = $bconsole->testBconsoleCommand(['version'], $config['bin_path'], $config['cfg_path'], $sudo);
+		$bcons_end = hrtime(true);
 		$result_accessible = ($ret->exitcode === 0);
 		$test->setResult($result_accessible);
 		if ($result_enabled) {
@@ -216,6 +218,44 @@ class SelfTest extends APIModule
 		$test->setDescription($description);
 		$result[] = $test->toArray();
 
+		// check bconsole access time
+		$test = new SelfTestResult();
+		$time_treshold = 500; // in miliseconds
+		$name = 'Bconsole command time.';
+		$test->setName($name);
+		$test->setSection($section);
+		$test->setType('float');
+		$description = $state_time = '';
+		$result_time = 0;
+		if ($result_enabled) {
+			$result_time = (float) (($bcons_end - $bcons_start) / 1000000); // conversion from nano to miliseconds
+			$result_time_sec = ($result_time / 1000);
+			if ($result_time > $time_treshold) {
+				$state_time = SelfTestResult::TEST_RESULT_STATE_WARNING;
+				$description = sprintf(
+					'Bconsole access takes long time (%0.2f sec.). It can cause the interface performance problems.',
+					$result_time_sec
+				);
+			} else {
+				$state_time = SelfTestResult::TEST_RESULT_STATE_INFO;
+				$description = sprintf(
+					'%s (%0.2f sec.)',
+					SelfTestResult::TEST_RESULT_DESC_OK,
+					$result_time_sec
+				);
+			}
+		} else {
+			$state_time = SelfTestResult::TEST_RESULT_STATE_DISABLED;
+			$description = sprintf(
+				'%s. Test skipped',
+				SelfTestResult::TEST_RESULT_DESC_DISABLED
+			);
+		}
+		$test->setResult($result_time);
+		$test->setState($state_time);
+		$test->setDescription($description);
+		$result[] = $test->toArray();
+
 		return $result;
 	}
 
@@ -235,13 +275,15 @@ class SelfTest extends APIModule
 		$test->setType('boolean');
 		$result_enabled = $config['enabled'] === '1';
 		$test->setResult($result_enabled);
-		$state_enabled = SelfTestResult::TEST_RESULT_STATE_INFO;
-		$test->setState($state_enabled);
+		$description = $state_enabled = '';
 		if ($result_enabled) {
+			$state_enabled = SelfTestResult::TEST_RESULT_STATE_INFO;
 			$description = SelfTestResult::TEST_RESULT_DESC_OK;
 		} else {
+			$state_enabled = SelfTestResult::TEST_RESULT_STATE_DISABLED;
 			$description = SelfTestResult::TEST_RESULT_DESC_DISABLED;
 		}
+		$test->setState($state_enabled);
 		$test->setDescription($description);
 		$result[] = $test->toArray();
 
@@ -253,6 +295,7 @@ class SelfTest extends APIModule
 		$test->setType('boolean');
 		$result_accessible = false;
 		$state_accessible = $description = '';
+		$catalog_start = hrtime(true);
 		if ($result_enabled) {
 			try {
 				$result_accessible = $db->testCatalog();
@@ -276,8 +319,48 @@ class SelfTest extends APIModule
 				SelfTestResult::TEST_RESULT_DESC_DISABLED
 			);
 		}
+		$catalog_end = hrtime(true);
 		$test->setResult($result_accessible);
 		$test->setState($state_accessible);
+		$test->setDescription($description);
+		$result[] = $test->toArray();
+
+
+		// check the catalog access time
+		$time_treshold = 150; // in miliseconds
+		$name = 'Catalog access time.';
+		$test = new SelfTestResult();
+		$test->setName($name);
+		$test->setSection($section);
+		$test->setType('float');
+		$description = $state_time = '';
+		$result_time = 0;
+		if ($result_enabled) {
+			$result_time = (float) (($catalog_end - $catalog_start) / 1000000); // conversion from nano to miliseconds
+			$result_time_sec = ($result_time / 1000);
+			if ($result_time > $time_treshold) {
+				$state_time = SelfTestResult::TEST_RESULT_STATE_WARNING;
+				$description = sprintf(
+					'Catalog access takes long time (%0.2f sec.). It can cause the interface performance problems.',
+					$result_time_sec
+				);
+			} else {
+				$state_time = SelfTestResult::TEST_RESULT_STATE_INFO;
+				$description = sprintf(
+					'%s (%0.2f sec.)',
+					SelfTestResult::TEST_RESULT_DESC_OK,
+					$result_time_sec
+				);
+			}
+		} else {
+			$state_time = SelfTestResult::TEST_RESULT_STATE_DISABLED;
+			$description = sprintf(
+				'%s. Test skipped',
+				SelfTestResult::TEST_RESULT_DESC_DISABLED
+			);
+		}
+		$test->setResult($result_time);
+		$test->setState($state_time);
 		$test->setDescription($description);
 		$result[] = $test->toArray();
 
