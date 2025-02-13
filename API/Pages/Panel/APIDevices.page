@@ -13,7 +13,7 @@
 		<a href="javascript:void(0)" class="w3-button w3-green w3-margin-bottom" onclick="oAPIAutochangers.add_autochanger();">
 			<i class="fas fa-plus"></i> &nbsp;<%[ Add autochanger ]%>
 		</a>
-		<table id="autochanger_list" class="w3-table w3-striped w3-hoverable w3-margin-bottom" style="width: 100%">
+		<table id="autochanger_list" class="display w3-table w3-striped w3-hoverable w3-margin-bottom" style="width: 100%">
 			<thead>
 				<tr>
 					<th></th>
@@ -55,14 +55,28 @@ var oAutochangerList = {
 		this.table = $('#' + this.ids.autochanger_list).DataTable({
 			data: this.data,
 			deferRender: true,
-			dom: 'lBfrtip',
+			layout: {
+				topStart: [
+					{
+						pageLength: {}
+					},
+					{
+						buttons: ['copy', 'csv', 'colvis']
+					}
+				],
+				topEnd: [
+					'search'
+				],
+				bottomStart: [
+					'info'
+				],
+				bottomEnd: [
+					'paging'
+				]
+			},
 			stateSave: true,
-			buttons: [
-				'copy', 'csv', 'colvis'
-			],
 			columns: [
 				{
-					className: 'details-control',
 					orderable: false,
 					data: null,
 					defaultContent: '<button type="button" class="w3-button w3-blue"><i class="fa fa-angle-down"></i></button>'
@@ -106,11 +120,12 @@ var oAutochangerList = {
 			],
 			responsive: {
 				details: {
-					type: 'column'
+					type: 'column',
+					display: DataTable.Responsive.display.childRow
 				}
 			},
 			columnDefs: [{
-				className: 'control',
+				className: 'dtr-control',
 				orderable: false,
 				targets: 0
 			},
@@ -522,7 +537,7 @@ $(function() {
 		<a href="javascript:void(0)" class="w3-button w3-green w3-margin-bottom" onclick="oAPIDevices.show_device_window(true);">
 			<i class="fas fa-plus"></i> &nbsp;<%[ Add device ]%>
 		</a>
-		<table id="device_list" class="w3-table w3-striped w3-hoverable w3-margin-bottom" style="width: 100%">
+		<table id="device_list" class="display w3-table w3-striped w3-hoverable w3-margin-bottom" style="width: 100%">
 			<thead>
 				<tr>
 					<th></th>
@@ -567,14 +582,28 @@ var oDeviceList = {
 		this.table = $('#' + this.ids.device_list).DataTable({
 			data: this.data,
 			deferRender: true,
-			dom: 'lBfrtip',
+			layout: {
+				topStart: [
+					{
+						pageLength: {}
+					},
+					{
+						buttons: ['copy', 'csv', 'colvis']
+					}
+				],
+				topEnd: [
+					'search'
+				],
+				bottomStart: [
+					'info'
+				],
+				bottomEnd: [
+					'paging'
+				]
+			},
 			stateSave: true,
-			buttons: [
-				'copy', 'csv', 'colvis'
-			],
 			columns: [
 				{
-					className: 'details-control',
 					orderable: false,
 					data: null,
 					defaultContent: '<button type="button" class="w3-button w3-blue"><i class="fa fa-angle-down"></i></button>'
@@ -620,11 +649,12 @@ var oDeviceList = {
 			],
 			responsive: {
 				details: {
-					type: 'column'
+					type: 'column',
+					display: DataTable.Responsive.display.childRow
 				}
 			},
 			columnDefs: [{
-				className: 'control',
+				className: 'dtr-control',
 				orderable: false,
 				targets: 0
 			},
@@ -641,7 +671,7 @@ var oDeviceList = {
 	set_filters: function(api) {
 		api.columns([2, 3, 4]).every(function () {
 			var column = this;
-			var select = $('<select><option value=""></option></select>')
+			var select = $('<select class="dt-select"><option value=""></option></select>')
 			.appendTo($(column.footer()).empty())
 			.on('change', function () {
 				var val = dtEscapeRegex(

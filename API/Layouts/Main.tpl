@@ -8,17 +8,17 @@
 	<body>
 		<com:TForm>
 			<com:TClientScript PradoScripts="ajax, effects" />
-			<com:BClientScript ScriptUrl=<%~ ../../../../../vendor/bower-asset/datatables.net/js/jquery.dataTables.min.js %> />
-			<com:BClientScript ScriptUrl=<%~ ../../../../../vendor/bower-asset/datatables.net-responsive/js/dataTables.responsive.min.js %> />
-			<com:BClientScript ScriptUrl=<%~ ../../../../../vendor/bower-asset/datatables.net-buttons/js/dataTables.buttons.min.js %> />
-			<com:BClientScript ScriptUrl=<%~ ../../../../../vendor/bower-asset/datatables.net-buttons/js/buttons.html5.min.js %> />
-			<com:BClientScript ScriptUrl=<%~ ../../../../../vendor/bower-asset/datatables.net-buttons/js/buttons.colVis.min.js %> />
-			<com:BClientScript ScriptUrl=<%~ ../../../../../vendor/bower-asset/datatables.net-select/js/dataTables.select.min.js %> />
+			<com:BClientScript ScriptUrl=<%~ ../../../../../vendor/npm-asset/datatables.net/js/dataTables.min.js %> />
+			<com:BClientScript ScriptUrl=<%~ ../../../../../vendor/npm-asset/datatables.net-responsive/js/dataTables.responsive.min.js %> />
+			<com:BClientScript ScriptUrl=<%~ ../../../../../vendor/npm-asset/datatables.net-buttons/js/dataTables.buttons.min.js %> />
+			<com:BClientScript ScriptUrl=<%~ ../../../../../vendor/npm-asset/datatables.net-buttons/js/buttons.html5.min.js %> />
+			<com:BClientScript ScriptUrl=<%~ ../../../../../vendor/npm-asset/datatables.net-buttons/js/buttons.colVis.min.js %> />
+			<com:BClientScript ScriptUrl=<%~ ../../../../../vendor/npm-asset/datatables.net-select/js/dataTables.select.min.js %> />
 			<com:BClientScript ScriptUrl=<%~ ../../../../../Common/JavaScript/misc.js %> />
 			<com:BStyleSheet StyleSheetUrl=<%~ ../../../../../Common/CSS/w3css/w3.css %> />
-			<com:BStyleSheet StyleSheetUrl=<%~ ../../../../../vendor/bower-asset/datatables.net-dt/css/jquery.dataTables.min.css %> />
-			<com:BStyleSheet StyleSheetUrl=<%~ ../../../../../vendor/bower-asset/datatables.net-responsive-dt/css/responsive.dataTables.min.css %> />
-			<com:BStyleSheet StyleSheetUrl=<%~ ../../../../../vendor/bower-asset/datatables.net-buttons-dt/css/buttons.dataTables.min.css %> />
+			<com:BStyleSheet StyleSheetUrl=<%~ ../../../../../vendor/npm-asset/datatables.net-dt/css/dataTables.dataTables.min.css %> />
+			<com:BStyleSheet StyleSheetUrl=<%~ ../../../../../vendor/npm-asset/datatables.net-responsive-dt/css/responsive.dataTables.min.css %> />
+			<com:BStyleSheet StyleSheetUrl=<%~ ../../../../../vendor/npm-asset/datatables.net-buttons-dt/css/buttons.dataTables.min.css %> />
 			<com:BStyleSheet StyleSheetUrl=<%~ ../../../../../Common/CSS/baculum.css %> />
 			<com:Bacularis.Common.Portlets.TableDefaults />
 			<!-- Top container -->

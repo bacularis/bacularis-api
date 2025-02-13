@@ -9,7 +9,7 @@
 		<a href="javascript:void(0)" class="w3-button w3-green w3-margin-bottom" onclick="oAPIOAuth2Clients.new_client();">
 			<i class="fas fa-plus"></i> &nbsp;<%[ Add OAuth2 client ]%>
 		</a>
-		<table id="oauth2_client_list" class="w3-table w3-striped w3-hoverable w3-margin-bottom" style="width: 100%">
+		<table id="oauth2_client_list" class="display w3-table w3-striped w3-hoverable w3-margin-bottom" style="width: 100%">
 			<thead>
 				<tr>
 					<th></th>
@@ -52,14 +52,28 @@ var oOAuth2ClientList = {
 		this.table = $('#' + this.ids.oauth2_client_list).DataTable({
 			data: this.data,
 			deferRender: true,
-			dom: 'lBfrtip',
+			layout: {
+				topStart: [
+					{
+						pageLength: {}
+					},
+					{
+						buttons: ['copy', 'csv', 'colvis']
+					}
+				],
+				topEnd: [
+					'search'
+				],
+				bottomStart: [
+					'info'
+				],
+				bottomEnd: [
+					'paging'
+				]
+			},
 			stateSave: true,
-			buttons: [
-				'copy', 'csv', 'colvis'
-			],
 			columns: [
 				{
-					className: 'details-control',
 					orderable: false,
 					data: null,
 					defaultContent: '<button type="button" class="w3-button w3-blue"><i class="fa fa-angle-down"></i></button>'
@@ -104,11 +118,12 @@ var oOAuth2ClientList = {
 			],
 			responsive: {
 				details: {
-					type: 'column'
+					type: 'column',
+					display: DataTable.Responsive.display.childRow
 				}
 			},
 			columnDefs: [{
-				className: 'control',
+				className: 'dtr-control',
 				orderable: false,
 				targets: 0
 			},
