@@ -603,20 +603,46 @@ WHERE {$where['where']}";
 
 		$sort_sql = '';
 		$sort_comp = [];
+		$add_fields = '';
+		$post_sql = '';
+		$connection = JobRecord::finder()->getDbConnection();
+		$pdo = $connection->getPdoInstance();
 		if (is_array($order) && count($order) == 2) {
-			if ($order[0] == 'file') {
-				$sort_sql = " ORDER BY {$order[0]} {$order[1]} ";
-			} else {
-				$sort_comp = $order;
-				$limit_sql = '';
-				$offset_sql = '';
+			$sort_sql = " ORDER BY {$order[0]} {$order[1]} ";
+			if ($order[0] != 'file') {
+				if ($db_params['type'] == Database::PGSQL_TYPE) {
+					// PostgreSQL temporary LStat function
+					$pre_sql = self::getCreateDecodeLStatFuncPgSQL();
+					$add_fields = '
+						pg_temp.decode_lstat(8, F.lstat) AS size, 
+						pg_temp.decode_lstat(12, F.lstat) AS mtime, 
+					';
+					$pdo->exec($pre_sql);
+				} elseif ($db_params['type'] == Database::MYSQL_TYPE) {
+					// PostgreSQL temporary LStat function
+					$pre_sql = self::getCreateDecodeLStatFuncMySQL();
+					$post_sql = 'DROP FUNCTION IF EXISTS decode_lstat;';
+					$add_fields = '
+						decode_lstat(8, F.lstat) AS size, 
+						decode_lstat(12, F.lstat) AS mtime, 
+					';
+					$pdo->exec($pre_sql);
+
+				} elseif ($db_params['type'] == Database::SQLITE_TYPE) {
+					// SQLite - no LStat function
+					$sort_sql = '';
+					$sort_comp = $order;
+					$limit_sql = '';
+					$offset_sql = '';
+				}
 			}
 		}
 
-		$sql = "SELECT $fname_col  AS file, 
+		$sql = "SELECT $add_fields
+			       $fname_col  AS file, 
                                F.lstat     AS lstat, 
                                F.fileindex AS fileindex 
-                        FROM ( 
+			FROM ( 
                             SELECT PathId     AS pathid, 
                                    Lstat      AS lstat, 
                                    FileIndex  AS fileindex, 
@@ -657,6 +683,9 @@ WHERE {$where['where']}";
 					$result = array_slice($result, $offset, $limit);
 				}
 			}
+		}
+		if ($post_sql) {
+			$pdo->exec($post_sql);
 		}
 		return $result;
 	}
@@ -796,5 +825,86 @@ WHERE {$where['where']}";
 			}
 		}
 		return Database::findAllBySql($sql, [], PDO::FETCH_GROUP | PDO::FETCH_ASSOC);
+	}
+
+	/**
+	 * Get SQL command to create temporary function for decoding LStat.
+	 * This is version for PostgreSQL.
+	 * This function exists only in the current session and is removed on
+	 * the session close.
+	 *
+	 * @return string SQL command
+	 */
+	private static function getCreateDecodeLStatFuncPgSQL(): string
+	{
+		return "CREATE FUNCTION pg_temp.decode_lstat(integer, text) RETURNS integer AS $$
+	DECLARE
+		value integer DEFAULT 0;
+		dict char(64) DEFAULT 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+		part varchar(44);
+		len integer;
+	BEGIN
+		part := split_part($2, ' ', $1);
+		len := length(part);
+		FOR i IN 1..len LOOP
+			value := (value << 6);
+			value := value + strpos(
+				dict,
+				substr(part, i, 1)
+			) - 1;
+		END LOOP;
+		RETURN value;
+	END;
+$$ LANGUAGE plpgsql IMMUTABLE STRICT;
+";
+	}
+
+	/**
+	 * Get SQL command to create temporary function for decoding LStat.
+	 * This is version for MySQL.
+	 * NOTE: Because in MySQL there is not temporary function support, this function,
+	 * is added before using and removed just after.
+	 * It means that there is a small probability of occuring colisions if two different users
+	 * start sorting at exactly the same time. If it happens, one of sortings can fail
+	 * if function is not used at the moment.
+	 * It could be solved by adding user-specific suffix to function, but we don't want
+	 * to do that.
+	 * NOTE: If binary log is enabled there is needed to set log_bin_trust_function_creators=on
+	 * in MySQL settings.
+	 *
+	 * @return string SQL command
+	 */
+	private static function getCreateDecodeLStatFuncMySQL(): string
+	{
+		return "
+DROP FUNCTION IF EXISTS decode_lstat;
+CREATE FUNCTION decode_lstat(fpos TINYINT, lstat BLOB)
+RETURNS BIGINT
+CONTAINS SQL
+DETERMINISTIC
+BEGIN
+	DECLARE value BIGINT DEFAULT 0;
+	DECLARE dict TINYBLOB DEFAULT 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+	DECLARE part VARCHAR(44);
+	DECLARE len BIGINT;
+	DECLARE i TINYINT DEFAULT 1;
+	SET part = SUBSTRING_INDEX(
+		SUBSTRING_INDEX(lstat, ' ', fpos),
+		' ',
+		-1
+	);
+	SET len = LENGTH(part);
+	mloop: REPEAT
+		SET value = (value << 6);
+		SET value = value + LOCATE(
+			SUBSTRING(part, i, 1),
+			dict
+		) - 1;
+		SET i = i + 1;
+	UNTIL i > len
+	END REPEAT;
+	RETURN value;
+END;
+";
 	}
 }
