@@ -6,8 +6,8 @@
 		</h5>
 	</header>
 	<div class="w3-bar w3-green w3-margin-bottom">
-		<button type="button" id="btn_devices_autochanger" class="w3-bar-item w3-button tab_btn w3-grey" onclick="W3Tabs.open(this.id, 'devices_autochanger');"><%[ Autochangers ]%></button>
-		<button type="button" id="btn_devices_device" class="w3-bar-item w3-button tab_btn" onclick="W3Tabs.open(this.id, 'devices_device'); oDeviceList.table.responsive.recalc();"><%[ Devices ]%></button>
+		<button type="button" id="btn_devices_autochanger" class="w3-bar-item w3-button tab_btn w3-grey" onclick="W3Tabs.open(this.id, 'devices_autochanger'); set_page_tables([oAutochangerList, oDeviceList]);"><%[ Autochangers ]%></button>
+		<button type="button" id="btn_devices_device" class="w3-bar-item w3-button tab_btn" onclick="W3Tabs.open(this.id, 'devices_device'); oDeviceList.table.responsive.recalc(); set_page_tables([oAutochangerList, oDeviceList]);"><%[ Devices ]%></button>
 	</div>
 	<div class="w3-container tab_item" id="devices_autochanger">
 		<a href="javascript:void(0)" class="w3-button w3-green w3-margin-bottom" onclick="oAPIAutochangers.add_autochanger();">
@@ -55,6 +55,10 @@ var oAutochangerList = {
 		this.table = $('#' + this.ids.autochanger_list).DataTable({
 			data: this.data,
 			deferRender: true,
+			fixedHeader: {
+				header: true,
+				headerOffset: $('#main_top_bar').height()
+			},
 			layout: {
 				topStart: [
 					{
@@ -582,6 +586,10 @@ var oDeviceList = {
 		this.table = $('#' + this.ids.device_list).DataTable({
 			data: this.data,
 			deferRender: true,
+			fixedHeader: {
+				header: true,
+				headerOffset: $('#main_top_bar').height()
+			},
 			layout: {
 				topStart: [
 					{

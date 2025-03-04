@@ -52,6 +52,10 @@ var oOAuth2ClientList = {
 		this.table = $('#' + this.ids.oauth2_client_list).DataTable({
 			data: this.data,
 			deferRender: true,
+			fixedHeader: {
+				header: true,
+				headerOffset: $('#main_top_bar').height()
+			},
 			layout: {
 				topStart: [
 					{

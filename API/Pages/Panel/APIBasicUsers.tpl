@@ -50,6 +50,10 @@ var oBasicUserList = {
 		this.table = $('#' + this.ids.basic_user_list).DataTable({
 			data: this.data,
 			deferRender: true,
+			fixedHeader: {
+				header: true,
+				headerOffset: $('#main_top_bar').height()
+			},
 			layout: {
 				topStart: [
 					{
