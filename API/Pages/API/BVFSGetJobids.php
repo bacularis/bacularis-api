@@ -40,14 +40,15 @@ class BVFSGetJobids extends BaculumAPIServer
 {
 	public function get()
 	{
+		$misc = $this->getModule('misc');
 		$jobid = $this->Request->contains('jobid') ? (int) ($this->Request['jobid']) : 0;
-		$inc_copy_job = $this->Request->contains('inc_copy_job') ? (int) $this->Request['inc_copy_job'] : 0;
+		$inc_copy_job = $this->Request->contains('inc_copy_job') && $misc->isValidBooleanTrue($this->Request['inc_copy_job']);
 		if ($jobid > 0) {
 			$result = [];
 			$error = -1;
 			$job = $this->getModule('job');
 			$jobobj = $job->getJobById($jobid);
-			if ($inc_copy_job == 1 && is_object($jobobj) && $jobobj->type == 'C') {
+			if ($inc_copy_job && is_object($jobobj) && $jobobj->type == 'C') {
 				/**
 				 * .bvfs_get_jobids does not support copy jobs and returns wrong results.
 				 * Because of that to select compositional jobids, we use own algorithm for copy jobs.

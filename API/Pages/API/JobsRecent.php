@@ -42,12 +42,13 @@ class JobsRecent extends BaculumAPIServer
 {
 	public function get()
 	{
+		$misc = $this->getModule('misc');
 		$jobname = $this->Request->contains('name') ? $this->Request['name'] : '';
-		$inc_copy_job = $this->Request->contains('inc_copy_job') ? (int) ($this->Request['inc_copy_job']) : 0;
+		$inc_copy_job = $this->Request->contains('inc_copy_job') && $misc->isValidBooleanTrue($this->Request['inc_copy_job']);
 		$clientid = null;
 		if ($this->Request->contains('clientid')) {
 			$clientid = (int) ($this->Request['clientid']);
-		} elseif ($this->Request->contains('client') && $this->getModule('misc')->isValidName($this->Request['client'])) {
+		} elseif ($this->Request->contains('client') && $misc->isValidName($this->Request['client'])) {
 			$client = $this->Request['client'];
 			$client_row = $this->getModule('client')->getClientByName($client);
 			if (is_object($client_row)) {
@@ -57,7 +58,7 @@ class JobsRecent extends BaculumAPIServer
 		$filesetid = null;
 		if ($this->Request->contains('filesetid')) {
 			$filesetid = (int) ($this->Request['filesetid']);
-		} elseif ($this->Request->contains('fileset') && $this->getModule('misc')->isValidName($this->Request['fileset'])) {
+		} elseif ($this->Request->contains('fileset') && $misc->isValidName($this->Request['fileset'])) {
 			$fileset = $this->Request['fileset'];
 			$fileset_row = $this->getModule('fileset')->getFileSetByName($fileset);
 			if (is_object($fileset_row)) {
