@@ -2331,6 +2331,15 @@
 							"type": "string",
 							"pattern": "[a-zA-Z0-9:.-_ ]+"
 						}
+					},
+					{
+						"name": "inc_copy_job",
+						"in": "query",
+						"description": "Enable copy job support",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
 					}
 				]
 			}
@@ -5031,6 +5040,15 @@
 						"required": true,
 						"schema": {
 							"type": "integer"
+						}
+					},
+					{
+						"name": "inc_copy_job",
+						"in": "query",
+						"description": "Enable copy job support",
+						"required": false,
+						"schema": {
+							"type": "boolean"
 						}
 					}
 				]
