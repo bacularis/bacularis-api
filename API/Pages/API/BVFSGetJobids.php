@@ -41,14 +41,34 @@ class BVFSGetJobids extends BaculumAPIServer
 	public function get()
 	{
 		$jobid = $this->Request->contains('jobid') ? (int) ($this->Request['jobid']) : 0;
+		$inc_copy_job = $this->Request->contains('inc_copy_job') ? (int) $this->Request['inc_copy_job'] : 0;
 		if ($jobid > 0) {
-			$cmd = ['.bvfs_get_jobids', 'jobid="' . $jobid . '"'];
-			$jobids = $this->getModule('bconsole')->bconsoleCommand(
-				$this->director,
-				$cmd
-			);
-			$result = $jobids->exitcode !== 0 ? BVFSError::MSG_ERROR_WRONG_EXITCODE . 'ExitCode=' . $jobids->exitcode : $jobids->output;
-			$error = $jobids->exitcode !== 0 ? BVFSError::ERROR_WRONG_EXITCODE : BVFSError::ERROR_NO_ERRORS;
+			$result = [];
+			$error = -1;
+			$job = $this->getModule('job');
+			$jobobj = $job->getJobById($jobid);
+			if ($inc_copy_job == 1 && is_object($jobobj) && $jobobj->type == 'C') {
+				/**
+				 * .bvfs_get_jobids does not support copy jobs and returns wrong results.
+				 * Because of that to select compositional jobids, we use own algorithm for copy jobs.
+				 */
+				$jobids = $job->getJobidsToRestore($jobobj->jobid);
+				$jobids_str = implode(',', $jobids); // implode to be compatible with Bvfs output
+				if (!empty($jobids_str)) {
+					$result = [$jobids_str];
+					$error = BVFSError::ERROR_NO_ERRORS;
+				} else {
+					$error = BVFSError::ERROR_INVALID_JOBID;
+				}
+			} else {
+				$cmd = ['.bvfs_get_jobids', 'jobid="' . $jobid . '"'];
+				$jobids = $this->getModule('bconsole')->bconsoleCommand(
+					$this->director,
+					$cmd
+				);
+				$result = $jobids->exitcode !== 0 ? BVFSError::MSG_ERROR_WRONG_EXITCODE . 'ExitCode=' . $jobids->exitcode : $jobids->output;
+				$error = $jobids->exitcode !== 0 ? BVFSError::ERROR_WRONG_EXITCODE : BVFSError::ERROR_NO_ERRORS;
+			}
 			$this->output = $result;
 			$this->error = $error;
 		} else {

@@ -179,21 +179,41 @@ LEFT JOIN FileSet ON FileSet.FilesetId=Job.FilesetId '
 	 * Find all compojobs required to do full restore.
 	 *
 	 * @param array $jobs jobid to start searching for jobs
+	 * @param string|null job type letter selected to find compositional jobids
 	 * @return array compositional jobs regarding given jobid
 	 */
-	private function findCompositionalJobs(array $jobs)
+	private function findCompositionalJobs(array $jobs, ?string $type = null)
 	{
 		$jobids = [];
+		$skip_jobids = [];
 		$wait_on_full = false;
 		foreach ($jobs as $job) {
+			if (in_array($job->jobid, $skip_jobids)) {
+				continue;
+			}
 			if ($job->level == 'F') {
 				$jobids[] = $job->jobid;
 				break;
 			} elseif ($job->level == 'D' && $wait_on_full === false) {
-				$jobids[] = $job->jobid;
-				$wait_on_full = true;
+				if ($job->type == 'C') {
+					if ($type == 'C') {
+						$jobids[] = $job->jobid;
+						$skip_jobids[] = $job->priorjobid;
+						$wait_on_full = true;
+					}
+				} else {
+					$jobids[] = $job->jobid;
+					$wait_on_full = true;
+				}
 			} elseif ($job->level == 'I' && $wait_on_full === false) {
-				$jobids[] = $job->jobid;
+				if ($job->type == 'C') {
+					if ($type == 'C') {
+						$jobids[] = $job->jobid;
+						$skip_jobids[] = $job->priorjobid;
+					}
+				} else {
+					$jobids[] = $job->jobid;
+				}
 			}
 		}
 		return $jobids;
@@ -217,8 +237,8 @@ LEFT JOIN FileSet ON FileSet.FilesetId=Job.FilesetId '
 		$sql = "name='$jobname' AND clientid='$clientid' AND filesetid='$filesetid' AND type IN $types AND jobstatus IN ('T', 'W') AND level IN ('F', 'I', 'D')";
 		$finder = JobRecord::finder();
 		$criteria = new TActiveRecordCriteria();
-		$order1 = 'RealEndTime';
-		$order2 = 'JobId';
+		$order1 = 'JobTDate';
+		$order2 = 'Type';
 		$db_params = $this->getModule('api_config')->getConfig('db');
 		if ($db_params['type'] === Database::PGSQL_TYPE) {
 			$order1 = strtolower($order1);
@@ -231,7 +251,8 @@ LEFT JOIN FileSet ON FileSet.FilesetId=Job.FilesetId '
 
 		$jobids = [];
 		if (is_array($jobs)) {
-			$jobids = $this->findCompositionalJobs($jobs);
+			$type = count($jobs) > 0 ? $jobs[0]->type : 'B';
+			$jobids = $this->findCompositionalJobs($jobs, $type);
 		}
 		return $jobids;
 	}
@@ -255,12 +276,15 @@ LEFT JOIN FileSet ON FileSet.FilesetId=Job.FilesetId '
 					" AND starttime <= :starttime and jobid <= :jobid";
 				$finder = JobRecord::finder();
 				$criteria = new TActiveRecordCriteria();
-				$order1 = 'JobId';
+				$order1 = 'JobTDate';
+				$order2 = 'Type';
 				$db_params = $this->getModule('api_config')->getConfig('db');
 				if ($db_params['type'] === Database::PGSQL_TYPE) {
 					$order1 = strtolower($order1);
+					$order2 = strtolower($order2);
 				}
 				$criteria->OrdersBy[$order1] = 'desc';
+				$criteria->OrdersBy[$order2] = 'desc'; // for having copy jobids before backup jobids
 				$criteria->Condition = $sql;
 				$criteria->Parameters[':clientid'] = $bjob->clientid;
 				$criteria->Parameters[':filesetid'] = $bjob->filesetid;
@@ -269,7 +293,7 @@ LEFT JOIN FileSet ON FileSet.FilesetId=Job.FilesetId '
 				$jobs = $finder->findAll($criteria);
 
 				if (is_array($jobs)) {
-					$jobids = $this->findCompositionalJobs($jobs);
+					$jobids = $this->findCompositionalJobs($jobs, $bjob->type);
 				}
 			} else {
 				$jobids[] = $bjob->jobid;
