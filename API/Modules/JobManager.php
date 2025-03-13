@@ -179,7 +179,7 @@ LEFT JOIN FileSet ON FileSet.FilesetId=Job.FilesetId '
 	 * Find all compojobs required to do full restore.
 	 *
 	 * @param array $jobs jobid to start searching for jobs
-	 * @param string|null job type letter selected to find compositional jobids
+	 * @param null|string $type job type letter selected to find compositional jobids
 	 * @return array compositional jobs regarding given jobid
 	 */
 	private function findCompositionalJobs(array $jobs, ?string $type = null)
