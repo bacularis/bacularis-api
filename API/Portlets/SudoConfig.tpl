@@ -86,12 +86,16 @@ var oSudoConfig = {
 	Options.minWidth="820"
 	Options.minHeight="200"
 >
-	<p><%[ Please copy appropriate sudo configuration and put it to a new sudoers.d file for example /etc/sudoers.d/bacularis-api ]%></p>
-	<p><strong><%[ Note ]%></strong> <%[ Please use visudo to add this configuration, otherwise please do remember to add empty line at the end of file. ]%>
-	<p><%[ Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (RHEL, CentOS and others): ]%></p>
-	<pre id="sudo_config_apache_nginx_lighttpd"></pre>
-	<p><%[ Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (Debian, Ubuntu and others): ]%></p>
-	<pre id="sudo_config_www_data"></pre>
-	<p><%[ Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (SLES, openSUSE and others): ]%></p>
-	<pre id="sudo_config_wwwrun"></pre>
+	<p><%[ Please copy appropriate sudo configuration and put it to a new sudoers.d file for example /etc/sudoers.d/bacularis ]%></p>
+	<p><strong><%[ Note ]%>:</strong> <%[ Please use visudo to add this configuration, otherwise please do remember to add empty line at the end of file. ]%>
+	<p><%[ Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration: ]%></p>
+	<h4><%[ RHEL, CentOS, Fedora, Rocky Linux, AlmaLinux, Oracle Linux and others ]%></h4>
+	<com:Bacularis.Common.Portlets.CopyButton ID="Copy1" TextId="sudo_config_apache_nginx_lighttpd" />
+	<pre id="sudo_config_apache_nginx_lighttpd" class="w3-code" style="margin-top: 4px !important"></pre>
+	<h4><%[ Debian, Ubuntu and others ]%></h4>
+	<com:Bacularis.Common.Portlets.CopyButton ID="Copy2" TextId="sudo_config_www_data" />
+	<pre id="sudo_config_www_data" class="w3-code" style="margin-top: 4px !important"></pre>
+	<h4><%[ SLES, openSUSE and others ]%></h4>
+	<com:Bacularis.Common.Portlets.CopyButton ID="Copy3" TextId="sudo_config_wwwrun" />
+	<pre id="sudo_config_wwwrun" class="w3-code" style="margin-top: 4px !important"></pre>
 </com:TJuiDialog>
