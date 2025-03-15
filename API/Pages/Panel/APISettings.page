@@ -427,11 +427,11 @@
 		<div id="config_container" style="display: <%=$this->ConfigEnabled->Checked ? 'block' : 'none'%>">
 			<fieldset>
 				<legend><%[ General configuration ]%></legend>
-				<div class="w3-row w3-section" title="<%[ In this directory Baculum API saves temporarily Bacula configuration files (mainly for validation purposes) just before they are written as real Bacula configuration files. ]%>">
+				<div class="w3-row w3-section" title="<%[ In this directory Bacularis API saves temporarily Bacula configuration files (mainly for validation purposes) just before they are written as real Bacula configuration files. ]%>">
 					<div class="w3-col w3-quarter">
 						<com:TLabel
 							ForControl="BConfigDir"
-							Text="<%[ Baculum working directory for Bacula config: ]%>"
+							Text="<%[ Bacularis working directory for Bacula config: ]%>"
 						/>
 					</div>
 					<div class="w3-col w3-threequarter">
