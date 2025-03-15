@@ -108,6 +108,9 @@ class APIInstallWizard extends BaculumAPIPage
 			$add_auth_params = (count($oauth2_cfg) === 0);
 			$this->setAddAuthParams($add_auth_params);
 		}
+		if ($this->IsCallBack) {
+			return;
+		}
 		$session = $this->Application->getSession();
 		if ($session->contains('language')) {
 			$this->Lang->SelectedValue = $session->itemAt('language');
@@ -864,16 +867,17 @@ class APIInstallWizard extends BaculumAPIPage
 	{
 		if ($this->isSQLiteType($db) === true) {
 			$this->DBPath->Enabled = true;
-			$this->DBPathField->Display = 'Fixed';
+			$this->DBPathField->Display = 'Dynamic';
 		} else {
 			$this->DBPath->Enabled = false;
-			$this->DBPathField->Display = 'Hidden';
+			$this->DBPathField->Display = 'None';
 		}
 	}
 
-	public function setLang($sender, $param)
+	public function setLanguage($sender, $param)
 	{
 		$session = $this->Application->getSession();
+		$session->open();
 		$session->add('language', $sender->SelectedValue);
 	}
 

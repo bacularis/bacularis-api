@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-Project: b02f04a28aec0155df9503e3b78ae8cc\n"
 "X-Crowdin-Project-ID: 1\n"
 "X-Crowdin-Language: pt-BR\n"
-"X-Crowdin-File: /Baculum API/messages.po\n"
+"X-Crowdin-File: /Bacularis API/messages.po\n"
 "X-Crowdin-File-ID: 51\n"
 
 msgid "Language:"
@@ -38,14 +38,8 @@ msgstr "Avançar"
 msgid "Step 1 - select language"
 msgstr "Passo 1 - Selecionar o idioma"
 
-msgid "Catalog API"
-msgstr "Catálogo"
-
 msgid "Step 2 - share the Bacula Catalog Database"
 msgstr "Passo 2 - Compartilhar o banco de dados do catálogo do Bacula"
-
-msgid "Do you want to setup and to share the Bacula Catalog Database access for this API instance?"
-msgstr "Deseja configurar e compartilhar o acesso ao banco de dados do catálogo do Bacula para esta instância da API?"
 
 msgid "Yes"
 msgstr "Sim"
@@ -110,9 +104,6 @@ msgstr "Erro de conexão"
 msgid "test"
 msgstr "testar"
 
-msgid "Do you want to setup and share the Bacula Bconsole interface to execute commands in this API instance?"
-msgstr "Deseja configurar e compartilhar o Bconsole para executar comandos nesta instância da API?"
-
 msgid "Bconsole binary file path:"
 msgstr "Caminho para o bconsole:"
 
@@ -133,9 +124,6 @@ msgstr "Caminho do bconsole.conf:"
 
 msgid "NOTE!"
 msgstr "NOTA!"
-
-msgid "Bacularis needs access to bconsole by the web server."
-msgstr "O Bacularis requer acesso ao bconsole pelo Servidor Web."
 
 msgid "Step 3 - share the Bacula Bconsole commands interface"
 msgstr "Passo 3 - Compartilhar a interface de comandos Bconsole"
@@ -193,9 +181,6 @@ msgstr "Erro"
 
 msgid "Finish"
 msgstr "Finalizar"
-
-msgid "Do you want to setup and share the Bacula configuration interface to configure Bacula components via this API instance?"
-msgstr "Deseja configurar e compartilhar a interface de configuração do Bacula para configurar os recursos através desta instância da API?"
 
 msgid "Administration login:"
 msgstr "Usuário administrador:"
@@ -398,20 +383,17 @@ msgstr "Editar parâmetros do cliente OAuth2"
 msgid "Select:"
 msgstr "Selecionar:"
 
-msgid "Baculum working directory for Bacula config:"
-msgstr "Diretório de trabalho do Baculum para a configuração do Bacula:"
+msgid "Bacularis working directory for Bacula config:"
+msgstr "Diretório de trabalho do Bacularis para a configuração do Bacula:"
 
-msgid "In this directory Baculum API saves temporarily Bacula configuration files (mainly for validation purposes) just before they are written as real Bacula configuration files."
-msgstr "Nesse diretório, a API do Baculum salva temporariamente os arquivos de configuração do Bacula (principalmente para fins de validação) antes de serem gravados como arquivos de configuração reais do Bacula."
+msgid "In this directory Bacularis API saves temporarily Bacula configuration files (mainly for validation purposes) just before they are written as real Bacula configuration files."
+msgstr "Nesse diretório, a API do Bacularis salva temporariamente os arquivos de configuração do Bacula (principalmente para fins de validação) antes de serem gravados como arquivos de configuração reais do Bacula."
 
 msgid "Version:"
 msgstr "Versão:"
 
 msgid "Authentication"
 msgstr "Autenticação"
-
-msgid "Authentication to Bacularis REST API"
-msgstr "Autenticação REST API do Bacularis"
 
 msgid "Authentication type:"
 msgstr "Tipo de autenticação:"
@@ -464,17 +446,14 @@ msgstr "Deseja configurar ações de (iniciar, parar e reiniciar) para os compon
 msgid "Sudo configuration"
 msgstr "Configuração do Sudo"
 
-msgid "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (Debian, Ubuntu and others):"
-msgstr "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (Debian, Ubuntu and others):"
-
-msgid "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (RHEL, CentOS and others):"
-msgstr "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (RHEL, CentOS and others):"
+msgid "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration:"
+msgstr "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration:"
 
 msgid "Get sudo configuration"
 msgstr "Obter configuração do sudo"
 
-msgid "Please copy appropriate sudo configuration and put it to a new sudoers.d file for example /etc/sudoers.d/bacularis-api"
-msgstr "Copie a configuração sudo apropriada e coloque-a em um novo arquivo sudoers.d, por exemplo /etc/sudoers.d/bacularis-api"
+msgid "Please copy appropriate sudo configuration and put it to a new sudoers.d file for example /etc/sudoers.d/bacularis"
+msgstr "Copie a configuração sudo apropriada e coloque-a em um novo arquivo sudoers.d, por exemplo /etc/sudoers.d/bacularis"
 
 msgid "Step 5 - enable actions for components"
 msgstr "Passo 5 - Ativar ações para componentes"
@@ -1053,9 +1032,6 @@ msgstr "Remove"
 msgid "Plugin settings with the given name already exists."
 msgstr "Plugin settings with the given name already exists."
 
-msgid "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (SLES, openSUSE and others):"
-msgstr "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (SLES, openSUSE and others):"
-
 msgid "Login test"
 msgstr "Login test"
 
@@ -1067,3 +1043,39 @@ msgstr "Show result"
 
 msgid "Hide result"
 msgstr "Hide result"
+
+msgid "Do you want to setup the Bacula Catalog Database access?"
+msgstr "Do you want to setup the Bacula Catalog Database access?"
+
+msgid "Bconsole configuration"
+msgstr "Bconsole configuration"
+
+msgid "Bacularis uses read-only access to the Bacula database."
+msgstr "Bacularis uses read-only access to the Bacula database."
+
+msgid "Bacularis uses Bacula console access to execute Bacula commands."
+msgstr "Bacularis uses Bacula console access to execute Bacula commands."
+
+msgid "Do you want to setup the Bacula Bconsole access?"
+msgstr "Do you want to setup the Bacula Bconsole access?"
+
+msgid "Catalog configuration"
+msgstr "Catalog configuration"
+
+msgid "Bacula configuration"
+msgstr "Bacula configuration"
+
+msgid "RHEL, CentOS, Fedora, Rocky Linux, AlmaLinux, Oracle Linux and others"
+msgstr "RHEL, CentOS, Fedora, Rocky Linux, AlmaLinux, Oracle Linux and others"
+
+msgid "Debian, Ubuntu and others"
+msgstr "Debian, Ubuntu and others"
+
+msgid "SLES, openSUSE and others"
+msgstr "SLES, openSUSE and others"
+
+msgid "The configuration interface enables to configure Bacula components (Director, Storage, Client and Bconsole)."
+msgstr "The configuration interface enables to configure Bacula components (Director, Storage, Client and Bconsole)."
+
+msgid "Do you want to setup the Bacula configuration interface?"
+msgstr "Do you want to setup the Bacula configuration interface?"

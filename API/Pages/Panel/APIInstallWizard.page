@@ -145,9 +145,9 @@
 							ID="Lang"
 							CssClass="w3-select w3-border"
 							Width="150px"
-							OnTextChanged="setLang"
+							OnTextChanged="setLanguage"
 							CausesValidation="false"
-							ClientSide.OnComplete="location.reload();"
+							ClientSide.OnComplete="window.location.href = window.location.pathname;"
 						>
 							<com:TListItem Value="en" Text="English" />
 							<com:TListItem Value="fr" Text="French" />
@@ -581,7 +581,8 @@ function show_start_next_btn(show) {
 		</com:TWizardStep>
 		<com:TWizardStep ID="Step2" Title="<%[ Step 2 - share the Bacula Catalog Database ]%>" StepType="Auto">
 			<div class="w3-half" style="float: none; margin: auto">
-				<h5><%[ Do you want to setup and to share the Bacula Catalog Database access for this API instance? ]%></h5>
+				<h5><%[ Bacularis uses read-only access to the Bacula database. ]%></h5>
+				<h5><%[ Do you want to setup the Bacula Catalog Database access? ]%></h5>
 				<div class="w3-container w3-section">
 					<com:TRadioButton
 						ID="DatabaseNo"
@@ -600,112 +601,115 @@ function show_start_next_btn(show) {
 				</div>
 				<div id="configure_database" style="display: <%=($this->DatabaseYes->Checked === true) ? '' : 'none';%>">
 					<com:TActivePanel ID="Step2Content">
-						<div class="w3-row w3-section">
-							<div class="w3-col w3-third"><com:TLabel ForControl="DBType" Text="<%[ Database type: ]%>" /></div>
-							<div class="w3-col w3-third">
-								<com:TActiveDropDownList
-									ID="DBType"
-									CssClass="w3-select w3-border"
-									Width="170px"
-									OnLoad="setDBType"
-									OnTextChanged="setDBType"
-									CausesValidation="false"
-									OnCallback="renderPanel"
-								>
-									<com:TListItem Value="none" Text="<%[ select database ]%>" />
-									<com:TListItem Value="pgsql" Text="PostgreSQL" />
-									<com:TListItem Value="mysql" Text="MySQL" />
-									<com:TListItem Value="sqlite" Text="SQLite" />
-								</com:TActiveDropDownList>
-								<com:TCompareValidator
-									Display="Dynamic"
-									ControlToValidate="DBType"
-									DataType="String"
-									ValueToCompare="none"
-									Operator="NotEqual"
-									ValidationGroup="DbGroup"
-									Text="<%[ Please select database type. ]%>"
-								/>
+						<fieldset>
+							<legend><%[ Catalog configuration ]%></legend>
+							<div class="w3-row w3-section">
+								<div class="w3-col w3-third"><com:TLabel ForControl="DBType" Text="<%[ Database type: ]%>" /></div>
+								<div class="w3-col w3-third">
+									<com:TActiveDropDownList
+										ID="DBType"
+										CssClass="w3-select w3-border"
+										Width="170px"
+										OnLoad="setDBType"
+										OnTextChanged="setDBType"
+										CausesValidation="false"
+										OnCallback="renderPanel"
+									>
+										<com:TListItem Value="none" Text="<%[ select database ]%>" />
+										<com:TListItem Value="pgsql" Text="PostgreSQL" />
+										<com:TListItem Value="mysql" Text="MySQL" />
+										<com:TListItem Value="sqlite" Text="SQLite" />
+									</com:TActiveDropDownList>
+									<com:TCompareValidator
+										Display="Dynamic"
+										ControlToValidate="DBType"
+										DataType="String"
+										ValueToCompare="none"
+										Operator="NotEqual"
+										ValidationGroup="DbGroup"
+										Text="<%[ Please select database type. ]%>"
+									/>
+								</div>
 							</div>
-						</div>
-						<div class="w3-row w3-section">
-							<div class="w3-col w3-third"><com:TLabel ForControl="DBName" Text="<%[ Database name: ]%>" /></div>
-							<div class="w3-col w3-third">
-								<com:TTextBox ID="DBName" CssClass="w3-input w3-border" />
-								<com:TRequiredFieldValidator
-									Display="Dynamic"
-									ControlCssClass="invalidate"
-									ControlToValidate="DBName"
-									ValidationGroup="DbGroup"
-									Text="<%[ Please enter database name. ]%>"
-								/>
+							<div class="w3-row w3-section">
+								<div class="w3-col w3-third"><com:TLabel ForControl="DBName" Text="<%[ Database name: ]%>" /></div>
+								<div class="w3-col w3-third">
+									<com:TTextBox ID="DBName" CssClass="w3-input w3-border" />
+									<com:TRequiredFieldValidator
+										Display="Dynamic"
+										ControlCssClass="invalidate"
+										ControlToValidate="DBName"
+										ValidationGroup="DbGroup"
+										Text="<%[ Please enter database name. ]%>"
+									/>
+								</div>
 							</div>
-						</div>
-						<div class="w3-row w3-section">
-							<div class="w3-col w3-third"><com:TLabel ForControl="Login" Text="<%[ Login: ]%>" /></div>
-							<div class="w3-col w3-third">
-								<com:TActiveTextBox ID="Login" CssClass="w3-input w3-border" />
-								<com:TRequiredFieldValidator
-									ID="LoginValidator"
-									Display="Dynamic"
-									ControlCssClass="invalidate"
-									ControlToValidate="Login"
-									ValidationGroup="DbGroup"
-									Text="<%[ Please enter login. ]%>"
-								/>
+							<div class="w3-row w3-section">
+								<div class="w3-col w3-third"><com:TLabel ForControl="Login" Text="<%[ Login: ]%>" /></div>
+								<div class="w3-col w3-third">
+									<com:TActiveTextBox ID="Login" CssClass="w3-input w3-border" />
+									<com:TRequiredFieldValidator
+										ID="LoginValidator"
+										Display="Dynamic"
+										ControlCssClass="invalidate"
+										ControlToValidate="Login"
+										ValidationGroup="DbGroup"
+										Text="<%[ Please enter login. ]%>"
+									/>
+								</div>
 							</div>
-						</div>
-						<div class="w3-row w3-section">
-							<div class="w3-col w3-third"><com:TLabel ForControl="Password" Text="<%[ Password: ]%>" /></div>
-							<div class="w3-col w3-third"><com:TActiveTextBox
-								ID="Password"
-								CssClass="w3-input w3-border"
-								TextMode="Password"
-								PersistPassword="true"
-							 /></div>
-						</div>
-						<div class="w3-row w3-section">
-							<div class="w3-col w3-third"><com:TLabel ForControl="IP" Text="<%[ IP address (or hostname): ]%>" /></div>
-							<div class="w3-col w3-third">
-								<com:TActiveTextBox ID="IP" CssClass="w3-input w3-border" />
-								<com:TRequiredFieldValidator
-									ID="IPValidator"
-									Display="Dynamic"
-									ControlToValidate="IP"
-									ValidationGroup="DbGroup"
-									Text="<%[ Please enter IP address or hostname. ]%>"
-								/>
+							<div class="w3-row w3-section">
+								<div class="w3-col w3-third"><com:TLabel ForControl="Password" Text="<%[ Password: ]%>" /></div>
+								<div class="w3-col w3-third"><com:TActiveTextBox
+									ID="Password"
+									CssClass="w3-input w3-border"
+									TextMode="Password"
+									PersistPassword="true"
+								 /></div>
 							</div>
-						</div>
-						<div class="w3-row w3-section">
-							<div class="w3-col w3-third"><com:TLabel ForControl="Port" Text="<%[ Port: ]%>" /></div>
-							<div class="w3-col w3-third">
-								<com:TActiveTextBox ID="Port" CssClass="w3-input w3-border" Width="55px" MaxLength="5" Enabled="false" />
-								<com:TRequiredFieldValidator
-									ID="PortValidator"
-									Display="Dynamic"
-									ControlToValidate="Port"
-									ValidationGroup="DbGroup"
-									Text="<%[ Please enter database port. ]%>"
-								/>
+							<div class="w3-row w3-section">
+								<div class="w3-col w3-third"><com:TLabel ForControl="IP" Text="<%[ IP address (or hostname): ]%>" /></div>
+								<div class="w3-col w3-third">
+									<com:TActiveTextBox ID="IP" CssClass="w3-input w3-border" />
+									<com:TRequiredFieldValidator
+										ID="IPValidator"
+										Display="Dynamic"
+										ControlToValidate="IP"
+										ValidationGroup="DbGroup"
+										Text="<%[ Please enter IP address or hostname. ]%>"
+									/>
+								</div>
 							</div>
-						</div>
-						<com:TActivePanel
-							ID="DBPathField"
-							CssClass="w3-row w3-section"
-							Display="<%=$this->getPage()->getFirstRun() === false && !$this->IsCallBack && $this->getPage()->config['db']['type'] == 'sqlite' ? 'Fixed' : $this->DBPathField->Display%>">
-							<div class="w3-col w3-third"><com:TLabel ForControl="DBPath" Text="<%[ SQLite database path: ]%>" /></div>
-							<div class="w3-col w3-third">
-								<com:TActiveTextBox ID="DBPath" CssClass="w3-input w3-border" Enabled="false" />
-								<com:TRequiredFieldValidator
-									ID="DBPathValidator"
-									Display="Dynamic"
-									ControlToValidate="DBPath"
-									ValidationGroup="DbGroup"
-									Text="<%[ Please enter database path. ]%>"
-								/>
+							<div class="w3-row w3-section">
+								<div class="w3-col w3-third"><com:TLabel ForControl="Port" Text="<%[ Port: ]%>" /></div>
+								<div class="w3-col w3-third">
+									<com:TActiveTextBox ID="Port" CssClass="w3-input w3-border" Width="55px" MaxLength="5" Enabled="false" />
+									<com:TRequiredFieldValidator
+										ID="PortValidator"
+										Display="Dynamic"
+										ControlToValidate="Port"
+										ValidationGroup="DbGroup"
+										Text="<%[ Please enter database port. ]%>"
+									/>
+								</div>
 							</div>
-						</com:TActivePanel>
+							<com:TActivePanel
+								ID="DBPathField"
+								CssClass="w3-row w3-section"
+								Display="<%=$this->getPage()->getFirstRun() === false && !$this->IsCallBack && $this->getPage()->config['db']['type'] == 'sqlite' ? 'Dynamic' : $this->DBPathField->Display%>">
+								<div class="w3-col w3-third"><com:TLabel ForControl="DBPath" Text="<%[ SQLite database path: ]%>" /></div>
+								<div class="w3-col w3-third">
+									<com:TActiveTextBox ID="DBPath" CssClass="w3-input w3-border" Enabled="false" />
+									<com:TRequiredFieldValidator
+										ID="DBPathValidator"
+										Display="Dynamic"
+										ControlToValidate="DBPath"
+										ValidationGroup="DbGroup"
+										Text="<%[ Please enter database path. ]%>"
+									/>
+								</div>
+							</com:TActivePanel>
+						</fieldset>
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third" style="vertical-align: top"><com:TLabel ForControl="ConnectionTest" Text="<%[ Connection test: ]%>" CssClass="test_label" /></div>
 							<div class="w3-col w3-third">
@@ -762,7 +766,8 @@ function show_start_next_btn(show) {
 		</com:TWizardStep>
 		<com:TWizardStep ID="Step3" Title="<%[ Step 3 - share the Bacula Bconsole commands interface ]%>" StepType="Auto">
 			<div class="w3-half" style="float: none; margin: auto">
-				<h5><%[ Do you want to setup and share the Bacula Bconsole interface to execute commands in this API instance? ]%></h5>
+				<h5><%[ Bacularis uses Bacula console access to execute Bacula commands. ]%></h5>
+				<h5><%[ Do you want to setup the Bacula Bconsole access? ]%></h5>
 				<div class="w3-container w3-section">
 					<com:TRadioButton
 						ID="ConsoleNo"
@@ -780,95 +785,108 @@ function show_start_next_btn(show) {
 					/> <com:TLabel ForControl="ConsoleYes" Text="<%[ Yes ]%>" />
 				</div>
 				<div id="configure_console" style="display: <%=($this->ConsoleYes->Checked === true) ? '' : 'none';%>">
-					<div class="w3-row w3-section">
-						<div class="w3-col w3-third">
-							<com:TLabel
-								ForControl="BconsolePath"
-								Text="<%[ Bconsole binary file path: ]%>" />
-						</div>
-						<div class="w3-col w3-third">
-							<com:TTextBox
-								ID="BconsolePath"
-								CssClass="w3-input w3-border"
-								CausesValidation="false"
-							/>
-							<com:TRequiredFieldValidator
-								Display="Dynamic"
-								ControlToValidate="BconsolePath"
-								Text="<%[ Please enter bconsole path. ]%>"
-							/>
-						</div>
+					<div class="w3-right-align">
+						<span><%[ Get pre-defined paths: ]%></span>
+						<select id="pre_defined_paths" onchange="oConfigWizardStep3.set_paths();" class="w3-input w3-border" style="width: 400px; display: inline;">
+							<option value=""><%[ Select paths ]%></option>
+							<option value="system"><%[ Binaries: ]%> /usr/sbin, <%[ Configs: ]%> /etc/bacula</option>
+							<option value="bacula.org"><%[ Binaries: ]%> /opt/bacula/bin, <%[ Configs: ]%> /opt/bacula/etc</option>
+							<option value="debian"><%[ Binaries: ]%> /usr/lib/bacula, <%[ Configs: ]%> /etc/bacula</option>
+							<option value="freebsd"><%[ Binaries: ]%> /usr/local/sbin, <%[ Configs: ]%> /usr/local/etc/bacula</option>
+						</select>
 					</div>
-					<div class="w3-row w3-section">
-						<div class="w3-col w3-third">
-							<com:TLabel
-								ForControl="BconsoleConfigPath"
-								Text="<%[ Bconsole admin config file path: ]%>"
-							/>
+					<fieldset>
+						<legend><%[ Bconsole configuration ]%></legend>
+						<div class="w3-row w3-section">
+							<div class="w3-col w3-third">
+								<com:TLabel
+									ForControl="BconsolePath"
+									Text="<%[ Bconsole binary file path: ]%>" />
+							</div>
+							<div class="w3-col w3-third">
+								<com:TTextBox
+									ID="BconsolePath"
+									CssClass="w3-input w3-border"
+									CausesValidation="false"
+								/>
+								<com:TRequiredFieldValidator
+									Display="Dynamic"
+									ControlToValidate="BconsolePath"
+									Text="<%[ Please enter bconsole path. ]%>"
+								/>
+							</div>
 						</div>
-						<div class="w3-col w3-third">
-							<com:TTextBox
-								ID="BconsoleConfigPath"
-								CssClass="w3-input w3-border"
-								CausesValidation="false"
-							/>
-							<com:TRequiredFieldValidator
-								Display="Dynamic"
-								ControlToValidate="BconsoleConfigPath"
-								Text="<%[ Please enter bconsole config file path. ]%>"
-							/>
+						<div class="w3-row w3-section">
+							<div class="w3-col w3-third">
+								<com:TLabel
+									ForControl="BconsoleConfigPath"
+									Text="<%[ Bconsole admin config file path: ]%>"
+								/>
+							</div>
+							<div class="w3-col w3-third">
+								<com:TTextBox
+									ID="BconsoleConfigPath"
+									CssClass="w3-input w3-border"
+									CausesValidation="false"
+								/>
+								<com:TRequiredFieldValidator
+									Display="Dynamic"
+									ControlToValidate="BconsoleConfigPath"
+									Text="<%[ Please enter bconsole config file path. ]%>"
+								/>
+							</div>
 						</div>
-					</div>
-					<div class="w3-row w3-section">
-						<div class="w3-col w3-third">
-							<com:TLabel
-								ForControl="UseSudo"
-								Text="<%[ Use sudo: ]%>"
-							/>
-						</div>
-						<div class="w3-col w3-third">
-							<com:TCheckBox
-								ID="UseSudo"
-								CssClass="w3-check"
-							/> &nbsp;<a href="javascript:void(0)" onclick="oSudoConfig.get_config('bconsole');"><%[ Get sudo configuration ]%></a>
+						<div class="w3-row w3-section">
+							<div class="w3-col w3-third">
+								<com:TLabel
+									ForControl="UseSudo"
+									Text="<%[ Use sudo: ]%>"
+								/>
+							</div>
+							<div class="w3-col w3-third">
+								<com:TCheckBox
+									ID="UseSudo"
+									CssClass="w3-check"
+								/> &nbsp;<a href="javascript:void(0)" onclick="oSudoConfig.get_config('bconsole');"><%[ Get sudo configuration ]%></a>
 
-						</div>
-					</div>
-					<i class="fa-solid fa-wrench"></i> <a id="bconsole_advanced_settings_btn" href="javascript:void(0)" onclick="$('#bconsole_advanced_settings').toggle('fast');"><%[ Advanced options ]%></a>
-					<div id="bconsole_advanced_settings" style="display: none;">
-						<div class="w3-row w3-section">
-							<div class="w3-col w3-quarter">
-								<com:TLabel
-									ForControl="BconsoleSudoRunAsUser"
-									Text="<%[ Sudo Runas user: ]%>"
-								/>
-							</div>
-							<div class="w3-col w3-threequarter">
-								<com:TTextBox
-									ID="BconsoleSudoRunAsUser"
-									CssClass="w3-input w3-border"
-									CausesValidation="false"
-									Width="170px"
-								/>
 							</div>
 						</div>
-						<div class="w3-row w3-section">
-							<div class="w3-col w3-quarter">
-								<com:TLabel
-									ForControl="BconsoleSudoRunAsGroup"
-									Text="<%[ Sudo Runas group: ]%>"
-								/>
+						<i class="fa-solid fa-wrench"></i> <a id="bconsole_advanced_settings_btn" href="javascript:void(0)" onclick="$('#bconsole_advanced_settings').toggle('fast');"><%[ Advanced options ]%></a>
+						<div id="bconsole_advanced_settings" style="display: none;">
+							<div class="w3-row w3-section">
+								<div class="w3-col w3-quarter">
+									<com:TLabel
+										ForControl="BconsoleSudoRunAsUser"
+										Text="<%[ Sudo Runas user: ]%>"
+									/>
+								</div>
+								<div class="w3-col w3-threequarter">
+									<com:TTextBox
+										ID="BconsoleSudoRunAsUser"
+										CssClass="w3-input w3-border"
+										CausesValidation="false"
+										Width="170px"
+									/>
+								</div>
 							</div>
-							<div class="w3-col w3-threequarter">
-								<com:TTextBox
-									ID="BconsoleSudoRunAsGroup"
-									CssClass="w3-input w3-border"
-									CausesValidation="false"
-									Width="170px"
-								/>
+							<div class="w3-row w3-section">
+								<div class="w3-col w3-quarter">
+									<com:TLabel
+										ForControl="BconsoleSudoRunAsGroup"
+										Text="<%[ Sudo Runas group: ]%>"
+									/>
+								</div>
+								<div class="w3-col w3-threequarter">
+									<com:TTextBox
+										ID="BconsoleSudoRunAsGroup"
+										CssClass="w3-input w3-border"
+										CausesValidation="false"
+										Width="170px"
+									/>
+								</div>
 							</div>
 						</div>
-					</div>
+					</fieldset>
 					<div class="w3-row w3-section">
 						<div class="w3-col w3-third">
 							<com:TLabel
@@ -913,15 +931,61 @@ function show_start_next_btn(show) {
 							</table>
 						</div>
 					</div>
-					<div class="line left">
-						<span><b><%[ NOTE! ]%></b><br /><em><%[ Bacularis needs access to bconsole by the web server. ]%></em></span>
-					</div>
 				</div>
 			</div>
+<script>
+var oConfigWizardStep3 = {
+	paths: {
+		'system': {
+			configs: '/etc/bacula/',
+			binaries: '/usr/sbin/'
+		},
+		'bacula.org': {
+			configs: '/opt/bacula/etc/',
+			binaries: '/opt/bacula/bin/'
+		},
+		'debian': {
+			configs: '/etc/bacula/',
+			binaries: '/usr/lib/bacula/'
+		},
+		'freebsd': {
+			configs: '/usr/local/etc/bacula/',
+			binaries: '/usr/local/sbin/'
+		}
+	},
+	ids: {
+		pre_defined_paths: 'pre_defined_paths',
+		fields: {
+			bconsole: {
+				binary: '<%=$this->BconsolePath->ClientID%>',
+				config: '<%=$this->BconsoleConfigPath->ClientID%>'
+			}
+		}
+	},
+	configs: {
+		bconsole: {
+			config: 'bconsole.conf'
+		}
+	},
+	set_paths: function() {
+		const paths = document.getElementById(this.ids.pre_defined_paths);
+		if (paths.value) {
+			let bin, conf;
+			for (const binary in this.ids.fields) {
+				bin = document.getElementById(this.ids.fields[binary].binary);
+				conf = document.getElementById(this.ids.fields[binary].config);
+				bin.value = this.paths[paths.value].binaries + binary;
+				conf.value = this.paths[paths.value].configs + this.configs[binary].config;
+			}
+		}
+	}
+};
+</script>
 		</com:TWizardStep>
 		<com:TWizardStep ID="Step4" Title="<%[ Step 4 - share the Bacula configuration interface ]%>" StepType="Auto">
 			<div class="w3-half" style="float: none; margin: auto">
-				<h5><%[ Do you want to setup and share the Bacula configuration interface to configure Bacula components via this API instance? ]%></h5>
+				<h5><%[ The configuration interface enables to configure Bacula components (Director, Storage, Client and Bconsole). ]%></h5>
+				<h5><%[ Do you want to setup the Bacula configuration interface? ]%></h5>
 				<div class="w3-container w3-section">
 					<com:TRadioButton
 						ID="ConfigNo"
@@ -951,11 +1015,11 @@ function show_start_next_btn(show) {
 					</div>
 					<fieldset>
 						<legend><%[ General configuration ]%></legend>
-						<div class="w3-row w3-section" title="<%[ In this directory Baculum API saves temporarily Bacula configuration files (mainly for validation purposes) just before they are written as real Bacula configuration files. ]%>">
+						<div class="w3-row w3-section" title="<%[ In this directory Bacularis API saves temporarily Bacula configuration files (mainly for validation purposes) just before they are written as real Bacula configuration files. ]%>">
 							<div class="w3-col w3-third">
 								<com:TLabel
 									ForControl="BConfigDir"
-									Text="<%[ Baculum working directory for Bacula config: ]%>"
+									Text="<%[ Bacularis working directory for Bacula config: ]%>"
 								/>
 							</div>
 							<div class="w3-col w3-twothird">
@@ -1850,7 +1914,7 @@ var oConfigWizardStep4 = {
 		<com:TWizardStep ID="Step7" Title="<%[ Step 6 - Finish ]%>" StepType="Finish">
 			<div class="w3-half" style="float: none; margin: auto">
 				<fieldset>
-					<legend><%[ Catalog API ]%></legend>
+					<legend><%[ Catalog ]%></legend>
 					<div style="display: <%=($this->DatabaseYes->Checked ? 'block' : 'none')%>">
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ Database type: ]%></div>
@@ -1889,7 +1953,7 @@ var oConfigWizardStep4 = {
 					</div>
 				</fieldset>
 				<fieldset>
-					<legend><%[ Console API ]%></legend>
+					<legend>Bconsole</legend>
 					<div style="display: <%=($this->ConsoleYes->Checked ? 'block' : 'none')%>">
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ Bconsole binary file path: ]%></div>
@@ -1920,7 +1984,7 @@ var oConfigWizardStep4 = {
 					</div>
 				</fieldset>
 				<fieldset>
-					<legend><%[ Config API ]%></legend>
+					<legend><%[ Bacula configuration ]%></legend>
 					<div style="display: <%=($this->ConfigYes->Checked ? 'block' : 'none')%>">
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ Directory path for new config files: ]%></div>
@@ -1979,7 +2043,7 @@ var oConfigWizardStep4 = {
 					</div>
 				</fieldset>
 				<fieldset>
-					<legend><%[ Authentication to Bacularis REST API ]%></legend>
+					<legend><%[ API authentication ]%></legend>
 					<div class="w3-row w3-section">
 						<div class="w3-col w3-third"><%[ Authentication type: ]%></div>
 						<div class="w3-col w3-third">
@@ -2033,11 +2097,11 @@ var oConfigWizardStep4 = {
 							<div class="w3-col w3-third"><%[ Use the same credentials for the API and for the web interface ]%>:</div>
 							<div class="w3-col w3-third">
 								<strong>
-									<%=$this->SetAPICredentialsForWeb->Checked ? \Prado::localize('Yes') : \Prado::localize('No')%>
+									<%=$this->SetAPICredentialsForWeb->Checked && $this->AuthBasic->Checked ? \Prado::localize('Yes') : \Prado::localize('No')%>
 								</strong>
 							</div>
 						</div>
-						<div style="display: <%=$this->SetAPICredentialsForWeb->Checked ? 'none' : 'block'%>">
+						<div style="display: <%=$this->SetAPICredentialsForWeb->Checked && $this->AuthBasic->Checked ? 'none' : 'block'%>">
 							<div class="w3-row w3-section">
 								<div class="w3-col w3-third"><%[ Administration login: ]%></div>
 								<div class="w3-col w3-third"><strong><%=$this->WebLogin->Text%></strong></div>

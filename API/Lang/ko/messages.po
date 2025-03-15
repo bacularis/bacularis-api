@@ -38,14 +38,8 @@ msgstr "다음"
 msgid "Step 1 - select language"
 msgstr "1단계 - 언어 선택"
 
-msgid "Catalog API"
-msgstr "카탈로그 API"
-
 msgid "Step 2 - share the Bacula Catalog Database"
 msgstr "2단계 - Bacula 카탈로그 데이터베이스 공유"
-
-msgid "Do you want to setup and to share the Bacula Catalog Database access for this API instance?"
-msgstr "이 API 인스턴스에 대한 Bacula 카탈로그 데이터베이스 액세스를 설정하고 공유하시겠습니까?"
 
 msgid "Yes"
 msgstr "예"
@@ -110,9 +104,6 @@ msgstr "연결 오류"
 msgid "test"
 msgstr "테스트"
 
-msgid "Do you want to setup and share the Bacula Bconsole interface to execute commands in this API instance?"
-msgstr "이 API 인스턴스에서 명령을 실행하기 위해 Bacula Bconsole 인터페이스를 설정하고 공유하시겠습니까?"
-
 msgid "Bconsole binary file path:"
 msgstr "Bconsole 바이너리 파일 경로:"
 
@@ -133,9 +124,6 @@ msgstr "Bconsole 관리자 설정 파일 경로:"
 
 msgid "NOTE!"
 msgstr "주의!"
-
-msgid "Bacularis needs access to bconsole by the web server."
-msgstr "Bacularis는 웹 서버에서 bconsole에 액세스해야 합니다."
 
 msgid "Step 3 - share the Bacula Bconsole commands interface"
 msgstr "3단계 - Bacula Bconsole 명령 인터페이스 공유"
@@ -193,9 +181,6 @@ msgstr "오류"
 
 msgid "Finish"
 msgstr "종료"
-
-msgid "Do you want to setup and share the Bacula configuration interface to configure Bacula components via this API instance?"
-msgstr "이 API 인스턴스를 통해 Bacula 구성 요소를 구성하기 위해 Bacula 구성 인터페이스를 설정하고 공유하시겠습니까?"
 
 msgid "Administration login:"
 msgstr "관리 로그인:"
@@ -398,20 +383,17 @@ msgstr "OAuth2 클라이언트 매개변수 편집"
 msgid "Select:"
 msgstr "선택:"
 
-msgid "Baculum working directory for Bacula config:"
-msgstr "Bacula 설정을 위한 Baculum 작업 디렉터리:"
+msgid "Bacularis working directory for Bacula config:"
+msgstr "Bacula 설정을 위한 Bacularis 작업 디렉터리:"
 
-msgid "In this directory Baculum API saves temporarily Bacula configuration files (mainly for validation purposes) just before they are written as real Bacula configuration files."
-msgstr "이 디렉터리에 Baculum API는 실제 Bacula 구성 파일로 작성되기 직전에 Bacula 구성 파일(검증 목적으로 사용)을 임시로 저장합니다."
+msgid "In this directory Bacularis API saves temporarily Bacula configuration files (mainly for validation purposes) just before they are written as real Bacula configuration files."
+msgstr "이 디렉터리에 Bacularis API는 실제 Bacula 구성 파일로 작성되기 직전에 Bacula 구성 파일(검증 목적으로 사용)을 임시로 저장합니다."
 
 msgid "Version:"
 msgstr "버전:"
 
 msgid "Authentication"
 msgstr "인증"
-
-msgid "Authentication to Bacularis REST API"
-msgstr "Bacularis REST API 인증"
 
 msgid "Authentication type:"
 msgstr "인증 유형:"
@@ -464,17 +446,14 @@ msgstr "Bacula 구성 요소에 대한 시작, 중지 및 다시 시작 작업�
 msgid "Sudo configuration"
 msgstr "sudo 설정"
 
-msgid "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (Debian, Ubuntu and others):"
-msgstr "기본 PHP-FPM 구성(데비안, 우분투 및 기타)을 사용하는 Apache, Nginx 및 Lighttpd 웹 서버에 대한 sudo 구성 예:"
-
-msgid "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (RHEL, CentOS and others):"
-msgstr "기본 PHP-FPM 구성(RHEL, CentOS 및 기타)을 사용하는 Apache, Nginx 및 Lighttpd 웹 서버에 대한 sudo 구성 예:"
+msgid "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration:"
+msgstr "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration:"
 
 msgid "Get sudo configuration"
 msgstr "sudo 구성 가져오기"
 
-msgid "Please copy appropriate sudo configuration and put it to a new sudoers.d file for example /etc/sudoers.d/bacularis-api"
-msgstr "적절한 sudo 구성을 복사하여 새 sudoers.d 파일에 저장하십시오(예: /etc/sudoers.d/bacularis-api)."
+msgid "Please copy appropriate sudo configuration and put it to a new sudoers.d file for example /etc/sudoers.d/bacularis"
+msgstr "적절한 sudo 구성을 복사하여 새 sudoers.d 파일에 저장하십시오(예: /etc/sudoers.d/bacularis)."
 
 msgid "Step 5 - enable actions for components"
 msgstr "5단계 - 구성 요소에 대한 작업 활성화"
@@ -1052,9 +1031,6 @@ msgstr "Remove"
 msgid "Plugin settings with the given name already exists."
 msgstr "Plugin settings with the given name already exists."
 
-msgid "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (SLES, openSUSE and others):"
-msgstr "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration (SLES, openSUSE and others):"
-
 msgid "Login test"
 msgstr "Login test"
 
@@ -1066,3 +1042,39 @@ msgstr "Show result"
 
 msgid "Hide result"
 msgstr "Hide result"
+
+msgid "Do you want to setup the Bacula Catalog Database access?"
+msgstr "Do you want to setup the Bacula Catalog Database access?"
+
+msgid "Bconsole configuration"
+msgstr "Bconsole configuration"
+
+msgid "Bacularis uses read-only access to the Bacula database."
+msgstr "Bacularis uses read-only access to the Bacula database."
+
+msgid "Bacularis uses Bacula console access to execute Bacula commands."
+msgstr "Bacularis uses Bacula console access to execute Bacula commands."
+
+msgid "Do you want to setup the Bacula Bconsole access?"
+msgstr "Do you want to setup the Bacula Bconsole access?"
+
+msgid "Catalog configuration"
+msgstr "Catalog configuration"
+
+msgid "Bacula configuration"
+msgstr "Bacula configuration"
+
+msgid "RHEL, CentOS, Fedora, Rocky Linux, AlmaLinux, Oracle Linux and others"
+msgstr "RHEL, CentOS, Fedora, Rocky Linux, AlmaLinux, Oracle Linux and others"
+
+msgid "Debian, Ubuntu and others"
+msgstr "Debian, Ubuntu and others"
+
+msgid "SLES, openSUSE and others"
+msgstr "SLES, openSUSE and others"
+
+msgid "The configuration interface enables to configure Bacula components (Director, Storage, Client and Bconsole)."
+msgstr "The configuration interface enables to configure Bacula components (Director, Storage, Client and Bconsole)."
+
+msgid "Do you want to setup the Bacula configuration interface?"
+msgstr "Do you want to setup the Bacula configuration interface?"
