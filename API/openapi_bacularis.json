@@ -12,7 +12,7 @@
 			"name": "AGPLv3",
 			"url": "https://www.gnu.org/licenses/agpl-3.0-standalone.html"
 		},
-		"version": "3.0.0"
+		"version": "3.0.1"
 	},
 	"servers": [
 		{
@@ -2226,10 +2226,15 @@
 									"type": "object",
 									"properties": {
 										"output": {
-											"type": "array",
-											"items": {
-												"description": "List resource job names",
-												"type": "string"
+											"type": "object",
+											"properties": {
+												"director_name": {
+													"type": "array",
+													"items": {
+														"description": "List resource job names",
+														"type": "string"
+													}
+												}
 											}
 										},
 										"error": {
