@@ -2442,6 +2442,16 @@
 						}
 					},
 					{
+						"name": "level",
+						"in": "header",
+						"description": "Job level letter",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"enum": ["F", "I", "D"]
+						}
+					},
+					{
 						"name": "clientid",
 						"in": "header",
 						"description": "Client identifier",
