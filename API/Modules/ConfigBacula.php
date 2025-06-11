@@ -68,7 +68,7 @@ class ConfigBacula extends APIModule implements IConfigFormat
 		umask($orig_umask);
 
 		// Call API write config plugins
-		$this->getModule('api_plugin')->callPluginAction(
+		$this->getModule('plugin_manager')->callPluginActionByType(
 			PluginConfigBase::PLUGIN_TYPE_BACULA_CONFIGURATION,
 			'writeConfig',
 			$content

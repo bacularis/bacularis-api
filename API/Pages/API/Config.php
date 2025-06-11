@@ -68,7 +68,7 @@ class Config extends BaculumAPIServer
 		}
 
 		// Run plugin pre-read actions
-		$this->getModule('api_plugin')->callPluginAction(
+		$this->getModule('plugin_manager')->callPluginActionByType(
 			PluginConfigBase::PLUGIN_TYPE_BACULA_CONFIGURATION,
 			'preConfigRead',
 			$component_type,
@@ -86,7 +86,7 @@ class Config extends BaculumAPIServer
 
 		// Run plugin post-read actions
 		if ($config['exitcode'] == 0) {
-			$this->getModule('api_plugin')->callPluginAction(
+			$this->getModule('plugin_manager')->callPluginActionByType(
 				PluginConfigBase::PLUGIN_TYPE_BACULA_CONFIGURATION,
 				'postConfigRead',
 				$component_type,
@@ -134,7 +134,7 @@ class Config extends BaculumAPIServer
 		}
 
 		// Run plugin pre-create actions
-		$this->getModule('api_plugin')->callPluginAction(
+		$this->getModule('plugin_manager')->callPluginActionByType(
 			PluginConfigBase::PLUGIN_TYPE_BACULA_CONFIGURATION,
 			'preConfigCreate',
 			$component_type,
@@ -170,7 +170,7 @@ class Config extends BaculumAPIServer
 					$this->output = BaculaConfigError::MSG_ERROR_NO_ERRORS;
 
 					// Run plugin post-create actions
-					$this->getModule('api_plugin')->callPluginAction(
+					$this->getModule('plugin_manager')->callPluginActionByType(
 						PluginConfigBase::PLUGIN_TYPE_BACULA_CONFIGURATION,
 						'postConfigCreate',
 						$component_type,
@@ -239,7 +239,7 @@ class Config extends BaculumAPIServer
 		}
 
 		// Run plugin pre-update actions
-		$this->getModule('api_plugin')->callPluginAction(
+		$this->getModule('plugin_manager')->callPluginActionByType(
 			PluginConfigBase::PLUGIN_TYPE_BACULA_CONFIGURATION,
 			'preConfigUpdate',
 			$component_type,
@@ -300,7 +300,7 @@ class Config extends BaculumAPIServer
 					$this->output = BaculaConfigError::MSG_ERROR_NO_ERRORS;
 
 					// Run plugin post-update actions
-					$this->getModule('api_plugin')->callPluginAction(
+					$this->getModule('plugin_manager')->callPluginActionByType(
 						PluginConfigBase::PLUGIN_TYPE_BACULA_CONFIGURATION,
 						'postConfigUpdate',
 						$component_type,
@@ -350,7 +350,7 @@ class Config extends BaculumAPIServer
 		}
 
 		// Run plugin pre-delete actions
-		$this->getModule('api_plugin')->callPluginAction(
+		$this->getModule('plugin_manager')->callPluginActionByType(
 			PluginConfigBase::PLUGIN_TYPE_BACULA_CONFIGURATION,
 			'preConfigDelete',
 			$component_type,
@@ -399,7 +399,7 @@ class Config extends BaculumAPIServer
 						$this->error = BaculaConfigError::ERROR_NO_ERRORS;
 
 						// Run plugin post-delete actions
-						$this->getModule('api_plugin')->callPluginAction(
+						$this->getModule('plugin_manager')->callPluginActionByType(
 							PluginConfigBase::PLUGIN_TYPE_BACULA_CONFIGURATION,
 							'postConfigDelete',
 							$component_type,
