@@ -1075,3 +1075,6 @@ msgstr "The configuration interface enables to configure Bacula components (Dire
 
 msgid "Do you want to setup the Bacula configuration interface?"
 msgstr "Do you want to setup the Bacula configuration interface?"
+
+msgid "Plugin not installed"
+msgstr "Plugin not installed"
