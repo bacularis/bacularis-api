@@ -442,7 +442,7 @@ class APIInstallWizard extends BaculumAPIPage
 							'roles' => WebUserRoles::ADMIN,
 							'enabled' => 1
 						]);
-						$ret = $user_config->setUserConfig($this->WebLogin->Text, $new_user_prop);
+						$ret = $user_config->setUserConfig('', $this->WebLogin->Text, $new_user_prop);
 						if (!$ret) {
 							$emsg = 'Error while saving web user config.';
 							Logging::log(
