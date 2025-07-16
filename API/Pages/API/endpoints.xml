@@ -55,6 +55,7 @@
 	<url ServiceParameter="PoolUpdateVolumes" pattern="api/v3/pools/{id}/update/volumes/" parameters.id="\d+" />
 	<url ServiceParameter="PoolsShow" pattern="api/v3/pools/show/" />
 	<url ServiceParameter="PoolShow" pattern="api/v3/pools/{id}/show/" parameters.id="\d+" />
+	<url ServiceParameter="PoolsUpdateVolumes" pattern="api/v3/pools/update/volumes/" />
 	<!-- jobs endpoints-->
 	<url ServiceParameter="Jobs" pattern="api/v3/jobs/" />
 	<url ServiceParameter="Job" pattern="api/v3/jobs/{id}/" parameters.id="\d+" />

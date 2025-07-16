@@ -3561,6 +3561,39 @@
 				]
 			}
 		},
+		"/api/v3/pools/update/volumes": {
+			"put": {
+				"tags": ["pools"],
+				"summary": "Update properties all volumes in all pools",
+				"description": "Update properties all volumes in all pools",
+				"responses": {
+					"200": {
+						"description": "Update all volumes in all pools output",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "array",
+											"items": {
+												"type": "string",
+												"description": "Show update all volumes output"
+											}
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 1, 4, 5, 6, 7, 9, 11, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"/api/v3/volumes": {
 			"get": {
 				"tags": ["volumes"],
