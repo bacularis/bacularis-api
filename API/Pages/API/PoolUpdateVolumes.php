@@ -40,19 +40,21 @@ class PoolUpdateVolumes extends BaculumAPIServer
 {
 	public function set($id, $params)
 	{
-		$result = $this->getModule('bconsole')->bconsoleCommand(
+		$bconsole = $this->getModule('bconsole');
+		$result = $bconsole->bconsoleCommand(
 			$this->director,
-			['.pool']
+			['.pool'],
+			null,
+			true
 		);
 		if ($result->exitcode === 0) {
-			array_shift($result->output);
 			$pool = $this->getModule('pool')->getPoolById($id);
 			if (is_object($pool) && in_array($pool->name, $result->output)) {
 				$voldata = $this->getModule('volume')->getVolumeByPoolId($pool->poolid);
 				if (is_object($voldata)) {
-					$result = $this->getModule('bconsole')->bconsoleCommand(
+					$result = $bconsole->bconsoleCommand(
 						$this->director,
-						['update', 'volume="' . $voldata->volumename . '"', 'allfrompool="' . $pool->name . '"']
+						['update', 'volume', 'allfrompool="' . $pool->name . '"']
 					);
 					$this->output = $result->output;
 					$this->error = $result->exitcode;
