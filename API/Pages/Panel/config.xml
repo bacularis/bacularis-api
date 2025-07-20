@@ -23,7 +23,7 @@
 		<module id="plugin_config" class="Bacularis\API\Modules\PluginConfig" />
 		<!-- internalization modules -->
 		<module id="globalization" class="TGlobalization">
-			<translation type="gettext" source="Application.API.Lang" marker="@@" autosave="false" cache="false" DefaultCulture="en" />
+			<translation type="gettext" source="Application.API.Lang" marker="" autosave="false" cache="false" DefaultCulture="en" />
 		</module>
 		<!-- logging modules -->
 		<module id="log" class="System\Util\TLogRouter">
