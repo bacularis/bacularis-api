@@ -439,6 +439,7 @@ class APIInstallWizard extends BaculumAPIPage
 						$user_config = $this->getModule('user_config');
 						$new_user_prop = $user_config->getUserConfigProps([
 							'username' => $this->WebLogin->Text,
+							'organization_id' => '',
 							'roles' => WebUserRoles::ADMIN,
 							'enabled' => 1
 						]);
