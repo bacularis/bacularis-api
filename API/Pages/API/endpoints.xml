@@ -100,6 +100,7 @@
 	<!-- director endpoints -->
 	<url ServiceParameter="DirectorShow" pattern="api/v3/directors/{name}/show/" parameters.name="[a-zA-Z0-9:.\-_ ]+" />
 	<url ServiceParameter="DirectorStatus" pattern="api/v3/directors/{name}/status/" parameters.name="[a-zA-Z0-9:.\-_ ]+" />
+	<url ServiceParameter="DirectorUname" pattern="api/v3/directors/{name}/uname/" parameters.name="[a-zA-Z0-9:.\-_ ]+" />
 	<!-- actions endpoints -->
 	<url ServiceParameter="Actions" pattern="api/v3/actions/{component}/{action}/" parameters.component="(catalog|director|storage|client)" parameters.action="(start|stop|restart)" />
 	<!-- OAuth2 client endpoints -->
