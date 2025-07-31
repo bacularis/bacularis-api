@@ -23,7 +23,6 @@ namespace Bacularis\API\Modules;
  */
 class Uname extends APIModule
 {
-
 	/**
 	 * General uname pattern.
 	 */
@@ -32,7 +31,7 @@ class Uname extends APIModule
 	/**
 	 * Parse uname string.
 	 *
-	 * @param string $val uname string
+	 * @param string $uname uname string
 	 * @return array parsed uname value
 	 */
 	public static function parse(string $uname): array
@@ -43,7 +42,6 @@ class Uname extends APIModule
 		 * or
 		 * 13.0.4 (12Feb24) Microsoft Windows 8 Professional (build 9200), 64-bit,Cross-compile,Win64
 		 */
-
 		$result = [
 			'major' => -1,
 			'minor' => -1,

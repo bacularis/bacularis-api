@@ -120,7 +120,6 @@ class DirectorUname extends ConsoleOutputPage
 		 * Example:
 		 * darkstar-dir Version: 15.0.3 (25 March 2025) x86_64-pc-linux-gnu redhat
 		 */
-
 		$uname = '';
 		if (strpos($ver_val, ':') !== false) {
 			[, $uname] = explode(':', $ver_val, 2);
