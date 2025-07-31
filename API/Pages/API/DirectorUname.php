@@ -18,7 +18,7 @@ use Bacularis\API\Modules\ConsoleOutputPage;
 use Bacularis\API\Modules\Uname;
 
 /**
- * Cancel job endpoint.
+ * Director uname endpoint.
  *
  * @author Marcin Haba <marcin.haba@bacula.pl>
  * @category API
