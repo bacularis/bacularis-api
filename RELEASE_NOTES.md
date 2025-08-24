@@ -1,38 +1,25 @@
 
-We’re pleased to announce the release of **Bacularis 5.5.0**.
+We are pleased to announce the release of **Bacularis 5.6.0**. This version
+introduces several new features, improvements, and a few bug fixes.
 
-This version introduces a new feature for detecting incompatibilities between
- Bacula components. If any component is found to be incompatible, Bacularis will
- **alert you** and provide a clear explanation of what’s wrong and where the
- issue lies. This is especially helpful for new users unfamiliar with Bacula’s
- compatibility rules.
+One of the most notable additions is the **PostgreSQL database backup plugin**,
+a requested feature from our Community, which we committed to delivering in
+the last monthly project status update. This new plugin supports logical SQL
+dump backups, physical online binary backups, WAL backups, and backups of
+special PostgreSQL files. It also includes support for incremental binary
+backups introduced in PostgreSQL 17.
 
-For administrators, we’ve added several usability improvements to streamline
- user management. These include **bulk actions** that allow you to assign or
- unassign roles to multiple users at once, as well as manage user organization
- settings in bulk.
+For those using the **deployment feature**, we have added new OS profiles for
+installing Bacula and Bacularis on **AlmaLinux 10**, **CentOS Stream 10**,
+**Oracle Linux 10**, and **Rocky Linux 10**.
 
-We’ve also added support for the upcoming **Debian 13 "Trixie"**, ensuring
- compatibility with the next major Debian release.
+To make **bulk user management** easier for system administrators, we’ve added
+new actions that allow setting API hosts and API host groups for multiple
+users at once.
 
-On the Identity Provider page, new filters have been introduced, allowing you
- to filter by various IdP properties for easier navigation and management.
+Additionally, we have improved **Messages resource configuration**, introduced
+two new message types, and updated the **SELinux policy module**. Finally,
+this release includes couple of bug fixes.
 
-On the API side, we’ve added a new **Director uname endpoint**.
-
-Finally, we’ve fixed an important bug in the **new user wizard** that previously
- caused error when creating users through the wizard.
-
-We wish you smooth installations and upgrades!
-
-## Main changes
-
-**Bacularis API**
-
- * Add ``/directors/{director_name}/uname`` endpoint
- * Add missing ``/directors/{director_name}/show`` endpoint to API documentation
- * Add new uname module
- * Update API documentation
- * Update API doc version
- * Fix uname module description
+We hope you enjoy a smooth installation and upgrade experience.
 
