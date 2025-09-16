@@ -92,15 +92,15 @@ COALESCE(mi.volcount, 0) AS volcount,
 ' . $add_cols . '
 FROM Job 
 LEFT JOIN (
-	SELECT
-		JobMedia.JobId AS jobid,
-		Media.VolumeName AS volumename,
-		ROW_NUMBER() OVER (PARTITION BY JobMedia.JobId ORDER BY JobMedia.JobMediaId) AS jmi
-	FROM
-		Media
-	LEFT JOIN
-		JobMedia USING (MediaId)
-) AS jm ON jm.JobId=Job.JobId AND jm.jmi=1 
+  SELECT jm.JobId AS jobid, m.VolumeName AS volumename
+  FROM JobMedia jm
+  JOIN (
+    SELECT JobId, MIN(JobMediaId) AS min_jmid
+    FROM JobMedia
+    GROUP BY JobId
+  ) first ON first.JobId = jm.JobId AND first.min_jmid = jm.JobMediaId
+  JOIN Media m ON m.MediaId = jm.MediaId
+) AS jm ON jm.jobid = Job.JobId
 LEFT JOIN (
 	SELECT
 		JobMedia.JobId AS jobid,
