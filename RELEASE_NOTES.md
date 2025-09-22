@@ -1,25 +1,27 @@
 
-We are pleased to announce the release of **Bacularis 5.6.0**. This version
-introduces several new features, improvements, and a few bug fixes.
+We are pleased to announce the release of **Bacularis 5.7.0**. This version introduces
+a new **Web Access** feature that simplifies different backup automations in Bacula
+environments such as event-driven backup, run automated jobs with custom settings
+and others. Access can be restricted by time, usage, or source IP address, offering
+flexible and secure control.
 
-One of the most notable additions is the **PostgreSQL database backup plugin**,
-a requested feature from our Community, which we committed to delivering in
-the last monthly project status update. This new plugin supports logical SQL
-dump backups, physical online binary backups, WAL backups, and backups of
-special PostgreSQL files. It also includes support for incremental binary
-backups introduced in PostgreSQL 17.
+This release further includes several improvements and fixes to existing features.
+Notably, the job list loading speed has been significantly improved, thanks to
+a contribution from Community member Elias Pereira.
 
-For those using the **deployment feature**, we have added new OS profiles for
-installing Bacula and Bacularis on **AlmaLinux 10**, **CentOS Stream 10**,
-**Oracle Linux 10**, and **Rocky Linux 10**.
+At the end we added an option to define maximum number of jobs displayed in
+the job table. This was a feature request reported by the Community.
 
-To make **bulk user management** easier for system administrators, we’ve added
-new actions that allow setting API hosts and API host groups for multiple
-users at once.
+We wish you smooth installations and upgrades!
 
-Additionally, we have improved **Messages resource configuration**, introduced
-two new message types, and updated the **SELinux policy module**. Finally,
-this release includes couple of bug fixes.
+## Main changes
 
-We hope you enjoy a smooth installation and upgrade experience.
+**Bacularis API**
+
+ - Jobs list: replace ROW_NUMBER() first-volume subquery with MIN(JobMediaId) join (big speedup on MariaDB; also OK on PostgreSQL)
+ - Add Elias to AUTHORS
+
+**Contributors**
+
+ - @empereira
 
