@@ -29,7 +29,7 @@ var oSudoConfig = {
 				// For CentOS, RHEL and others by default for PHP-FPM is set apache user.
 				users[i] = 'apache';
 			}
-			pre.textContent = 'Defaults:' + users[i] + ' !requiretty' + "\n";
+			pre.textContent = '';
 			for (var j = 0; j < fields.length; j++) {
 				val = document.getElementById(fields[j]).value.trim();
 				if (this.bin_opts.hasOwnProperty(type)) {
