@@ -313,7 +313,8 @@ LEFT JOIN FileSet ON FileSet.FilesetId=Job.FilesetId '
 			'most_occupied_pool' => 0,
 			'most_occupied_pool_count' => 0,
 			'bytes' => 0,
-			'files' => 0
+			'files' => 0,
+			'currtime_epoch' => time()
 		];
 		$where = Database::getWhere($criteria);
 
