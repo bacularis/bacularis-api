@@ -12,7 +12,7 @@
 			"name": "AGPLv3",
 			"url": "https://www.gnu.org/licenses/agpl-3.0-standalone.html"
 		},
-		"version": "3.0.2"
+		"version": "3.0.3"
 	},
 	"servers": [
 		{
@@ -2768,6 +2768,10 @@
 												"files": {
 													"type": "integer",
 													"description": "Total number backed up files"
+												},
+												"currtime_epoch": {
+													"type": "integer",
+													"description": "Current API server time epoch (seconds)."
 												}
 											}
 										},
