@@ -12,7 +12,7 @@
 			"name": "AGPLv3",
 			"url": "https://www.gnu.org/licenses/agpl-3.0-standalone.html"
 		},
-		"version": "3.0.3"
+		"version": "3.0.4"
 	},
 	"servers": [
 		{
@@ -1260,6 +1260,48 @@
 				"parameters": [{
 					"$ref": "#/components/parameters/ClientId"
 				}]
+			},
+			"delete": {
+				"tags": ["clients"],
+				"summary": "Delete client",
+				"description": "Delete client by specific Client identifier. This deletes client from the catalog only if the corresponding client resource does not exist in the configuration. This request should be used by users with admin roles, not regular restricted users.",
+				"responses": {
+					"200": {
+						"description": "Client properties",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "array",
+											"items": {
+												"description": "Console output from removing specific clientid",
+												"type": "string"
+											}
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 1, 2, 3, 4, 5, 6, 7, 10, 11, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"name": "clientid",
+						"in": "path",
+						"description": "Client identifier",
+						"required":  true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				]
 			}
 		},
 		"/api/v3/clients/{clientid}/show": {
