@@ -60,4 +60,43 @@ class Client extends BaculumAPIServer
 			$this->error = $result->exitcode;
 		}
 	}
+
+	public function remove($id)
+	{
+		$clientid = (int) $id;
+		$bconsole = $this->getModule('bconsole');
+		$result = $bconsole->bconsoleCommand(
+			$this->director,
+			['.client'],
+			null,
+			true
+		);
+		if ($result->exitcode === 0) {
+			$client = $this->getModule('client');
+			$client = $client->getClientById($clientid);
+			if (is_object($client)) {
+				if (!in_array($client->name, $result->output)) {
+					// Client does not exist in config, delete it from the catalog
+					$result = $bconsole->bconsoleCommand(
+						$this->director,
+						['delete', 'client="' . $client->name . '"', 'yes']
+					);
+					$this->output = $result->output;
+					$this->error = $result->exitcode;
+				} else {
+					// Client exists in configuration - error
+					$this->output = ClientError::MSG_ERROR_INVALID_COMMAND;
+					$this->error = ClientError::ERROR_INVALID_COMMAND;
+				}
+			} else {
+				// Client does not exist in catalog - error
+				$this->output = ClientError::MSG_ERROR_CLIENT_DOES_NOT_EXISTS;
+				$this->error = ClientError::ERROR_CLIENT_DOES_NOT_EXISTS;
+			}
+		} else {
+			// Something wrong with bconsole - error
+			$this->output = $result->output;
+			$this->error = $result->exitcode;
+		}
+	}
 }
