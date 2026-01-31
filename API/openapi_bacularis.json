@@ -3419,7 +3419,7 @@
 			"delete": {
 				"tags": ["pools"],
 				"summary": "Delete pool",
-				"description": "Delete pool by specific Pool identifier. This deletes pool from the catalog only if the corresponding pool resource does not exist in the configuration. Pool must be empty - no volume assigned. This endpoint should not be shared non-admin users.",
+				"description": "Delete pool by specific Pool identifier. This deletes pool from the catalog only if the corresponding pool resource does not exist in the configuration. Pool must be empty - no volume assigned. This endpoint should not be shared non-admin users. It requires configured Bacula configration module (JSON tools).",
 				"responses": {
 					"200": {
 						"description": "Pool properties",
@@ -3438,7 +3438,7 @@
 										"error": {
 											"type": "integer",
 											"description": "Error code",
-											"enum": [0, 1, 2, 3, 4, 5, 6, 7, 11, 40, 42, 1000]
+											"enum": [0, 1, 2, 3, 4, 5, 6, 7, 11, 40, 42, 80, 81, 82, 83, 84, 97, 98, 1000]
 										}
 									}
 								}
