@@ -28,6 +28,7 @@
  */
 
 use Bacularis\API\Modules\BaculumAPIServer;
+use Bacularis\API\Modules\Bconsole;
 use Bacularis\Common\Modules\Errors\PoolError;
 
 /**
@@ -52,6 +53,49 @@ class Pool extends BaculumAPIServer
 			if (!is_null($pool) && in_array($pool->name, $result->output)) {
 				$this->output = $pool;
 				$this->error = PoolError::ERROR_NO_ERRORS;
+			} else {
+				$this->output = PoolError::MSG_ERROR_POOL_DOES_NOT_EXISTS;
+				$this->error = PoolError::ERROR_POOL_DOES_NOT_EXISTS;
+			}
+		} else {
+			$this->output = $result->output;
+			$this->error = $result->exitcode;
+		}
+	}
+
+	public function remove($id)
+	{
+		$poolid = (int) $id;
+		$bconsole = $this->getModule('bconsole');
+		$result = $bconsole->bconsoleCommand(
+			$this->director,
+			['.pool'],
+			null,
+			true
+		);
+		if ($result->exitcode === 0) {
+			$pool = $this->getModule('pool');
+			$pool_obj = $pool->getPoolById($poolid);
+			if (!is_null($pool_obj) && !in_array($pool_obj->name, $result->output)) {
+				// Pool does not exists in configuration but exists in catalog - delete it
+				$volume = $this->getModule('volume');
+				$volumes = $volume->getVolumesByPoolId($poolid);
+				if (is_array($volumes)) {
+					if (count($volumes) == 0) {
+						// no volume in pool - delete it
+						$result = $bconsole->bconsoleCommand(
+							$this->director,
+							['delete', 'pool="' . $pool_obj->name . '"'],
+							Bconsole::PTYPE_CONFIRM_YES_CMD
+						);
+						$this->output = $result->output;
+						$this->error = $result->exitcode;
+					} else {
+						// volumes in pool - error
+						$this->output = PoolError::MSG_ERROR_POOL_NOT_EMPTY;
+						$this->error = PoolError::ERROR_POOL_NOT_EMPTY;
+					}
+				}
 			} else {
 				$this->output = PoolError::MSG_ERROR_POOL_DOES_NOT_EXISTS;
 				$this->error = PoolError::ERROR_POOL_DOES_NOT_EXISTS;
