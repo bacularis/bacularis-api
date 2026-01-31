@@ -29,6 +29,7 @@
 
 use Bacularis\API\Modules\BaculumAPIServer;
 use Bacularis\API\Modules\Bconsole;
+use Bacularis\Common\Modules\Errors\BaculaConfigError;
 use Bacularis\Common\Modules\Errors\PoolError;
 
 /**
@@ -66,43 +67,77 @@ class Pool extends BaculumAPIServer
 	public function remove($id)
 	{
 		$poolid = (int) $id;
+
+		// Get pool from catalog
+		$pool = $this->getModule('pool');
+		$pool_obj = $pool->getPoolById($poolid);
+		if (is_null($pool_obj)) {
+			$this->output = PoolError::MSG_ERROR_POOL_DOES_NOT_EXISTS;
+			$this->error = PoolError::ERROR_POOL_DOES_NOT_EXISTS;
+			return;
+		}
+
+		// Get pool config
+		$bsettings = $this->getModule('bacula_setting');
+		$config = $bsettings->getConfig(
+			'dir',
+			'Pool',
+			$pool_obj->name
+		);
+		if ($config['exitcode'] != 0) {
+			$this->output = PoolError::MSG_ERROR_WRONG_EXITCODE . ' ' . var_export($config['output'], true);
+			$this->error = PoolError::ERROR_WRONG_EXITCODE;
+			return;
+		}
+
+		// Get pools
 		$bconsole = $this->getModule('bconsole');
-		$result = $bconsole->bconsoleCommand(
+		$pools = $bconsole->bconsoleCommand(
 			$this->director,
 			['.pool'],
 			null,
 			true
 		);
-		if ($result->exitcode === 0) {
-			$pool = $this->getModule('pool');
-			$pool_obj = $pool->getPoolById($poolid);
-			if (!is_null($pool_obj) && !in_array($pool_obj->name, $result->output)) {
-				// Pool does not exists in configuration but exists in catalog - delete it
-				$volume = $this->getModule('volume');
-				$volumes = $volume->getVolumesByPoolId($poolid);
-				if (is_array($volumes)) {
-					if (count($volumes) == 0) {
-						// no volume in pool - delete it
-						$result = $bconsole->bconsoleCommand(
-							$this->director,
-							['delete', 'pool="' . $pool_obj->name . '"'],
-							Bconsole::PTYPE_CONFIRM_YES_CMD
-						);
-						$this->output = $result->output;
-						$this->error = $result->exitcode;
-					} else {
-						// volumes in pool - error
-						$this->output = PoolError::MSG_ERROR_POOL_NOT_EMPTY;
-						$this->error = PoolError::ERROR_POOL_NOT_EMPTY;
-					}
-				}
-			} else {
-				$this->output = PoolError::MSG_ERROR_POOL_DOES_NOT_EXISTS;
-				$this->error = PoolError::ERROR_POOL_DOES_NOT_EXISTS;
-			}
-		} else {
-			$this->output = $result->output;
-			$this->error = $result->exitcode;
+		if ($pools->exitcode != 0) {
+			$this->output = PoolError::MSG_ERROR_WRONG_EXITCODE . ' ' . var_export($pools->output, true);
+			$this->error = PoolError::ERROR_WRONG_EXITCODE;
+			return;
 		}
+
+		// Check if pool config does not exist.
+		if (count($config['output']) > 0) {
+			// Pool config exists - end
+			$this->output = BaculaConfigError::MSG_ERROR_CONFIG_ALREADY_EXISTS;
+			$this->error = BaculaConfigError::ERROR_CONFIG_ALREADY_EXISTS;
+			return;
+		}
+
+		// Check if pool exists on config pool list
+		if (in_array($pool_obj->name, $pools->output)) {
+			/**
+			 * Pool does not exists in configuration but exists in Director memory.
+			 * It looks that it is removed from config but the Director configuration has not been reloaded yet.
+			 */
+			$this->output = BaculaConfigError::MSG_ERROR_CONFIG_DOES_NOT_EXIST;
+			$this->error = BaculaConfigError::ERROR_CONFIG_DOES_NOT_EXIST;
+			return;
+		}
+		$volume = $this->getModule('volume');
+		$volumes = $volume->getVolumesByPoolId($poolid);
+		if (count($volumes) > 0) {
+			// volumes in pool - error
+			$this->output = PoolError::MSG_ERROR_POOL_NOT_EMPTY;
+			$this->error = PoolError::ERROR_POOL_NOT_EMPTY;
+			return;
+		}
+
+		// No volume in pool - delete it
+		$result = $bconsole->bconsoleCommand(
+			$this->director,
+			['delete', 'pool="' . $pool_obj->name . '"'],
+			Bconsole::PTYPE_CONFIRM_YES_CMD
+		);
+		$this->output = $result->output;
+		$this->error = $result->exitcode;
 	}
 }
