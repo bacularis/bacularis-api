@@ -28,6 +28,8 @@
  */
 
 use Bacularis\API\Modules\BaculumAPIServer;
+use Bacularis\API\Modules\Bconsole;
+use Bacularis\Common\Modules\Errors\BaculaConfigError;
 use Bacularis\Common\Modules\Errors\ClientError;
 
 /**
@@ -64,39 +66,68 @@ class Client extends BaculumAPIServer
 	public function remove($id)
 	{
 		$clientid = (int) $id;
+		$client = $this->getModule('client');
+		$client_obj = $client->getClientById($clientid);
+		if (is_null($client_obj)) {
+			// Client does not exist in catalog - error
+			$this->output = ClientError::MSG_ERROR_CLIENT_DOES_NOT_EXISTS;
+			$this->error = ClientError::ERROR_CLIENT_DOES_NOT_EXISTS;
+			return;
+		}
+
+		// Get client config
+		$bsettings = $this->getModule('bacula_setting');
+		$config = $bsettings->getConfig(
+			'dir',
+			'Client',
+			$client_obj->name
+		);
+		if ($config['exitcode'] != 0) {
+			$this->output = ClientError::MSG_ERROR_WRONG_EXITCODE . ' ' . var_export($config['output'], true);
+			$this->error = ClientError::ERROR_WRONG_EXITCODE;
+			return;
+		}
+
+		// Get clients
 		$bconsole = $this->getModule('bconsole');
-		$result = $bconsole->bconsoleCommand(
+		$clients = $bconsole->bconsoleCommand(
 			$this->director,
 			['.client'],
 			null,
 			true
 		);
-		if ($result->exitcode === 0) {
-			$client = $this->getModule('client');
-			$client = $client->getClientById($clientid);
-			if (is_object($client)) {
-				if (!in_array($client->name, $result->output)) {
-					// Client does not exist in config, delete it from the catalog
-					$result = $bconsole->bconsoleCommand(
-						$this->director,
-						['delete', 'client="' . $client->name . '"', 'yes']
-					);
-					$this->output = $result->output;
-					$this->error = $result->exitcode;
-				} else {
-					// Client exists in configuration - error
-					$this->output = ClientError::MSG_ERROR_INVALID_COMMAND;
-					$this->error = ClientError::ERROR_INVALID_COMMAND;
-				}
-			} else {
-				// Client does not exist in catalog - error
-				$this->output = ClientError::MSG_ERROR_CLIENT_DOES_NOT_EXISTS;
-				$this->error = ClientError::ERROR_CLIENT_DOES_NOT_EXISTS;
-			}
-		} else {
-			// Something wrong with bconsole - error
-			$this->output = $result->output;
-			$this->error = $result->exitcode;
+		if ($clients->exitcode != 0) {
+			$this->output = ClientError::MSG_ERROR_WRONG_EXITCODE . ' ' . var_export($clients->output, true);
+			$this->error = ClientError::ERROR_WRONG_EXITCODE;
+			return;
 		}
+
+		// Check if client config does not exist.
+		if (count($config['output']) > 0) {
+			// Client config exists - end
+			$this->output = BaculaConfigError::MSG_ERROR_CONFIG_ALREADY_EXISTS;
+			$this->error = BaculaConfigError::ERROR_CONFIG_ALREADY_EXISTS;
+			return;
+		}
+
+		// Check if client exists on config client list
+		if (in_array($client_obj->name, $clients->output)) {
+			/**
+			 * Client does not exists in configuration but exists in Director memory.
+			 * It looks that it is removed from config but the Director configuration has not been reloaded yet.
+			 */
+			$this->output = BaculaConfigError::MSG_ERROR_CONFIG_DOES_NOT_EXIST;
+			$this->error = BaculaConfigError::ERROR_CONFIG_DOES_NOT_EXIST;
+			return;
+		}
+
+		// Client does not exist in config, delete it from the catalog
+		$result = $bconsole->bconsoleCommand(
+			$this->director,
+			['delete', 'client="' . $client_obj->name . '"'],
+			Bconsole::PTYPE_CONFIRM_YES_CMD
+		);
+		$this->output = $result->output;
+		$this->error = $result->exitcode;
 	}
 }
