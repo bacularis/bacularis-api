@@ -12,7 +12,7 @@
 			"name": "AGPLv3",
 			"url": "https://www.gnu.org/licenses/agpl-3.0-standalone.html"
 		},
-		"version": "3.0.5"
+		"version": "3.0.6"
 	},
 	"servers": [
 		{
@@ -1572,6 +1572,82 @@
 						"schema": {
 							"type": "integer"
 						}
+					}
+				]
+			}
+		},
+		"/api/v3/clients/{clientid}/enable": {
+			"put": {
+				"tags": ["clients"],
+				"summary": "Enable Client",
+				"description": "Enable Client that is disabled",
+				"responses": {
+					"200": {
+						"description": "Enable Client output",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "array",
+											"items": {
+												"type": "string",
+												"description": "Enable Client output"
+											}
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/ClientId"
+					}
+				]
+			}
+		},
+		"/api/v3/clients/{clientid}/disable": {
+			"put": {
+				"tags": ["clients"],
+				"summary": "Disable Client",
+				"description": "Disable Client",
+				"responses": {
+					"200": {
+						"description": "Disable Client output",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "array",
+											"items": {
+												"type": "string",
+												"description": "Disable Client output"
+											}
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/ClientId"
 					}
 				]
 			}
