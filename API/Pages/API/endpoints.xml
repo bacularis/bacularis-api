@@ -18,6 +18,7 @@
 	<url ServiceParameter="JobsForClient" pattern="api/v3/clients/{id}/jobs/" parameters.id="\d+" />
 	<url ServiceParameter="ClientLs" pattern="api/v3/clients/{id}/ls/" parameters.id="\d+" />
 	<url ServiceParameter="ClientBandwidthLimit" pattern="api/v3/clients/{id}/bandwidth/" parameters.id="\d+" />
+	<url ServiceParameter="ClientEnable" pattern="api/v3/clients/{id}/enable/" parameters.id="\d+" />
 	<!-- storages (storage daemons) endpoints -->
 	<url ServiceParameter="Storages" pattern="api/v3/storages/" />
 	<url ServiceParameter="Storage" pattern="api/v3/storages/{id}/" parameters.id="\d+" />
