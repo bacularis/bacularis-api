@@ -100,7 +100,9 @@ class Bconsole extends APIModule
 		'.api',
 		'.status',
 		'.ls',
-		'setbandwidth'
+		'setbandwidth',
+		'enable',
+		'disable'
 	];
 
 	private $config;
