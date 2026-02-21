@@ -30,6 +30,7 @@
 	<url ServiceParameter="StorageUmount" pattern="api/v3/storages/{id}/umount/" parameters.id="\d+" />
 	<url ServiceParameter="StorageRelease" pattern="api/v3/storages/{id}/release/" parameters.id="\d+" />
 	<url ServiceParameter="StorageEnable" pattern="api/v3/storages/{id}/enable/" parameters.id="\d+" />
+	<url ServiceParameter="StorageDisable" pattern="api/v3/storages/{id}/disable/" parameters.id="\d+" />
 	<!-- devices endpoints -->
 	<url ServiceParameter="Changer" pattern="api/v3/devices/{device_name}/" parameters.device_name="[a-zA-Z0-9:.\-_ ]+" />
 	<url ServiceParameter="ChangerDriveLoad" pattern="api/v3/devices/{device_name}/load/" parameters.device_name="[a-zA-Z0-9:.\-_ ]+" />
