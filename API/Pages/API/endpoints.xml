@@ -32,6 +32,7 @@
 	<url ServiceParameter="StorageRelease" pattern="api/v3/storages/{id}/release/" parameters.id="\d+" />
 	<url ServiceParameter="StorageEnable" pattern="api/v3/storages/{id}/enable/" parameters.id="\d+" />
 	<url ServiceParameter="StorageDisable" pattern="api/v3/storages/{id}/disable/" parameters.id="\d+" />
+	<url ServiceParameter="StorageResNames" pattern="api/v3/storages/resnames/" />
 	<!-- devices endpoints -->
 	<url ServiceParameter="Changer" pattern="api/v3/devices/{device_name}/" parameters.device_name="[a-zA-Z0-9:.\-_ ]+" />
 	<url ServiceParameter="ChangerDriveLoad" pattern="api/v3/devices/{device_name}/load/" parameters.device_name="[a-zA-Z0-9:.\-_ ]+" />
@@ -61,6 +62,7 @@
 	<url ServiceParameter="PoolsShow" pattern="api/v3/pools/show/" />
 	<url ServiceParameter="PoolShow" pattern="api/v3/pools/{id}/show/" parameters.id="\d+" />
 	<url ServiceParameter="PoolsUpdateVolumes" pattern="api/v3/pools/update/volumes/" />
+	<url ServiceParameter="PoolResNames" pattern="api/v3/pools/resnames/" />
 	<!-- jobs endpoints-->
 	<url ServiceParameter="Jobs" pattern="api/v3/jobs/" />
 	<url ServiceParameter="Job" pattern="api/v3/jobs/{id}/" parameters.id="\d+" />
@@ -95,7 +97,7 @@
 	<url ServiceParameter="FileSet" pattern="api/v3/filesets/{id}/" parameters.id="\d+" />
 	<url ServiceParameter="FileSetResNames" pattern="api/v3/filesets/resnames/" />
 	<!-- schedule endpoints -->
-	<url ServiceParameter="Schedules" pattern="api/v3/schedules/resnames/" />
+	<url ServiceParameter="ScheduleResNames" pattern="api/v3/schedules/resnames/" />
 	<url ServiceParameter="ScheduleStatus" pattern="api/v3/schedules/status/" />
 	<!-- Bacula config module endpoints -->
 	<url ServiceParameter="Config" pattern="api/v3/config/" />
