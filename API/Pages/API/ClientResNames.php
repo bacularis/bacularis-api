@@ -29,7 +29,13 @@ class ClientResNames extends BaculumAPIServer
 		$misc = $this->getModule('misc');
 		$offset = $this->Request->contains('offset') ? (int) ($this->Request['offset']) : 0;
 		$limit = $this->Request->contains('limit') ? (int) ($this->Request['limit']) : 0;
-		$search = $this->Request->contains('search') && $misc->isValidName($this->Request['search']) ? $this->Request['search'] : null;
+		$search = $this->Request->contains('search') ? $this->Request['search'] : null;
+
+		if (is_string($search) && !$misc->isValidName($this->Request['search'])) {
+			$this->output = BconsoleError::MSG_ERROR_INVALID_COMMAND;
+			$this->error = BconsoleError::ERROR_INVALID_COMMAND;
+			return;
+		}
 
 		$client_cmd = ['.client'];
 		$bconsole = $this->getModule('bconsole');
@@ -41,15 +47,15 @@ class ClientResNames extends BaculumAPIServer
 		);
 		$error = $clients->exitcode !== 0;
 
+		if (!$error && $clients->output && isset($search)) {
+			$misc::filterList($clients->output, "*{$search}*");
+		}
+
 		if ($offset > 0 || $limit > 0) {
 			if ($limit == 0) {
 				$limit = null;
 			}
 			$clients->output = array_slice($clients->output, $offset, $limit);
-		}
-
-		if (!$error && $clients->output && $search) {
-			$misc::filterList($clients->output, "*{$search}*");
 		}
 
 		if (!$error) {
