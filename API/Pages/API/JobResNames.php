@@ -40,14 +40,17 @@ class JobResNames extends BaculumAPIServer
 {
 	public function get()
 	{
+		$misc = $this->getModule('misc');
 		$limit = $this->Request->contains('limit') ? (int) ($this->Request['limit']) : 0;
 		$jobs_cmd = ['.jobs'];
 		$types = $this->getModule('misc')->job_types;
 		if ($this->Request->contains('type') && key_exists($this->Request['type'], $types)) {
 			array_push($jobs_cmd, 'type="' . $this->Request['type'] . '"');
 		}
+		$search = $this->Request->contains('search') && $misc->isValidName($this->Request['search']) ? $this->Request['search'] : null;
 
-		$directors = $this->getModule('bconsole')->getDirectors();
+		$bconsole = $this->getModule('bconsole');
+		$directors = $bconsole->getDirectors();
 		if ($directors->exitcode != 0) {
 			$this->output = $directors->output;
 			$this->error = $directors->exitcode;
@@ -57,7 +60,7 @@ class JobResNames extends BaculumAPIServer
 		$error = false;
 		$error_obj = null;
 		for ($i = 0; $i < count($directors->output); $i++) {
-			$job_list = $this->getModule('bconsole')->bconsoleCommand(
+			$job_list = $bconsole->bconsoleCommand(
 				$directors->output[$i],
 				$jobs_cmd,
 				null,
@@ -76,6 +79,12 @@ class JobResNames extends BaculumAPIServer
 				if ($limit > 0 && count($jobs[$directors->output[$i]]) === $limit) {
 					break;
 				}
+			}
+		}
+
+		if ($jobs && $search) {
+			foreach($jobs as &$items) {
+				$misc::filterList($items, "*{$search}*");
 			}
 		}
 		if ($error === true) {
