@@ -57,7 +57,7 @@ class Volumes extends BaculumAPIServer
 				'vals' => "%{$search}%"
 			];
 		}
-		$volume  = $this->getModule('volume');
+		$volume = $this->getModule('volume');
 		$result = $volume->getVolumes($criteria, $limit);
 		$this->output = $result;
 		$this->error = VolumeError::ERROR_NO_ERRORS;
