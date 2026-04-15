@@ -83,7 +83,7 @@ class JobResNames extends BaculumAPIServer
 		}
 
 		if ($jobs && $search) {
-			foreach($jobs as &$items) {
+			foreach ($jobs as &$items) {
 				$misc::filterList($items, "*{$search}*");
 			}
 		}
