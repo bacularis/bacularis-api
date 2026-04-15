@@ -40,8 +40,25 @@ class Volumes extends BaculumAPIServer
 {
 	public function get()
 	{
+		$misc = $this->getModule('misc');
 		$limit = $this->Request->contains('limit') ? (int) ($this->Request['limit']) : 0;
-		$result = $this->getModule('volume')->getVolumes([], $limit);
+		$search = $this->Request->contains('search') ? $this->Request['search'] : null;
+
+		if (is_string($search) && !$misc->isValidName($this->Request['search'])) {
+			$this->output = VolumeError::MSG_ERROR_INVALID_COMMAND;
+			$this->error = VolumeError::ERROR_INVALID_COMMAND;
+			return;
+		}
+
+		$criteria = [];
+		if ($search) {
+			$criteria['Media.VolumeName'] = [
+				'operator' => 'ILIKE',
+				'vals' => "%{$search}%"
+			];
+		}
+		$volume  = $this->getModule('volume');
+		$result = $volume->getVolumes($criteria, $limit);
 		$this->output = $result;
 		$this->error = VolumeError::ERROR_NO_ERRORS;
 	}
