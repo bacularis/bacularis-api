@@ -40,32 +40,55 @@ class FileSetResNames extends BaculumAPIServer
 {
 	public function get()
 	{
-		$directors = $this->getModule('bconsole')->getDirectors();
+		$misc = $this->getModule('misc');
+		$offset = $this->Request->contains('offset') ? (int) ($this->Request['offset']) : 0;
+		$limit = $this->Request->contains('limit') ? (int) ($this->Request['limit']) : 0;
+		$search = $this->Request->contains('search') ? $this->Request['search'] : null;
+
+		if (is_string($search) && !$misc->isValidName($this->Request['search'])) {
+			$this->output = BconsoleError::MSG_ERROR_INVALID_COMMAND;
+			$this->error = BconsoleError::ERROR_INVALID_COMMAND;
+			return;
+		}
+		$bconsole = $this->getModule('bconsole');
+		$directors = $bconsole->getDirectors();
 		if ($directors->exitcode != 0) {
 			$this->output = $directors->output;
 			$this->error = $directors->exitcode;
 			return;
 		}
 
+		$fileset_cmd = ['.fileset'];
 		$filesets = [];
 		$error = false;
 		$error_obj = null;
 		for ($i = 0; $i < count($directors->output); $i++) {
-			$result = $this->getModule('bconsole')->bconsoleCommand(
+			$fileset_list = $bconsole->bconsoleCommand(
 				$directors->output[$i],
-				['show', 'fileset']
+				$fileset_cmd,
+				null,
+				true
 			);
-			if ($result->exitcode != 0) {
-				$error_obj = $result;
+			if ($fileset_list->exitcode != 0) {
+				$error_obj = $fileset_list;
 				$error = true;
 				break;
 			}
-			$filesets[$directors->output[$i]] = [];
+			$filesets[$directors->output[$i]] = $fileset_list->output;
+		}
 
-			for ($j = 0; $j < count($result->output); $j++) {
-				if (preg_match('/^FileSet:\ name=(.+?(?=\s\S+\=.+)|.+$)/i', $result->output[$j], $match) === 1) {
-					$filesets[$directors->output[$i]][] = $match[1];
+		if ($filesets && isset($search)) {
+			foreach ($filesets as &$items) {
+				$misc::filterList($items, "*{$search}*");
+			}
+		}
+
+		foreach ($filesets as &$fileset_list) {
+			if ($offset > 0 || $limit > 0) {
+				if ($limit == 0) {
+					$limit = null;
 				}
+				$fileset_list = array_slice($fileset_list, $offset, $limit);
 			}
 		}
 
