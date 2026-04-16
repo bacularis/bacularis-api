@@ -30,6 +30,7 @@
 use Bacularis\API\Modules\BaculumAPIServer;
 use Bacularis\API\Modules\BaculaSetting;
 use Bacularis\API\Modules\BaculaConfig;
+use Bacularis\Common\Modules\Miscellaneous;
 use Bacularis\Common\Modules\PluginConfigBase;
 use Bacularis\Common\Modules\Errors\BaculaConfigError;
 
@@ -51,6 +52,12 @@ class Config extends BaculumAPIServer
 		$opts = [];
 		if ($apply_jobdefs) {
 			$opts['apply_jobdefs'] = $apply_jobdefs;
+		}
+		$search = $this->Request->contains('search') ? $this->Request['search'] : null;
+		if (is_string($search) && !$misc->isValidName($this->Request['search'])) {
+			$this->output = BaculaConfigError::MSG_ERROR_INVALID_COMMAND;
+			$this->error = BaculaConfigError::ERROR_INVALID_COMMAND;
+			return;
 		}
 
 		// Check if user is allowed to read resource type
@@ -94,6 +101,11 @@ class Config extends BaculumAPIServer
 				$resource_name,
 				$config['output']
 			);
+		}
+
+		if ($config['exitcode'] == 0 && is_string($search) && is_null($resource_type) && is_null($resource_name)) {
+			// filter search results
+			$config['output'] = $this->filterConfig($config['output'], $search);
 		}
 
 		$this->output = $config['output'];
@@ -444,5 +456,45 @@ class Config extends BaculumAPIServer
 			}
 		}
 		return $conf;
+	}
+
+	/**
+	 * Filter configuration resources result by given keyword.
+	 * It filters values by keyword in resource 'Name' directive.
+	 *
+	 * @param array $output config output
+	 * @param string $keyword keyword to search for
+	 * @return array result with filtered configuration
+	 */
+	private function filterConfig(array $output, string $keyword): array
+	{
+		$config = [];
+		$resources = [];
+		// Group resource names by resource types
+		for ($i = 0; $i < count($output); $i++) {
+			$resource_type = key($output[$i]);
+			$resource_name = $output[$i][$resource_type]['Name'] ?? '';
+			if (!key_exists($resource_type, $resources)) {
+				$resources[$resource_type] = [];
+			}
+			$resources[$resource_type][] = $resource_name;
+		}
+		// Filter configuration
+		foreach ($resources as $resource_type => $names) {
+			Miscellaneous::filterList($names, "*{$keyword}*");
+			for ($i = 0; $i < count($output); $i++) {
+				$res_type = key($output[$i]);
+				if ($res_type != $resource_type) {
+					// different resource types in config and filtered results, skip it
+					continue;
+				}
+				if (!in_array($output[$i][$resource_type]['Name'], $names)) {
+					// not found in fitlered results, skip it
+					continue;
+				}
+				$config[] = $output[$i];
+			}
+		}
+		return $config;
 	}
 }

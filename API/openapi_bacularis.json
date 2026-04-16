@@ -5765,6 +5765,9 @@
 					},
 					{
 						"$ref": "#/components/parameters/ApplyJobDefs"
+					},
+					{
+						"$ref": "#/components/parameters/Search"
 					}
 				]
 			},
