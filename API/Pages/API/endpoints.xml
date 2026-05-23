@@ -123,6 +123,12 @@
 	<url ServiceParameter="SoftwareManagementInfo" pattern="api/v3/software/{component}/info" parameters.component="(catalog|director|storage|client|console)" />
 	<url ServiceParameter="SoftwareManagementEnable" pattern="api/v3/software/{component}/enable" parameters.component="(catalog|director|storage|client)" />
 	<url ServiceParameter="SelfTestRun" pattern="api/v3/software/selftest" />
+	<!-- Cloud endpoints -->
+	<url ServiceParameter="CloudAmazonAccounts" pattern="api/v3/cloud/amazon/accounts" />
+	<url ServiceParameter="CloudAmazonAccount" pattern="api/v3/cloud/amazon/accounts/{name}/" parameters.name="[a-zA-Z0-9._\-]{1,127}" />
+	<url ServiceParameter="CloudAmazonEC2InstancesDescribe" pattern="api/v3/cloud/amazon/ec2/instances/describe" />
+	<url ServiceParameter="CloudAmazonEBSVolumesDescribe" pattern="api/v3/cloud/amazon/ebs/volumes/describe" />
+
 
 
 

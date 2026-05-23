@@ -60,5 +60,9 @@
 		<module id="changer_command" class="Bacularis\API\Modules\ChangerCommand" />
 		<!-- software management modules -->
 		<module id="software_mgmt" class="Bacularis\API\Modules\SoftwareManagement" />
+		<!-- cloud modules -->
+		<module id="cloud_amazon_account_config" class="Bacularis\API\Modules\Cloud\Amazon\AccountConfig" />
+		<module id="cloud_amazon_aws_cli_config" class="Bacularis\API\Modules\Cloud\Amazon\AWSCLIConfig" />
+		<module id="cloud_amazon_aws_cmd" class="Bacularis\API\Modules\Cloud\Amazon\AWSCommand" />
 	</modules>
 </configuration>
