@@ -44,7 +44,7 @@ class AWSEC2Data
 	 */
 	public const ZERO_BLOCK_CHECKSUM_SHA256_BASE64 = 'B4VNL+8pega6gWheZgwzLeNtXRjVRpJ9MNqtbX/aFUE=';
 
-	private static $zero_block = null;
+	private static $zero_block;
 
 	public static function getZeroBlock(): string
 	{
