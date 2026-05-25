@@ -7982,6 +7982,261 @@
 					}
 				]
 			}
+		},
+		"/api/v3/cloud/amazon/accounts": {
+			"get": {
+				"tags": ["cloud"],
+				"summary": "AWS account list",
+				"description": "Get AWS account list.",
+				"responses": {
+					"200": {
+						"description": "List of AWS account properties",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "array",
+											"description": "AWS account properties",
+											"items": {
+											}
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v3/cloud/amazon/accounts/{account}": {
+			"get": {
+				"tags": ["cloud"],
+				"summary": "AWS account config",
+				"description": "Get AWS account config",
+				"responses": {
+					"200": {
+						"description": "AWS account config",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "object",
+											"description": "AWS account properties"
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 160, 161, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"name": "account",
+						"in": "path",
+						"required": true,
+						"description": "AWS account name",
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"tags": ["cloud"],
+				"summary": "Set AWS account settings",
+				"description": "Set AWS account settings",
+				"responses": {
+					"200": {
+						"description": "Set AWS account settings",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "object",
+											"description": "Upated AWS account settings"
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 9, 160, 161, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"name": "account",
+						"in": "path",
+						"required": true,
+						"description": "AWS account name",
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"post": {
+				"tags": ["cloud"],
+				"summary": "Create AWS account",
+				"description": "Create AWS account",
+				"responses": {
+					"200": {
+						"description": "Create AWS account",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "object",
+											"description": "New AWS settings"
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 9, 160, 162, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"name": "account",
+						"in": "path",
+						"required": true,
+						"description": "AWS account name",
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"delete": {
+				"tags": ["cloud"],
+				"summary": "Delete AWS account",
+				"description": "Delete AWS account.",
+				"responses": {
+					"200": {
+						"description": "Delete AWS account",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "array",
+											"items": {
+											}
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 9, 160, 161, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"name": "account",
+						"in": "path",
+						"required": true,
+						"description": "AWS account name",
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v3/cloud/amazon/ec2/instances/describe": {
+			"get": {
+				"tags": ["cloud"],
+				"summary": "Describe AWS EC2 instances",
+				"description": "Get AWS EC2 described instances.",
+				"responses": {
+					"200": {
+						"description": "List of described AWS EC2 instance properties",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "array",
+											"description": "AWS EC2 described instance properties",
+											"items": {
+											}
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 160, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v3/cloud/amazon/ebs/volumes/describe": {
+			"get": {
+				"tags": ["cloud"],
+				"summary": "Describe AWS EBS volumes",
+				"description": "Get AWS EBS described volumes.",
+				"responses": {
+					"200": {
+						"description": "List of described AWS EBS volume properties",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "array",
+											"description": "AWS EBS described volume properties",
+											"items": {
+											}
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 160, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }
