@@ -31,6 +31,7 @@
 use Prado\Prado;
 use Prado\TPropertyValue;
 use Bacularis\Common\Modules\Logging;
+use Bacularis\Common\Modules\WebEnvironment;
 use Bacularis\API\Modules\APIConfig;
 use Bacularis\API\Modules\BAPIException;
 use Bacularis\API\Modules\BaculumAPIPage;
@@ -542,7 +543,7 @@ class APIInstallWizard extends BaculumAPIPage
 		$use_sudo = $this->InstallBaculaUseSudo->Checked;
 		$cmd = ['ls', '/'];
 		if ($use_sudo) {
-			array_unshift($cmd, 'sudo -S');
+			array_unshift($cmd, 'sudo -S -k');
 		}
 		array_unshift($cmd, 'LANG=C');
 		$su = $this->getModule('su');
@@ -554,15 +555,30 @@ class APIInstallWizard extends BaculumAPIPage
 				'use_sudo' => $use_sudo
 			]
 		);
-		$this->getCallbackClient()->callClientFunction(
+		$success = ($result['exitcode'] === 0);
+		$cb = $this->getCallbackClient();
+		$cb->callClientFunction(
 			'oInstallBacula.check_host_connection_cb',
 			[
 				[
 					'output' => $result['output'],
-					'success' => ($result['exitcode'] === 0)
+					'success' => $success
 				]
 			]
 		);
+
+		$osprofile = $this->getInstallBaculaOSProfile();
+		if ($success && $osprofile) {
+			$params = $this->getInstallBaculaParams();
+			$issues = WebEnvironment::checkSystemForDeployment(
+				$osprofile['repository_type'],
+				$params
+			);
+			$cb->callClientFunction(
+				'oInstallBacula.check_deployment_environment_cb',
+				[$issues]
+			);
+		}
 	}
 
 	public function installBaculaAddSUDOSettings($sender, $param)

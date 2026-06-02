@@ -289,6 +289,7 @@
 											<pre id="check_connection_check_result_raw"></pre>
 										</div>
 									</div>
+									<div id="show_messages_container" style="display: none;"></div>
 								</div>
 							</div>
 							<div class="w3-container w3-center">
@@ -407,7 +408,13 @@ var oInstallBacula = {
 		check_connection_result_error: 'check_connection_check_result_error',
 		check_connection_result_link: 'check_connection_check_result_link',
 		check_connection_loader_result_output: 'check_connection_check_result_output',
-		check_connection_loader_result_raw: 'check_connection_check_result_raw'
+		check_connection_loader_result_raw: 'check_connection_check_result_raw',
+		show_messages_container: 'show_messages_container'
+	},
+	message_types: {
+		info: 0,
+		warning: 1,
+		error: 2
 	},
 	steps: [
 		{
@@ -566,6 +573,59 @@ var oInstallBacula = {
 		const self = oInstallBacula;
 		self.show_host_connection_loader(false);
 		self.set_host_connection_result(result.success, result.output);
+	},
+	check_deployment_environment_cb: function(result) {
+		const self = oInstallBacula;
+		self.clear_messages();
+		let type;
+		for (let i = 0; i < result.length; i++) {
+			type = self.message_types.error;
+			if (self.message_types.hasOwnProperty(result[i].type)) {
+				type = self.message_types[result[i].type];
+			}
+			self.show_message(type, result[i].message);
+		}
+	},
+	clear_messages: function() {
+		const container = document.getElementById(this.ids.show_messages_container);
+		while (container.firstChild) {
+			container.removeChild(container.firstChild);
+		}
+		container.style.display = 'none';
+	},
+	show_message: function(type, msg) {
+		const container = document.getElementById(this.ids.show_messages_container);
+		const box = document.createElement('DIV');
+		const header = document.createElement('H3');
+		const text = document.createElement('P');
+		let htext = '', css = [];
+		switch (type) {
+			case this.message_types.info: {
+				htext = '<%[ Information ]%>';
+				css = ['w3-blue'];
+				break;
+			}
+			case this.message_types.warning: {
+				htext = '<%[ Warning ]%>';
+				css = ['w3-deep-orange'];
+				break;
+			}
+			case this.message_types.error: {
+				htext = '<%[ Error ]%>';
+				css = ['w3-red'];
+				break;
+			}
+		}
+		css.push('w3-panel');
+		box.classList.add(...css);
+		box.style.display = 'none';
+		header.textContent = htext;
+		text.innerHTML = msg.replace(/\n/g, '<br />');
+		box.appendChild(header);
+		box.appendChild(text);
+		container.appendChild(box);
+		container.style.display = 'block';
+		$(box).slideDown('fast');
 	}
 };
 function show_start_next_btn(show) {
