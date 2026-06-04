@@ -13,13 +13,8 @@
  * terms pursuant to its AGPLv3 Section 7.
  */
 
-use Bacularis\Common\Modules\WebEnvironment;
 use Bacularis\API\Pages\Requirements as APIRequirements;
 
 $service_dir = __DIR__;
 new APIRequirements(APPLICATION_WEBROOT, APPLICATION_PROTECTED, $service_dir);
 
-/**
- * Set up HTTP Host if needed.
- */
-WebEnvironment::setupHTTPHost();

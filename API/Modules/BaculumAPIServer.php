@@ -35,6 +35,7 @@ use Bacularis\Common\Modules\AuthBasic;
 use Bacularis\Common\Modules\Errors\GenericError;
 use Bacularis\Common\Modules\Errors\AuthenticationError;
 use Bacularis\Common\Modules\Errors\AuthorizationError;
+use Bacularis\Common\Modules\Protocol\HTTP\Redirection;
 use Bacularis\Common\Modules\OAuth2;
 use Bacularis\Common\Modules\Logging;
 use Bacularis\API\Modules\OAuth2\TokenRecord;
@@ -104,7 +105,7 @@ abstract class BaculumAPIServer extends TPage
 		$is_auth = false;
 		$config = $this->getModule('api_config')->getConfig('api');
 		if (count($config) === 0) {
-			$this->Response->redirect('/panel');
+			Redirection::redirect('/panel');
 			exit();
 		}
 		if ($config['auth_type'] === 'basic') {

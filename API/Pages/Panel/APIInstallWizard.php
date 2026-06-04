@@ -32,6 +32,7 @@ use Prado\Prado;
 use Prado\TPropertyValue;
 use Bacularis\Common\Modules\Logging;
 use Bacularis\Common\Modules\WebEnvironment;
+use Bacularis\Common\Modules\Protocol\HTTP\Redirection;
 use Bacularis\API\Modules\APIConfig;
 use Bacularis\API\Modules\BAPIException;
 use Bacularis\API\Modules\BaculumAPIPage;
@@ -271,7 +272,7 @@ class APIInstallWizard extends BaculumAPIPage
 	{
 		if ($param->CurrentStepIndex === 0) {
 			if ($this->getFirstRun() && !$this->EnableAPI->Checked && $this->EnableWeb->Checked) {
-				$this->Response->redirect('/web');
+				Redirection::redirect('/web');
 			} elseif ($this->BaculaNotInstalled->Checked) {
 				$this->InstallWizard->ActiveStepIndex = 4;
 			}
@@ -474,10 +475,10 @@ class APIInstallWizard extends BaculumAPIPage
 		// Go to default user page
 		if ($this->getFirstRun() && $this->EnableAPI->Checked && !$this->EnableWeb->Checked) {
 			// Only API configured, so go to API panel page
-			$this->Response->redirect('/panel');
+			Redirection::redirect('/panel');
 		} else {
 			// Go to default page
-			$this->Response->redirect('/');
+			Redirection::redirect('/');
 		}
 	}
 
