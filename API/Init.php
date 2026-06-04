@@ -17,4 +17,3 @@ use Bacularis\API\Pages\Requirements as APIRequirements;
 
 $service_dir = __DIR__;
 new APIRequirements(APPLICATION_WEBROOT, APPLICATION_PROTECTED, $service_dir);
-
