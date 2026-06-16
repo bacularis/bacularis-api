@@ -12,7 +12,7 @@
 			"name": "AGPLv3",
 			"url": "https://www.gnu.org/licenses/agpl-3.0-standalone.html"
 		},
-		"version": "3.0.8"
+		"version": "3.1.0"
 	},
 	"servers": [
 		{
@@ -460,9 +460,25 @@
 						"description": "Date and time first write to volume",
 						"type": "string"
 					},
+					"firstwritten_epoch": {
+						"description": "Time of first write on volume in epoch form",
+						"type": "integer"
+					},
+					"firstwritten_ago": {
+						"description": "Time in seconds from first write time until now",
+						"type": "integer"
+					},
 					"lastwritten": {
 						"description": "Date and time last write to volume",
 						"type": "string"
+					},
+					"lastwritten_epoch": {
+						"description": "Time of last write on volume in epoch form",
+						"type": "integer"
+					},
+					"lastwritten_ago": {
+						"description": "Time in seconds from last write time until now",
+						"type": "integer"
 					},
 					"labeldate": {
 						"description": "Data and time label",
@@ -657,8 +673,12 @@
 						"type": "string"
 					},
 					"whenexpire": {
-						"description": "Expiration date and time",
+						"description": "Expiry date and time (last written time + volume retention). This is time when volume can be purged and next recycled if volume recycling is configured. If volume status is different than 'Full' or 'Used' since API 6.3.0 it stores null, before 6.3.0 it stored 'no data' string for this case.",
 						"type": "string"
+					},
+					"expiresin": {
+						"description": "Time from now to expiry time (last written time + volume retention). Negative value means that volume is expired. Null value means that expiry time is not applicaple yet because volume status is different than 'Full' or 'Used'.",
+						"type": "integer"
 					}
 				}
 			},
