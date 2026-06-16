@@ -96,6 +96,11 @@ class VolumeRecord extends APIDbModule
 	public $scratchpool;
 	public $recyclepool;
 	public $whenexpire;
+	public $expiresin;
+	public $firstwritten_epoch;
+	public $lastwritten_epoch;
+	public $firstwritten_ago;
+	public $lastwritten_ago;
 
 	public static function finder($className = __CLASS__)
 	{

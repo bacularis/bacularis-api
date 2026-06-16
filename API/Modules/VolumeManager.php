@@ -55,11 +55,14 @@ class VolumeManager extends APIModule
 
 		$where = Database::getWhere($criteria);
 
+		$add_cols = $this->getAddCols();
+
 		$sql = 'SELECT Media.*, 
 pool1.Name as pool, 
 pool2.Name as scratchpool, 
 pool3.Name as recyclepool, 
-Storage.Name as storage 
+Storage.Name as storage, 
+' . $add_cols . '
 FROM Media 
 LEFT JOIN Pool AS pool1 USING (PoolId) 
 LEFT JOIN Pool AS pool2 ON Media.ScratchPoolId = pool2.PoolId 
@@ -67,7 +70,6 @@ LEFT JOIN Pool AS pool3 ON Media.RecyclePoolId = pool3.PoolId
 LEFT JOIN Storage USING (StorageId) 
 ' . $where['where'] . $order . $limit;
 		$volumes = Database::findAllBySql($sql, $where['params']);
-		$this->setExtraVariables($volumes);
 		return $volumes;
 	}
 
@@ -79,8 +81,55 @@ LEFT JOIN Storage USING (StorageId)
 				'operator' => 'AND'
 			]
 		]);
-		$this->setExtraVariables($volumes);
 		return $volumes;
+	}
+
+	private function getAddCols()
+	{
+		$add_cols = '';
+		$api_config = $this->getModule('api_config');
+		$db_params = $api_config->getConfig('db');
+		if ($db_params['type'] === Database::PGSQL_TYPE) {
+			$add_cols .= '
+				CAST(EXTRACT(EPOCH FROM Media.FirstWritten) AS INTEGER) AS firstwritten_epoch,
+				CAST(EXTRACT(EPOCH FROM Media.LastWritten) AS INTEGER) AS lastwritten_epoch,
+				CAST(EXTRACT(EPOCH FROM NOW()) - CAST(EXTRACT(EPOCH FROM Media.FirstWritten) AS INTEGER) AS INTEGER) AS firstwritten_ago,
+				CAST(EXTRACT(EPOCH FROM NOW()) - CAST(EXTRACT(EPOCH FROM Media.LastWritten) AS INTEGER) AS INTEGER) AS lastwritten_ago,
+				CASE
+					WHEN Media.VolStatus IN (\'Full\', \'Used\') THEN to_timestamp(CAST(EXTRACT(EPOCH FROM Media.LastWritten) AS INTEGER) + CAST(Media.VolRetention AS INTEGER)) ELSE NULL
+				END whenexpire,
+				CASE
+					WHEN Media.VolStatus IN (\'Full\', \'Used\') THEN CAST(CAST(EXTRACT(EPOCH FROM Media.LastWritten) AS INTEGER) + CAST(Media.VolRetention AS INTEGER) - EXTRACT(EPOCH FROM NOW()) AS INTEGER) ELSE NULL
+				END expiresin
+			';
+		} elseif ($db_params['type'] === Database::MYSQL_TYPE) {
+			$add_cols .= '
+				TIMESTAMPDIFF(SECOND, \'1970-01-01 00:00:00\', Media.FirstWritten) AS firstwritten_epoch,
+				TIMESTAMPDIFF(SECOND, \'1970-01-01 00:00:00\', Media.LastWritten) AS lastwritten_epoch,
+				(UNIX_TIMESTAMP() - TIMESTAMPDIFF(SECOND, \'1970-01-01 00:00:00\', Media.FirstWritten)) AS firstwritten_ago,
+				(UNIX_TIMESTAMP() - TIMESTAMPDIFF(SECOND, \'1970-01-01 00:00:00\', Media.LastWritten)) AS lastwritten_ago,
+				CASE
+					WHEN Media.VolStatus IN (\'Full\', \'Used\') THEN FROM_UNIXTIME(TIMESTAMPDIFF(SECOND, \'1970-01-01 00:00:00\', Media.LastWritten) + Media.VolRetention) ELSE NULL
+				END whenexpire,
+				CASE
+					WHEN Media.VolStatus IN (\'Full\', \'Used\') THEN CAST((TIMESTAMPDIFF(SECOND, \'1970-01-01 00:00:00\', Media.LastWritten) + Media.VolRetention) AS SIGNED) - UNIX_TIMESTAMP() ELSE NULL
+				END expiresin
+			';
+		} elseif ($db_params['type'] === Database::SQLITE_TYPE) {
+			$add_cols .= '
+				strftime(\'%s\', Media.FirstWritten) AS firstwritten_epoch,
+				strftime(\'%s\', Media.LastWritten) AS lastwritten_epoch,
+				(unixepoch() - strftime(\'%s\', Media.FirstWritten)) AS firstwritten_ago,
+				(unixepoch() - strftime(\'%s\', Media.LastWritten)) AS lastwritten_ago,
+				CASE
+					WHEN Media.VolStatus IN (\'Full\', \'Used\') THEN datetime(strftime(\'%s\', Media.LastWritten) + Media.VolRetention, \'unixepoch\') ELSE NULL
+				END whenexpire,
+				CASE
+					WHEN Media.VolStatus IN (\'Full\', \'Used\') THEN (strftime(\'%s\', Media.LastWritten) + Media.VolRetention) - unixepoch() ELSE NULL
+				END expiresin
+			';
+		}
+		return $add_cols;
 	}
 
 	public function getVolumeByPoolId($poolid)
@@ -94,7 +143,6 @@ LEFT JOIN Storage USING (StorageId)
 		if (is_array($volume) && count($volume) > 0) {
 			$volume = array_shift($volume);
 		}
-		$this->setExtraVariables($volume);
 		return $volume;
 	}
 
@@ -109,7 +157,6 @@ LEFT JOIN Storage USING (StorageId)
 		if (is_array($volume) && count($volume) > 0) {
 			$volume = array_shift($volume);
 		}
-		$this->setExtraVariables($volume);
 		return $volume;
 	}
 
@@ -124,33 +171,7 @@ LEFT JOIN Storage USING (StorageId)
 		if (is_array($volume) && count($volume) > 0) {
 			$volume = array_shift($volume);
 		}
-		$this->setExtraVariables($volume);
 		return $volume;
-	}
-
-	private function setExtraVariables(&$volumes)
-	{
-		if (is_array($volumes)) {
-			foreach ($volumes as $volume) {
-				$this->setWhenExpire($volume);
-			}
-		} elseif (is_object($volumes)) {
-			$this->setWhenExpire($volumes);
-		}
-	}
-
-	private function setWhenExpire(&$volume)
-	{
-		$whenexpire = 'no date';
-		$volstatus = strtolower($volume->volstatus);
-		if ($volstatus == 'full' || $volstatus == 'used') {
-			$lwt = strtotime($volume->lastwritten);
-			if (is_int($lwt) && $lwt >= 0) {
-				$whenexpire = $lwt + $volume->volretention;
-				$whenexpire = date('Y-m-d H:i:s', $whenexpire);
-			}
-		}
-		$volume->whenexpire = $whenexpire;
 	}
 
 	/**
