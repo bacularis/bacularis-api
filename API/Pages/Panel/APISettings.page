@@ -222,7 +222,7 @@
 								<span id="db_test_loader" style="display: none">
 									<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
 								</span>
-								<span id="db_test_result_ok" class="w3-text-green" style="display: none">
+								<span id="db_test_result_ok" class="w3-text-success" style="display: none">
 									<i class="fas fa-check"></i> &nbsp;<%[ OK ]%>
 								</span>
 								<span id="db_test_result_err" class="w3-text-red" style="display: none">
@@ -386,7 +386,7 @@
 								<span id="bconsole_test_loader" style="display: none">
 									<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
 								</span>
-								<span id="bconsole_test_result_ok" class="w3-text-green" style="display: none">
+								<span id="bconsole_test_result_ok" class="w3-text-success" style="display: none">
 									<i class="fas fa-check"></i> &nbsp;<%[ OK ]%>
 								</span>
 								<span id="bconsole_test_result_err" class="w3-text-red" style="display: none">
@@ -446,7 +446,7 @@
 						<com:TActiveLabel
 							ID="BConfigDirTestOk"
 							Display="None"
-							CssClass="w3-text-green"
+							CssClass="w3-text-success"
 							EnableViewState="false"
 						>
 							<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
@@ -546,7 +546,7 @@
 						<com:TActiveLabel
 							ID="BDirJSONPathTestOk"
 							Display="None"
-							CssClass="w3-text-green"
+							CssClass="w3-text-success"
 							EnableViewState="false"
 						>
 							<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
@@ -619,7 +619,7 @@
 						<com:TActiveLabel
 							ID="BSdJSONPathTestOk"
 							Display="None"
-							CssClass="w3-text-green"
+							CssClass="w3-text-success"
 							EnableViewState="false"
 						>
 							<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
@@ -685,7 +685,7 @@
 						<com:TActiveLabel
 							ID="BFdJSONPathTestOk"
 							Display="None"
-							CssClass="w3-text-green"
+							CssClass="w3-text-success"
 							EnableViewState="false"
 						>
 							<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
@@ -751,7 +751,7 @@
 						<com:TActiveLabel
 							ID="BBconsJSONPathTestOk"
 							Display="None"
-							CssClass="w3-text-green"
+							CssClass="w3-text-success"
 							EnableViewState="false"
 						>
 							<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
@@ -922,7 +922,7 @@
 							<span class="action_test_loader" style="display: none">
 								<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
 							</span>
-							<span class="action_success w3-text-green" style="display: none">
+							<span class="action_success w3-text-success" style="display: none">
 								<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
 							</span>
 							<span class="action_error w3-text-red" style="display: none">
@@ -966,7 +966,7 @@
 							<span class="action_test_loader" style="display: none">
 								<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
 							</span>
-							<span class="action_success w3-text-green" style="display: none">
+							<span class="action_success w3-text-success" style="display: none">
 								<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
 							</span>
 							<span class="action_error w3-text-red" style="display: none">
@@ -1010,7 +1010,7 @@
 							<span class="action_test_loader" style="display: none">
 								<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
 							</span>
-							<span class="action_success w3-text-green" style="display: none">
+							<span class="action_success w3-text-success" style="display: none">
 								<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
 							</span>
 							<span class="action_error w3-text-red" style="display: none">
@@ -1057,7 +1057,7 @@
 							<span class="action_test_loader" style="display: none">
 								<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
 							</span>
-							<span class="action_success w3-text-green" style="display: none">
+							<span class="action_success w3-text-success" style="display: none">
 								<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
 							</span>
 							<span class="action_error w3-text-red" style="display: none">
@@ -1101,7 +1101,7 @@
 							<span class="action_test_loader" style="display: none">
 								<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
 							</span>
-							<span class="action_success w3-text-green" style="display: none">
+							<span class="action_success w3-text-success" style="display: none">
 								<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
 							</span>
 							<span class="action_error w3-text-red" style="display: none">
@@ -1145,7 +1145,7 @@
 							<span class="action_test_loader" style="display: none">
 								<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
 							</span>
-							<span class="action_success w3-text-green" style="display: none">
+							<span class="action_success w3-text-success" style="display: none">
 								<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
 							</span>
 							<span class="action_error w3-text-red" style="display: none">
@@ -1192,7 +1192,7 @@
 							<span class="action_test_loader" style="display: none">
 								<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
 							</span>
-							<span class="action_success w3-text-green" style="display: none">
+							<span class="action_success w3-text-success" style="display: none">
 								<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
 							</span>
 							<span class="action_error w3-text-red" style="display: none">
@@ -1236,7 +1236,7 @@
 							<span class="action_test_loader" style="display: none">
 								<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
 							</span>
-							<span class="action_success w3-text-green" style="display: none">
+							<span class="action_success w3-text-success" style="display: none">
 								<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
 							</span>
 							<span class="action_error w3-text-red" style="display: none">
@@ -1280,7 +1280,7 @@
 							<span class="action_test_loader" style="display: none">
 								<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
 							</span>
-							<span class="action_success w3-text-green" style="display: none">
+							<span class="action_success w3-text-success" style="display: none">
 								<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
 							</span>
 							<span class="action_error w3-text-red" style="display: none">

@@ -52,6 +52,7 @@ var oOAuth2ClientList = {
 		this.table = $('#' + this.ids.oauth2_client_list).DataTable({
 			data: this.data,
 			deferRender: true,
+			autoWidth: false,
 			fixedHeader: {
 				header: true,
 				headerOffset: $('#main_top_bar').height()
@@ -127,7 +128,7 @@ var oOAuth2ClientList = {
 				}
 			},
 			columnDefs: [{
-				className: 'dtr-control',
+				className: 'dtr-control-custom',
 				orderable: false,
 				targets: 0
 			},

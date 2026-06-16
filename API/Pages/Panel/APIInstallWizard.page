@@ -282,7 +282,7 @@
 											<i class="fa fa-play"></i> &nbsp; <%[ Test ]%>
 										</com:TActiveLinkButton> &nbsp;
 										<i id="check_connection_check_loader" class="fa-solid fa-sync w3-spin" style="display: none"></i>
-										<i id="check_connection_check_result_ok" class="fa-solid fa-check w3-text-green" style="display: none"></i>
+										<i id="check_connection_check_result_ok" class="fa-solid fa-check w3-text-success" style="display: none"></i>
 										<i id="check_connection_check_result_error" class="fa-solid fa-times w3-text-red" style="display: none"></i>
 										 &nbsp;<span id="check_connection_check_result_link" class="w3-tiny bold pointer" style="display: none" onclick="oInstallBacula.toggle_host_connection_result();"></span>
 										<div class="w3-code" id="check_connection_check_result_output" style="display: none">
@@ -294,7 +294,7 @@
 							</div>
 							<div class="w3-container w3-center">
 								<button type="button" id="install_bacula_locally_btn" class="w3-button w3-green" onclick="if (Prado.Validation.validate(Prado.Validation.getForm(), 'InstallBaculaGroup')) { oInstallBaculaLocally.load_install_bacula_locally_window();}"><i class="fa-solid fa-rocket"></i> &nbsp;<%[ Install Bacula ]%></button>
-								<i class="fa-solid fa-info-circle help_icon w3-text-green" onclick="$(this).next().slideToggle('fast');"></i>
+								<i class="fa-solid fa-info-circle help_icon w3-text-success" onclick="$(this).next().slideToggle('fast');"></i>
 								<div class="directive_help w3-padding" style="display: none;">
 									<dd><%[ After clicking the install Bacula button, there will be installed on this host Catalog (PostgreSQL), Bacula Director, Client, Storage and Bconsole. ]%></dd>
 								</div>
@@ -374,7 +374,7 @@ var oSteps = {
 		const step = document.getElementById(step_id);
 		step.removeChild(step.firstChild);
 		const icon = document.createElement('I');
-		icon.classList.add('fa-solid', 'fa-check', 'w3-text-green');
+		icon.classList.add('fa-solid', 'fa-check', 'w3-text-success');
 		step.appendChild(icon);
 	},
 	mark_step_err: function(step_id) {
@@ -798,7 +798,7 @@ function show_start_next_btn(show) {
 											<span id="db_test_loader" style="display: none">
 												<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
 											</span>
-											<span id="db_test_result_ok" class="w3-text-green" style="display: none">
+											<span id="db_test_result_ok" class="w3-text-success" style="display: none">
 												<i class="fas fa-check"></i> &nbsp;<%[ OK ]%>
 											</span>
 											<span id="db_test_result_err" class="w3-text-red" style="display: none">
@@ -979,7 +979,7 @@ function show_start_next_btn(show) {
 										<span id="bconsole_test_loader" style="display: none">
 											<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
 										</span>
-										<span id="bconsole_test_result_ok" class="w3-text-green" style="display: none">
+										<span id="bconsole_test_result_ok" class="w3-text-success" style="display: none">
 											<i class="fas fa-check"></i> &nbsp;<%[ OK ]%>
 										</span>
 										<span id="bconsole_test_result_err" class="w3-text-red" style="display: none">
@@ -1094,7 +1094,7 @@ var oConfigWizardStep3 = {
 								<com:TActiveLabel
 									ID="BConfigDirTestOk"
 									Display="None"
-									CssClass="w3-text-green"
+									CssClass="w3-text-success"
 									EnableViewState="false"
 								>
 									<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
@@ -1194,7 +1194,7 @@ var oConfigWizardStep3 = {
 								<com:TActiveLabel
 									ID="BDirJSONPathTestOk"
 									Display="None"
-									CssClass="w3-text-green"
+									CssClass="w3-text-success"
 									EnableViewState="false"
 								>
 									<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
@@ -1267,7 +1267,7 @@ var oConfigWizardStep3 = {
 								<com:TActiveLabel
 									ID="BSdJSONPathTestOk"
 									Display="None"
-									CssClass="w3-text-green"
+									CssClass="w3-text-success"
 									EnableViewState="false"
 								>
 									<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
@@ -1333,7 +1333,7 @@ var oConfigWizardStep3 = {
 								<com:TActiveLabel
 									ID="BFdJSONPathTestOk"
 									Display="None"
-									CssClass="w3-text-green"
+									CssClass="w3-text-success"
 									EnableViewState="false"
 								>
 									<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>
@@ -1399,7 +1399,7 @@ var oConfigWizardStep3 = {
 								<com:TActiveLabel
 									ID="BBconsJSONPathTestOk"
 									Display="None"
-									CssClass="w3-text-green"
+									CssClass="w3-text-success"
 									EnableViewState="false"
 								>
 									<i class="fas fa-check" title="<%[ OK ]%>"></i> &nbsp;<%[ OK ]%>

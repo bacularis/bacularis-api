@@ -329,13 +329,13 @@ msgstr "O usuário já existe no arquivo de configuração."
 msgid "set all scopes"
 msgstr "definir todos os escopos"
 
-msgid "Welcome on the Bacularis API default page"
-msgstr "Bem-vindo à página padrão do Bacularis API"
+msgid "API panel"
+msgstr "API panel"
 
 msgid "Bacularis API Client"
 msgstr "API do Cliente Bacularis"
 
-msgid "Here you can try one from API commands"
+msgid "Try one of the API commands"
 msgstr "Aqui você pode utilizar alguns comandos da API"
 
 msgid "Starting..."

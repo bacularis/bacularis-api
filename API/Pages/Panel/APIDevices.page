@@ -7,7 +7,7 @@
 	</header>
 	<div class="w3-bar w3-green w3-margin-bottom">
 		<button type="button" id="btn_devices_autochanger" class="w3-bar-item w3-button tab_btn w3-grey" onclick="W3Tabs.open(this.id, 'devices_autochanger'); set_page_tables([oAutochangerList, oDeviceList]);"><%[ Autochangers ]%></button>
-		<button type="button" id="btn_devices_device" class="w3-bar-item w3-button tab_btn" onclick="W3Tabs.open(this.id, 'devices_device'); oDeviceList.table.responsive.recalc(); set_page_tables([oAutochangerList, oDeviceList]);"><%[ Devices ]%></button>
+		<button type="button" id="btn_devices_device" class="w3-bar-item w3-button tab_btn" onclick="W3Tabs.open(this.id, 'devices_device'); set_page_tables([oAutochangerList, oDeviceList]); oDeviceList.table.responsive.recalc().draw();"><%[ Devices ]%></button>
 	</div>
 	<div class="w3-container tab_item" id="devices_autochanger">
 		<a href="javascript:void(0)" class="w3-button w3-green w3-margin-bottom" onclick="oAPIAutochangers.add_autochanger();">
@@ -55,6 +55,7 @@ var oAutochangerList = {
 		this.table = $('#' + this.ids.autochanger_list).DataTable({
 			data: this.data,
 			deferRender: true,
+			autoWidth: false,
 			fixedHeader: {
 				header: true,
 				headerOffset: $('#main_top_bar').height()
@@ -129,7 +130,7 @@ var oAutochangerList = {
 				}
 			},
 			columnDefs: [{
-				className: 'dtr-control',
+				className: 'dtr-control-custom',
 				orderable: false,
 				targets: 0
 			},
@@ -322,7 +323,7 @@ oSudoConfig.set_bin_ownership(bin_ownership);
 									<span id="changer_command_test_loader" style="display: none">
 										<i class="fas fa-sync fa-spin" title="<%[ Loading... ]%>"></i>
 									</span>
-									<span id="changer_command_test_result_ok" class="w3-text-green" style="display: none">
+									<span id="changer_command_test_result_ok" class="w3-text-success" style="display: none">
 										<i class="fas fa-check"></i> &nbsp;<%[ OK ]%>
 									</span>
 									<span id="changer_command_test_result_err" class="w3-text-red" style="display: none">
@@ -586,6 +587,7 @@ var oDeviceList = {
 		this.table = $('#' + this.ids.device_list).DataTable({
 			data: this.data,
 			deferRender: true,
+			autoWidth: false,
 			fixedHeader: {
 				header: true,
 				headerOffset: $('#main_top_bar').height()
@@ -662,7 +664,7 @@ var oDeviceList = {
 				}
 			},
 			columnDefs: [{
-				className: 'dtr-control',
+				className: 'dtr-control-custom',
 				orderable: false,
 				targets: 0
 			},

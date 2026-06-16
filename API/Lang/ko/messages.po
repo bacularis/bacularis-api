@@ -329,13 +329,13 @@ msgstr "주어진 사용자가 설정 파일에 이미 있습니다."
 msgid "set all scopes"
 msgstr "모든 스코프로 설정"
 
-msgid "Welcome on the Bacularis API default page"
-msgstr "Bacularis API 기본 페이지에 오신 것을 환영합니다."
+msgid "API panel"
+msgstr "API panel"
 
 msgid "Bacularis API Client"
 msgstr "Bacularis API 클라이언트"
 
-msgid "Here you can try one from API commands"
+msgid "Try one of the API commands"
 msgstr "여기서 당신은 API 명령에서 하나를 시도할 수 있습니다."
 
 msgid "Starting..."

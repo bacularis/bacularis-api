@@ -8,7 +8,7 @@
 				<com:BClientScript ScriptUrl=<%~ ../../../../../Common/JavaScript/misc.js %> />
 				<com:TClientScript PradoScripts="effects" />
 				<com:BStyleSheet StyleSheetUrl=<%~ ../../../../../Common/CSS/w3css/w3.css %> />
-				<com:BStyleSheet StyleSheetUrl=<%~ ../../../../../Common/CSS/baculum.css %> />
+				<com:BStyleSheet StyleSheetUrl=<%~ ../../../../../Common/CSS/bacularis.css %> />
 				<com:TContentPlaceHolder ID="Wizard" />
 		</com:TForm>
 	</body>

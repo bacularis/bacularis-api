@@ -50,6 +50,7 @@ var oBasicUserList = {
 		this.table = $('#' + this.ids.basic_user_list).DataTable({
 			data: this.data,
 			deferRender: true,
+			autoWidth: false,
 			fixedHeader: {
 				header: true,
 				headerOffset: $('#main_top_bar').height()
@@ -142,7 +143,7 @@ var oBasicUserList = {
 				}
 			},
 			columnDefs: [{
-				className: 'dtr-control',
+				className: 'dtr-control-custom',
 				orderable: false,
 				targets: 0
 			},
