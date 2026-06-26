@@ -41,6 +41,19 @@ use Bacularis\Common\Modules\SessionRecord;
  */
 class TokenRecord extends SessionRecord implements ISessionItem
 {
+	/**
+	 * Host record session file name.
+	 */
+	private const SESSION_FILE_NAME = 'Bacularis.API.Config.session';
+
+	/**
+	 * Host record sesion file extension.
+	 */
+	private const SESSION_FILE_EXT = '.dump';
+
+	/**
+	 * Token session properties.
+	 */
 	public $access_token;
 	public $refresh_token;
 	public $client_id;
@@ -48,18 +61,36 @@ class TokenRecord extends SessionRecord implements ISessionItem
 	public $scope;
 	public $bconsole_cfg_path;
 
-	public static function getRecordId()
+	/**
+	 * Get session record identifier.
+	 *
+	 * @return string record identifier
+	 */
+	public static function getRecordId(): string
 	{
 		return 'oauth2_token';
 	}
 
-	public static function getPrimaryKey()
+	/**
+	 * Get session record primary key.
+	 *
+	 * @return string primary key name
+	 */
+	public static function getPrimaryKey(): string
 	{
 		return 'access_token';
 	}
 
-	public static function getSessionFile()
+	/**
+	 * Get full session file path.
+	 *
+	 * @return string session file path
+	 */
+	public static function getSessionFile(): string
 	{
-		return Prado::getPathOfNamespace('Bacularis.API.Config.session', '.dump');
+		return Prado::getPathOfNamespace(
+			self::SESSION_FILE_NAME,
+			self::SESSION_FILE_EXT
+		);
 	}
 }
