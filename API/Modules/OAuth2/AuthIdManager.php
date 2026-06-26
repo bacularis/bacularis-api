@@ -63,7 +63,7 @@ class AuthIdManager extends APIModule
 		$vals_len = count($vals);
 		for ($i = ($vals_len - 1); $i >= 0; $i--) {
 			if ($vals[$i]['expires'] < $current_time) {
-				array_splice($vals, $i, 1);
+				AuthIdRecord::deleteByRecord($vals[$i]);
 			}
 		}
 	}
