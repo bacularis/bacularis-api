@@ -44,8 +44,8 @@ class Jobs extends BaculumAPIServer
 		$limit = $this->Request->contains('limit') && $misc->isValidInteger($this->Request['limit']) ? (int) ($this->Request['limit']) : 0;
 		$age = $this->Request->contains('age') && $misc->isValidInteger($this->Request['age']) ? (int) ($this->Request['age']) : 0;
 		$jobstatus = $this->Request->contains('jobstatus') ? $this->Request['jobstatus'] : '';
-		$level = $this->Request->contains('level') && $misc->isValidJobLevel($this->Request['level']) ? $this->Request['level'] : '';
-		$type = $this->Request->contains('type') && $misc->isValidJobType($this->Request['type']) ? $this->Request['type'] : '';
+		$level = $this->Request->contains('level') && $this->Request['level'] ? $this->Request['level'] : '';
+		$type = $this->Request->contains('type') && $this->Request['type'] ? $this->Request['type'] : '';
 		$jobname = $this->Request->contains('name') && $misc->isValidName($this->Request['name']) ? $this->Request['name'] : '';
 		$clientid = $this->Request->contains('clientid') ? $this->Request['clientid'] : '';
 
@@ -63,6 +63,8 @@ class Jobs extends BaculumAPIServer
 		}
 
 		$params = [];
+
+		// Job status
 		$jobstatuses = array_keys($misc->getJobState());
 		$sts = str_split($jobstatus);
 		for ($i = 0; $i < count($sts); $i++) {
@@ -73,15 +75,31 @@ class Jobs extends BaculumAPIServer
 				$params['Job.JobStatus']['vals'][] = $sts[$i];
 			}
 		}
-		if (!empty($level)) {
-			$params['Job.Level']['operator'] = '';
-			$params['Job.Level']['vals'] = $level;
+
+		// Job level
+		$jls = str_split($level);
+		for ($i = 0; $i < count($jls); $i++) {
+			if ($misc->isValidJobLevel($jls[$i])) {
+				if (!key_exists('Job.Level', $params)) {
+					$params['Job.Level'] = ['operator' => 'OR', 'vals' => []];
+				}
+				$params['Job.Level']['vals'][] = $jls[$i];
+			}
 		}
-		if (!empty($type)) {
-			$params['Job.Type']['operator'] = '';
-			$params['Job.Type']['vals'] = $type;
+
+		// Job type
+		$jts = str_split($type);
+		for ($i = 0; $i < count($jts); $i++) {
+			if ($misc->isValidJobType($jts[$i])) {
+				if (!key_exists('Job.Type', $params)) {
+					$params['Job.Type'] = ['operator' => 'OR', 'vals' => []];
+				}
+				$params['Job.Type']['vals'][] = $jts[$i];
+			}
 		}
-		$result = $this->getModule('bconsole')->bconsoleCommand(
+
+		$bconsole = $this->getModule('bconsole');
+		$result = $bconsole->bconsoleCommand(
 			$this->director,
 			['.jobs'],
 			null,

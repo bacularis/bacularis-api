@@ -12,7 +12,7 @@
 			"name": "AGPLv3",
 			"url": "https://www.gnu.org/licenses/agpl-3.0-standalone.html"
 		},
-		"version": "3.1.1"
+		"version": "3.1.2"
 	},
 	"servers": [
 		{
@@ -1828,7 +1828,7 @@
 						"name": "jobstatus",
 						"in": "query",
 						"required": false,
-						"description": "Job status letter",
+						"description": "Job status letter. Single or multiple letters are allowed.",
 						"schema": {
 							"type": "string"
 						}
@@ -1855,7 +1855,7 @@
 						"name": "type",
 						"in": "query",
 						"required": false,
-						"description": "Job type letter",
+						"description": "Job type letter. Single or multiple letters are allowed.",
 						"schema": {
 							"type": "string"
 						}
@@ -1864,7 +1864,7 @@
 						"name": "level",
 						"in": "query",
 						"required": false,
-						"description": "Job level letter",
+						"description": "Job level letter. Single or multiple letters are allowed.",
 						"schema": {
 							"type": "string"
 						}
