@@ -136,10 +136,10 @@ LEFT JOIN FileSet ON FileSet.FilesetId=Job.FilesetId '
 		$db_params = $this->getModule('api_config')->getConfig('db');
 		if ($db_params['type'] === Database::PGSQL_TYPE) {
 			$add_cols .= '
-				CAST(EXTRACT(EPOCH FROM Job.SchedTime) AS INTEGER) AS schedtime_epoch,
-				CAST(EXTRACT(EPOCH FROM Job.StartTime) AS INTEGER) AS starttime_epoch,
-				CAST(EXTRACT(EPOCH FROM Job.EndTime) AS INTEGER) AS endtime_epoch,
-				CAST(EXTRACT(EPOCH FROM Job.RealEndTime) AS INTEGER) AS realendtime_epoch
+				CAST(EXTRACT(EPOCH FROM Job.SchedTime) AS BIGINT) AS schedtime_epoch,
+				CAST(EXTRACT(EPOCH FROM Job.StartTime) AS BIGINT) AS starttime_epoch,
+				CAST(EXTRACT(EPOCH FROM Job.EndTime) AS BIGINT) AS endtime_epoch,
+				CAST(EXTRACT(EPOCH FROM Job.RealEndTime) AS BIGINT) AS realendtime_epoch
 			';
 		} elseif ($db_params['type'] === Database::MYSQL_TYPE) {
 			$add_cols .= "

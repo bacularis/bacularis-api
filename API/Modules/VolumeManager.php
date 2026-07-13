@@ -91,15 +91,15 @@ LEFT JOIN Storage USING (StorageId)
 		$db_params = $api_config->getConfig('db');
 		if ($db_params['type'] === Database::PGSQL_TYPE) {
 			$add_cols .= '
-				CAST(EXTRACT(EPOCH FROM Media.FirstWritten) AS INTEGER) AS firstwritten_epoch,
-				CAST(EXTRACT(EPOCH FROM Media.LastWritten) AS INTEGER) AS lastwritten_epoch,
-				CAST(EXTRACT(EPOCH FROM NOW()) - CAST(EXTRACT(EPOCH FROM Media.FirstWritten) AS INTEGER) AS INTEGER) AS firstwritten_ago,
-				CAST(EXTRACT(EPOCH FROM NOW()) - CAST(EXTRACT(EPOCH FROM Media.LastWritten) AS INTEGER) AS INTEGER) AS lastwritten_ago,
+				CAST(EXTRACT(EPOCH FROM Media.FirstWritten) AS BIGINT) AS firstwritten_epoch,
+				CAST(EXTRACT(EPOCH FROM Media.LastWritten) AS BIGINT) AS lastwritten_epoch,
+				CAST(EXTRACT(EPOCH FROM NOW()) - CAST(EXTRACT(EPOCH FROM Media.FirstWritten) AS BIGINT) AS BIGINT) AS firstwritten_ago,
+				CAST(EXTRACT(EPOCH FROM NOW()) - CAST(EXTRACT(EPOCH FROM Media.LastWritten) AS BIGINT) AS BIGINT) AS lastwritten_ago,
 				CASE
-					WHEN Media.VolStatus IN (\'Full\', \'Used\') THEN to_timestamp(CAST(EXTRACT(EPOCH FROM Media.LastWritten) AS INTEGER) + CAST(Media.VolRetention AS INTEGER)) ELSE NULL
+					WHEN Media.VolStatus IN (\'Full\', \'Used\') THEN to_timestamp(CAST(EXTRACT(EPOCH FROM Media.LastWritten) AS BIGINT) + CAST(Media.VolRetention AS BIGINT)) ELSE NULL
 				END whenexpire,
 				CASE
-					WHEN Media.VolStatus IN (\'Full\', \'Used\') THEN CAST(CAST(EXTRACT(EPOCH FROM Media.LastWritten) AS INTEGER) + CAST(Media.VolRetention AS INTEGER) - EXTRACT(EPOCH FROM NOW()) AS INTEGER) ELSE NULL
+					WHEN Media.VolStatus IN (\'Full\', \'Used\') THEN CAST(CAST(EXTRACT(EPOCH FROM Media.LastWritten) AS BIGINT) + CAST(Media.VolRetention AS BIGINT) - EXTRACT(EPOCH FROM NOW()) AS BIGINT) ELSE NULL
 				END expiresin
 			';
 		} elseif ($db_params['type'] === Database::MYSQL_TYPE) {
