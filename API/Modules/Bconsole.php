@@ -49,6 +49,8 @@ class Bconsole extends APIModule
 	public const PTYPE_BG_CMD = 2;
 	public const PTYPE_CONFIRM_YES_CMD = 3;
 	public const PTYPE_CONFIRM_YES_BG_CMD = 4;
+	public const PTYPE_OPEN_CMD = 5;
+	public const PTYPE_OPEN_BG_CMD = 6;
 
 	public const BCONSOLE_COMMAND_PATTERN = "%s%s -c \"%s\" %s 2>&1 <<END_OF_DATA\ngui on\n%s\nquit\nEND_OF_DATA";
 
@@ -61,6 +63,10 @@ class Bconsole extends APIModule
 	public const BCONSOLE_API_COMMAND_PATTERN = "%s%s -c \"%s\" %s 2>&1 <<END_OF_DATA\ngui on\n.api 2 nosignal api_opts=o\n%s\nquit\nEND_OF_DATA";
 
 	public const BCONSOLE_DIRECTORS_PATTERN = "%s%s -c \"%s\" -l 2>&1";
+
+	public const BCONSOLE_OPEN_PATTERN = "%s%s -c \"%s\"";
+
+	public const BCONSOLE_OPEN_BG_PATTERN = "%s%s -c \"%s\" 2>&1 &";
 
 	public const OUTPUT_FILE_PREFIX = 'output_';
 
@@ -118,7 +124,8 @@ class Bconsole extends APIModule
 
 	public function init($param)
 	{
-		$this->config = $this->getModule('api_config')->getConfig('bconsole');
+		$api_config = $this->getModule('api_config');
+		$this->config = $api_config ? $api_config->getConfig('bconsole') : [];
 		if (count($this->config) > 0) {
 			$sudo_prop = [
 				'use_sudo' => ((int) $this->config['use_sudo'] === 1),
@@ -175,7 +182,7 @@ class Bconsole extends APIModule
 		return self::$cfg_path;
 	}
 
-	private function setEnvironmentParams(string $cmd_path, string $cfg_path, array $sudo_prop, bool $force = false): void
+	public function setEnvironmentParams(string $cmd_path, string $cfg_path, array $sudo_prop, bool $force = false): void
 	{
 		self::setCmdPath($cmd_path, $force);
 		self::setCfgPath($cfg_path, $force);
@@ -192,6 +199,10 @@ class Bconsole extends APIModule
 	{
 		array_pop($output); // deleted 'quit' bconsole command
 		$out = $output;
+		if (strpos($bconsole_command, PHP_EOL) !== false) {
+			// for multi-line bconsole command take first command line
+			$bconsole_command = explode(PHP_EOL, $bconsole_command)[0];
+		}
 		for ($i = 0; $i < count($out); $i++) {
 			if (strstr($out[$i], $bconsole_command) == false) {
 				unset($output[$i]);
@@ -237,11 +248,7 @@ class Bconsole extends APIModule
 				BconsoleError::ERROR_INVALID_DIRECTOR
 			);
 		} else {
-			$dir = is_null($director) ? '' : '-D ' . $director;
-			$sudo = $this->sudo->getSudoCmd();
-			$bconsole_command = implode(' ', $command);
-			$pattern = $this->getCmdPattern($ptype);
-			$cmd = $this->getCommand($pattern, $sudo, $dir, $bconsole_command);
+			$cmd = $this->prepareBconsoleCommand($director, $command, $ptype);
 			exec($cmd['cmd'], $output, $exitcode);
 			Logging::log(
 				Logging::CATEGORY_EXECUTE,
@@ -254,6 +261,8 @@ class Bconsole extends APIModule
 					BconsoleError::ERROR_BCONSOLE_CONNECTION_PROBLEM
 				);
 			} else {
+				$pattern = $this->getCmdPattern($ptype);
+				$bconsole_command = implode(' ', $command);
 				if ($pattern === self::BCONSOLE_BG_COMMAND_PATTERN || $pattern === self::BCONSOLE_CONFIRM_YES_BG_COMMAND_PATTERN) {
 					$output = [
 						$bconsole_command,
@@ -265,6 +274,23 @@ class Bconsole extends APIModule
 			}
 		}
 		return $result;
+	}
+
+	/**
+	 * Prepare Bconsole command to use.
+	 *
+	 * @param null|string $director Bacula Director name
+	 * @param array $command Bconsole command
+	 * @param null|int $ptype Bconsole command pattern type
+	 * @return array command and output identifier
+	 */
+	public function prepareBconsoleCommand(?string $director, array $command, ?int $ptype = null): array
+	{
+		$dir = is_null($director) ? '' : '-D ' . $director;
+		$sudo = $this->sudo->getSudoCmd();
+		$bconsole_command = implode(' ', $command);
+		$pattern = $this->getCmdPattern($ptype);
+		return $this->getCommand($pattern, $sudo, $dir, $bconsole_command);
 	}
 
 	private function getCommand($pattern, $sudo, $director, $bconsole_command)
@@ -310,6 +336,10 @@ class Bconsole extends APIModule
 			case self::PTYPE_CONFIRM_YES_CMD: $pattern = self::BCONSOLE_CONFIRM_YES_COMMAND_PATTERN;
 				break;
 			case self::PTYPE_CONFIRM_YES_BG_CMD: $pattern = self::BCONSOLE_CONFIRM_YES_BG_COMMAND_PATTERN;
+				break;
+			case self::PTYPE_OPEN_CMD: $pattern = self::BCONSOLE_OPEN_PATTERN;
+				break;
+			case self::PTYPE_OPEN_BG_CMD: $pattern = self::BCONSOLE_OPEN_BG_PATTERN;
 				break;
 			default: $pattern = self::BCONSOLE_COMMAND_PATTERN;
 		}
