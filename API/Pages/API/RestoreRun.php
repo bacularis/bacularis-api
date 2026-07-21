@@ -41,37 +41,52 @@ class RestoreRun extends BaculumAPIServer
 	public function create($params)
 	{
 		$misc = $this->getModule('misc');
+
+		// Backup jobid - restore point
 		$jobid = property_exists($params, 'id') && $misc->isValidInteger($params->id) ? (int) ($params->id) : null;
+
+		// Backup client
 		$client = null;
+		$client_mod = $this->getModule('client');
 		if (property_exists($params, 'clientid')) {
 			$clientid = (int) ($params->clientid);
-			$client_row = $this->getModule('client')->getClientById($clientid);
+			$client_row = $client_mod->getClientById($clientid);
 			$client = is_object($client_row) ? $client_row->name : null;
 		} elseif (property_exists($params, 'client') && $misc->isValidName($params->client)) {
 			$client = $params->client;
 		}
 
+		// Restore client
 		$restoreclient = null;
 		if (property_exists($params, 'restoreclientid')) {
 			$restoreclientid = (int) ($params->restoreclientid);
-			$restoreclient_row = $this->getModule('client')->getClientById($restoreclientid);
+			$restoreclient_row = $client_mod->getClientById($restoreclientid);
 			$restoreclient = is_object($restoreclient_row) ? $restoreclient_row->name : null;
 		} elseif (property_exists($params, 'restoreclient') && $misc->isValidName($params->restoreclient)) {
 			$restoreclient = $params->restoreclient;
 		}
 
+		// Backup fileset
 		$fileset = null;
 		if (property_exists($params, 'filesetid')) {
 			$filesetid = (int) ($params->filesetid);
-			$fileset_row = $this->getModule('fileset')->getFileSetById($filesetid);
+			$fileset_mod = $this->getModule('fileset');
+			$fileset_row = $fileset_mod->getFileSetById($filesetid);
 			$fileset = is_object($fileset_row) ? $fileset_row->fileset : null;
 		} elseif (property_exists($params, 'fileset') && $misc->isValidName($params->fileset)) {
 			$fileset = $params->fileset;
 		}
 
+		// BVFS restore table
 		$rfile = property_exists($params, 'rpath') ? $params->rpath : null;
+
+		// Full backup mode
 		$full = property_exists($params, 'full') && $misc->isValidInteger($params->full) ? (bool) $params->full : null;
+
+		// Where to restore
 		$where = property_exists($params, 'where') ? $params->where : null;
+
+		// Replace mode - ifolder/ifnewer/never/always
 		$replace = property_exists($params, 'replace') ? $params->replace : null;
 
 		$restorejob = null;
@@ -118,19 +133,10 @@ class RestoreRun extends BaculumAPIServer
 			return;
 		}
 
-		$command = ['restore',
+		$command = [
+			'restore',
 			'client="' . $client . '"'
 		];
-		if (is_string($rfile)) {
-			// Restore using Bvfs
-			$command[] = 'file="?' . $rfile . '"';
-		} elseif ($full === true && is_int($jobid) && $jobid > 0 && is_string($fileset)) {
-			// Full restore all files
-			$command[] = 'jobid="' . $jobid . '"';
-			$command[] = 'fileset="' . $fileset . '"';
-			$command[] = 'all';
-			$command[] = 'done';
-		}
 
 		if (is_string($replace)) {
 			$command[] = 'replace="' . $replace . '"';
@@ -157,7 +163,21 @@ class RestoreRun extends BaculumAPIServer
 		}
 		$command[] = 'yes';
 
-		$restore = $this->getModule('bconsole')->bconsoleCommand($this->director, $command);
+		if (is_string($rfile)) {
+			// Restore using Bvfs
+			$command[] = 'file="?' . $rfile . '"';
+		} elseif ($full === true && is_int($jobid) && $jobid > 0 && is_string($fileset)) {
+			// Full restore all files
+			$command[] = 'jobid="' . $jobid . '"';
+			$command[] = 'fileset="' . $fileset . '"';
+			$command[] = 'all';
+			$command[] = 'done';
+		}
+
+		// Run restore
+		$bconsole = $this->getModule('bconsole');
+		$restore = $bconsole->bconsoleCommand($this->director, $command);
+
 		$this->output = $restore->output;
 		$this->error = $restore->exitcode;
 	}
