@@ -55,6 +55,14 @@ class RestoreStart extends BaculumAPIServer
 			$parameters_con['sudo-group'] = $sudo_group;
 		}
 
+		// Add debug option
+		$api_config = $this->getModule('api_config');
+		$config = $api_config->getConfig('api');
+		if (key_exists('debug', $config) && $config['debug'] == 1) {
+			$parameters_con['debug'] = 1;
+		}
+
+
 		// Open a new Bacula console session first
 		$result = BaculaConsole::start($parameters_con);
 		if ($result['error'] == 0) {
@@ -105,6 +113,13 @@ class RestoreStart extends BaculumAPIServer
 				'client' => $client,
 				'fileset' => $fileset
 			];
+
+			// Add debug option
+			$api_config = $this->getModule('api_config');
+			$config = $api_config->getConfig('api');
+			if (key_exists('debug', $config) && $config['debug'] == 1) {
+				$parameters_res['debug'] = 1;
+			}
 
 			// Run Bacula restore session
 			$result = BaculaConsole::execute($command, $parameters_res);

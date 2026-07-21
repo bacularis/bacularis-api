@@ -395,6 +395,14 @@ class RestoreFinish extends BaculumAPIServer
 			'value' => $value,
 			'async' => ($async ? 1 : 0)
 		];
+
+		// Add debug option
+		$api_config = $this->getModule('api_config');
+		$config = $api_config->getConfig('api');
+		if (key_exists('debug', $config) && $config['debug'] == 1) {
+			$params['debug'] = 1;
+		}
+
 		$ret = [];
 		$result = BaculaConsole::execute($command, $params);
 		if ($result['error'] == 0) {

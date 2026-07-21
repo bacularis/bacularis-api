@@ -64,6 +64,14 @@ class RestoreOutput extends BaculumAPIServer
 		if ($timeout) {
 			$params['timeout'] = $timeout;
 		}
+
+		// Add debug option
+		$api_config = $this->getModule('api_config');
+		$config = $api_config->getConfig('api');
+		if (key_exists('debug', $config) && $config['debug'] == 1) {
+			$params['debug'] = 1;
+		}
+
 		$result = BaculaConsole::execute($command, $params);
 		if ($result['error'] == 0 && count($result['output']) > 0) {
 			$parts = explode(' ', $result['output'][0]);
