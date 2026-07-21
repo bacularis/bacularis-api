@@ -79,6 +79,10 @@
 	<url ServiceParameter="JobFileDiff" pattern="api/v3/jobs/{name}/{start_id}/{end_id}/diff/" parameters.name="[a-zA-Z0-9:.\-_ ]+" parameters.start_id="\d+" parameters.end_id="\d+" />
 	<url ServiceParameter="JobFiles" pattern="api/v3/jobs/files/" />
 	<url ServiceParameter="RestoreRun" pattern="api/v3/jobs/restore/" />
+	<url ServiceParameter="RestoreStart" pattern="api/v3/jobs/restore/start/" />
+	<url ServiceParameter="RestoreFinish" pattern="api/v3/jobs/restore/finish/" />
+	<url ServiceParameter="RestoreCommand" pattern="api/v3/jobs/restore/command/" />
+	<url ServiceParameter="RestoreOutput" pattern="api/v3/jobs/restore/output/" />
 	<!-- bvfs endpoints-->
 	<url ServiceParameter="BVFSUpdate" pattern="api/v3/bvfs/update/" />
 	<url ServiceParameter="BVFSLsDirs" pattern="api/v3/bvfs/lsdirs/" />
