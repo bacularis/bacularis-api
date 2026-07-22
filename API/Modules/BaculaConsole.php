@@ -33,8 +33,11 @@ class BaculaConsole extends APIModule
 
 	/**
 	 * Start Bacula console session.
+	 *
+	 * @param array $params start parameters
+	 * @return array command output and error code
 	 */
-	public static function start($params)
+	public static function start(array $params): array
 	{
 		$command = 'console/start';
 		return self::executeInBg($command, $params);
@@ -47,7 +50,7 @@ class BaculaConsole extends APIModule
 	 * @param array $params command parameters
 	 * @return array result output and error code
 	 */
-	public static function execute(string $command, array $params)
+	public static function execute(string $command, array $params): array
 	{
 		$bin = Prado::getPathOfNamespace(self::BACULA_CONSOLE_BINARY);
 		$cmd_params = self::getCommandParams($params);
@@ -70,7 +73,7 @@ class BaculaConsole extends APIModule
 	 * @param array $params command parameters
 	 * @return array result output and error code.
 	 */
-	public static function executeInBg(string $command, array $params)
+	public static function executeInBg(string $command, array $params): array
 	{
 		$bin = Prado::getPathOfNamespace(self::BACULA_CONSOLE_BINARY);
 		$cmd_params = self::getCommandParams($params);

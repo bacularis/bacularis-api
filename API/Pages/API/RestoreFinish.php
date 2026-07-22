@@ -213,6 +213,7 @@ class RestoreFinish extends BaculumAPIServer
 	/**
 	 * Exit the console restore file selection mode.
 	 *
+	 * @param string $session_id session identifier
 	 * @return bool true on success, false otherwise
 	 */
 	private function finishDirFileSelection(string $session_id): bool
