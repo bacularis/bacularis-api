@@ -44,10 +44,10 @@ class RestoreFinish extends BaculumAPIServer
 		}
 
 		// Where to restore
-		$where = property_exists($params, 'where') ? $params->where : null;
+		$where = property_exists($params, 'where') && $misc->isValidPath($params->where) ? $params->where : null;
 
 		// Replace mode - ifolder/ifnewer/never/always
-		$replace = property_exists($params, 'replace') ? $params->replace : null;
+		$replace = property_exists($params, 'replace') && $misc->isValidReplace($params->replace) ? $params->replace : null;
 
 		// Directory list to restore
 		$directory = property_exists($params, 'directory') ? $params->directory : [];
@@ -132,21 +132,25 @@ class RestoreFinish extends BaculumAPIServer
 		}
 
 		// Select replace files option
-		$result = $this->selectReplace($session_id, $replace);
-		if (!$result) {
-			$emsg = ' Error while modifying replace parameter.';
-			$this->output = JobError::MSG_ERROR_INVALID_REPLACE_OPTION . $emsg;
-			$this->error = JobError::ERROR_INVALID_REPLACE_OPTION;
-			return;
+		if (is_string($replace)) {
+			$result = $this->selectReplace($session_id, $replace);
+			if (!$result) {
+				$emsg = ' Error while modifying replace parameter.';
+				$this->output = JobError::MSG_ERROR_INVALID_REPLACE_OPTION . $emsg;
+				$this->error = JobError::ERROR_INVALID_REPLACE_OPTION;
+				return;
+			}
 		}
 
 		// Select restore client
-		$result = $this->selectRestoreClient($session_id, $restoreclient);
-		if (!$result) {
-			$emsg = ' Error while modifying restore client parameter.';
-			$this->output = JobError::MSG_ERROR_INVALID_COMMAND . $emsg;
-			$this->error = JobError::ERROR_INVALID_COMMAND;
-			return;
+		if (is_string($restoreclient)) {
+			$result = $this->selectRestoreClient($session_id, $restoreclient);
+			if (!$result) {
+				$emsg = ' Error while modifying restore client parameter.';
+				$this->output = JobError::MSG_ERROR_INVALID_COMMAND . $emsg;
+				$this->error = JobError::ERROR_INVALID_COMMAND;
+				return;
+			}
 		}
 
 		// File relocation options
