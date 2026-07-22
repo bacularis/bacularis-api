@@ -12,7 +12,7 @@
 			"name": "AGPLv3",
 			"url": "https://www.gnu.org/licenses/agpl-3.0-standalone.html"
 		},
-		"version": "3.1.2"
+		"version": "3.2.0"
 	},
 	"servers": [
 		{
@@ -2999,7 +2999,7 @@
 			"post": {
 				"tags": ["jobs"],
 				"summary": "Restore job",
-				"description": "Restore backup job.",
+				"description": "Standard restore backup job - all restore run in one request. This does not use restore session feature. It supports BVFS restore and full backup job restore (all backup data, without single dir/file selection).",
 				"responses": {
 					"200": {
 						"description": "Restore command output",
@@ -3161,6 +3161,361 @@
 						"name": "regex_where",
 						"in": "header",
 						"description": "Use regex to file relocation",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v3/jobs/restore/start": {
+			"post": {
+				"tags": ["jobs"],
+				"summary": "Start restore job session.",
+				"description": "Start restore backup job session. This uses restore session feature.",
+				"responses": {
+					"200": {
+						"description": "Start restore session command output",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "object",
+											"properties": {
+												"session-id": {
+													"type": "string",
+													"description": "Restore session identifier"
+												},
+												"command-id": {
+													"type": "string",
+													"description": "Restore command identifier"
+												}
+											}
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 1, 2, 3, 4, 5, 6, 7, 9, 11, 50, 52, 53, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"name": "jobid",
+						"in": "header",
+						"description": "Job identifier (or comma separated identifiers if more jobids needed to restore)",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					},
+					{
+						"name": "clientid",
+						"in": "header",
+						"description": "Client identifier",
+						"required":  true,
+						"schema": {
+							"type": "integer"
+						}
+					},
+					{
+						"name": "client",
+						"in": "header",
+						"description": "Client name (can be used instead clientid)",
+						"required":  true,
+						"schema": {
+							"type": "string",
+							"pattern": "[a-zA-Z0-9:.-_ ]+"
+						}
+					},
+					{
+						"name": "filesetid",
+						"in": "header",
+						"description": "FileSet identifier",
+						"required":  true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "fileset",
+						"in": "header",
+						"description": "FileSet name (can be used instead of filesetid)",
+						"required":  true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v3/jobs/restore/finish": {
+			"post": {
+				"tags": ["jobs"],
+				"summary": "Finish restore job session",
+				"description": "Finish restore backup job session. This uses restore session feature.",
+				"responses": {
+					"200": {
+						"description": "Finish restore session command output",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "array",
+											"items": {
+												"type": "string",
+												"description": "Run restore command output"
+											}
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 57, 58, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"name": "where",
+						"in": "header",
+						"description": "Where to restore files",
+						"required":  false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "restoreclientid",
+						"in": "header",
+						"description": "Restore client identifier (can be used instead of restoreclient)",
+						"required": false,
+						"schema": {
+							"type": "integer"
+						}
+					},
+					{
+						"name": "restoreclient",
+						"in": "header",
+						"description": "Restore client name (can be used instead of restoreclientid)",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"pattern": "[a-zA-Z0-9:.-_ ]+"
+						}
+					},
+					{
+						"name": "directory",
+						"in": "header",
+						"description": "Directory list to restore",
+						"required": false,
+						"schema": {
+							"type": "array"
+						}
+					},
+					{
+						"name": "file",
+						"in": "header",
+						"description": "File list to restore",
+						"required": false,
+						"schema": {
+							"type": "array"
+						}
+					},
+					{
+						"name": "where",
+						"in": "header",
+						"description": "Destination path where to restore data",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "replace",
+						"in": "header",
+						"description": "Restore destination data replace option",
+						"required": false,
+						"schema": {
+							"enum": ["never", "ifolder", "ifnewer", "always"]
+						}
+					},
+					{
+						"name": "strip_prefix",
+						"in": "header",
+						"description": "Strip prefix in restored paths",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "add_prefix",
+						"in": "header",
+						"description": "Add prefix to restored paths",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "add_suffix",
+						"in": "header",
+						"description": "Add suffix to restored paths",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "regex_where",
+						"in": "header",
+						"description": "Use regex to file relocation",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v3/jobs/restore/command": {
+			"post": {
+				"tags": ["jobs"],
+				"summary": "Execute restore session command",
+				"description": "Execute restore session command. This uses restore session feature.",
+				"responses": {
+					"200": {
+						"description": "Execute restore session command output.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "array",
+											"items": {
+												"type": "string",
+												"description": "Execute restore session command output"
+											}
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"name": "session-id",
+						"in": "header",
+						"description": "Restore session identifier",
+						"required":  true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "command",
+						"in": "header",
+						"description": "Restore command name",
+						"required": true,
+						"schema": {
+							"enum": ["ls", "cd", "mark", "markall", "done", "quit", "yes", "modify", "select"]
+						}
+					},
+					{
+						"name": "path",
+						"in": "header",
+						"description": "Directory or file path. Used in selected commands (cd, mark)",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "async",
+						"in": "header",
+						"description": "Decides if command should be executed in foreground or in background (asynchronously)",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/api/v3/jobs/restore/output": {
+			"get": {
+				"tags": ["jobs"],
+				"summary": "Get restore session command output",
+				"description": "Get restore session command output. This uses restore session feature.",
+				"responses": {
+					"200": {
+						"description": "Restore session command output.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "array",
+											"items": {
+												"type": "string",
+												"description": "Command output. NOTE: for some commands this output is a JSON-preformatted (list directories, list files)."
+											}
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"name": "session-id",
+						"in": "query",
+						"description": "Restore session identifier",
+						"required":  true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "command-id",
+						"in": "query",
+						"description": "Restore command identifier",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "timeout",
+						"in": "query",
+						"description": "Maximum waiting time for command output (in miliseconds)",
 						"required": false,
 						"schema": {
 							"type": "string"
