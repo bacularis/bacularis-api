@@ -37,8 +37,8 @@ class RestoreStart extends BaculumAPIServer
 		$bconsole_bin = Bconsole::getCmdPath();
 		$bconsole_cfg = Bconsole::getCfgPath();
 		$use_sudo = ($config['use_sudo'] == 1);
-		$sudo_user = $config['sudo_user'] ?: null;
-		$sudo_group = $config['sudo_group'] ?: null;
+		$sudo_user = $config['sudo_user'] ?? null;
+		$sudo_group = $config['sudo_group'] ?? null;
 
 		$parameters_con = [
 			'session-id' => $session_id,
