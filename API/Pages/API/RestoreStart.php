@@ -90,6 +90,11 @@ class RestoreStart extends BaculumAPIServer
 				$fileset = $params->fileset;
 			}
 
+			$restorejob = null;
+			if (property_exists($params, 'restorejob') && $misc->isValidName($params->restorejob)) {
+				$restorejob = $params->restorejob;
+			}
+
 			if (is_null($jobid)) {
 				$this->output = JobError::MSG_ERROR_JOB_DOES_NOT_EXISTS;
 				$this->error = JobError::ERROR_JOB_DOES_NOT_EXISTS;
@@ -105,13 +110,20 @@ class RestoreStart extends BaculumAPIServer
 				$this->error = JobError::ERROR_FILESET_DOES_NOT_EXISTS;
 				return;
 			}
+			if (is_null($restorejob)) {
+				$emsg = ' Required restore job has not been provided.';
+				$this->output = JobError::MSG_ERROR_JOB_DOES_NOT_EXISTS . $emsg;
+				$this->error = JobError::ERROR_JOB_DOES_NOT_EXISTS;
+				return;
+			}
 
 			$command = 'restore/start';
 			$parameters_res = [
 				'session-id' => $session_id,
 				'job-id' => $jobid,
 				'client' => $client,
-				'fileset' => $fileset
+				'fileset' => $fileset,
+				'restorejob' => $restorejob
 			];
 
 			// Add debug option
