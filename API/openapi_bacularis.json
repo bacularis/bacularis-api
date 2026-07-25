@@ -12,7 +12,7 @@
 			"name": "AGPLv3",
 			"url": "https://www.gnu.org/licenses/agpl-3.0-standalone.html"
 		},
-		"version": "3.2.0"
+		"version": "3.2.1"
 	},
 	"servers": [
 		{
@@ -948,6 +948,15 @@
 				"name": "offset",
 				"in": "query",
 				"description": "Item offset",
+				"required": false,
+				"schema": {
+					"type": "integer"
+				}
+			},
+			"OffsetDB": {
+				"name": "offset",
+				"in": "query",
+				"description": "Item offset. Requires providing limit parameter as well.",
 				"required": false,
 				"schema": {
 					"type": "integer"
@@ -7347,14 +7356,27 @@
 						"$ref": "#/components/parameters/JobId"
 					},
 					{
-					"name": "show_time",
-					"in": "query",
-					"description": "Show time in job log.",
-					"required": false,
-					"schema": {
-						"type": "boolean"
+						"name": "show_time",
+						"in": "query",
+						"description": "Show time in job log.",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"$ref": "#/components/parameters/Limit"
+					},
+					{
+						"$ref": "#/components/parameters/OffsetDB"
+					},
+					{
+						"$ref": "#/components/parameters/OrderBy"
+					},
+					{
+						"$ref": "#/components/parameters/OrderType"
 					}
-				}]
+				]
 			}
 		},
 		"/api/v3/joblog/messages": {
