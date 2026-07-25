@@ -29,6 +29,8 @@
 
 namespace Bacularis\API\Modules;
 
+use PDO;
+
 /**
  * Log manager module.
  *
@@ -40,23 +42,36 @@ class LogManager extends APIModule
 	/**
 	 * Get job log by job identifier.
 	 *
-	 * @param int $jobid job identifier
-	 * @param bool $show_time show time in job log
+	 * @param array $criteria SQL log query criterias
+	 * @param array $params query parameters (show time, offset, limit ...etc.)
 	 * @return array job log lines
 	 */
-	public function getLogByJobId($jobid, $show_time = false)
+	public function getLogs($criteria, $params)
 	{
-		$logs = LogRecord::finder()->findAllByjobid($jobid);
-		$joblog = [];
-		if (is_array($logs)) {
-			foreach ($logs as $log) {
-				if ($show_time) {
-					$joblog[] = $log->time . ' ' . $log->logtext;
-				} else {
-					$joblog[] = $log->logtext;
-				}
-			}
+		$limit = '';
+		if (key_exists('limit', $params) && $params['limit'] > 0) {
+			$limit = ' LIMIT ' . $params['limit'];
 		}
-		return $joblog;
+		$offset = '';
+		if ($limit && key_exists('offset', $params) && $params['offset'] > 0) {
+			$offset = ' OFFSET ' . $params['offset'];
+		}
+		$order = '';
+		if (key_exists('order_by', $params) && $params['order_by'] && key_exists('order_type', $params) && $params['order_type']) {
+			$order_by = $params['order_by'];
+			$order_type = $params['order_type'];
+			$order = ' ORDER BY ' . $order_by . ' ' . strtoupper($order_type);
+		}
+		$where = Database::getWhere($criteria);
+
+		$sql = '';
+		if (key_exists('show_time', $params) && $params['show_time']) {
+			$sql = 'SELECT CONCAT(Log.Time, \' \', Log.LogText) FROM Log';
+		} else {
+			$sql = 'SELECT Log.LogText FROM Log';
+		}
+		$sql .= $where['where'] . $order . $limit . $offset;
+
+		return Database::findAllBySql($sql, $where['params'], PDO::FETCH_COLUMN);
 	}
 }
