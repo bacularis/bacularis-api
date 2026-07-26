@@ -263,7 +263,7 @@
 									<div class="w3-rest">
 										<com:TActiveCheckBox
 											ID="InstallBaculaUseSudo"
-											CssClass="w3-check"
+											CssClass="w3-check w3-margin-bottom"
 										/>
 									</div>
 								</div>
