@@ -1153,6 +1153,34 @@
 					"type": "string",
 					"pattern": "[a-zA-Z0-9:.-_ ]+"
 				}
+			},
+			"SearchDirectiveName": {
+				"name": "search_directive_name",
+				"in": "query",
+				"description": "Search by directive name (requires: search_directive_value=xxx)",
+				"required": false,
+				"schema": {
+					"type": "string",
+					"pattern": "[a-zA-Z0-9:.-_ ]+"
+				}
+			},
+			"SearchDirectiveValue": {
+				"name": "search_directive_value",
+				"in": "query",
+				"description": "Search by directive value or value part (requires: search_directive_name=xxx)",
+				"required": false,
+				"schema": {
+					"type": "string"
+				}
+			},
+			"SearchAccurate": {
+				"name": "search_accurate",
+				"in": "query",
+				"description": "If the value is true, then search_directive_value means to search for the exact, complete value, otherwise the value or part of the value is searched.",
+				"required": false,
+				"schema": {
+					"type": "boolean"
+				}
 			}
 		}
 	},
@@ -6165,6 +6193,15 @@
 					},
 					{
 						"$ref": "#/components/parameters/Search"
+					},
+					{
+						"$ref": "#/components/parameters/SearchDirectiveName"
+					},
+					{
+						"$ref": "#/components/parameters/SearchDirectiveValue"
+					},
+					{
+						"$ref": "#/components/parameters/SearchAccurate"
 					}
 				]
 			},
@@ -6261,6 +6298,18 @@
 					},
 					{
 						"$ref": "#/components/parameters/ApplyJobDefs"
+					},
+					{
+						"$ref": "#/components/parameters/Search"
+					},
+					{
+						"$ref": "#/components/parameters/SearchDirectiveName"
+					},
+					{
+						"$ref": "#/components/parameters/SearchDirectiveValue"
+					},
+					{
+						"$ref": "#/components/parameters/SearchAccurate"
 					}
 				]
 			},
