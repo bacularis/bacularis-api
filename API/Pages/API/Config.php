@@ -53,8 +53,28 @@ class Config extends BaculumAPIServer
 		if ($apply_jobdefs) {
 			$opts['apply_jobdefs'] = $apply_jobdefs;
 		}
+		// Search by resource name
 		$search = $this->Request->contains('search') ? $this->Request['search'] : null;
 		if (is_string($search) && !$misc->isValidName($this->Request['search'])) {
+			$this->output = BaculaConfigError::MSG_ERROR_INVALID_COMMAND;
+			$this->error = BaculaConfigError::ERROR_INVALID_COMMAND;
+			return;
+		}
+
+		// Search by directive name and value
+		$search_directive_name = $this->Request->contains('search_directive_name') ? $this->Request['search_directive_name'] : null;
+		$search_directive_value = $this->Request->contains('search_directive_value') ? $this->Request['search_directive_value'] : null;
+
+		// Accurate search mode for exact matching
+		$search_accurate = $this->Request->contains('search_accurate') ? $misc->isValidBoolean($this->Request['search_accurate']) : false;
+
+		if (is_string($search_directive_name) && (empty($search_directive_name) || !$misc->isValidName($this->Request['search_directive_name']))) {
+			$this->output = BaculaConfigError::MSG_ERROR_INVALID_COMMAND;
+			$this->error = BaculaConfigError::ERROR_INVALID_COMMAND;
+			return;
+		}
+
+		if (is_string($search_directive_value) && (empty($search_directive_value) || !$misc->isValidFilename($this->Request['search_directive_value']))) {
 			$this->output = BaculaConfigError::MSG_ERROR_INVALID_COMMAND;
 			$this->error = BaculaConfigError::ERROR_INVALID_COMMAND;
 			return;
@@ -103,9 +123,24 @@ class Config extends BaculumAPIServer
 			);
 		}
 
-		if ($config['exitcode'] == 0 && is_string($search) && is_null($resource_type) && is_null($resource_name)) {
-			// filter search results
-			$config['output'] = $this->filterConfig($config['output'], $search);
+		if ($config['exitcode'] == 0 && is_null($resource_name)) {
+			if (is_string($search)) {
+				// filter search results by Name
+				$config['output'] = $this->filterConfig(
+					$config['output'],
+					'Name',
+					$search,
+					$search_accurate
+				);
+			} elseif (is_string($search_directive_name) && is_string($search_directive_value)) {
+				// filter search results by given directive name and value or value part
+				$config['output'] = $this->filterConfig(
+					$config['output'],
+					$search_directive_name,
+					$search_directive_value,
+					$search_accurate
+				);
+			}
 		}
 
 		$this->output = $config['output'];
@@ -463,34 +498,67 @@ class Config extends BaculumAPIServer
 	 * It filters values by keyword in resource 'Name' directive.
 	 *
 	 * @param array $output config output
+	 * @param string $directive_name directive name to search
 	 * @param string $keyword keyword to search for
+	 * @param bool $accurate accurate search mode (search by exact names, not parts)
 	 * @return array result with filtered configuration
 	 */
-	private function filterConfig(array $output, string $keyword): array
+	private function filterConfig(array $output, string $directive_name, string $keyword, bool $accurate = false): array
 	{
 		$config = [];
 		$resources = [];
 		// Group resource names by resource types
 		for ($i = 0; $i < count($output); $i++) {
 			$resource_type = key($output[$i]);
-			$resource_name = $output[$i][$resource_type]['Name'] ?? '';
+			$search_value = $output[$i][$resource_type][$directive_name] ?? null;
+			if (is_null($search_value)) {
+				// resource does not have given directive name, skip it
+				continue;
+			}
 			if (!key_exists($resource_type, $resources)) {
 				$resources[$resource_type] = [];
 			}
-			$resources[$resource_type][] = $resource_name;
+			$resources[$resource_type][] = $search_value;
 		}
 		// Filter configuration
 		foreach ($resources as $resource_type => $names) {
-			Miscellaneous::filterList($names, "*{$keyword}*");
+			$pattern = $accurate ? $keyword : "*{$keyword}*";
+			Miscellaneous::filterList($names, $pattern);
 			for ($i = 0; $i < count($output); $i++) {
 				$res_type = key($output[$i]);
 				if ($res_type != $resource_type) {
 					// different resource types in config and filtered results, skip it
 					continue;
 				}
-				if (!in_array($output[$i][$resource_type]['Name'], $names)) {
-					// not found in fitlered results, skip it
+				if (!isset($output[$i][$resource_type][$directive_name])) {
+					// directive does not exist in config, skip it
 					continue;
+				}
+				if (is_array($output[$i][$resource_type][$directive_name])) {
+					// Directive stores array type (ex: Storage: [])
+					$assoc_keys = array_filter(array_keys($output[$i][$resource_type][$directive_name]), 'is_string');
+					if (count($assoc_keys) > 0) {
+						// associative array, not supported, skip it
+						continue;
+					}
+					$found = false;
+					for ($j = 0; $j < count($names); $j++) {
+						$diff = array_diff($output[$i][$resource_type][$directive_name], $names[$j]);
+						if (count($diff) === 0) {
+							$found = true;
+							break;
+						}
+					}
+					if (!$found) {
+						// value not found, skip it
+						continue;
+					}
+				} else {
+					// Directive stores scalar type
+					if (!in_array($output[$i][$resource_type][$directive_name], $names)) {
+						// not found in fitlered results, skip it
+						continue;
+					}
 				}
 				$config[] = $output[$i];
 			}
