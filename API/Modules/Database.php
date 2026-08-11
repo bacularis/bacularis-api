@@ -181,42 +181,48 @@ class Database extends APIModule
 		if (count($params) > 0) {
 			$condition = [];
 			foreach ($params as $key => $value) {
-				$cond = [];
-				$vals = [];
-				$kval = $vars_prefix . str_replace('.', '_', $key);
-				$value['operator'] ??= 'OR';
-				if (is_array($value['vals'])) {
-					if ($value['operator'] == 'IN') {
-						$in_vals = [];
-						for ($i = 0; $i < count($value['vals']); $i++) {
-							$in_vals[] = ":{$kval}{$i}";
-							$vals[":{$kval}{$i}"] = $value['vals'][$i];
+				for ($i = 0; $i < count($value); $i++) {
+					$cond = [];
+					$vals = [];
+					$kval = $vars_prefix . str_replace('.', '_', $key) . $i;
+					$value[$i]['operator'] ??= 'OR';
+					if (is_array($value[$i]['vals'])) {
+						if ($value[$i]['operator'] == 'IN') {
+							$in_vals = [];
+							for ($j = 0; $j < count($value[$i]['vals']); $j++) {
+								$in_vals[] = ":{$kval}{$j}";
+								$vals[":{$kval}{$j}"] = $value[$i]['vals'][$j];
+							}
+							$cond[] = "{$key} {$value[$i]['operator']} (" . implode(',', $in_vals) . ')';
+							$value[$i]['operator'] = '';
+						} else {
+							for ($j = 0; $j < count($value[$i]['vals']); $j++) {
+								$cond[] = "{$key} = :{$kval}{$j}";
+								$vals[":{$kval}{$j}"] = $value[$i]['vals'][$j];
+							}
 						}
-						$cond[] = "{$key} {$value['operator']} (" . implode(',', $in_vals) . ')';
 					} else {
-						for ($i = 0; $i < count($value['vals']); $i++) {
-							$cond[] = "{$key} = :{$kval}{$i}";
-							$vals[":{$kval}{$i}"] = $value['vals'][$i];
+						if ($value[$i]['operator'] == 'LIKE') {
+							$cond[] = "$key {$value[$i]['operator']} :$kval";
+							$vals[":$kval"] = $value[$i]['vals'];
+							$value[$i]['operator'] = '';
+						} elseif ($value[$i]['operator'] == 'ILIKE') {
+							$cond[] = "LOWER($key) LIKE :$kval";
+							$vals[":$kval"] = strtolower($value[$i]['vals']);
+							$value[$i]['operator'] = '';
+						} elseif (in_array($value[$i]['operator'], ['>', '<', '>=', '<='])) {
+							$cond[] = "{$key} {$value[$i]['operator']} :{$kval}";
+							$vals[":{$kval}"] = $value[$i]['vals'];
+							$value[$i]['operator'] = '';
+						} else {
+							$cond[] = "$key = :$kval";
+							$vals[":$kval"] = $value[$i]['vals'];
 						}
 					}
-				} else {
-					if ($value['operator'] == 'LIKE') {
-						$cond[] = "$key LIKE :$kval";
-						$vals[":$kval"] = $value['vals'];
-					} elseif ($value['operator'] == 'ILIKE') {
-						$cond[] = "LOWER($key) LIKE :$kval";
-						$vals[":$kval"] = strtolower($value['vals']);
-					} elseif (in_array($value['operator'], ['>', '<', '>=', '<='])) {
-						$cond[] = "{$key} {$value['operator']} :{$kval}";
-						$vals[":{$kval}"] = $value['vals'];
-					} else {
-						$cond[] = "$key = :$kval";
-						$vals[":$kval"] = $value['vals'];
+					$condition[] = implode(' ' . $value[$i]['operator'] . ' ', $cond);
+					foreach ($vals as $pkey => $pval) {
+						$parameters[$pkey] = $pval;
 					}
-				}
-				$condition[] = implode(' ' . $value['operator'] . ' ', $cond);
-				foreach ($vals as $pkey => $pval) {
-					$parameters[$pkey] = $pval;
 				}
 			}
 			if (count($condition) > 0) {

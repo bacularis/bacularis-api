@@ -46,9 +46,9 @@ class Storages extends BaculumAPIServer
 
 		$params = [];
 		if ($name) {
-			$params['Storage.Name'] = [
+			$params['Storage.Name'] = [[
 				'vals' => [$name]
-			];
+			]];
 		}
 		$storages = $this->getModule('storage')->getStorages($limit, $params);
 		$result = $this->getModule('bconsole')->bconsoleCommand(

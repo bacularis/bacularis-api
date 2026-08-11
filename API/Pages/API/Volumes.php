@@ -52,10 +52,10 @@ class Volumes extends BaculumAPIServer
 
 		$criteria = [];
 		if ($search) {
-			$criteria['Media.VolumeName'] = [
+			$criteria['Media.VolumeName'] = [[
 				'operator' => 'ILIKE',
 				'vals' => "%{$search}%"
-			];
+			]];
 		}
 		$volume = $this->getModule('volume');
 		$result = $volume->getVolumes($criteria, $limit);

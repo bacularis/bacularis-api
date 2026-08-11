@@ -76,10 +76,10 @@ class JobLog extends BaculumAPIServer
 			}
 
 			$params = [
-				'Job.Name' => [
+				'Job.Name' => [[
 					'operator' => 'IN',
 					'vals' => $result->output
-				]
+				]]
 			];
 			$job_mod = $this->getModule('job');
 			$job = $job_mod->getJobById($jobid, $params);
@@ -101,9 +101,9 @@ class JobLog extends BaculumAPIServer
 					'limit' => $limit
 				];
 				$criteria = [
-					'Log.JobId' => [
+					'Log.JobId' => [[
 						'vals' => $job->jobid
-					]
+					]]
 				];
 				$joblog_mod = $this->getModule('joblog');
 				$log = $joblog_mod->getLogs($criteria, $log_params);

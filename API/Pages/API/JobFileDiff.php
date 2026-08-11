@@ -48,14 +48,14 @@ class JobFileDiff extends BaculumAPIServer
 			}
 		}
 		$params = [
-			'Job.JobId' => [
+			'Job.JobId' => [[
 				'operator' => 'OR',
 				'vals' => [$start_jobid, $end_jobid]
-			],
-			'Job.Name' => [
+			]],
+			'Job.Name' => [[
 				'operator' => 'AND',
 				'vals' => $jobname
-			]
+			]]
 		];
 
 		$job = $this->getModule('job');

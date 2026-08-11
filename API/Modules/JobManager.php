@@ -162,10 +162,10 @@ LEFT JOIN FileSet ON FileSet.FilesetId=Job.FilesetId '
 	public function getJobById($jobid, $criteria = [])
 	{
 		$params = [
-			'Job.JobId' => [
+			'Job.JobId' => [[
 				'vals' => [$jobid],
 				'operator' => 'AND'
-			]
+			]]
 		];
 		$params = array_merge($params, $criteria);
 		$job = $this->getJobs($params, 1);
@@ -399,16 +399,16 @@ LEFT JOIN FileSet ON FileSet.FilesetId=Job.FilesetId '
 	public function getJobsOnVolume($mediaid, $allowed_jobs = [])
 	{
 		$criteria = [
-			'JobMedia.MediaId' => [
+			'JobMedia.MediaId' => [[
 				'vals' => $mediaid,
 				'operator' => 'AND'
-			]
+			]]
 		];
 		if (count($allowed_jobs) > 0) {
-			$criteria['Job.Name'] = [
+			$criteria['Job.Name'] = [[
 				'vals' => $allowed_jobs,
 				'operator' => 'IN'
-			];
+			]];
 		}
 		$where = Database::getWhere($criteria, true);
 		$add_cols = $this->getAddCols();
@@ -457,16 +457,16 @@ WHERE {$where['where']}";
 	public function getJobsForClient($clientid, $allowed_jobs = [])
 	{
 		$criteria = [
-			'Client.ClientId' => [
+			'Client.ClientId' => [[
 				'vals' => $clientid,
 				'operator' => 'AND'
-			]
+			]]
 		];
 		if (count($allowed_jobs) > 0) {
-			$criteria['Job.Name'] = [
+			$criteria['Job.Name'] = [[
 				'vals' => $allowed_jobs,
 				'operator' => 'IN'
-			];
+			]];
 		}
 		$where = Database::getWhere($criteria, true);
 
@@ -519,25 +519,25 @@ WHERE {$where['where']}";
 	{
 		$criteria = [];
 		if (count($allowed_jobs) > 0) {
-			$criteria['Job.Name'] = [
+			$criteria['Job.Name'] = [[
 				'vals' => $allowed_jobs,
 				'operator' => 'IN'
-			];
+			]];
 		}
 
 		if ($strict_mode === false) {
 			$filename = '%' . $filename . '%';
 		}
-		$criteria['File.Filename'] = [
+		$criteria['File.Filename'] = [[
 			'vals' => $filename,
 			'operator' => 'LIKE'
-		];
+		]];
 
 		if (!empty($path)) {
-			$criteria['Path.Path'] = [
+			$criteria['Path.Path'] = [[
 				'vals' => $path,
 				'operator' => 'AND'
-			];
+			]];
 		}
 		$where = Database::getWhere($criteria, true);
 		$wh = '';
