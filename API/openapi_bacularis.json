@@ -1914,6 +1914,24 @@
 						"schema": {
 							"type": "integer"
 						}
+					},
+					{
+						"name": "starttime_from",
+						"in": "query",
+						"required": false,
+						"description": "Job start time from value in form YYYY-MM-DD HH:II:SS",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "starttime_to",
+						"in": "query",
+						"required": false,
+						"description": "Job start time to value in form YYYY-MM-DD HH:II:SS",
+						"schema": {
+							"type": "string"
+						}
 					}
 				]
 			}
