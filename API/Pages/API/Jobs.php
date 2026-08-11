@@ -48,6 +48,8 @@ class Jobs extends BaculumAPIServer
 		$type = $this->Request->contains('type') && $this->Request['type'] ? $this->Request['type'] : '';
 		$jobname = $this->Request->contains('name') && $misc->isValidName($this->Request['name']) ? $this->Request['name'] : '';
 		$clientid = $this->Request->contains('clientid') ? $this->Request['clientid'] : '';
+		$starttime_from = $this->Request->contains('starttime_from') && $misc->isValidBDateAndTime($this->Request['starttime_from']) ? $this->Request['starttime_from'] : '';
+		$starttime_to = $this->Request->contains('starttime_to') && $misc->isValidBDateAndTime($this->Request['starttime_to']) ? $this->Request['starttime_to'] : '';
 
 		if (!empty($clientid) && !$misc->isValidId($clientid)) {
 			$this->output = JobError::MSG_ERROR_CLIENT_DOES_NOT_EXISTS;
@@ -70,9 +72,9 @@ class Jobs extends BaculumAPIServer
 		for ($i = 0; $i < count($sts); $i++) {
 			if (in_array($sts[$i], $jobstatuses)) {
 				if (!key_exists('Job.JobStatus', $params)) {
-					$params['Job.JobStatus'] = ['operator' => 'OR', 'vals' => []];
+					$params['Job.JobStatus'] = [['operator' => 'OR', 'vals' => []]];
 				}
-				$params['Job.JobStatus']['vals'][] = $sts[$i];
+				$params['Job.JobStatus'][0]['vals'][] = $sts[$i];
 			}
 		}
 
@@ -81,9 +83,9 @@ class Jobs extends BaculumAPIServer
 		for ($i = 0; $i < count($jls); $i++) {
 			if ($misc->isValidJobLevel($jls[$i])) {
 				if (!key_exists('Job.Level', $params)) {
-					$params['Job.Level'] = ['operator' => 'OR', 'vals' => []];
+					$params['Job.Level'] = [['operator' => 'OR', 'vals' => []]];
 				}
-				$params['Job.Level']['vals'][] = $jls[$i];
+				$params['Job.Level'][0]['vals'][] = $jls[$i];
 			}
 		}
 
@@ -92,9 +94,9 @@ class Jobs extends BaculumAPIServer
 		for ($i = 0; $i < count($jts); $i++) {
 			if ($misc->isValidJobType($jts[$i])) {
 				if (!key_exists('Job.Type', $params)) {
-					$params['Job.Type'] = ['operator' => 'OR', 'vals' => []];
+					$params['Job.Type'] = [['operator' => 'OR', 'vals' => []]];
 				}
-				$params['Job.Type']['vals'][] = $jts[$i];
+				$params['Job.Type'][0]['vals'][] = $jts[$i];
 			}
 		}
 
@@ -125,8 +127,10 @@ class Jobs extends BaculumAPIServer
 				return;
 			}
 
-			$params['Job.Name']['operator'] = 'IN';
-			$params['Job.Name']['vals'] = $vals;
+			$params['Job.Name'] = [[
+				'operator' => 'IN',
+				'vals' => $vals
+			]];
 
 			$error = false;
 			// Client name and clientid filter
@@ -141,8 +145,10 @@ class Jobs extends BaculumAPIServer
 						$cli = $this->getModule('client')->getClientById($clientid);
 					}
 					if (is_object($cli) && in_array($cli->name, $result->output)) {
-						$params['Job.ClientId']['operator'] = 'AND';
-						$params['Job.ClientId']['vals'] = [$cli->clientid];
+						$params['Job.ClientId'] = [[
+							'operator' => 'AND',
+							'vals' => [$cli->clientid]
+						]];
 					} else {
 						$error = true;
 						$this->output = JobError::MSG_ERROR_CLIENT_DOES_NOT_EXISTS;
@@ -156,8 +162,24 @@ class Jobs extends BaculumAPIServer
 			}
 			if ($age > 0) {
 				$t = time() - $age;
-				$params['Job.StartTime']['operator'] = '>=';
-				$params['Job.StartTime']['vals'] = date('Y-m-d H:i:s', $t);
+				$params['Job.StartTime'] = [[
+					'operator' => '>=',
+					'vals' => date('Y-m-d H:i:s', $t)
+				]];
+			} elseif ($starttime_from || $starttime_to) {
+				$params['Job.StartTime'] = [];
+				if ($starttime_from) {
+					$params['Job.StartTime'][] = [
+						'operator' => '>=',
+						'vals' => $starttime_from
+					];
+				}
+				if ($starttime_to) {
+					$params['Job.StartTime'][] = [
+						'operator' => '<=',
+						'vals' => $starttime_to
+					];
+				}
 			}
 
 			if ($error === false) {
