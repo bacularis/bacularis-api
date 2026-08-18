@@ -154,7 +154,7 @@
 				request.done(function(data) {
 					if (typeof(data) == 'object' && data.hasOwnProperty('access_token')) {
 						this.token = data.access_token;
-						var text = document.createTextNode('<%[ Access token: ]%> ');
+						var text = document.createTextNode("<%[ Access token: ]%> ");
 						var span_out = document.createElement('SPAN');
 						var span_in = document.createElement('SPAN');
 						span_in.id = this.ids.progress_content;
