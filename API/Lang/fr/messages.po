@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-12-19 09:40\n"
+"PO-Revision-Date: 2026-08-16 12:21\n"
 "Project-Id-Version: bacularis\n"
 "POT-Creation-Date: \n"
 "Last-Translator: Marcin Haba <marcin.haba@bacula.pl>\n"
@@ -330,13 +330,13 @@ msgid "set all scopes"
 msgstr "définir toutes les portées"
 
 msgid "API panel"
-msgstr "API panel"
+msgstr "Panneau API"
 
 msgid "Bacularis API Client"
 msgstr "Bacularis API Client"
 
 msgid "Try one of the API commands"
-msgstr "Ici, vous pouvez essayer une des commandes de l'API"
+msgstr "Essaye une commande API"
 
 msgid "Starting..."
 msgstr "Démarrage en cours..."
@@ -384,10 +384,10 @@ msgid "Select:"
 msgstr "Sélectionner :"
 
 msgid "Bacularis working directory for Bacula config:"
-msgstr "Répertoire de travail Bacularis pour la configuration Bacula :"
+msgstr "Répertoire de travail Bacularis pour la configuration Bacula"
 
 msgid "In this directory Bacularis API saves temporarily Bacula configuration files (mainly for validation purposes) just before they are written as real Bacula configuration files."
-msgstr "Dans ce répertoire, Bacularis API enregistre temporairement les fichiers de configuration Bacula (principalement à des fins de validation) juste avant qu'ils ne soient écrits comme de vrais fichiers de configuration Bacula."
+msgstr "Dans ce répertoire, l’API Bacularis enregistre temporairement les fichiers de configuration Bacula (principalement pour validation) avant leur écriture définitive."
 
 msgid "Version:"
 msgstr "Version :"
@@ -447,13 +447,13 @@ msgid "Sudo configuration"
 msgstr "Configuration de Sudo"
 
 msgid "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration:"
-msgstr "Example sudo configuration for Apache, Nginx and Lighttpd web servers with default PHP-FPM configuration:"
+msgstr "Exemple de configuration sudo pour les serveurs web Apache, Nginx et Lighttpd avec configuration PHP-FPM par défaut"
 
 msgid "Get sudo configuration"
 msgstr "Obtenir la configuration de sudo"
 
 msgid "Please copy appropriate sudo configuration and put it to a new sudoers.d file for example /etc/sudoers.d/bacularis"
-msgstr "Veuillez copier la configuration sudo appropriée et la mettre dans un nouveau fichier sudoers.d par exemple /etc/sudoers.d/bacularis"
+msgstr "Copiez la configuration sudo appropriée dans un nouveau fichier sudoers, par exemple /etc/sudoers.d/bacularis"
 
 msgid "Step 5 - enable actions for components"
 msgstr "Étape 5 - activer les actions pour les composants"
@@ -860,222 +860,222 @@ msgstr "Gestion des logiciels"
 msgid "Get pre-defined commands:"
 msgstr "Obtenir les commandes prédéfinies :"
 
-
 msgid "Director resource permissions"
-msgstr "Director resource permissions"
+msgstr "Permissions de ressource du Directeur"
 
 msgid "Storage resource permissions"
-msgstr "Storage resource permissions"
+msgstr "Permissions de ressource du Stockage"
 
 msgid "Client resource permissions"
-msgstr "Client resource permissions"
+msgstr "Permissions de ressource du Client"
 
 msgid "Bconsole resource permissions"
-msgstr "Bconsole resource permissions"
+msgstr "Permissions de ressource de Bconsole"
 
 msgid "Resource"
-msgstr "Resource"
+msgstr "Ressource"
 
 msgid "Read-Only"
-msgstr "Read-Only"
+msgstr "Lecture seule"
 
 msgid "Read-Write"
-msgstr "Read-Write"
+msgstr "Lecture/Écriture"
 
 msgid "No access"
-msgstr "No access"
+msgstr "Aucun accès"
 
 msgid "read only"
-msgstr "read only"
+msgstr "lecture seule"
 
 msgid "read write"
-msgstr "read write"
+msgstr "lecture/écriture"
 
 msgid "no access"
-msgstr "no access"
+msgstr "aucun accès"
 
 msgid "Preview"
-msgstr "Preview"
+msgstr "Aperçu"
 
 msgid "All read-only"
-msgstr "All read-only"
+msgstr "Tout en lecture seule"
 
 msgid "All read-write"
-msgstr "All read-write"
+msgstr "Tout en lecture/écriture"
 
 msgid "All no access"
-msgstr "All no access"
+msgstr "Tout sans accès"
 
 msgid "Resource permissions"
-msgstr "Resource permissions"
+msgstr "Permissions des ressources"
 
 msgid "By default, all resources have read-write permissions."
-msgstr "By default, all resources have read-write permissions."
+msgstr "Par défaut, toutes les ressources ont des permissions lecture/écriture."
 
 msgid "Sudo Runas user:"
-msgstr "Sudo Runas user:"
+msgstr "Sudo fonctionne en tant qu'utilisateur:"
 
 msgid "Sudo Runas group:"
-msgstr "Sudo Runas group:"
+msgstr "Sudo fonctionne en tant que groupe:"
 
 msgid "What services do you want to enable for this installation?"
-msgstr "What services do you want to enable for this installation?"
+msgstr "Quels services souhaitez-vous activer pour cette installation ?"
 
 msgid "Do you have Bacula installed on this host?"
-msgstr "Do you have Bacula installed on this host?"
+msgstr "Avez-vous Bacula installé sur cet hôte ?"
 
 msgid "Yes. I already have Bacula component(s) installed on this host. I would like to use Bacularis with them."
-msgstr "Yes. I already have Bacula component(s) installed on this host. I would like to use Bacularis with them."
+msgstr "Oui, Bacula est déjà installé sur cet hôte, je souhaite utiliser Bacularis avec."
 
 msgid "No. I do not have Bacula installed. I would like to install Bacula now and use Bacularis with it."
-msgstr "No. I do not have Bacula installed. I would like to install Bacula now and use Bacularis with it."
+msgstr "Non, Bacula n’est pas installé, je souhaite l’installer et l’utiliser avec Bacularis."
 
 msgid "What is your operating system?"
-msgstr "What is your operating system?"
+msgstr "Quel est votre système d’exploitation ?"
 
 msgid "Operating system:"
-msgstr "Operating system:"
+msgstr "Système d’exploitation :"
 
 msgid "What are your system admin account credentials?"
-msgstr "What are your system admin account credentials?"
+msgstr "Quelles sont les informations d’identification du compte administrateur système ?"
 
 msgid "System admin login:"
-msgstr "System admin login:"
+msgstr "Identifiant administrateur système :"
 
 msgid "System admin password:"
-msgstr "System admin password:"
+msgstr "Mot de passe administrateur système :"
 
 msgid "After clicking the install Bacula button, there will be installed on this host Catalog (PostgreSQL), Bacula Director, Client, Storage and Bconsole."
-msgstr "After clicking the install Bacula button, there will be installed on this host Catalog (PostgreSQL), Bacula Director, Client, Storage and Bconsole."
+msgstr "Après avoir cliqué sur le bouton d’installation de Bacula, les composants Catalog (PostgreSQL), Bacula Director, Client, Storage et Bconsole seront installés sur cet hôte."
 
 msgid "Install Bacula"
-msgstr "Install Bacula"
+msgstr "Installer Bacula"
 
 msgid "Bacula has been installed successfully. You can close this window and go further."
-msgstr "Bacula has been installed successfully. You can close this window and go further."
+msgstr "Bacula a été installé avec succès. Vous pouvez fermer cette fenêtre et continuer."
 
 msgid "Result"
-msgstr "Result"
+msgstr "Résultat"
 
 msgid "Raw output"
-msgstr "Raw output"
+msgstr "Sortie brute"
 
 msgid "Add SUDO settings"
-msgstr "Add SUDO settings"
+msgstr "Ajouter les paramètres SUDO"
 
 msgid "Configure Bacularis"
-msgstr "Configure Bacularis"
+msgstr "Configurer Bacularis"
 
 msgid "Install Catalog"
-msgstr "Install Catalog"
+msgstr "Installer le Catalogue"
 
 msgid "Install Director"
-msgstr "Install Director"
+msgstr "Installer le Directeur"
 
 msgid "Install Storage"
-msgstr "Install Storage"
+msgstr "Installer le Stockage"
 
 msgid "Install Client"
-msgstr "Install Client"
+msgstr "Installer le Client"
 
 msgid "Install Bconsole"
-msgstr "Install Bconsole"
+msgstr "Installer Bconsole"
 
 msgid "Step"
-msgstr "Step"
+msgstr "Étape"
 
 msgid "Close"
-msgstr "Close"
+msgstr "Fermer"
 
 msgid "Plugin settings"
-msgstr "Plugin settings"
+msgstr "Paramètres du plugin"
 
 msgid "Installed plugins"
-msgstr "Installed plugins"
+msgstr "Plugins installés"
 
 msgid "Add plugin settings"
-msgstr "Add plugin settings"
+msgstr ""
 
 msgid "Plugin name"
-msgstr "Plugin name"
+msgstr "Nom du plugin"
 
 msgid "Enabled"
-msgstr "Enabled"
+msgstr ""
 
 msgid "Type"
-msgstr "Type"
+msgstr ""
 
 msgid "Version"
-msgstr "Version"
+msgstr ""
 
 msgid "Select plugin"
-msgstr "Select plugin"
+msgstr ""
 
 msgid "Plugin"
-msgstr "Plugin"
+msgstr ""
 
 msgid "Edit plugin settings"
-msgstr "Edit plugin settings"
+msgstr ""
 
 msgid "Plugins"
-msgstr "Plugins"
+msgstr ""
 
 msgid "Tip: Use left-click to select table row. Use CTRL + left-click to multiple row selection. Use SHIFT + left-click to add a range of rows to selection."
-msgstr "Tip: Use left-click to select table row. Use CTRL + left-click to multiple row selection. Use SHIFT + left-click to add a range of rows to selection."
+msgstr ""
 
 msgid "Remove"
-msgstr "Remove"
+msgstr "Supprimer"
 
 msgid "Plugin settings with the given name already exists."
-msgstr "Plugin settings with the given name already exists."
+msgstr ""
 
 msgid "Login test"
-msgstr "Login test"
+msgstr ""
 
 msgid "Test"
-msgstr "Test"
+msgstr ""
 
 msgid "Show result"
-msgstr "Show result"
+msgstr ""
 
 msgid "Hide result"
-msgstr "Hide result"
+msgstr ""
 
 msgid "Do you want to setup the Bacula Catalog Database access?"
-msgstr "Do you want to setup the Bacula Catalog Database access?"
+msgstr ""
 
 msgid "Bconsole configuration"
-msgstr "Bconsole configuration"
+msgstr ""
 
 msgid "Bacularis uses read-only access to the Bacula database."
-msgstr "Bacularis uses read-only access to the Bacula database."
+msgstr ""
 
 msgid "Bacularis uses Bacula console access to execute Bacula commands."
-msgstr "Bacularis uses Bacula console access to execute Bacula commands."
+msgstr ""
 
 msgid "Do you want to setup the Bacula Bconsole access?"
-msgstr "Do you want to setup the Bacula Bconsole access?"
+msgstr ""
 
 msgid "Catalog configuration"
-msgstr "Catalog configuration"
+msgstr ""
 
 msgid "Bacula configuration"
-msgstr "Bacula configuration"
+msgstr ""
 
 msgid "RHEL, CentOS, Fedora, Rocky Linux, AlmaLinux, Oracle Linux and others"
-msgstr "RHEL, CentOS, Fedora, Rocky Linux, AlmaLinux, Oracle Linux and others"
+msgstr ""
 
 msgid "Debian, Ubuntu and others"
-msgstr "Debian, Ubuntu and others"
+msgstr ""
 
 msgid "SLES, openSUSE and others"
-msgstr "SLES, openSUSE and others"
+msgstr "SLES, openSUSE et autres"
 
 msgid "The configuration interface enables to configure Bacula components (Director, Storage, Client and Bconsole)."
-msgstr "The configuration interface enables to configure Bacula components (Director, Storage, Client and Bconsole)."
+msgstr ""
 
 msgid "Do you want to setup the Bacula configuration interface?"
-msgstr "Do you want to setup the Bacula configuration interface?"
+msgstr ""
 
 msgid "Plugin not installed"
-msgstr "Plugin not installed"
+msgstr "Plugin non installé"
+
