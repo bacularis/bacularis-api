@@ -54,7 +54,8 @@ class JobListFiles extends BaculumAPIServer
 		$search = $this->Request->contains('search') && $misc->isValidPath($this->Request['search']) ? $this->Request['search'] : null;
 		$details = $this->Request->contains('details') && $misc->isValidBooleanTrue($this->Request['details']) ? $this->Request['details'] : false;
 
-		$result = $this->getModule('bconsole')->bconsoleCommand(
+		$bconsole = $this->getModule('bconsole');
+		$result = $bconsole->bconsoleCommand(
 			$this->director,
 			['.jobs'],
 			null,
@@ -71,13 +72,16 @@ class JobListFiles extends BaculumAPIServer
 				}
 				$order = [$order_by, $order_type];
 			}
+
 			$params = [
 				'Job.Name' => [[
 					'operator' => 'IN',
 					'vals' => $result->output
 				]]
 			];
-			$job = $this->getModule('job')->getJobById($jobid, $params);
+			$job_mod = $this->getModule('job');
+			$job = $job_mod->getJobById($jobid, $params);
+
 			if (is_object($job) && in_array($job->name, $result->output)) {
 				if ($details) {
 					$result = $this->getDetailedOutput([
