@@ -104,8 +104,8 @@ class RestoreFinish extends BaculumAPIServer
 
 		// Select files and directories to restore
 		$result = $this->selectDirsFiles($session_id, $dirs, $files);
-		if (!$result) {
-			$emsg = ' Error while selecting restore dirs/files';
+		if (!$result['state']) {
+			$emsg = ' Error while selecting restore dirs/files: ' . $result['output'];
 			$this->output = JobError::MSG_ERROR_INVALID_PATH . $emsg;
 			$this->error = JobError::ERROR_INVALID_PATH;
 			return;
@@ -219,6 +219,12 @@ class RestoreFinish extends BaculumAPIServer
 	private function finishDirFileSelection(string $session_id): bool
 	{
 		$ret = $this->runCommand($session_id, 'done');
+		for ($i = 0; $i < count($ret); $i++) {
+			if (strpos($ret[$i], 'No files selected to be restored') !== false) {
+				$ret = false;
+				break;
+			}
+		}
 		return ($ret || false);
 	}
 
@@ -228,13 +234,22 @@ class RestoreFinish extends BaculumAPIServer
 	 * @param string $session_id session identifier
 	 * @param array $dirs directory list to restore
 	 * @param array $files file list to restore
-	 * @return bool true on success, false otherwise
+	 * @return array state that is true on success, false otherwise, and output if error happens
 	 */
-	private function selectDirsFiles(string $session_id, array $dirs, array $files): bool
+	private function selectDirsFiles(string $session_id, array $dirs, array $files): array
 	{
+		$success = true;
+		$output = '';
 		$result_dirs = $this->selectDirs($session_id, $dirs);
 		$result_files = $this->selectFiles($session_id, $files);
-		return ($result_dirs && $result_files);
+		if (!$result_dirs['state']) {
+			$success = false;
+			$output = $result_dirs['output'];
+		} elseif (!$result_files['state']) {
+			$success = false;
+			$output = $result_files['output'];
+		}
+		return ['state' => $success, 'output' => $output];
 	}
 
 	/**
@@ -242,12 +257,13 @@ class RestoreFinish extends BaculumAPIServer
 	 *
 	 * @param string $session_id session identifier
 	 * @param array $dirs directory list to restore
-	 * @return bool true on success, false otherwise
+	 * @return array state that is true on success, false otherwise, and output if error happens
 	 */
-	private function selectDirs(string $session_id, array $dirs): bool
+	private function selectDirs(string $session_id, array $dirs): array
 	{
 		$success = true;
 		$command = 'restore/command';
+		$emsg = '';
 		for ($i = 0; $i < count($dirs); $i++) {
 			$params = [
 				'session-id' => $session_id,
@@ -256,20 +272,36 @@ class RestoreFinish extends BaculumAPIServer
 			];
 			$result = BaculaConsole::execute($command, $params);
 			if ($result['error'] != 0) {
-				$result = false;
-				break;
-			}
-			$params = [
-				'session-id' => $session_id,
-				'command' => 'markall'
-			];
-			$result = BaculaConsole::execute($command, $params);
-			if ($result['error'] != 0) {
 				$success = false;
 				break;
 			}
+			if ($success) {
+				// Check if path was opened successfully
+				for ($j = 0; $j < count($result['output']); $j++) {
+					if (strpos($result['output'][$j], 'Invalid path given') !== false) {
+						// do not mark directory files if path is wrong - skip it
+						continue 2;
+					} elseif (strpos($result['output'][$j], 'Do you want to restore all the files? (yes|no):') !== false) {
+						// this is more serious case - jobid file records do not exists in catalog - error
+						$success = false;
+						$emsg = 'File records for selected backup job (or for a jobid in the backup chain) do not exist in the catalog database. They were pruned. Restore single files is not possible.';
+						break 2;
+					}
+				}
+			}
+			if ($success) {
+				$params = [
+					'session-id' => $session_id,
+					'command' => 'markall'
+				];
+				$result = BaculaConsole::execute($command, $params);
+				if ($result['error'] != 0) {
+					$success = false;
+					break;
+				}
+			}
 		}
-		return $success;
+		return ['state' => $success, 'output' => $emsg];
 	}
 
 	/**
@@ -277,9 +309,9 @@ class RestoreFinish extends BaculumAPIServer
 	 *
 	 * @param string $session_id session identifier
 	 * @param array $files file list to restore
-	 * @return bool true on success, false otherwise
+	 * @return array state that is true on success, false otherwise, and output if error happens
 	 */
-	private function selectFiles(string $session_id, array $files): bool
+	private function selectFiles(string $session_id, array $files): array
 	{
 		$success = true;
 		$command = 'restore/command';
@@ -307,7 +339,7 @@ class RestoreFinish extends BaculumAPIServer
 				break;
 			}
 		}
-		return $success;
+		return ['state' => $success, 'output' => ''];
 	}
 
 	/**
