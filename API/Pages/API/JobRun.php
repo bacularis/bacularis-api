@@ -40,12 +40,13 @@ class JobRun extends BaculumAPIServer
 {
 	public function create($params)
 	{
+		$misc = $this->getModule('misc');
 		$job = null;
 		if (property_exists($params, 'id')) {
 			$jobid = (int) ($params->id);
 			$job_row = $this->getModule('job')->getJobById($jobid);
 			$job = is_object($job_row) ? $job_row->name : null;
-		} elseif (property_exists($params, 'name') && $this->getModule('misc')->isValidName($params->name)) {
+		} elseif (property_exists($params, 'name') && $misc->isValidName($params->name)) {
 			$job = $params->name;
 		}
 		$level = null;
@@ -57,7 +58,7 @@ class JobRun extends BaculumAPIServer
 			$filesetid = (int) ($params->filesetid);
 			$fileset_row = $this->getModule('fileset')->getFileSetById($filesetid);
 			$fileset = is_object($fileset_row) ? $fileset_row->fileset : null;
-		} elseif (property_exists($params, 'fileset') && $this->getModule('misc')->isValidName($params->fileset)) {
+		} elseif (property_exists($params, 'fileset') && $misc->isValidName($params->fileset)) {
 			$fileset = $params->fileset;
 		}
 		$client = null;
@@ -65,7 +66,7 @@ class JobRun extends BaculumAPIServer
 			$clientid = (int) ($params->clientid);
 			$client_row = $this->getModule('client')->getClientById($clientid);
 			$client = is_object($client_row) ? $client_row->name : null;
-		} elseif (property_exists($params, 'client') && $this->getModule('misc')->isValidName($params->client)) {
+		} elseif (property_exists($params, 'client') && $misc->isValidName($params->client)) {
 			$client = $params->client;
 		}
 
@@ -80,7 +81,7 @@ class JobRun extends BaculumAPIServer
 			$storageid = (int) ($params->storageid);
 			$storage_row = $this->getModule('storage')->getStorageById($storageid);
 			$storage = is_object($storage_row) ? $storage_row->name : null;
-		} elseif (property_exists($params, 'storage') && $this->getModule('misc')->isValidName($params->storage)) {
+		} elseif (property_exists($params, 'storage') && $misc->isValidName($params->storage)) {
 			$storage = $params->storage;
 		}
 		$pool = null;
@@ -88,16 +89,19 @@ class JobRun extends BaculumAPIServer
 			$poolid = (int) ($params->poolid);
 			$pool_row = $this->getModule('pool')->getPoolById($poolid);
 			$pool = is_object($pool_row) ? $pool_row->name : null;
-		} elseif (property_exists($params, 'pool') && $this->getModule('misc')->isValidName($params->pool)) {
+		} elseif (property_exists($params, 'pool') && $misc->isValidName($params->pool)) {
 			$pool = $params->pool;
 		}
 		$priority = property_exists($params, 'priority') ? (int) ($params->priority) : null;
 
 		$jobid = property_exists($params, 'jobid') ? 'jobid="' . (int) ($params->jobid) . '"' : null;
 		$verifyjob = null;
-		if (property_exists($params, 'verifyjob') && $this->getModule('misc')->isValidName($params->verifyjob)) {
+		if (property_exists($params, 'verifyjob') && $misc->isValidName($params->verifyjob)) {
 			$verifyjob = 'verifyjob="' . $params->verifyjob . '"';
 		}
+
+		// Comment
+		$comment = property_exists($params, 'comment') && $misc->isValidName($params->comment) ? $params->comment : null;
 
 		if (is_null($job)) {
 			$this->output = JobError::MSG_ERROR_JOB_DOES_NOT_EXISTS;
@@ -123,14 +127,14 @@ class JobRun extends BaculumAPIServer
 			}
 		}
 
-		$is_valid_level = is_null($level) || $this->getModule('misc')->isValidJobLevel($level);
+		$is_valid_level = is_null($level) || $misc->isValidJobLevel($level);
 		if (!$is_valid_level) {
 			$this->output = JobError::MSG_ERROR_INVALID_JOBLEVEL;
 			$this->error = JobError::ERROR_INVALID_JOBLEVEL;
 			return;
 		}
 
-		$joblevels = $this->getModule('misc')->getJobLevels();
+		$joblevels = $misc->getJobLevels();
 		$command = [
 			'run',
 			'job="' . $job . '"'
@@ -161,6 +165,9 @@ class JobRun extends BaculumAPIServer
 		}
 		if (is_string($verifyjob)) {
 			$command[] = $verifyjob;
+		}
+		if (is_string($comment)) {
+			$command[] = 'comment="' . $comment . '"';
 		}
 		$command[] = 'yes';
 		$run = $this->getModule('bconsole')->bconsoleCommand($this->director, $command);
