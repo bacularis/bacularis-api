@@ -29,6 +29,8 @@
 
 namespace Bacularis\API\Modules;
 
+use Bacularis\Common\Modules\Miscellaneous;
+
 /**
  * Bacula LStat value support.
  *
@@ -43,7 +45,7 @@ class BLStat extends APIModule
 	 * @param string $lstat encoded LStat string
 	 * @return array decoded values from LStat string
 	 */
-	public function decode($lstat)
+	public static function decode($lstat)
 	{
 		$base64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 		$lstat = trim($lstat);
@@ -120,40 +122,10 @@ class BLStat extends APIModule
 	 * @param string $lstat LStat value to decode
 	 * @return array decoded LStat values
 	 */
-	public function lstat_human($lstat)
+	public static function lstat_human($lstat)
 	{
-		$value = $this->decode($lstat);
-		$value['mode'] = $this->get_human_mode($value['mode']);
+		$value = self::decode($lstat);
+		$value['mode'] = Miscellaneous::get_human_mode($value['mode']);
 		return $value;
-	}
-
-	/**
-	 * Get human readable mode/attributes (ex. drwx-r-xr-x).
-	 *
-	 * @param int $dmode mode value in decimal LStat form
-	 * @return string mode in human readable form
-	 */
-	private function get_human_mode($dmode)
-	{
-		$ts = [
-			0140000 => 'ssocket',
-			0120000 => 'llink',
-			0100000 => '-file',
-			0060000 => 'bblock',
-			0040000 => 'ddir',
-			0020000 => 'cchar',
-			0010000 => 'pfifo'
-		];
-
-		$p = $dmode;
-		$t = decoct($dmode & 0170000); // File Encoding Bit
-		$mode = (key_exists(octdec($t), $ts)) ? $ts[octdec($t)][0] : 'u';
-		$mode .= (($p & 0x0100) ? 'r' : '-') . (($p & 0x0080) ? 'w' : '-');
-		$mode .= (($p & 0x0040) ? (($p & 0x0800) ? 's' : 'x') : (($p & 0x0800) ? 'S' : '-'));
-		$mode .= (($p & 0x0020) ? 'r' : '-') . (($p & 0x0010) ? 'w' : '-');
-		$mode .= (($p & 0x0008) ? (($p & 0x0400) ? 's' : 'x') : (($p & 0x0400) ? 'S' : '-'));
-		$mode .= (($p & 0x0004) ? 'r' : '-') . (($p & 0x0002) ? 'w' : '-');
-		$mode .= (($p & 0x0001) ? (($p & 0x0200) ? 't' : 'x') : (($p & 0x0200) ? 'T' : '-'));
-		return $mode;
 	}
 }
