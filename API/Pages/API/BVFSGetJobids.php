@@ -29,6 +29,7 @@
 
 use Bacularis\API\Modules\ConsoleOutputPage;
 use Bacularis\Common\Modules\Errors\BVFSError;
+use Bacularis\Common\Modules\Errors\JobError;
 
 /**
  * BVFS get elementary jobids (full/incremental/differential).
@@ -43,29 +44,55 @@ class BVFSGetJobids extends ConsoleOutputPage
 	{
 		$misc = $this->getModule('misc');
 		$jobid = $this->Request->contains('jobid') ? (int) ($this->Request['jobid']) : 0;
+		$jobname = $this->Request->contains('jobname') && $misc->isValidName($this->Request['jobname']) ? $this->Request['jobname'] : '';
 		$out_format = $this->Request->contains('output') && $this->isOutputFormatValid($this->Request['output']) ? $this->Request['output'] : parent::OUTPUT_FORMAT_RAW;
 		$inc_copy_job = $this->Request->contains('inc_copy_job') && $misc->isValidBooleanTrue($this->Request['inc_copy_job']);
-		if ($jobid <= 0) {
-			$this->output = BVFSError::MSG_ERROR_INVALID_JOBID;
-			$this->error = BVFSError::ERROR_INVALID_JOBID;
-			return;
-		}
 
 		// Get job identifier
 		$job = $this->getModule('job');
-		$jobobj = $job->getJobById($jobid);
-		if (!is_object($jobobj)) {
-			$this->output = BVFSError::MSG_ERROR_INVALID_JOBID;
-			$this->error = BVFSError::ERROR_INVALID_JOBID;
+		$jobobj = null;
+		if ($jobid > 0) {
+			$jobobj = $job->getJobById($jobid);
+			if (!is_object($jobobj)) {
+				$this->output = BVFSError::MSG_ERROR_INVALID_JOBID;
+				$this->error = BVFSError::ERROR_INVALID_JOBID;
+				return;
+			}
+		}
+
+		// Validate job
+		$bconsole = $this->getModule('bconsole');
+		$result = $bconsole->bconsoleCommand(
+			$this->director,
+			['.jobs'],
+			null,
+			true
+		);
+		if ($result->exitcode != 0) {
+			$this->output = BVFSError::MSG_ERROR_WRONG_EXITCODE;
+			$this->error = BVFSError::ERROR_WRONG_EXITCODE;
+			return;
+		}
+		$jobs = $result->output;
+		$jname = $jobobj ? $jobobj->name : $jobname;
+		if (!in_array($jname, $jobs)) {
+			$this->output = JobError::MSG_ERROR_JOB_DOES_NOT_EXISTS;
+			$this->error = JobError::ERROR_JOB_DOES_NOT_EXISTS;
 			return;
 		}
 
 		// Get elementary job identifiers
 		$result = [];
-		if ($inc_copy_job && $jobobj->type == 'C') {
+		if ($inc_copy_job && is_object($jobobj) && $jobobj->type == 'C') {
 			$result = $this->getJobIdsCopyJob($jobobj->jobid);
 		} else {
-			$result = $this->getJobIdsBackupJob($jobobj->jobid);
+			if (is_object($jobobj)) {
+				// Get for jobid
+				$result = $this->getJobIdsBackupJobId($jobobj->jobid);
+			} elseif (!empty($jobname)) {
+				// Get for job name (latest jobids)
+				$result = $this->getJobIdsBackupJobName($jobname);
+			}
 		}
 
 		// Prepare output
@@ -85,9 +112,34 @@ class BVFSGetJobids extends ConsoleOutputPage
 	 * @param int $jobid base job identifier
 	 * @return array elementary job identifiers
 	 */
-	private function getJobIdsBackupJob(int $jobid): array
+	private function getJobIdsBackupJobId(int $jobid): array
 	{
 		$cmd = ['.bvfs_get_jobids', 'jobid="' . $jobid . '"'];
+		$bconsole = $this->getModule('bconsole');
+		$jobids = $bconsole->bconsoleCommand(
+			$this->director,
+			$cmd
+		);
+		$ret = ['output' => [], 'error' => -1];
+		if ($jobids->exitcode == 0) {
+			$ret['output'] = $jobids->output;
+			$ret['error'] = BVFSError::ERROR_NO_ERRORS;
+		} else {
+			$ret['output'] = BVFSError::MSG_ERROR_WRONG_EXITCODE . 'ExitCode=' . $jobids->exitcode;
+			$ret['error'] = BVFSError::ERROR_WRONG_EXITCODE;
+		}
+		return $ret;
+	}
+
+	/**
+	 * Get latest elementary job identifiers for backup job name.
+	 *
+	 * @param string $jobname job name
+	 * @return array latest elementary job identifiers
+	 */
+	private function getJobIdsBackupJobName(string $jobname): array
+	{
+		$cmd = ['.bvfs_get_jobids', 'job="' . $jobname . '"'];
 		$bconsole = $this->getModule('bconsole');
 		$jobids = $bconsole->bconsoleCommand(
 			$this->director,
