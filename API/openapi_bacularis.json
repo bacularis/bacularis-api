@@ -12,7 +12,7 @@
 			"name": "AGPLv3",
 			"url": "https://www.gnu.org/licenses/agpl-3.0-standalone.html"
 		},
-		"version": "3.2.2"
+		"version": "3.2.3"
 	},
 	"servers": [
 		{
@@ -2927,6 +2927,15 @@
 							"type": "string",
 							"pattern": "[a-zA-Z0-9:.-_ ]+"
 						}
+					},
+					{
+						"name": "comment",
+						"in": "header",
+						"description": "Job comment",
+						"required":  false,
+						"schema": {
+							"type": "string"
+						}
 					}
 				]
 			}
@@ -5612,6 +5621,25 @@
 						"schema": {
 							"type": "string"
 						}
+					},
+					{
+						"name": "group_by",
+						"in": "query",
+						"required": false,
+						"description": "Group results by schedule item property. Allowed: name, client, schedule.",
+						"schema": {
+							"type": "string",
+							"enum": ["name", "client", "schedule"]
+						}
+					},
+					{
+						"name": "group_limit",
+						"in": "query",
+						"required": false,
+						"description": "Maximum number of items in group defiend by group_by parameter.",
+						"schema": {
+							"type": "integer"
+						}
 					}
 				]
 			}
@@ -5912,7 +5940,7 @@
 			"get": {
 				"tags": ["bvfs"],
 				"summary": "BVFS get particular jobids to restore",
-				"description": "BVFS get particular jobids to restore job with given jobid",
+				"description": "BVFS get particular jobids to restore job with given jobid or job name",
 				"responses": {
 					"200": {
 						"description": "Console output with list job identifiers",
@@ -5947,6 +5975,15 @@
 						"required": true,
 						"schema": {
 							"type": "integer"
+						}
+					},
+					{
+						"name": "jobname",
+						"in": "query",
+						"description": "Job name to get latest elementary backups for job. Job name can be used instead of jobid parameter and it works with backup jobs only (inc_copy_job parameter not set).",
+						"required": true,
+						"schema": {
+							"type": "string"
 						}
 					},
 					{
