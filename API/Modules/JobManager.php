@@ -31,6 +31,7 @@ namespace Bacularis\API\Modules;
 
 use PDO;
 use Prado\Data\ActiveRecord\TActiveRecordCriteria;
+use Bacularis\API\Modules\BLStat;
 use Bacularis\Common\Modules\Miscellaneous;
 
 /**
@@ -57,15 +58,20 @@ class JobManager extends APIModule
 	public const FILE_DIFF_METHOD_A_NOT_B = 'a_not_b'; // in A but not in B
 	public const FILE_DIFF_METHOD_B_NOT_A = 'b_not_a'; // in B but not in A
 
-	public function getJobs($criteria = [], $limit_val = null)
+	public function getJobs($criteria = [], $limit_val = null, $order_by = null, $order_type = null)
 	{
-		$sort_col = 'JobId';
-		$db_params = $this->getModule('api_config')->getConfig('db');
+		$order_by ??= 'JobId';
+		$order_type ??= 'desc';
+		$api_config = $this->getModule('api_config');
+		$db_params = $api_config->getConfig('db');
 		if ($db_params['type'] === Database::PGSQL_TYPE) {
-			$sort_col = strtolower($sort_col);
+			$order_by = strtolower($order_by);
 		}
-
-		$order = ' ORDER BY ' . $sort_col . ' DESC';
+		$order = sprintf(
+			' ORDER BY %s %s',
+			$order_by,
+			strtoupper($order_type)
+		);
 		$limit = '';
 		if (is_int($limit_val) && $limit_val > 0) {
 			$limit = ' LIMIT ' . $limit_val;
@@ -698,19 +704,92 @@ WHERE {$where['where']}";
 
 			// decode LStat value
 			if (is_array($result)) {
-				$blstat = $this->getModule('blstat');
 				$result_len = count($result);
 				for ($i = 0; $i < $result_len; $i++) {
-					$result[$i]['lstat'] = $blstat->lstat_human($result[$i]['lstat']);
+					$result[$i]['lstat'] = BLStat::lstat_human($result[$i]['lstat']);
 				}
 				if (count($sort_comp) == 2) {
 					Miscellaneous::sortByProperty($result, $sort_comp[0], $sort_comp[1], 'lstat');
 					$result = array_slice($result, $offset, $limit);
-				}
+		}
 			}
 		}
 		if ($post_sql) {
 			$pdo->exec($post_sql);
+		}
+		return $result;
+	}
+
+	public function getJobFileTree(array $jobids): array
+	{
+		$jids = implode(',', $jobids);
+		$api_config = $this->getModule('api_config');
+		$db_params = $api_config->getConfig('db');
+		$fname_col = 'Path || Filename';
+		if ($db_params['type'] === Database::MYSQL_TYPE) {
+			$fname_col = 'CONCAT(Path, Filename)';
+		}
+
+		// These SQL queries are compatible with Bacula queries (@see sql_get.c)
+		$sql_inner = '';
+		if ($db_params['type'] === Database::PGSQL_TYPE) {
+			$sql_inner = 'SELECT DISTINCT ON (Filename, PathId, DeltaSeq) JobTDate, JobId, FileId, FileIndex, PathId, Filename, LStat, Md5, DeltaSeq 
+				FROM ( 
+					SELECT FileId, JobId, PathId, Filename, FileIndex, LStat, Md5, DeltaSeq 
+					FROM File 
+					WHERE JobId IN (' . $jids . ') 
+					UNION ALL 
+					SELECT File.FileId, File.JobId, PathId, Filename, File.FileIndex, LStat, Md5, DeltaSeq 
+					FROM BaseFiles 
+					JOIN File USING (FileId) 
+					WHERE BaseFiles.JobId IN (' . $jids . ') 
+				) AS FLIST
+				JOIN Job USING (JobId) 
+				ORDER BY Filename, PathId, DeltaSeq, JobTDate DESC ';
+		} else {
+			$sql_inner = 'SELECT FileId, Job.JobId AS JobId, FileIndex, File.PathId AS PathId, File.Filename AS Filename, LStat, MD5, File.DeltaSeq AS DeltaSeq, Job.JobTDate AS JobTDate 
+				FROM Job, File, ( 
+					SELECT MAX(JobTDate) AS JobTDate, PathId, Filename, DeltaSeq 
+					FROM ( 
+						SELECT JobTDate, PathId, Filename, DeltaSeq 
+						FROM File JOIN Job USING (JobId) 
+						WHERE File.JobId IN (' . $jids . ') 
+						UNION ALL 
+						SELECT JobTDate, PathId, Filename, DeltaSeq 
+						FROM BaseFiles 
+						JOIN File USING (FileId) 
+						JOIN Job ON (BaseJobId = Job.JobId) 
+						WHERE BaseFiles.JobId IN (' . $jids . ') 
+					) AS tmp 
+					GROUP BY PathId, Filename, DeltaSeq 
+				) AS T1 
+				WHERE ( 
+					Job.JobId IN ( 
+						SELECT DISTINCT BaseJobId FROM BaseFiles WHERE JobId IN (' . $jids . ') 
+					) OR Job.JobId IN (' . $jids . ') 
+				) 
+				AND T1.JobTDate = Job.JobTDate 
+				AND Job.JobId = File.JobId 
+				AND T1.PathId = File.PathId 
+				AND T1.Filename = File.Filename ';
+		}
+		$sql = 'SELECT ' . $fname_col . ' AS Path, FileIndex, JobId, LStat, Md5 AS Checksum, JobTDate 
+			FROM ( 
+				SELECT Path.Path, PLIST.Filename, PLIST.FileIndex, PLIST.JobId, LStat, Md5, JobTDate 
+				FROM ( 
+					' . $sql_inner . '
+				) AS PLIST
+				JOIN Path ON (Path.PathId = PLIST.PathId) WHERE FileIndex > 0 
+			) AS ALIST
+			ORDER BY JobTDate, FileIndex ASC
+		';
+		$result = Database::findAllBySql($sql, [], PDO::FETCH_GROUP | PDO::FETCH_ASSOC);
+		// decode LStat value
+		if (is_array($result)) {
+			foreach ($result as &$props) {
+				$props = $props[0];
+				$props['lstat'] = BLStat::lstat_human($props['lstat']);
+			}
 		}
 		return $result;
 	}
