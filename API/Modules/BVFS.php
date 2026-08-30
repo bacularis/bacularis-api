@@ -45,7 +45,6 @@ class BVFS extends APIModule
 	public function parseFileDirList($list)
 	{
 		$elements = [];
-		$blstat = $this->getModule('blstat');
 		for ($i = 0; $i < count($list); $i++) {
 			if (preg_match(self::DIR_PATTERN, $list[$i], $match) == 1) {
 				if ($match['name'] == '.') {
@@ -56,7 +55,7 @@ class BVFS extends APIModule
 					'filenameid' => $match['filenameid'],
 					'fileid' => $match['fileid'],
 					'jobid' => $match['jobid'],
-					'lstat' => $blstat->decode($match['lstat']),
+					'lstat' => BLStat::decode($match['lstat']),
 					'name' => $match['name'],
 					'type' => 'dir'
 				];
@@ -69,7 +68,7 @@ class BVFS extends APIModule
 					'filenameid' => $match['filenameid'],
 					'fileid' => $match['fileid'],
 					'jobid' => $match['jobid'],
-					'lstat' => $blstat->decode($match['lstat']),
+					'lstat' => BLStat::decode($match['lstat']),
 					'name' => $match['name'],
 					'type' => 'file'
 				];
@@ -89,7 +88,7 @@ class BVFS extends APIModule
 					'filenameid' => $match['filenameid'],
 					'fileid' => $match['fileid'],
 					'jobid' => $match['jobid'],
-					'lstat' => $this->getModule('blstat')->decode($match['lstat']),
+					'lstat' => BLStat::decode($match['lstat']),
 					'md5' => $match['md5'],
 					'volname' => $match['volname'],
 					'inchanger' => $match['inchanger'],
