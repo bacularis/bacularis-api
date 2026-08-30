@@ -49,6 +49,11 @@ class ScheduleStatus extends BaculumAPIServer
 	 */
 	public const DEF_LIMIT = 30;
 
+	/**
+	 * Allowed properties to group by.
+	 */
+	private const GROUP_BY_PROPS = ['name', 'client', 'schedule'];
+
 	public function get()
 	{
 		$misc = $this->getModule('misc');
@@ -81,15 +86,24 @@ class ScheduleStatus extends BaculumAPIServer
 		if ($this->Request->contains('time') && $misc->isValidBDateAndTime($this->Request['time'])) {
 			$cmd[] = 'time="' . $this->Request['time'] . '"';
 		}
+		$group_by = null;
+		if ($this->Request->contains('group_by') && in_array($this->Request['group_by'], self::GROUP_BY_PROPS)) {
+			$group_by = $this->Request['group_by'];
+		}
+		$group_limit = null;
+		if ($this->Request->contains('group_limit') && $misc->isValidInteger($this->Request['group_limit'])) {
+			$group_limit = (int) $this->Request['group_limit'];
+		}
 
-		$result = $this->getModule('bconsole')->bconsoleCommand(
+		$bconsole = $this->getModule('bconsole');
+		$result = $bconsole->bconsoleCommand(
 			$this->director,
 			$cmd,
 			Bconsole::PTYPE_API_CMD,
 			true
 		);
 		if ($result->exitcode === 0) {
-			$this->output = $this->formatSchedules($result->output);
+			$this->output = $this->formatSchedules($result->output, $group_by, $group_limit);
 			$this->error = PoolError::ERROR_NO_ERRORS;
 		} else {
 			$this->output = $result->output;
@@ -97,9 +111,10 @@ class ScheduleStatus extends BaculumAPIServer
 		}
 	}
 
-	private function formatSchedules(array $output)
+	private function formatSchedules(array $output, ?string $group_by = null, ?int $group_limit = null)
 	{
 		$items = $item = [];
+		$cnt = [];
 		for ($i = 0; $i < count($output); $i++) {
 			if (preg_match('/^(limit|error|errmsg)=/', $output[$i]) === 1) {
 				// skip key/value items that are not schedule status
@@ -108,7 +123,23 @@ class ScheduleStatus extends BaculumAPIServer
 			if (preg_match('/^(?P<key>\w+)=(?P<val>[\s\S]*)$/', $output[$i], $match) === 1) {
 				$item[$match['key']] = $match['val'];
 			} elseif (empty($output[$i]) && count($item) > 0) {
-				$items[] = $item;
+				if (is_string($group_by)) {
+					if (!key_exists($group_by, $item)) {
+						// group by not available in single result - skip it
+						continue;
+					}
+					if (!key_exists($item[$group_by], $items)) {
+						$items[$item[$group_by]] = [];
+						$cnt[$item[$group_by]] = 0;
+					}
+					if (is_int($group_limit) && $cnt[$item[$group_by]] >= $group_limit) {
+						continue;
+					}
+					$items[$item[$group_by]][] = $item;
+					$cnt[$item[$group_by]]++;
+				} else {
+					$items[] = $item;
+				}
 				$item = [];
 			}
 		}
