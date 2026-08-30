@@ -90,10 +90,14 @@ class RestoreStart extends BaculumAPIServer
 				$fileset = $params->fileset;
 			}
 
+			// Restore job
 			$restorejob = null;
 			if (property_exists($params, 'restorejob') && $misc->isValidName($params->restorejob)) {
 				$restorejob = $params->restorejob;
 			}
+
+			// Comment
+			$comment = property_exists($params, 'comment') && $misc->isValidName($params->comment) ? $params->comment : '';
 
 			if (is_null($jobid)) {
 				$this->output = JobError::MSG_ERROR_JOB_DOES_NOT_EXISTS;
@@ -125,6 +129,10 @@ class RestoreStart extends BaculumAPIServer
 				'fileset' => $fileset,
 				'restorejob' => $restorejob
 			];
+
+			if ($comment) {
+				$parameters_res['comment'] = $comment;
+			}
 
 			// Add debug option
 			$api_config = $this->getModule('api_config');
