@@ -48,6 +48,7 @@ abstract class ConsoleOutputShowPage extends ConsoleOutputPage
 		$ret = [];
 		for ($i = 0; $i < count($output); $i++) {
 			$mcount = preg_match_all('/(?<=\s)\w+=.+?(?=\s+\w+=.+|$)/i', $output[$i], $matches);
+			$rcount = preg_match('/^\s\s-->\s(?P<resource_type>[A-Za-z]+): name=(?P<resource_name>.+?)(?=\s+\w+=.*?|$)/i', $output[$i], $rmatch);
 			if ($mcount === 0) {
 				continue;
 			}
@@ -62,6 +63,9 @@ abstract class ConsoleOutputShowPage extends ConsoleOutputPage
 					continue;
 				}
 				$ret[$key] = $value;
+			}
+			if ($rcount > 0) {
+				$ret[strtolower($rmatch['resource_type'])] = $rmatch['resource_name'];
 			}
 		}
 		return $ret;
@@ -78,7 +82,8 @@ abstract class ConsoleOutputShowPage extends ConsoleOutputPage
 		$ret = $part = [];
 		$section = '';
 		for ($i = 0; $i < count($output); $i++) {
-			$scount = preg_match('/^[A-Za-z]+: name=.+/i', $output[$i], $match);
+			$scount = preg_match('/^[A-Za-z]+: name=.+/i', $output[$i]);
+			$rcount = preg_match('/^\s\s-->\s(?P<resource_type>[A-Za-z]+): name=(?P<resource_name>.+?)(?=\s+\w+=.*?|$)/i', $output[$i], $rmatch);
 			$mcount = preg_match_all('/(?<=\s)\w+=.*?(?=\s+\w+=.*?|$)/i', $output[$i], $matches);
 			if ($mcount == 0) {
 				continue;
@@ -99,6 +104,9 @@ abstract class ConsoleOutputShowPage extends ConsoleOutputPage
 					continue;
 				}
 				$part[$key] = $value;
+			}
+			if ($rcount > 0) {
+				$part[strtolower($rmatch['resource_type'])] = $rmatch['resource_name'];
 			}
 		}
 		if (count($part) > 0) {
