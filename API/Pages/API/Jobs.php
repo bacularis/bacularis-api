@@ -28,6 +28,7 @@
  */
 
 use Bacularis\API\Modules\BaculumAPIServer;
+use Bacularis\API\Modules\JobManager;
 use Bacularis\Common\Modules\Errors\JobError;
 
 /**
@@ -50,6 +51,8 @@ class Jobs extends BaculumAPIServer
 		$clientid = $this->Request->contains('clientid') ? $this->Request['clientid'] : '';
 		$starttime_from = $this->Request->contains('starttime_from') && $misc->isValidBDateAndTime($this->Request['starttime_from']) ? $this->Request['starttime_from'] : '';
 		$starttime_to = $this->Request->contains('starttime_to') && $misc->isValidBDateAndTime($this->Request['starttime_to']) ? $this->Request['starttime_to'] : '';
+		$order_by = $this->Request->contains('order_by') && $misc->isValidName($this->Request['order_by']) ? $this->Request['order_by'] : null;
+		$order_type = $this->Request->contains('order_type') && $misc->isValidOrderType($this->Request['order_type']) ? $this->Request['order_type'] : null;
 
 		if (!empty($clientid) && !$misc->isValidId($clientid)) {
 			$this->output = JobError::MSG_ERROR_CLIENT_DOES_NOT_EXISTS;
@@ -160,6 +163,8 @@ class Jobs extends BaculumAPIServer
 					$this->error = $result->exitcode;
 				}
 			}
+
+			// Time range filters
 			if ($age > 0) {
 				$t = time() - $age;
 				$params['Job.StartTime'] = [[
@@ -182,8 +187,21 @@ class Jobs extends BaculumAPIServer
 				}
 			}
 
+			// Sort type and order
+			if ($order_type) {
+				$jr = new ReflectionClass(\Bacularis\API\Modules\JobRecord::class);
+				$ob = strtolower($order_by);
+				if (!$jr->hasProperty($ob)) {
+					$error = true;
+					$this->output = JobError::MSG_ERROR_INVALID_COMMAND;
+					$this->error = JobError::ERROR_INVALID_COMMAND;
+					return;
+				}
+			}
+
 			if ($error === false) {
-				$jobs = $this->getModule('job')->getJobs($params, $limit);
+				$job_mod = $this->getModule('job');
+				$jobs = $job_mod->getJobs($params, $limit, $order_by, $order_type);
 				$this->output = $jobs;
 				$this->error = JobError::ERROR_NO_ERRORS;
 			}
