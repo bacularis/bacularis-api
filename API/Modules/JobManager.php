@@ -711,7 +711,7 @@ WHERE {$where['where']}";
 				if (count($sort_comp) == 2) {
 					Miscellaneous::sortByProperty($result, $sort_comp[0], $sort_comp[1], 'lstat');
 					$result = array_slice($result, $offset, $limit);
-		}
+				}
 			}
 		}
 		if ($post_sql) {

@@ -56,7 +56,7 @@ class JobFileTree extends BaculumAPIServer
 				break;
 			}
 		}
-		if  ($error) {
+		if ($error) {
 			$this->error = JobError::ERROR_INVALID_COMMAND;
 			$this->output = JobError::MSG_ERROR_INVALID_COMMAND;
 			return;
