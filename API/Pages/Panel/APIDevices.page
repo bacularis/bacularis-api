@@ -86,8 +86,28 @@ var oAutochangerList = {
 					data: null,
 					defaultContent: '<button type="button" class="w3-button w3-blue"><i class="fa fa-angle-down"></i></button>'
 				},
-				{data: 'name'},
-				{data: 'device'},
+				{
+					data: 'name',
+					render: function(data, type, row) {
+						if (type == 'display' || type == 'filter') {
+							var span = document.createElement('SPAN');
+							span.textContent = data;
+							return span.innerHTML;
+						}
+						return data;
+					}
+				},
+				{
+					data: 'device',
+					render: function(data, type, row) {
+						if (type == 'display' || type == 'filter') {
+							var span = document.createElement('SPAN');
+							span.textContent = data;
+							return span.innerHTML;
+						}
+						return data;
+					}
+				},
 				{
 					data: 'name',
 					render: function(data, type, row) {
@@ -101,9 +121,10 @@ var oAutochangerList = {
 						i.className = 'fas fa-edit';
 						var label = document.createTextNode(' <%[ Edit ]%>');
 						chpwd_btn.appendChild(i);
-						chpwd_btn.innerHTML += '&nbsp';
+						chpwd_btn.appendChild(document.createTextNode(' '));
 						chpwd_btn.appendChild(label);
-						chpwd_btn.setAttribute('onclick', 'oAPIAutochangers.edit_autochanger("' + data + '")');
+						chpwd_btn.setAttribute('data-autochanger', data);
+						chpwd_btn.setAttribute('onclick', 'oAPIAutochangers.edit_autochanger(this.dataset.autochanger)');
 
 						var del_btn = document.createElement('BUTTON');
 						del_btn.className = 'w3-button w3-red w3-margin-left';
@@ -112,9 +133,10 @@ var oAutochangerList = {
 						i.className = 'fas fa-trash-alt';
 						var label = document.createTextNode(' <%[ Delete ]%>');
 						del_btn.appendChild(i);
-						del_btn.innerHTML += '&nbsp';
+						del_btn.appendChild(document.createTextNode(' '));
 						del_btn.appendChild(label);
-						del_btn.setAttribute('onclick', 'oAPIAutochangers.delete_autochanger("' + data + '")');
+						del_btn.setAttribute('data-autochanger', data);
+						del_btn.setAttribute('onclick', 'oAPIAutochangers.delete_autochanger(this.dataset.autochanger)');
 
 						span.appendChild(chpwd_btn);
 						span.appendChild(del_btn);
@@ -618,10 +640,50 @@ var oDeviceList = {
 					data: null,
 					defaultContent: '<button type="button" class="w3-button w3-blue"><i class="fa fa-angle-down"></i></button>'
 				},
-				{data: 'name'},
-				{data: 'device'},
-				{data: 'index'},
-				{data: 'autochanger'},
+				{
+					data: 'name',
+					render: function(data, type, row) {
+						if (type == 'display' || type == 'filter') {
+							var span = document.createElement('SPAN');
+							span.textContent = data;
+							return span.innerHTML;
+						}
+						return data;
+					}
+				},
+				{
+					data: 'device',
+					render: function(data, type, row) {
+						if (type == 'display' || type == 'filter') {
+							var span = document.createElement('SPAN');
+							span.textContent = data;
+							return span.innerHTML;
+						}
+						return data;
+					}
+				},
+				{
+					data: 'index',
+					render: function(data, type, row) {
+						if (type == 'display' || type == 'filter') {
+							var span = document.createElement('SPAN');
+							span.textContent = data;
+							return span.innerHTML;
+						}
+						return data;
+					}
+				},
+				{
+					data: 'autochanger',
+					render: function(data, type, row) {
+						if (type == 'display' || type == 'filter') {
+							var span = document.createElement('SPAN');
+							span.textContent = data;
+							return span.innerHTML;
+						}
+						return data;
+					}
+				},
 				{
 					data: 'name',
 					render: function(data, type, row) {
@@ -635,9 +697,10 @@ var oDeviceList = {
 						i.className = 'fas fa-edit';
 						var label = document.createTextNode(' <%[ Edit ]%>');
 						chpwd_btn.appendChild(i);
-						chpwd_btn.innerHTML += '&nbsp';
+						chpwd_btn.appendChild(document.createTextNode(' '));
 						chpwd_btn.appendChild(label);
-						chpwd_btn.setAttribute('onclick', 'oAPIDevices.edit_device("' + data + '")');
+						chpwd_btn.setAttribute('data-device', data);
+						chpwd_btn.setAttribute('onclick', 'oAPIDevices.edit_device(this.dataset.device)');
 
 						var del_btn = document.createElement('BUTTON');
 						del_btn.className = 'w3-button w3-red w3-margin-left';
@@ -646,9 +709,11 @@ var oDeviceList = {
 						i.className = 'fas fa-trash-alt';
 						var label = document.createTextNode(' <%[ Delete ]%>');
 						del_btn.appendChild(i);
-						del_btn.innerHTML += '&nbsp';
+						del_btn.appendChild(document.createTextNode(' '));
 						del_btn.appendChild(label);
-						del_btn.setAttribute('onclick', 'oAPIDevices.delete_device("' + data + '", "' + row.autochanger + '")');
+						del_btn.setAttribute('data-device', data);
+						del_btn.setAttribute('data-autochanger', row.autochanger);
+						del_btn.setAttribute('onclick', 'oAPIDevices.delete_device(this.dataset.device, this.dataset.autochanger)');
 
 						span.appendChild(chpwd_btn);
 						span.appendChild(del_btn);

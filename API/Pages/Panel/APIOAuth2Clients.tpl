@@ -83,9 +83,39 @@ var oOAuth2ClientList = {
 					data: null,
 					defaultContent: '<button type="button" class="w3-button w3-blue"><i class="fa fa-angle-down"></i></button>'
 				},
-				{data: 'name'},
-				{data: 'client_id'},
-				{data: 'redirect_uri'},
+				{
+					data: 'name',
+					render: function(data, type, row) {
+						if (type == 'display' || type == 'filter') {
+							var span = document.createElement('SPAN');
+							span.textContent = data;
+							return span.innerHTML;
+						}
+						return data;
+					}
+				},
+				{
+					data: 'client_id',
+					render: function(data, type, row) {
+						if (type == 'display' || type == 'filter') {
+							var span = document.createElement('SPAN');
+							span.textContent = data;
+							return span.innerHTML;
+						}
+						return data;
+					}
+				},
+				{
+					data: 'redirect_uri',
+					render: function(data, type, row) {
+						if (type == 'display' || type == 'filter') {
+							var span = document.createElement('SPAN');
+							span.textContent = data;
+							return span.innerHTML;
+						}
+						return data;
+					}
+				},
 				{
 					data: 'client_id',
 					render: function(data, type, row) {
@@ -99,9 +129,10 @@ var oOAuth2ClientList = {
 						i.className = 'fas fa-edit';
 						var label = document.createTextNode(' <%[ Edit ]%>');
 						chpwd_btn.appendChild(i);
-						chpwd_btn.innerHTML += '&nbsp';
+						chpwd_btn.appendChild(document.createTextNode(' '));
 						chpwd_btn.appendChild(label);
-						chpwd_btn.setAttribute('onclick', 'oAPIOAuth2Clients.edit_client("' + data + '")');
+						chpwd_btn.setAttribute('data-client-id', data);
+						chpwd_btn.setAttribute('onclick', 'oAPIOAuth2Clients.edit_client(this.dataset.clientId)');
 
 						var del_btn = document.createElement('BUTTON');
 						del_btn.className = 'w3-button w3-red w3-margin-left';
@@ -110,9 +141,10 @@ var oOAuth2ClientList = {
 						i.className = 'fas fa-trash-alt';
 						var label = document.createTextNode(' <%[ Delete ]%>');
 						del_btn.appendChild(i);
-						del_btn.innerHTML += '&nbsp';
+						del_btn.appendChild(document.createTextNode(' '));
 						del_btn.appendChild(label);
-						del_btn.setAttribute('onclick', 'oAPIOAuth2Clients.delete_client("' + data + '")');
+						del_btn.setAttribute('data-client-id', data);
+						del_btn.setAttribute('onclick', 'oAPIOAuth2Clients.delete_client(this.dataset.clientId)');
 
 						span.appendChild(chpwd_btn);
 						span.appendChild(del_btn);

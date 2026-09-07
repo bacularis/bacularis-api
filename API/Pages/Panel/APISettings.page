@@ -2290,7 +2290,14 @@ var set_action_command_output = function(action, result) {
 	} else {
 		var error = document.querySelector('#actions_test_result_' + action + ' .action_error');
 		error.style.display = '';
-		result_el.innerHTML = '<br />' + result.output.join('<br />');
+		result_el.textContent = '';
+		result_el.appendChild(document.createElement('BR'));
+		for (var i = 0; i < result.output.length; i++) {
+			if (i > 0) {
+				result_el.appendChild(document.createElement('BR'));
+			}
+			result_el.appendChild(document.createTextNode(result.output[i]));
+		}
 	}
 };
 

@@ -81,7 +81,17 @@ var oBasicUserList = {
 					data: null,
 					defaultContent: '<button type="button" class="w3-button w3-blue"><i class="fa fa-angle-down"></i></button>'
 				},
-				{data: 'username'},
+				{
+					data: 'username',
+					render: function(data, type, row) {
+						if (type == 'display' || type == 'filter') {
+							var span = document.createElement('SPAN');
+							span.textContent = data;
+							return span.innerHTML;
+						}
+						return data;
+					}
+				},
 				{
 					data: 'bconsole_cfg_path',
 					render: function(data, type, row) {
@@ -112,9 +122,10 @@ var oBasicUserList = {
 						i.className = 'fas fa-edit';
 						var label = document.createTextNode(' <%[ Edit ]%>');
 						edit_btn.appendChild(i);
-						edit_btn.innerHTML += '&nbsp';
+						edit_btn.appendChild(document.createTextNode(' '));
 						edit_btn.appendChild(label);
-						edit_btn.setAttribute('onclick', 'oAPIBasicUsers.edit_user("' + data + '")');
+						edit_btn.setAttribute('data-username', data);
+						edit_btn.setAttribute('onclick', 'oAPIBasicUsers.edit_user(this.dataset.username)');
 
 						span.appendChild(edit_btn);
 
@@ -126,9 +137,10 @@ var oBasicUserList = {
 							i.className = 'fas fa-trash-alt';
 							var label = document.createTextNode(' <%[ Delete ]%>');
 							del_btn.appendChild(i);
-							del_btn.innerHTML += '&nbsp';
+							del_btn.appendChild(document.createTextNode(' '));
 							del_btn.appendChild(label);
-							del_btn.setAttribute('onclick', 'oAPIBasicUsers.delete_user("' + data + '")');
+							del_btn.setAttribute('data-username', data);
+							del_btn.setAttribute('onclick', 'oAPIBasicUsers.delete_user(this.dataset.username)');
 
 							span.appendChild(del_btn);
 						}

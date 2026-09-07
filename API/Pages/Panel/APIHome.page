@@ -100,7 +100,13 @@
 			},
 			set_progress: function(value, content) {
 				$('#' + this.ids.progress_bar).progressbar('value', value);
-				$('#' + this.ids.progress_label).html(content);
+				const label = document.getElementById(this.ids.progress_label);
+				label.textContent = '';
+				if (content instanceof HTMLElement) {
+					label.appendChild(content);
+				} else {
+					label.textContent = content;
+				}
 			},
 			init_basic: function() {
 				this.set_progress(3, '<%[ Basic auth ready... ]%>');
@@ -161,7 +167,7 @@
 						span_in.textContent = this.get_masked_token();
 						span_out.appendChild(text);
 						span_out.appendChild(span_in);
-						this.set_progress(3, span_out.outerHTML);
+						this.set_progress(3, span_out);
 					}
 				}.bind(this));
 			},

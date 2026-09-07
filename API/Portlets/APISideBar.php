@@ -27,6 +27,7 @@
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
 
+use Bacularis\Common\Modules\Miscellaneous;
 use Bacularis\Common\Portlets\PortletTemplate;
 
 /**
@@ -60,5 +61,15 @@ class APISideBar extends PortletTemplate
 		 * and to bring the login prompt on.
 		 */
 		$this->Response->setStatusCode(401);
+	}
+
+	/**
+	 * Get Basic auth user name.
+	 *
+	 * @return string Basic auth user name
+	 */
+	public function getBasicAuthUser(): string
+	{
+		return $_SERVER['PHP_AUTH_USER'] ?? '';
 	}
 }

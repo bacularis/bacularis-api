@@ -6,8 +6,8 @@
 	<div class="w3-container w3-border-bottom" style="min-height: 84px; margin-bottom: 5px;">
 		<div class="w3-center w3-margin-top">
 			<h5><%[ API panel ]%></h5>
-			<span><%[ Welcome ]%><strong><%=isset($_SERVER['PHP_AUTH_USER']) ? ', ' . $_SERVER['PHP_AUTH_USER'] : ''%></strong></span><br>
-			<script>var main_side_bar_reload_url = '<%=$this->reload_url%>';</script>
+			<span><%[ Welcome ]%><strong><%=$this->getBasicAuthUser() ? ', ' . Miscellaneous::html_value($this->getBasicAuthUser()) : ''%></strong></span><br>
+			<script>var main_side_bar_reload_url = <%=Miscellaneous::json_value($this->reload_url)%>;</script>
 			<com:TActiveLinkButton
 				ID="Logout"
 				OnClick="logout"

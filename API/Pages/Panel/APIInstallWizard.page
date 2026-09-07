@@ -551,7 +551,13 @@ var oInstallBacula = {
 			error.style.display = 'inline-block';
 			ok.style.display = 'none';
 		}
-		raw.innerHTML = result.join("<br />");
+		raw.textContent = '';
+		for (let i = 0; i < result.length; i++) {
+			if (i > 0) {
+				raw.appendChild(document.createElement('BR'));
+			}
+			raw.appendChild(document.createTextNode(result[i]));
+		}
 		link.style.display = 'inline-block';
 	},
 	toggle_host_connection_result: function() {
@@ -620,7 +626,8 @@ var oInstallBacula = {
 		box.classList.add(...css);
 		box.style.display = 'none';
 		header.textContent = htext;
-		text.innerHTML = msg.replace(/\n/g, '<br />');
+		text.style.whiteSpace = 'pre-line';
+		text.textContent = msg;
 		box.appendChild(header);
 		box.appendChild(text);
 		container.appendChild(box);
@@ -1978,31 +1985,31 @@ var oConfigWizardStep4 = {
 					<div style="display: <%=($this->DatabaseYes->Checked ? 'block' : 'none')%>">
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ Database type: ]%></div>
-							<div class="w3-col w3-third"><strong><%=$this->getDbNameByType($this->DBType->SelectedValue)%></strong></div>
+							<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value($this->getDbNameByType($this->DBType->SelectedValue))%></strong></div>
 						</div>
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ Database name: ]%></div>
-							<div class="w3-col w3-third"><strong><%=$this->DBName->Text%></strong></div>
+							<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value($this->DBName->Text)%></strong></div>
 						</div>
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ Login: ]%></div>
-							<div class="w3-col w3-third"><strong><%=$this->isSQLiteType($this->DBType->SelectedValue) === false ? $this->Login->Text : '-'%></strong></div>
+							<div class="w3-col w3-third"><strong><%=$this->isSQLiteType($this->DBType->SelectedValue) === false ? Miscellaneous::html_value($this->Login->Text) : '-'%></strong></div>
 						</div>
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ Password: ]%></div>
-							<div class="w3-col w3-third"><strong><%=$this->isSQLiteType($this->DBType->SelectedValue) === false ? preg_replace('/.{1}/', '*', $this->Password->Text) : '-'%></strong></div>
+							<div class="w3-col w3-third"><strong><%=$this->isSQLiteType($this->DBType->SelectedValue) === false ? Miscellaneous::html_value(preg_replace('/.{1}/', '*', $this->Password->Text)) : '-'%></strong></div>
 						</div>
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ IP address (or hostname): ]%></div>
-							<div class="w3-col w3-third"><strong><%=$this->isSQLiteType($this->DBType->SelectedValue) === false ? $this->IP->Text : '-'%></strong></div>
+							<div class="w3-col w3-third"><strong><%=$this->isSQLiteType($this->DBType->SelectedValue) === false ? Miscellaneous::html_value($this->IP->Text) : '-'%></strong></div>
 						</div>
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ Database port: ]%></div>
-							<div class="w3-col w3-third"><strong><%=$this->isSQLiteType($this->DBType->SelectedValue) === false ? $this->Port->Text : '-'%></strong></div>
+							<div class="w3-col w3-third"><strong><%=$this->isSQLiteType($this->DBType->SelectedValue) === false ? Miscellaneous::html_value($this->Port->Text) : '-'%></strong></div>
 						</div>
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ Database file path (SQLite only): ]%></div>
-							<div class="w3-col w3-third"><strong><%=$this->isSQLiteType($this->DBType->SelectedValue) === true ? $this->DBPath->Text : '-'%></strong></div>
+							<div class="w3-col w3-third"><strong><%=$this->isSQLiteType($this->DBType->SelectedValue) === true ? Miscellaneous::html_value($this->DBPath->Text) : '-'%></strong></div>
 						</div>
 					</div>
 					<div style="display: <%=($this->DatabaseNo->Checked ? 'block' : 'none')%>">
@@ -2017,11 +2024,11 @@ var oConfigWizardStep4 = {
 					<div style="display: <%=($this->ConsoleYes->Checked ? 'block' : 'none')%>">
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ Bconsole binary file path: ]%></div>
-							<div class="w3-col w3-third"><strong><%=$this->BconsolePath->Text%></strong></div>
+							<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value($this->BconsolePath->Text)%></strong></div>
 						</div>
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ Bconsole admin config file path: ]%></div>
-							<div class="w3-col w3-third"><strong><%=$this->BconsoleConfigPath->Text%></strong></div>
+							<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value($this->BconsoleConfigPath->Text)%></strong></div>
 						</div>
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ Use sudo for bconsole requests: ]%></div>
@@ -2029,11 +2036,11 @@ var oConfigWizardStep4 = {
 						</div>
 						<div class="w3-row w3-section" style="display: <%=(!empty($this->BconsoleSudoRunAsUser->Text) ? 'block' : 'none')%>">
 							<div class="w3-col w3-third"><%[ Sudo Runas user: ]%></div>
-							<div class="w3-col w3-third"><strong><%=$this->BconsoleSudoRunAsUser->Text%></strong></div>
+							<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value($this->BconsoleSudoRunAsUser->Text)%></strong></div>
 						</div>
 						<div class="w3-row w3-section" style="display: <%=(!empty($this->BconsoleSudoRunAsGroup->Text) ? 'block' : 'none')%>">
 							<div class="w3-col w3-third"><%[ Sudo Runas group: ]%></div>
-							<div class="w3-col w3-third"><strong><%=$this->BconsoleSudoRunAsGroup->Text%></strong></div>
+							<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value($this->BconsoleSudoRunAsGroup->Text)%></strong></div>
 						</div>
 					</div>
 					<div style="display: <%=($this->ConsoleNo->Checked ? 'block' : 'none')%>">
@@ -2048,7 +2055,7 @@ var oConfigWizardStep4 = {
 					<div style="display: <%=($this->ConfigYes->Checked ? 'block' : 'none')%>">
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ Directory path for new config files: ]%></div>
-							<div class="w3-col w3-third"><strong><%=$this->BConfigDir->Text%></strong></div>
+							<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value($this->BConfigDir->Text)%></strong></div>
 						</div>
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ Use sudo for Bacula JSON tools: ]%></div>
@@ -2056,43 +2063,43 @@ var oConfigWizardStep4 = {
 						</div>
 						<div class="w3-row w3-section" style="display: <%=(!empty($this->BConfigSudoRunAsUser->Text) ? 'block' : 'none')%>">
 							<div class="w3-col w3-third"><%[ Sudo Runas user: ]%></div>
-							<div class="w3-col w3-third"><strong><%=$this->BConfigSudoRunAsUser->Text%></strong></div>
+							<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value($this->BConfigSudoRunAsUser->Text)%></strong></div>
 						</div>
 						<div class="w3-row w3-section" style="display: <%=(!empty($this->BConfigSudoRunAsGroup->Text) ? 'block' : 'none')%>">
 							<div class="w3-col w3-third"><%[ Sudo Runas group: ]%></div>
-							<div class="w3-col w3-third"><strong><%=$this->BConfigSudoRunAsGroup->Text%></strong></div>
+							<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value($this->BConfigSudoRunAsGroup->Text)%></strong></div>
 						</div>
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ bdirjson binary file path: ]%></div>
-							<div class="w3-col w3-third"><strong><%=$this->BDirJSONPath->Text%></strong></div>
+							<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value($this->BDirJSONPath->Text)%></strong></div>
 						</div>
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ Main Director config file path: ]%></div>
-							<div class="w3-col w3-third"><strong><%=$this->DirCfgPath->Text%></strong></div>
+							<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value($this->DirCfgPath->Text)%></strong></div>
 						</div>
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ bsdjson binary file path: ]%></div>
-							<div class="w3-col w3-third"><strong><%=$this->BSdJSONPath->Text%></strong></div>
+							<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value($this->BSdJSONPath->Text)%></strong></div>
 						</div>
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ Main Storage Daemon config file path: ]%></div>
-							<div class="w3-col w3-third"><strong><%=$this->SdCfgPath->Text%></strong></div>
+							<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value($this->SdCfgPath->Text)%></strong></div>
 						</div>
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ bfdjson binary file path: ]%></div>
-							<div class="w3-col w3-third"><strong><%=$this->BFdJSONPath->Text%></strong></div>
+							<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value($this->BFdJSONPath->Text)%></strong></div>
 						</div>
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ Main Client config file path: ]%></div>
-							<div class="w3-col w3-third"><strong><%=$this->FdCfgPath->Text%></strong></div>
+							<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value($this->FdCfgPath->Text)%></strong></div>
 						</div>
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ bbconsjson binary file path: ]%></div>
-							<div class="w3-col w3-third"><strong><%=$this->BBconsJSONPath->Text%></strong></div>
+							<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value($this->BBconsJSONPath->Text)%></strong></div>
 						</div>
 						<div class="w3-row w3-section">
 							<div class="w3-col w3-third"><%[ Main Bconsole config file path: ]%></div>
-							<div class="w3-col w3-third"><strong><%=$this->BconsCfgPath->Text%></strong></div>
+							<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value($this->BconsCfgPath->Text)%></strong></div>
 						</div>
 					</div>
 					<div style="display: <%=($this->ConfigNo->Checked ? 'block' : 'none')%>">
@@ -2117,11 +2124,11 @@ var oConfigWizardStep4 = {
 						<div style="display: <%=$this->AuthBasic->Checked ? 'block' : 'none'%>">
 							<div class="w3-row w3-section">
 								<div class="w3-col w3-third"><%[ Administration login: ]%></div>
-								<div class="w3-col w3-third"><strong><%=$this->APILogin->Text%></strong></div>
+								<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value($this->APILogin->Text)%></strong></div>
 							</div>
 							<div class="w3-row w3-section">
 								<div class="w3-col w3-third"><%[ Administration password: ]%></div>
-								<div class="w3-col w3-third"><strong><%=preg_replace('/.{1}/', '*', $this->APIPassword->Text)%></strong></div>
+								<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value(preg_replace('/.{1}/', '*', $this->APIPassword->Text))%></strong></div>
 							</div>
 						</div>
 					</com:TPanel>
@@ -2129,23 +2136,23 @@ var oConfigWizardStep4 = {
 						<div style="display: <%=$this->AuthOAuth2->Checked ? 'block' : 'none'%>">
 							<div class="w3-row w3-section">
 								<div class="w3-col w3-third">Client ID:</div>
-								<div class="w3-col w3-third"><strong><%=$this->APIOAuth2ClientId->Text%></strong></div>
+								<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value($this->APIOAuth2ClientId->Text)%></strong></div>
 							</div>
 							<div class="w3-row w3-section">
 								<div class="w3-col w3-third">Client Secret:</div>
-								<div class="w3-col w3-third"><strong><%=preg_replace('/.{1}/', '*', $this->APIOAuth2ClientSecret->Text)%></strong></div>
+								<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value(preg_replace('/.{1}/', '*', $this->APIOAuth2ClientSecret->Text))%></strong></div>
 							</div>
 							<div class="w3-row w3-section">
 								<div class="w3-col w3-third">Redirect URI:</div>
-								<div class="w3-col w3-third"><strong><%=$this->APIOAuth2RedirectURI->Text%></strong></div>
+								<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value($this->APIOAuth2RedirectURI->Text)%></strong></div>
 							</div>
 							<div class="w3-row w3-section">
 								<div class="w3-col w3-third">Scope:</div>
-								<div class="w3-col w3-third"><strong><%=$this->APIOAuth2Scope->Text%></strong></div>
+								<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value($this->APIOAuth2Scope->Text)%></strong></div>
 							</div>
 							<div class="w3-row w3-section">
 								<div class="w3-col w3-third"><%[ Dedicated Bconsole config file path: ]%></div>
-								<div class="w3-col w3-third"><strong><%=!empty($this->APIOAuth2BconsoleCfgPath->Text) ? $this->APIOAuth2BconsoleCfgPath->Text : '-'%></strong></div>
+								<div class="w3-col w3-third"><strong><%=!empty($this->APIOAuth2BconsoleCfgPath->Text) ? Miscellaneous::html_value($this->APIOAuth2BconsoleCfgPath->Text) : '-'%></strong></div>
 							</div>
 						</div>
 					</com:TPanel>
@@ -2164,11 +2171,11 @@ var oConfigWizardStep4 = {
 						<div style="display: <%=$this->SetAPICredentialsForWeb->Checked && $this->AuthBasic->Checked ? 'none' : 'block'%>">
 							<div class="w3-row w3-section">
 								<div class="w3-col w3-third"><%[ Administration login: ]%></div>
-								<div class="w3-col w3-third"><strong><%=$this->WebLogin->Text%></strong></div>
+								<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value($this->WebLogin->Text)%></strong></div>
 							</div>
 							<div class="w3-row w3-section">
 								<div class="w3-col w3-third"><%[ Administration password: ]%></div>
-								<div class="w3-col w3-third"><strong><%=preg_replace('/.{1}/', '*', $this->WebPassword->Text)%></strong></div>
+								<div class="w3-col w3-third"><strong><%=Miscellaneous::html_value(preg_replace('/.{1}/', '*', $this->WebPassword->Text))%></strong></div>
 							</div>
 						</div>
 					</fieldset>
@@ -2269,7 +2276,14 @@ var set_action_command_output = function(action, result) {
 	} else {
 		var error = document.querySelector('#actions_test_result_' + action + ' .action_error');
 		error.style.display = '';
-		result_el.innerHTML = '<br />' + result.output.join('<br />');
+		result_el.textContent = '';
+		result_el.appendChild(document.createElement('BR'));
+		for (var i = 0; i < result.output.length; i++) {
+			if (i > 0) {
+				result_el.appendChild(document.createElement('BR'));
+			}
+			result_el.appendChild(document.createTextNode(result.output[i]));
+		}
 	}
 };
 
