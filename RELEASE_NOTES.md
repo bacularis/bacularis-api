@@ -25,4 +25,5 @@ CVE identifiers will be added once they are assigned and published.
 **Bacularis API**
 
 - Additional security hardening and output escaping fixes.
-
+- Use common render function in tables
+- Fix device path filter
