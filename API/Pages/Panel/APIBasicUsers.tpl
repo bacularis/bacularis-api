@@ -83,14 +83,7 @@ var oBasicUserList = {
 				},
 				{
 					data: 'username',
-					render: function(data, type, row) {
-						if (type == 'display' || type == 'filter') {
-							var span = document.createElement('SPAN');
-							span.textContent = data;
-							return span.innerHTML;
-						}
-						return data;
-					}
+					render: render_text
 				},
 				{
 					data: 'bconsole_cfg_path',

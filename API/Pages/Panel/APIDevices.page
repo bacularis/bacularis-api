@@ -88,25 +88,11 @@ var oAutochangerList = {
 				},
 				{
 					data: 'name',
-					render: function(data, type, row) {
-						if (type == 'display' || type == 'filter') {
-							var span = document.createElement('SPAN');
-							span.textContent = data;
-							return span.innerHTML;
-						}
-						return data;
-					}
+					render: render_text
 				},
 				{
 					data: 'device',
-					render: function(data, type, row) {
-						if (type == 'display' || type == 'filter') {
-							var span = document.createElement('SPAN');
-							span.textContent = data;
-							return span.innerHTML;
-						}
-						return data;
-					}
+					render: render_text
 				},
 				{
 					data: 'name',
@@ -642,47 +628,19 @@ var oDeviceList = {
 				},
 				{
 					data: 'name',
-					render: function(data, type, row) {
-						if (type == 'display' || type == 'filter') {
-							var span = document.createElement('SPAN');
-							span.textContent = data;
-							return span.innerHTML;
-						}
-						return data;
-					}
+					render: render_text
 				},
 				{
 					data: 'device',
-					render: function(data, type, row) {
-						if (type == 'display' || type == 'filter') {
-							var span = document.createElement('SPAN');
-							span.textContent = data;
-							return span.innerHTML;
-						}
-						return data;
-					}
+					render: render_text
 				},
 				{
 					data: 'index',
-					render: function(data, type, row) {
-						if (type == 'display' || type == 'filter') {
-							var span = document.createElement('SPAN');
-							span.textContent = data;
-							return span.innerHTML;
-						}
-						return data;
-					}
+					render: render_text
 				},
 				{
 					data: 'autochanger',
-					render: function(data, type, row) {
-						if (type == 'display' || type == 'filter') {
-							var span = document.createElement('SPAN');
-							span.textContent = data;
-							return span.innerHTML;
-						}
-						return data;
-					}
+					render: render_text
 				},
 				{
 					data: 'name',

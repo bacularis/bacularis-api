@@ -85,36 +85,15 @@ var oOAuth2ClientList = {
 				},
 				{
 					data: 'name',
-					render: function(data, type, row) {
-						if (type == 'display' || type == 'filter') {
-							var span = document.createElement('SPAN');
-							span.textContent = data;
-							return span.innerHTML;
-						}
-						return data;
-					}
+					render: render_text
 				},
 				{
 					data: 'client_id',
-					render: function(data, type, row) {
-						if (type == 'display' || type == 'filter') {
-							var span = document.createElement('SPAN');
-							span.textContent = data;
-							return span.innerHTML;
-						}
-						return data;
-					}
+					render: render_text
 				},
 				{
 					data: 'redirect_uri',
-					render: function(data, type, row) {
-						if (type == 'display' || type == 'filter') {
-							var span = document.createElement('SPAN');
-							span.textContent = data;
-							return span.innerHTML;
-						}
-						return data;
-					}
+					render: render_text
 				},
 				{
 					data: 'client_id',
