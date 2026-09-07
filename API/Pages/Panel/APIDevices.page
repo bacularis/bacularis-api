@@ -715,11 +715,18 @@ var oDeviceList = {
 				.draw();
 			});
 			column.data().unique().sort().each(function (d, j) {
+				const option = document.createElement('OPTION');
 				if (column.search() == '^' + dtEscapeRegex(d) + '$') {
-					select.append('<option value="' + d + '" title="' + d + '" selected>' + d + '</option>');
+					option.selected = true;
 				} else if (d) {
-					select.append('<option value="' + d + '" title="' + d + '">' + d + '</option>');
+					option.selected = false;
+				} else {
+					return;
 				}
+				option.value = d;
+				option.title = d;
+				option.textContent = d;
+				select.append(option);
 			});
 		});
 	},
