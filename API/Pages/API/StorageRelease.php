@@ -56,7 +56,16 @@ class StorageRelease extends BaculumAPIServer
 	public function set($id, $params)
 	{
 		$drive = $this->Request->contains('drive') ? (int) ($this->Request['drive']) : 0;
-		$device = $this->Request->contains('device') ? $this->Request['device'] : null;
+		$device = null;
+		if ($this->Request->contains('device')) {
+			$device = $this->Request['device'];
+			$misc = $this->getModule('misc');
+			if (!$misc->isValidName($device)) {
+				$this->output = StorageError::MSG_ERROR_INVALID_COMMAND;
+				$this->error = StorageError::ERROR_INVALID_COMMAND;
+				return;
+			}
+		}
 
 		$result = $this->getModule('bconsole')->bconsoleCommand(
 			$this->director,
