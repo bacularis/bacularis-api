@@ -29,9 +29,10 @@
 
 namespace Bacularis\API\Modules;
 
-use Prado\Prado;
+use Bacularis\Common\Modules\AsyncOutput;
 use Bacularis\Common\Modules\Errors\DeviceError;
 use Bacularis\Common\Modules\Logging;
+use Prado\Prado;
 
 /**
  * Execute changer command module.
@@ -57,7 +58,7 @@ class ChangerCommand extends APIModule
 	/**
 	 * Output file prefix used to temporary store output from commands.
 	 */
-	public const OUTPUT_FILE_PREFIX = 'output_';
+	public const OUTPUT_FILE_PREFIX = AsyncOutput::OUTPUT_FILE_PREFIX;
 
 	/**
 	 * Pattern to changer command.
@@ -246,7 +247,8 @@ class ChangerCommand extends APIModule
 		$misc = $this->getModule('misc');
 
 		if ($pattern === self::CHANGER_COMMAND_BG_PATTERN) {
-			$file = $this->prepareOutputFile();
+			$output_file = $this->prepareOutputFile();
+			$file = $output_file['path'];
 			$cmd = sprintf(
 				$pattern,
 				$sudo,
@@ -255,7 +257,7 @@ class ChangerCommand extends APIModule
 				$file
 			);
 			$command['cmd'] = $misc->escapeCharsToConsole($cmd);
-			$command['out_id'] = preg_replace('/^[\s\S]+\/' . self::OUTPUT_FILE_PREFIX . '/', '', $file);
+			$command['out_id'] = $output_file['out_id'];
 		} else {
 			$cmd = sprintf($pattern, $sudo, $bin);
 			$command['cmd'] = $misc->escapeCharsToConsole($cmd);
@@ -268,13 +270,12 @@ class ChangerCommand extends APIModule
 	 * Create and get output file.
 	 * Used with background type command patterns (ex. PTYPE_BG_CMD)
 	 *
-	 * @return bool|string new temporary filename (with path), or false on failure.
+	 * @return array output file path and public output ID
 	 */
-	private function prepareOutputFile()
+	private function prepareOutputFile(): array
 	{
 		$dir = Prado::getPathOfNamespace('Bacularis.API.Config');
-		$fname = tempnam($dir, self::OUTPUT_FILE_PREFIX);
-		return $fname;
+		return AsyncOutput::createOutputFile($dir);
 	}
 
 	/**
@@ -288,8 +289,8 @@ class ChangerCommand extends APIModule
 	{
 		$output = [];
 		$dir = Prado::getPathOfNamespace('Bacularis.API.Config');
-		if (preg_match('/^[a-z0-9]+$/i', $out_id) === 1) {
-			$file = $dir . '/' . self::OUTPUT_FILE_PREFIX . $out_id;
+		if (AsyncOutput::isValidOutputID($out_id)) {
+			$file = AsyncOutput::getOutputFilePath($dir, $out_id);
 			if (file_exists($file)) {
 				$output = file($file);
 			}
@@ -314,9 +315,14 @@ class ChangerCommand extends APIModule
 	public function execCommand($cmd, $ptype = null)
 	{
 		exec($cmd['cmd'], $output, $exitcode);
+		$log_command = $cmd['cmd'];
+		if (!empty($cmd['out_id'])) {
+			$log_command = str_replace($cmd['out_id'], '[REDACTED]', $log_command);
+		}
+		$log_message = Logging::prepareCommand($log_command, $output);
 		Logging::log(
 			Logging::CATEGORY_EXECUTE,
-			Logging::prepareCommand($cmd['cmd'], $output)
+			$log_message
 		);
 		if ($ptype === self::PTYPE_BG_CMD) {
 			$output = [

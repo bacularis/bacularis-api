@@ -106,8 +106,8 @@ class APIOAuth2Clients extends BaculumAPIPage
 		$client_id = $param->getCallbackParameter();
 		if (key_exists($client_id, $clients)) {
 			unset($clients[$client_id]);
+			$config->setConfig($clients, $client_id);
 		}
-		$config->setConfig($clients);
 		$this->loadOAuth2Clients(null, null);
 	}
 }

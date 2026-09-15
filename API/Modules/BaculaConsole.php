@@ -15,6 +15,7 @@
 
 namespace Bacularis\API\Modules;
 
+use Bacularis\Common\Modules\Errors\BconsoleError;
 use Bacularis\Common\Modules\Logging;
 use Prado\Prado;
 
@@ -100,11 +101,17 @@ class BaculaConsole extends APIModule
 		$plist = [];
 		foreach ($params as $key => $value) {
 			if (is_null($value) || (is_bool($value) && $value == true)) {
-				$plist[] = sprintf('--%s', $key);
+				$argument = sprintf('--%s', $key);
 			} else {
-				$evalue = str_replace('"', '\\"', $value);
-				$plist[] = sprintf('--%s="%s"', $key, $evalue);
+				if (!Bconsole::isValidBconsoleRecordValue($value)) {
+					throw new BConsoleException(
+						BconsoleError::MSG_ERROR_INVALID_COMMAND,
+						BconsoleError::ERROR_INVALID_COMMAND
+					);
+				}
+				$argument = sprintf('--%s=%s', $key, $value);
 			}
+			$plist[] = escapeshellarg($argument);
 		}
 		return $plist;
 	}

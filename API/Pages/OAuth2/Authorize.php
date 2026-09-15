@@ -27,6 +27,7 @@
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
 
+use Bacularis\API\Modules\OAuth2\BaculumOAuth2;
 use Bacularis\Common\Modules\BaculumPage;
 
 /**
@@ -53,12 +54,16 @@ class Authorize extends BaculumPage
 		parent::onLoad($param);
 		$oauth2 = $this->getModule('oauth2');
 
-		$is_valid_response_type = (array_key_exists('response_type', $_GET) && $_GET['response_type'] === self::RESPONSE_TYPE_CODE);
-		$is_valid_client_id = (array_key_exists('client_id', $_GET) && $oauth2->validateClientId($_GET['client_id']) === true);
-		$is_valid_redirect_uri = (array_key_exists('redirect_uri', $_GET) && !empty($_GET['redirect_uri']));
-		$is_valid_scope = (array_key_exists('scope', $_GET) && $oauth2->validateScopes($_GET['scope']) === true);
+		$is_valid_response_type = (key_exists('response_type', $_GET) && $_GET['response_type'] === self::RESPONSE_TYPE_CODE);
+		$is_valid_client_id = (key_exists('client_id', $_GET) && $oauth2->validateClientId($_GET['client_id']) === true);
+		$request_redirect_uri = null;
+		if (key_exists('redirect_uri', $_GET) && is_string($_GET['redirect_uri'])) {
+			$request_redirect_uri = BaculumOAuth2::normalizeRedirectURI($_GET['redirect_uri']);
+		}
+		$is_valid_redirect_uri = ($request_redirect_uri !== null);
+		$is_valid_scope = (key_exists('scope', $_GET) && $oauth2->validateScopes($_GET['scope']) === true);
 		$is_valid_state = true;
-		if (array_key_exists('state', $_GET) && $oauth2->validateState($_GET['state']) === false) {
+		if (key_exists('state', $_GET) && $oauth2->validateState($_GET['state']) === false) {
 			$is_valid_state = false;
 		}
 
@@ -79,7 +84,11 @@ class Authorize extends BaculumPage
 		}
 
 		$client = $this->getModule('oauth2_config')->getConfig($_GET['client_id']);
-		if (count($client) === 0 || $_GET['redirect_uri'] !== $client['redirect_uri']) {
+		$stored_redirect_uri = null;
+		if (key_exists('redirect_uri', $client) && is_string($client['redirect_uri'])) {
+			$stored_redirect_uri = BaculumOAuth2::normalizeRedirectURI($client['redirect_uri']);
+		}
+		if (count($client) === 0 || $stored_redirect_uri === null || $request_redirect_uri !== $stored_redirect_uri) {
 			$oauth2->authorizationError(
 				$oauth2::HEADER_UNAUTHORIZED,
 				$oauth2::AUTHORIZATION_ERROR_ACCESS_DENIED
@@ -97,14 +106,14 @@ class Authorize extends BaculumPage
 		$auth_id = $oauth2->generateAuthId();
 
 		// saving new authorization identifier
-		$result = $oauth2->setAuthId($auth_id, $_GET['client_id'], $client['redirect_uri'], $client['scope']);
+		$result = $oauth2->setAuthId($auth_id, $_GET['client_id'], $stored_redirect_uri, $client['scope']);
 
 		// redirecting user's application response to 'redirect URI value'
 		$uri_params = [self::FIELD_CODE => $auth_id];
 		if (!empty($_GET['state'])) {
 			$uri_params[self::FIELD_STATE] = $_GET['state'];
 		}
-		$oauth2->authorizationRedirect($client['redirect_uri'], $uri_params);
+		$oauth2->authorizationRedirect($stored_redirect_uri, $uri_params);
 		// end action
 	}
 }

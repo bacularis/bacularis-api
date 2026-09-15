@@ -44,7 +44,7 @@ class RestoreFinish extends BaculumAPIServer
 		}
 
 		// Where to restore
-		$where = property_exists($params, 'where') && $misc->isValidPath($params->where) ? $params->where : null;
+		$where = property_exists($params, 'where') ? $params->where : null;
 
 		// Replace mode - ifolder/ifnewer/never/always
 		$replace = property_exists($params, 'replace') && $misc->isValidReplace($params->replace) ? $params->replace : null;
@@ -90,7 +90,7 @@ class RestoreFinish extends BaculumAPIServer
 			$regex_where = $params->regex_where;
 		}
 
-		if (!is_null($where) && !$misc->isValidPath($where)) {
+		if (!is_null($where) && !$misc->isValidRestoreWhere($where)) {
 			$this->output = JobError::MSG_ERROR_INVALID_WHERE_OPTION;
 			$this->error = JobError::ERROR_INVALID_WHERE_OPTION;
 			return;

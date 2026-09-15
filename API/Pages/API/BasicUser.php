@@ -91,16 +91,40 @@ class BasicUser extends BaculumAPIServer
 		}
 
 		if (property_exists($params, 'dir_res_perm')) {
-			$props['dir_res_perm'] = (array) $params->dir_res_perm;
+			$dir_res_perm = (array) $params->dir_res_perm;
+			if (!$misc->isValidResourcePermissions('dir', $dir_res_perm)) {
+				$this->output = BasicUserError::MSG_ERROR_BASIC_USER_INVALID_RESOURCE_PERMISSIONS;
+				$this->error = BasicUserError::ERROR_BASIC_USER_INVALID_RESOURCE_PERMISSIONS;
+				return;
+			}
+			$props['dir_res_perm'] = $dir_res_perm;
 		}
 		if (property_exists($params, 'sd_res_perm')) {
-			$props['sd_res_perm'] = (array) $params->sd_res_perm;
+			$sd_res_perm = (array) $params->sd_res_perm;
+			if (!$misc->isValidResourcePermissions('sd', $sd_res_perm)) {
+				$this->output = BasicUserError::MSG_ERROR_BASIC_USER_INVALID_RESOURCE_PERMISSIONS;
+				$this->error = BasicUserError::ERROR_BASIC_USER_INVALID_RESOURCE_PERMISSIONS;
+				return;
+			}
+			$props['sd_res_perm'] = $sd_res_perm;
 		}
 		if (property_exists($params, 'fd_res_perm')) {
-			$props['fd_res_perm'] = (array) $params->fd_res_perm;
+			$fd_res_perm = (array) $params->fd_res_perm;
+			if (!$misc->isValidResourcePermissions('fd', $fd_res_perm)) {
+				$this->output = BasicUserError::MSG_ERROR_BASIC_USER_INVALID_RESOURCE_PERMISSIONS;
+				$this->error = BasicUserError::ERROR_BASIC_USER_INVALID_RESOURCE_PERMISSIONS;
+				return;
+			}
+			$props['fd_res_perm'] = $fd_res_perm;
 		}
 		if (property_exists($params, 'bcons_res_perm')) {
-			$props['bcons_res_perm'] = (array) $params->bcons_res_perm;
+			$bcons_res_perm = (array) $params->bcons_res_perm;
+			if (!$misc->isValidResourcePermissions('bcons', $bcons_res_perm)) {
+				$this->output = BasicUserError::MSG_ERROR_BASIC_USER_INVALID_RESOURCE_PERMISSIONS;
+				$this->error = BasicUserError::ERROR_BASIC_USER_INVALID_RESOURCE_PERMISSIONS;
+				return;
+			}
+			$props['bcons_res_perm'] = $bcons_res_perm;
 		}
 
 		if (property_exists($params, 'bconsole_cfg_path')) {
@@ -210,16 +234,40 @@ class BasicUser extends BaculumAPIServer
 		}
 
 		if (property_exists($params, 'dir_res_perm')) {
-			$props['dir_res_perm'] = (array) $params->dir_res_perm;
+			$dir_res_perm = (array) $params->dir_res_perm;
+			if (!$misc->isValidResourcePermissions('dir', $dir_res_perm)) {
+				$this->output = BasicUserError::MSG_ERROR_BASIC_USER_INVALID_RESOURCE_PERMISSIONS;
+				$this->error = BasicUserError::ERROR_BASIC_USER_INVALID_RESOURCE_PERMISSIONS;
+				return;
+			}
+			$props['dir_res_perm'] = $dir_res_perm;
 		}
 		if (property_exists($params, 'sd_res_perm')) {
-			$props['sd_res_perm'] = (array) $params->sd_res_perm;
+			$sd_res_perm = (array) $params->sd_res_perm;
+			if (!$misc->isValidResourcePermissions('sd', $sd_res_perm)) {
+				$this->output = BasicUserError::MSG_ERROR_BASIC_USER_INVALID_RESOURCE_PERMISSIONS;
+				$this->error = BasicUserError::ERROR_BASIC_USER_INVALID_RESOURCE_PERMISSIONS;
+				return;
+			}
+			$props['sd_res_perm'] = $sd_res_perm;
 		}
 		if (property_exists($params, 'fd_res_perm')) {
-			$props['fd_res_perm'] = (array) $params->fd_res_perm;
+			$fd_res_perm = (array) $params->fd_res_perm;
+			if (!$misc->isValidResourcePermissions('fd', $fd_res_perm)) {
+				$this->output = BasicUserError::MSG_ERROR_BASIC_USER_INVALID_RESOURCE_PERMISSIONS;
+				$this->error = BasicUserError::ERROR_BASIC_USER_INVALID_RESOURCE_PERMISSIONS;
+				return;
+			}
+			$props['fd_res_perm'] = $fd_res_perm;
 		}
 		if (property_exists($params, 'bcons_res_perm')) {
-			$props['bcons_res_perm'] = (array) $params->bcons_res_perm;
+			$bcons_res_perm = (array) $params->bcons_res_perm;
+			if (!$misc->isValidResourcePermissions('bcons', $bcons_res_perm)) {
+				$this->output = BasicUserError::MSG_ERROR_BASIC_USER_INVALID_RESOURCE_PERMISSIONS;
+				$this->error = BasicUserError::ERROR_BASIC_USER_INVALID_RESOURCE_PERMISSIONS;
+				return;
+			}
+			$props['bcons_res_perm'] = $bcons_res_perm;
 		}
 
 		if (property_exists($params, 'bconsole_cfg_path')) {

@@ -28,8 +28,9 @@
  */
 
 use Bacularis\API\Modules\BaculumAPIServer;
-use Bacularis\Common\Modules\Errors\DeviceError;
 use Bacularis\API\Modules\ChangerCommand;
+use Bacularis\Common\Modules\AsyncOutput;
+use Bacularis\Common\Modules\Errors\DeviceError;
 
 /**
  * Unload a given slot from autochanger drive.
@@ -42,10 +43,11 @@ class ChangerDriveUnload extends BaculumAPIServer
 	public function get()
 	{
 		$output = [];
-		$misc = $this->getModule('misc');
-		if ($this->Request->contains('out_id') && $misc->isValidAlphaNumeric($this->Request->itemAt('out_id'))) {
+		if ($this->Request->contains('out_id')) {
 			$out_id = $this->Request->itemAt('out_id');
-			$output = ChangerCommand::readOutputFile($out_id);
+			if (AsyncOutput::isValidOutputID($out_id)) {
+				$output = ChangerCommand::readOutputFile($out_id);
+			}
 		}
 		$this->output = $output;
 		$this->error = DeviceError::ERROR_NO_ERRORS;

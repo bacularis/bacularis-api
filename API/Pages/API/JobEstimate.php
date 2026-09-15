@@ -28,9 +28,10 @@
  */
 
 use Bacularis\API\Modules\BaculumAPIServer;
+use Bacularis\API\Modules\Bconsole;
+use Bacularis\Common\Modules\AsyncOutput;
 use Bacularis\Common\Modules\Errors\JobError;
 use Bacularis\Common\Modules\Errors\VolumeError;
-use Bacularis\API\Modules\Bconsole;
 
 /**
  * Estimate job endpoint.
@@ -43,10 +44,11 @@ class JobEstimate extends BaculumAPIServer
 	public function get()
 	{
 		$output = [];
-		$misc = $this->getModule('misc');
-		if ($this->Request->contains('out_id') && $misc->isValidAlphaNumeric($this->Request->itemAt('out_id'))) {
+		if ($this->Request->contains('out_id')) {
 			$out_id = $this->Request->itemAt('out_id');
-			$output = Bconsole::readOutputFile($out_id);
+			if (AsyncOutput::isValidOutputID($out_id)) {
+				$output = Bconsole::readOutputFile($out_id);
+			}
 		}
 		$this->output = $output;
 		$this->error = VolumeError::ERROR_NO_ERRORS;

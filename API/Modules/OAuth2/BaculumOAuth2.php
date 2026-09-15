@@ -40,6 +40,78 @@ use Bacularis\Common\Modules\OAuth2;
 class BaculumOAuth2 extends OAuth2
 {
 	/**
+	 * Validate and normalize an OAuth2 redirect URI.
+	 *
+	 * HTTP and HTTPS redirect URIs are supported for valid absolute hosts.
+	 *
+	 * @param string $redirect_uri redirect URI value
+	 * @return string|null normalized redirect URI or null if invalid
+	 */
+	public static function normalizeRedirectURI(string $redirect_uri): ?string
+	{
+		if ($redirect_uri === '' || preg_match('/[\x00-\x20\x7F]/', $redirect_uri) === 1) {
+			return null;
+		}
+		if (strpos($redirect_uri, '\\') !== false || preg_match('/%(?![0-9A-Fa-f]{2})/', $redirect_uri) === 1) {
+			return null;
+		}
+
+		$parts = parse_url($redirect_uri);
+		if (!is_array($parts) || !key_exists('scheme', $parts) || !key_exists('host', $parts)) {
+			return null;
+		}
+		if (key_exists('user', $parts) || key_exists('pass', $parts) || key_exists('fragment', $parts)) {
+			return null;
+		}
+
+		$scheme = $parts['scheme'];
+		$scheme_lower = strtolower($scheme);
+		if ($scheme_lower !== 'https' && $scheme_lower !== 'http') {
+			return null;
+		}
+
+		$host = $parts['host'];
+		$is_ipv6 = strlen($host) > 1 && $host[0] === '[' && substr($host, -1) === ']';
+		if ($is_ipv6) {
+			$host = substr($host, 1, -1);
+		}
+		$packed_host = inet_pton($host);
+		if ($is_ipv6 && ($packed_host === false || strlen($packed_host) !== 16)) {
+			return null;
+		}
+		if (!$is_ipv6 && $packed_host === false) {
+			$is_valid_host = filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME);
+			if ($is_valid_host === false) {
+				return null;
+			}
+		}
+
+		$port = $parts['port'] ?? null;
+		if ($port !== null && ($port < 1 || $port > 65535)) {
+			return null;
+		}
+		$path = $parts['path'] ?? '/';
+		if ($path === '') {
+			$path = '/';
+		}
+		if ($path[0] !== '/') {
+			return null;
+		}
+
+		$uri_host = $is_ipv6 ? '[' . $host . ']' : $host;
+		$normalized_uri = $scheme . '://' . $uri_host;
+		if ($port !== null) {
+			$normalized_uri .= ':' . $port;
+		}
+		$normalized_uri .= $path;
+		if (key_exists('query', $parts) && $parts['query'] !== '') {
+			$normalized_uri .= '?' . $parts['query'];
+		}
+
+		return $normalized_uri;
+	}
+
+	/**
 	 * Set authorization identifier (authorization code).
 	 *
 	 * NOTE!
@@ -132,8 +204,22 @@ class BaculumOAuth2 extends OAuth2
 	 */
 	public function authorizationRedirect($redirect_uri, $params = [])
 	{
+		$redirect_uri = self::normalizeRedirectURI($redirect_uri);
+		if ($redirect_uri === null) {
+			$this->authorizationError(
+				parent::HEADER_BAD_REQUEST,
+				parent::AUTHORIZATION_ERROR_INVALID_REQUEST
+			);
+		}
 		header(parent::HEADER_HTTP_FOUND);
-		$uri = sprintf('Location: %s?%s', $redirect_uri, http_build_query($params));
+		$query = http_build_query($params);
+		$uri = $redirect_uri;
+		if ($query !== '') {
+			$separator = strpos($redirect_uri, '?') === false ? '?' : '&';
+			$uri = sprintf('Location: %s%s%s', $redirect_uri, $separator, $query);
+		} else {
+			$uri = sprintf('Location: %s', $redirect_uri);
+		}
 		header($uri); // redirection action
 		exit();
 	}

@@ -29,16 +29,16 @@
 
 namespace Bacularis\API\Modules;
 
-use Prado\Web\UI\TPage;
-use Prado\Exceptions\TException;
+use Bacularis\API\Modules\OAuth2\TokenRecord;
 use Bacularis\Common\Modules\AuthBasic;
-use Bacularis\Common\Modules\Errors\GenericError;
 use Bacularis\Common\Modules\Errors\AuthenticationError;
 use Bacularis\Common\Modules\Errors\AuthorizationError;
-use Bacularis\Common\Modules\Protocol\HTTP\Redirection;
-use Bacularis\Common\Modules\OAuth2;
+use Bacularis\Common\Modules\Errors\GenericError;
 use Bacularis\Common\Modules\Logging;
-use Bacularis\API\Modules\OAuth2\TokenRecord;
+use Bacularis\Common\Modules\OAuth2;
+use Bacularis\Common\Modules\Protocol\HTTP\Redirection;
+use Prado\Exceptions\TException;
+use Prado\Web\UI\TPage;
 
 /**
  * Abstract module from which inherits each of API module.
@@ -140,6 +140,7 @@ abstract class BaculumAPIServer extends TPage
 	{
 		$is_auth = false;
 		$is_token = false;
+		$client = null;
 
 		// deleting expired tokens
 		$this->getModule('oauth2_token')->deleteExpiredTokens();
@@ -150,10 +151,14 @@ abstract class BaculumAPIServer extends TPage
 		$scopes = '';
 		$token = $auth_oauth2->getToken();
 		$auth = TokenRecord::findByPk($token);
-		if (is_array($auth)) {
-			// Token found
-			$scopes = $auth['scope'];
-			$is_token = true;
+		if (is_array($auth) && key_exists('client_id', $auth)) {
+			$oauth2_config = $this->getModule('oauth2_config');
+			$client = $oauth2_config->getValidClientConfig($auth['client_id']);
+			if (is_array($client)) {
+				// Token and its current client configuration are valid
+				$scopes = $client['scope'];
+				$is_token = true;
+			}
 		}
 
 		// Check if requested scope is valid according allowed scopes assigned to token
@@ -162,7 +167,7 @@ abstract class BaculumAPIServer extends TPage
 			if ($auth_oauth2->isScopeValid($path, $scopes, $this->public_endpoints)) {
 				// Authorization valid
 				$is_auth = true;
-				$this->initAuthParams($auth);
+				$this->initAuthParams($client);
 			} else {
 				// Scopes error. Access attempt to not allowed resource
 				$this->output = AuthorizationError::MSG_ERROR_ACCESS_ATTEMPT_TO_NOT_ALLOWED_RESOURCE . ' Endpoint: ' . $path;
@@ -248,16 +253,13 @@ abstract class BaculumAPIServer extends TPage
 	/**
 	 * Initialize auth parameters.
 	 *
-	 * @param array $auth token params stored in TokenRecord session
+	 * @param array $auth current authorization properties
 	 */
 	private function initAuthParams(array $auth)
 	{
 		// if client has own bconsole config, assign it here
 		if (key_exists('bconsole_cfg_path', $auth) && !empty($auth['bconsole_cfg_path'])) {
 			Bconsole::setCfgPath($auth['bconsole_cfg_path'], true);
-		}
-		if (key_exists('client_id', $auth)) {
-			$auth = $this->getModule('oauth2_config')->getConfig($auth['client_id']);
 		}
 		$this->auth = $auth;
 	}

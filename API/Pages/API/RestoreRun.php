@@ -121,7 +121,7 @@ class RestoreRun extends BaculumAPIServer
 			$this->error = JobError::ERROR_INVALID_RPATH;
 			return;
 		}
-		if (!is_null($where) && !$misc->isValidPath($where)) {
+		if (!is_null($where) && !$misc->isValidRestoreWhere($where)) {
 			$this->output = JobError::MSG_ERROR_INVALID_WHERE_OPTION;
 			$this->error = JobError::ERROR_INVALID_WHERE_OPTION;
 			return;

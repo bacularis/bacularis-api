@@ -111,7 +111,9 @@ var oOAuth2ClientList = {
 						chpwd_btn.appendChild(document.createTextNode(' '));
 						chpwd_btn.appendChild(label);
 						chpwd_btn.setAttribute('data-client-id', data);
-						chpwd_btn.setAttribute('onclick', 'oAPIOAuth2Clients.edit_client(this.dataset.clientId)');
+						chpwd_btn.addEventListener('click', function() {
+							oAPIOAuth2Clients.edit_client(this.dataset.clientId);
+						});
 
 						var del_btn = document.createElement('BUTTON');
 						del_btn.className = 'w3-button w3-red w3-margin-left';
@@ -123,12 +125,14 @@ var oOAuth2ClientList = {
 						del_btn.appendChild(document.createTextNode(' '));
 						del_btn.appendChild(label);
 						del_btn.setAttribute('data-client-id', data);
-						del_btn.setAttribute('onclick', 'oAPIOAuth2Clients.delete_client(this.dataset.clientId)');
+						del_btn.addEventListener('click', function() {
+							oAPIOAuth2Clients.delete_client(this.dataset.clientId);
+						});
 
 						span.appendChild(chpwd_btn);
 						span.appendChild(del_btn);
 
-						return span.outerHTML;
+						return span;
 					}
 				}
 			],

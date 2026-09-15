@@ -27,9 +27,10 @@
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
 
-use Bacularis\API\Modules\DeviceConfig;
 use Bacularis\API\Modules\BaculumAPIPage;
 use Bacularis\API\Modules\BConfigException;
+use Bacularis\API\Modules\DeviceConfig;
+use Bacularis\Common\Modules\Miscellaneous;
 
 /**
  * API devices page.
@@ -204,7 +205,9 @@ class APIDevices extends BaculumAPIPage
 			);
 			$is_validate = ($result->error === 0);
 			if (!$is_validate) {
-				$this->ChangerCommandTestResultErr->Text = implode(PHP_EOL, $result->output);
+				$error_output = implode(PHP_EOL, $result->output);
+				$error_output = Miscellaneous::html_value($error_output);
+				$this->ChangerCommandTestResultErr->Text = $error_output;
 			}
 		}
 		if ($is_validate === true) {

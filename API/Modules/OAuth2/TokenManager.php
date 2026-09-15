@@ -101,6 +101,27 @@ class TokenManager extends APIModule
 	}
 
 	/**
+	 * Revoke all access tokens assigned to an OAuth2 client.
+	 *
+	 * @param string $client_id client identifier
+	 * @return bool true if all matching token records were revoked, otherwise false
+	 */
+	public function revokeClientTokens(string $client_id): bool
+	{
+		$tokens = TokenRecord::get();
+		$result = true;
+		for ($i = count($tokens) - 1; $i >= 0; $i--) {
+			if (!key_exists('client_id', $tokens[$i]) || $tokens[$i]['client_id'] !== $client_id) {
+				continue;
+			}
+			if (!TokenRecord::deleteByRecord($tokens[$i])) {
+				$result = false;
+			}
+		}
+		return $result;
+	}
+
+	/**
 	 * Set tokens properties.
 	 *
 	 * NOTE!

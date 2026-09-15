@@ -32,6 +32,8 @@ use Bacularis\API\Modules\APIConfig;
 use Bacularis\API\Modules\BAPIException;
 use Bacularis\API\Modules\BaculumAPIPage;
 use Bacularis\API\Modules\Database;
+use Bacularis\API\Modules\OAuth2\BaculumOAuth2;
+use Bacularis\Common\Modules\Errors\DatabaseError;
 use Bacularis\Common\Modules\Logging;
 use Bacularis\Common\Modules\Miscellaneous;
 use Bacularis\Common\Modules\Protocol\HTTP\Redirection;
@@ -287,6 +289,15 @@ class APIInstallWizard extends BaculumAPIPage
 
 	public function wizardCompleted($sender, $param)
 	{
+		$redirect_uri = null;
+		if ($this->AuthOAuth2->Checked) {
+			$redirect_uri = BaculumOAuth2::normalizeRedirectURI($this->APIOAuth2RedirectURI->Text);
+			if ($redirect_uri === null) {
+				return;
+			}
+			$this->APIOAuth2RedirectURI->Text = $redirect_uri;
+		}
+
 		$cfg_data = [];
 		/****
 		 * SAVE API CONFIG
@@ -365,11 +376,12 @@ class APIInstallWizard extends BaculumAPIPage
 				$oauth2_cfg[$this->APIOAuth2ClientId->Text] = [];
 				$oauth2_cfg[$this->APIOAuth2ClientId->Text]['client_id'] = $this->APIOAuth2ClientId->Text;
 				$oauth2_cfg[$this->APIOAuth2ClientId->Text]['client_secret'] = $this->APIOAuth2ClientSecret->Text;
-				$oauth2_cfg[$this->APIOAuth2ClientId->Text]['redirect_uri'] = $this->APIOAuth2RedirectURI->Text;
+				$oauth2_cfg[$this->APIOAuth2ClientId->Text]['redirect_uri'] = $redirect_uri;
 				$oauth2_cfg[$this->APIOAuth2ClientId->Text]['scope'] = $this->APIOAuth2Scope->Text;
 				$oauth2_cfg[$this->APIOAuth2ClientId->Text]['bconsole_cfg_path'] = $this->APIOAuth2BconsoleCfgPath->Text;
 				$oauth2_cfg[$this->APIOAuth2ClientId->Text]['name'] = $this->APIOAuth2Name->Text;
-				$this->getModule('oauth2_config')->setConfig($oauth2_cfg);
+				$oauth2_config = $this->getModule('oauth2_config');
+				$oauth2_config->setConfig($oauth2_cfg, $this->APIOAuth2ClientId->Text);
 			}
 		}
 
@@ -404,7 +416,7 @@ class APIInstallWizard extends BaculumAPIPage
 					$cfg_host['auth_type'] = 'oauth2';
 					$cfg_host['client_id'] = $this->APIOAuth2ClientId->Text;
 					$cfg_host['client_secret'] = $this->APIOAuth2ClientSecret->Text;
-					$cfg_host['redirect_uri'] = $this->APIOAuth2RedirectURI->Text;
+					$cfg_host['redirect_uri'] = $redirect_uri;
 					$cfg_host['scope'] = $this->APIOAuth2Scope->Text;
 				}
 				$host_config = $this->getModule('host_config')->getConfig();
@@ -933,11 +945,14 @@ class APIInstallWizard extends BaculumAPIPage
 			try {
 				$is_validate = $this->getModule('db')->testDbConnection($db_params);
 			} catch (BAPIException $e) {
-				$emsg = $e->getErrorMessage();
+				$diagnostic_message = $e->getErrorMessage();
+				Logging::log(Logging::CATEGORY_APPLICATION, $diagnostic_message);
+				$emsg = DatabaseError::MSG_ERROR_DB_CONNECTION_PROBLEM;
 			}
 		}
 		if (!empty($emsg)) {
-			$this->DbTestResultErr->Text = $emsg;
+			$visible_error = Miscellaneous::html_value($emsg);
+			$this->DbTestResultErr->Text = $visible_error;
 		}
 		if ($is_validate === true) {
 			$this->getCallbackClient()->show('db_test_result_ok');
@@ -964,7 +979,8 @@ class APIInstallWizard extends BaculumAPIPage
 		);
 		$is_validate = ($result->exitcode === 0);
 		if (!$is_validate) {
-			$this->BconsoleTestResultErr->Text = $result->output;
+			$error_output = Miscellaneous::html_value($result->output);
+			$this->BconsoleTestResultErr->Text = $error_output;
 		}
 		if ($is_validate === true) {
 			$this->getCallbackClient()->show('bconsole_test_result_ok');
@@ -1021,7 +1037,9 @@ class APIInstallWizard extends BaculumAPIPage
 					$config['ok_el']->Display = 'Dynamic';
 				} else {
 					// test failed
-					$config['error_el']->Text = implode("\n", $result->output);
+					$error_output = implode("\n", $result->output);
+					$error_output = Miscellaneous::html_value($error_output);
+					$config['error_el']->Text = $error_output;
 					$config['error_el']->Display = 'Dynamic';
 				}
 			}

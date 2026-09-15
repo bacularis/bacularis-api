@@ -992,7 +992,7 @@ function show_start_next_btn(show) {
 										<span id="bconsole_test_result_err" class="w3-text-red" style="display: none">
 											<i class="fas fa-exclamation-circle"></i> &nbsp;
 										</span>
-										<com:TActiveLabel ID="BconsoleTestResultErr" CssClass="w3-text-red" Display="None"><%[ Connection error ]%></com:TActiveLabel>
+						<com:TActiveLabel ID="BconsoleTestResultErr" CssClass="w3-text-red" Style="white-space: pre-wrap" Display="None"><%[ Connection error ]%></com:TActiveLabel>
 									</td>
 								</tr>
 							</table>
@@ -1217,6 +1217,7 @@ var oConfigWizardStep3 = {
 									ID="BDirJSONPathTestErr"
 									Display="None"
 									CssClass="w3-text-red"
+									Style="white-space: pre-wrap"
 									EnableViewState="false"
 								>
 									<i class="fas fa-exclamation-circle" title="<%[ Error ]%>"></i> &nbsp;<%[ Connection error ]%>
@@ -1283,6 +1284,7 @@ var oConfigWizardStep3 = {
 									ID="BSdJSONPathTestErr"
 									Display="None"
 									CssClass="w3-text-red"
+									Style="white-space: pre-wrap"
 									EnableViewState="false"
 								>
 									<i class="fas fa-exclamation-circle" title="<%[ Error ]%>"></i> &nbsp;<%[ Connection error ]%>
@@ -1349,6 +1351,7 @@ var oConfigWizardStep3 = {
 									ID="BFdJSONPathTestErr"
 									Display="None"
 									CssClass="w3-text-red"
+									Style="white-space: pre-wrap"
 									EnableViewState="false"
 								>
 									<i class="fas fa-exclamation-circle" title="<%[ Error ]%>"></i> &nbsp;<%[ Connection error ]%>
@@ -1415,6 +1418,7 @@ var oConfigWizardStep3 = {
 									ID="BBconsJSONPathTestErr"
 									Display="None"
 									CssClass="w3-text-red"
+									Style="white-space: pre-wrap"
 									EnableViewState="false"
 								>
 									<i class="fas fa-exclamation-circle" title="<%[ Error ]%>"></i> &nbsp;<%[ Connection error ]%>

@@ -27,6 +27,7 @@
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
 
+use Bacularis\API\Modules\OAuth2\BaculumOAuth2;
 use Bacularis\Common\Modules\BaculumPage;
 
 /**
@@ -57,7 +58,11 @@ class RequestToken extends BaculumPage
 
 		$is_valid_grant_type = (array_key_exists('grant_type', $_POST) && $_POST['grant_type'] === self::REQUEST_TYPE_AUTHORIZATION_CODE);
 		$is_valid_code = (array_key_exists('code', $_POST) && $oauth2->validateAuthId($_POST['code']) === true);
-		$is_valid_redirect_uri = (array_key_exists('redirect_uri', $_POST) && !empty($_POST['redirect_uri']));
+		$request_redirect_uri = null;
+		if (key_exists('redirect_uri', $_POST) && is_string($_POST['redirect_uri'])) {
+			$request_redirect_uri = BaculumOAuth2::normalizeRedirectURI($_POST['redirect_uri']);
+		}
+		$is_valid_redirect_uri = ($request_redirect_uri !== null);
 		$is_valid_client_id = (array_key_exists('client_id', $_POST) && $oauth2->validateClientId($_POST['client_id']) === true);
 		$is_valid_client_secret = (array_key_exists('client_secret', $_POST) && $oauth2->validateClientSecret($_POST['client_secret']) === true);
 		if ($is_valid_grant_type === false) {
@@ -76,7 +81,11 @@ class RequestToken extends BaculumPage
 		}
 
 		$client = $this->getModule('oauth2_config')->getConfig($_POST['client_id']);
-		if (count($client) === 0 || $client['client_secret'] !== $_POST['client_secret'] || $client['redirect_uri'] !== $_POST['redirect_uri']) {
+		$stored_redirect_uri = null;
+		if (key_exists('redirect_uri', $client) && is_string($client['redirect_uri'])) {
+			$stored_redirect_uri = BaculumOAuth2::normalizeRedirectURI($client['redirect_uri']);
+		}
+		if (count($client) === 0 || $client['client_secret'] !== $_POST['client_secret'] || $stored_redirect_uri === null || $request_redirect_uri !== $stored_redirect_uri) {
 			$oauth2->authorizationError(
 				$oauth2::HEADER_BAD_REQUEST,
 				$oauth2::AUTHORIZATION_ERROR_INVALID_CLIENT
@@ -140,6 +149,7 @@ class RequestToken extends BaculumPage
 			self::FIELD_TOKEN_TYPE => 'Bearer',
 			self::FIELD_EXPIRES_IN => $expires_in
 		];
+		$this->Response->appendHeader('Content-Type: application/json; charset=UTF-8');
 		echo json_encode($token_data);
 		// end action
 	}

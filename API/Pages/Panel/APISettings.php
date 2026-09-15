@@ -27,11 +27,14 @@
  * Bacula(R) is a registered trademark of Kern Sibbald.
  */
 
-use Bacularis\Common\Modules\AuthBasic;
-use Bacularis\Common\Modules\AuthOAuth2;
 use Bacularis\API\Modules\BaculumAPIPage;
 use Bacularis\API\Modules\BAPIException;
 use Bacularis\API\Modules\Database;
+use Bacularis\Common\Modules\AuthBasic;
+use Bacularis\Common\Modules\AuthOAuth2;
+use Bacularis\Common\Modules\Errors\DatabaseError;
+use Bacularis\Common\Modules\Logging;
+use Bacularis\Common\Modules\Miscellaneous;
 
 /**
  * API settings page.
@@ -401,11 +404,14 @@ class APISettings extends BaculumAPIPage
 			try {
 				$is_validate = $this->getModule('db')->testDbConnection($db_params);
 			} catch (BAPIException $e) {
-				$emsg = $e->getErrorMessage();
+				$diagnostic_message = $e->getErrorMessage();
+				Logging::log(Logging::CATEGORY_APPLICATION, $diagnostic_message);
+				$emsg = DatabaseError::MSG_ERROR_DB_CONNECTION_PROBLEM . ' ' . $diagnostic_message;
 			}
 		}
 		if (!empty($emsg)) {
-			$this->DbTestResultErr->Text = $emsg;
+			$visible_error = Miscellaneous::html_value($emsg);
+			$this->DbTestResultErr->Text = $visible_error;
 		}
 		if ($is_validate === true) {
 			$this->getCallbackClient()->show('db_test_result_ok');
@@ -432,7 +438,8 @@ class APISettings extends BaculumAPIPage
 		);
 		$is_validate = ($result->exitcode === 0);
 		if (!$is_validate) {
-			$this->BconsoleTestResultErr->Text = $result->output;
+			$error_output = Miscellaneous::html_value($result->output);
+			$this->BconsoleTestResultErr->Text = $error_output;
 		}
 		if ($is_validate === true) {
 			$this->getCallbackClient()->show('bconsole_test_result_ok');
@@ -489,7 +496,9 @@ class APISettings extends BaculumAPIPage
 					$config['ok_el']->Display = 'Dynamic';
 				} else {
 					// test failed
-					$config['error_el']->Text = implode("\n", $result->output);
+					$error_output = implode("\n", $result->output);
+					$error_output = Miscellaneous::html_value($error_output);
+					$config['error_el']->Text = $error_output;
 					$config['error_el']->Display = 'Dynamic';
 				}
 			}

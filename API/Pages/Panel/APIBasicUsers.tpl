@@ -118,7 +118,9 @@ var oBasicUserList = {
 						edit_btn.appendChild(document.createTextNode(' '));
 						edit_btn.appendChild(label);
 						edit_btn.setAttribute('data-username', data);
-						edit_btn.setAttribute('onclick', 'oAPIBasicUsers.edit_user(this.dataset.username)');
+						edit_btn.addEventListener('click', function() {
+							oAPIBasicUsers.edit_user(this.dataset.username);
+						});
 
 						span.appendChild(edit_btn);
 
@@ -133,11 +135,13 @@ var oBasicUserList = {
 							del_btn.appendChild(document.createTextNode(' '));
 							del_btn.appendChild(label);
 							del_btn.setAttribute('data-username', data);
-							del_btn.setAttribute('onclick', 'oAPIBasicUsers.delete_user(this.dataset.username)');
+							del_btn.addEventListener('click', function() {
+								oAPIBasicUsers.delete_user(this.dataset.username);
+							});
 
 							span.appendChild(del_btn);
 						}
-						return span.outerHTML;
+						return span;
 					}.bind(this)
 				}
 			],

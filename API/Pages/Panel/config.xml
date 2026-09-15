@@ -33,6 +33,7 @@
 		<module id="basic_apiuser" class="Bacularis\API\Modules\BasicAPIUserConfig" />
 		<module id="basic_config" class="Bacularis\API\Modules\BasicConfig" />
 		<module id="oauth2_config" class="Bacularis\API\Modules\OAuth2\OAuth2Config" />
+		<module id="oauth2_token" class="Bacularis\API\Modules\OAuth2\TokenManager" />
 		<!-- component actions modules -->
 		<module id="comp_actions" class="Bacularis\API\Modules\ComponentActions" />
 		<!-- changer command modules -->

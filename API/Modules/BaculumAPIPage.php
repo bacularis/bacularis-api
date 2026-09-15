@@ -50,14 +50,15 @@ class BaculumAPIPage extends BaculumPage
 	public function onPreInit($param)
 	{
 		parent::onPreInit($param);
+		$config = $this->getModule('api_config')->getConfig('api');
+		$is_config = (count($config) > 0) && ($this->Service->getRequestedPagePath() != 'APIInstallWizard');
 		$auth_mod = $this->getModule('basic_apiuser');
-		if ($this->getModule('auth_basic')->authenticate($auth_mod, AuthBasic::REALM_PANEL, false) === false) {
+		if ($this->getModule('auth_basic')->authenticate($auth_mod, AuthBasic::REALM_PANEL, $is_config) === false) {
 			// authentication failed
 			exit();
 		}
 
-		$config = $this->getModule('api_config')->getConfig('api');
-		if (count($config) === 0) {
+		if (!$is_config) {
 			if ($this->Service->getRequestedPagePath() != 'APIInstallWizard') {
 				$this->goToPage('APIInstallWizard');
 			}

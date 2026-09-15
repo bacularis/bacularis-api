@@ -29,9 +29,10 @@
 
 namespace Bacularis\API\Modules;
 
-use Prado\Prado;
+use Bacularis\Common\Modules\AsyncOutput;
 use Bacularis\Common\Modules\Errors\BconsoleError;
 use Bacularis\Common\Modules\Logging;
+use Prado\Prado;
 
 /**
  * Execute bconsole module.
@@ -52,15 +53,15 @@ class Bconsole extends APIModule
 	public const PTYPE_OPEN_CMD = 5;
 	public const PTYPE_OPEN_BG_CMD = 6;
 
-	public const BCONSOLE_COMMAND_PATTERN = "%s%s -c \"%s\" %s 2>&1 <<END_OF_DATA\ngui on\n%s\nquit\nEND_OF_DATA";
+	public const BCONSOLE_COMMAND_PATTERN = "printf '%%s\\n' %s | %s%s -c \"%s\" %s 2>&1";
 
-	public const BCONSOLE_BG_COMMAND_PATTERN = "echo 'gui on\n%s\nquit\n' | nohup %s%s -c \"%s\" %s >%s 2>&1 &";
+	public const BCONSOLE_BG_COMMAND_PATTERN = "printf '%%s\\n' %s | nohup %s%s -c \"%s\" %s >%s 2>&1 &";
 
-	public const BCONSOLE_CONFIRM_YES_COMMAND_PATTERN = "%s%s -c \"%s\" %s 2>&1 <<END_OF_DATA\ngui on\n%s\nyes\nquit\nEND_OF_DATA";
+	public const BCONSOLE_CONFIRM_YES_COMMAND_PATTERN = self::BCONSOLE_COMMAND_PATTERN;
 
-	public const BCONSOLE_CONFIRM_YES_BG_COMMAND_PATTERN = "echo 'gui on\n%s\nyes\nquit\n' | nohup %s%s -c \"%s\" %s >%s 2>&1 &";
+	public const BCONSOLE_CONFIRM_YES_BG_COMMAND_PATTERN = self::BCONSOLE_BG_COMMAND_PATTERN;
 
-	public const BCONSOLE_API_COMMAND_PATTERN = "%s%s -c \"%s\" %s 2>&1 <<END_OF_DATA\ngui on\n.api 2 nosignal api_opts=o\n%s\nquit\nEND_OF_DATA";
+	public const BCONSOLE_API_COMMAND_PATTERN = self::BCONSOLE_COMMAND_PATTERN;
 
 	public const BCONSOLE_DIRECTORS_PATTERN = "%s%s -c \"%s\" -l 2>&1";
 
@@ -68,7 +69,7 @@ class Bconsole extends APIModule
 
 	public const BCONSOLE_OPEN_BG_PATTERN = "%s%s -c \"%s\" 2>&1 &";
 
-	public const OUTPUT_FILE_PREFIX = 'output_';
+	public const OUTPUT_FILE_PREFIX = AsyncOutput::OUTPUT_FILE_PREFIX;
 
 	private $allowed_commands = [
 		'version',
@@ -195,6 +196,21 @@ class Bconsole extends APIModule
 		return in_array($command, $this->allowed_commands);
 	}
 
+	/**
+	 * Validate a scalar value intended to stay within one bconsole record.
+	 *
+	 * @param mixed $value bconsole record value
+	 * @return bool true if the value does not contain control characters
+	 */
+	public static function isValidBconsoleRecordValue($value): bool
+	{
+		if (!is_scalar($value)) {
+			return false;
+		}
+		$value = (string) $value;
+		return preg_match('/[\x00-\x1F\x7F]/', $value) === 0;
+	}
+
 	private function prepareResult(array $output, $exitcode, $bconsole_command)
 	{
 		array_pop($output); // deleted 'quit' bconsole command
@@ -224,7 +240,14 @@ class Bconsole extends APIModule
 			);
 		}
 		$base_command = count($command) > 0 ? $command[0] : null;
-		if ($this->isCommandValid($base_command) === true) {
+		$valid_record_values = true;
+		foreach ($command as $value) {
+			if (!self::isValidBconsoleRecordValue($value)) {
+				$valid_record_values = false;
+				break;
+			}
+		}
+		if ($valid_record_values && $this->isCommandValid($base_command) === true) {
 			$result = $this->execCommand($director, $command, $ptype);
 			if ($without_cmd) {
 				array_shift($result->output);
@@ -250,9 +273,14 @@ class Bconsole extends APIModule
 		} else {
 			$cmd = $this->prepareBconsoleCommand($director, $command, $ptype);
 			exec($cmd['cmd'], $output, $exitcode);
+			$log_command = $cmd['cmd'];
+			if (!empty($cmd['out_id'])) {
+				$log_command = str_replace($cmd['out_id'], '[REDACTED]', $log_command);
+			}
+			$log_message = Logging::prepareCommand($log_command, $output);
 			Logging::log(
 				Logging::CATEGORY_EXECUTE,
-				Logging::prepareCommand($cmd['cmd'], $output)
+				$log_message
 			);
 			if ($exitcode != 0) {
 				$emsg = ' Output=>' . implode("\n", $output) . ', Exitcode=>' . $exitcode;
@@ -286,40 +314,89 @@ class Bconsole extends APIModule
 	 */
 	public function prepareBconsoleCommand(?string $director, array $command, ?int $ptype = null): array
 	{
-		$dir = is_null($director) ? '' : '-D ' . $director;
+		$dir = is_null($director) ? '' : '-D ' . escapeshellarg($director);
 		$sudo = $this->sudo->getSudoCmd();
 		$bconsole_command = implode(' ', $command);
 		$pattern = $this->getCmdPattern($ptype);
-		return $this->getCommand($pattern, $sudo, $dir, $bconsole_command);
+		$bconsole_program = $this->getBconsoleProgram($bconsole_command, $ptype);
+		return $this->getCommand($pattern, $sudo, $dir, $bconsole_program);
 	}
 
-	private function getCommand($pattern, $sudo, $director, $bconsole_command)
+	/**
+	 * Build the complete program passed to bconsole standard input.
+	 *
+	 * @param string $command bconsole command
+	 * @param null|int $ptype bconsole command pattern type
+	 * @return string complete bconsole program
+	 */
+	private function getBconsoleProgram(string $command, ?int $ptype): string
+	{
+		$program = ['gui on'];
+		if ($ptype === self::PTYPE_API_CMD) {
+			$program[] = '.api 2 nosignal api_opts=o';
+		}
+		$program[] = $command;
+		if ($ptype === self::PTYPE_CONFIRM_YES_CMD || $ptype === self::PTYPE_CONFIRM_YES_BG_CMD) {
+			$program[] = 'yes';
+		}
+		$program[] = 'quit';
+		return implode("\n", $program);
+	}
+
+	/**
+	 * Encode a complete bconsole program as one POSIX shell argument.
+	 *
+	 * @param string $program complete bconsole program
+	 * @return string shell-encoded bconsole program
+	 */
+	private static function prepareBconsoleProgramForShell(string $program): string
+	{
+		return escapeshellarg($program);
+	}
+
+	private function getCommand($pattern, $sudo, $director, $bconsole_program)
 	{
 		$command = ['cmd' => null, 'out_id' => null];
 		$misc = $this->getModule('misc');
+		$cmd_path = self::getCmdPath();
+		$cmd_path = $misc->escapeCharsToConsole($cmd_path);
+		$cfg_path = self::getCfgPath();
+		$cfg_path = $misc->escapeCharsToConsole($cfg_path);
+		$sudo = $misc->escapeCharsToConsole($sudo);
+		$shell_program = self::prepareBconsoleProgramForShell($bconsole_program);
 		if ($pattern === self::BCONSOLE_BG_COMMAND_PATTERN || $pattern === self::BCONSOLE_CONFIRM_YES_BG_COMMAND_PATTERN) {
-			$file = $this->prepareOutputFile();
+			$output_file = $this->prepareOutputFile();
+			$file = $output_file['path'];
+			$file = $misc->escapeCharsToConsole($file);
 			$cmd = sprintf(
 				$pattern,
-				$bconsole_command,
+				$shell_program,
 				$sudo,
-				self::getCmdPath(),
-				self::getCfgPath(),
+				$cmd_path,
+				$cfg_path,
 				$director,
 				$file
 			);
-			$command['cmd'] = $misc->escapeCharsToConsole($cmd);
-			$command['out_id'] = preg_replace('/^[\s\S]+\/output_/', '', $file);
+			$command['cmd'] = $cmd;
+			$command['out_id'] = $output_file['out_id'];
+		} elseif ($pattern === self::BCONSOLE_OPEN_PATTERN || $pattern === self::BCONSOLE_OPEN_BG_PATTERN) {
+			$command['cmd'] = sprintf(
+				$pattern,
+				$sudo,
+				$cmd_path,
+				$cfg_path
+			);
+			$command['out_id'] = '';
 		} else {
 			$cmd = sprintf(
 				$pattern,
+				$shell_program,
 				$sudo,
-				self::getCmdPath(),
-				self::getCfgPath(),
-				$director,
-				$bconsole_command
+				$cmd_path,
+				$cfg_path,
+				$director
 			);
-			$command['cmd'] = $misc->escapeCharsToConsole($cmd);
+			$command['cmd'] = $cmd;
 			$command['out_id'] = '';
 		}
 		return $command;
@@ -377,19 +454,18 @@ class Bconsole extends APIModule
 		return in_array($director, $this->getDirectors()->output);
 	}
 
-	private function prepareOutputFile()
+	private function prepareOutputFile(): array
 	{
 		$dir = Prado::getPathOfNamespace('Bacularis.API.Config');
-		$fname = tempnam($dir, self::OUTPUT_FILE_PREFIX);
-		return $fname;
+		return AsyncOutput::createOutputFile($dir);
 	}
 
 	public static function readOutputFile($out_id)
 	{
 		$output = [];
 		$dir = Prado::getPathOfNamespace('Bacularis.API.Config');
-		if (preg_match('/^[a-z0-9]+$/i', $out_id) === 1) {
-			$file = $dir . '/' . self::OUTPUT_FILE_PREFIX . $out_id;
+		if (AsyncOutput::isValidOutputID($out_id)) {
+			$file = AsyncOutput::getOutputFilePath($dir, $out_id);
 			if (file_exists($file)) {
 				$output = file($file);
 			}

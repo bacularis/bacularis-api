@@ -28,8 +28,9 @@
  */
 
 use Bacularis\API\Modules\BaculumAPIServer;
-use Bacularis\Common\Modules\Errors\StorageError;
 use Bacularis\API\Modules\Bconsole;
+use Bacularis\Common\Modules\AsyncOutput;
+use Bacularis\Common\Modules\Errors\StorageError;
 
 /**
  * Mount storage command endpoint.
@@ -42,10 +43,11 @@ class StorageMount extends BaculumAPIServer
 	public function get()
 	{
 		$output = [];
-		$misc = $this->getModule('misc');
-		if ($this->Request->contains('out_id') && $misc->isValidAlphaNumeric($this->Request->itemAt('out_id'))) {
+		if ($this->Request->contains('out_id')) {
 			$out_id = $this->Request->itemAt('out_id');
-			$output = Bconsole::readOutputFile($out_id);
+			if (AsyncOutput::isValidOutputID($out_id)) {
+				$output = Bconsole::readOutputFile($out_id);
+			}
 		}
 		$this->output = $output;
 		$this->error = StorageError::ERROR_NO_ERRORS;

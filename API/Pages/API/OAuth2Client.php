@@ -28,6 +28,7 @@
  */
 
 use Bacularis\API\Modules\BaculumAPIServer;
+use Bacularis\API\Modules\OAuth2\BaculumOAuth2;
 use Bacularis\Common\Modules\Errors\OAuth2Error;
 
 /**
@@ -86,8 +87,12 @@ class OAuth2Client extends BaculumAPIServer
 			return;
 		}
 
-		if (property_exists($params, 'redirect_uri') && $oauth2->validateRedirectUri($params->redirect_uri)) {
-			$oauth2_cfg[$params->client_id]['redirect_uri'] = $params->redirect_uri;
+		$redirect_uri = null;
+		if (property_exists($params, 'redirect_uri') && is_string($params->redirect_uri)) {
+			$redirect_uri = BaculumOAuth2::normalizeRedirectURI($params->redirect_uri);
+		}
+		if ($redirect_uri !== null) {
+			$oauth2_cfg[$params->client_id]['redirect_uri'] = $redirect_uri;
 		} else {
 			$this->output = OAuth2Error::MSG_ERROR_OAUTH2_CLIENT_INVALID_REDIRECT_URI;
 			$this->error = OAuth2Error::ERROR_OAUTH2_CLIENT_INVALID_REDIRECT_URI;
@@ -103,16 +108,40 @@ class OAuth2Client extends BaculumAPIServer
 		}
 
 		if (property_exists($params, 'dir_res_perm')) {
-			$oauth2_cfg[$params->client_id]['dir_res_perm'] = (array) $params->dir_res_perm;
+			$dir_res_perm = (array) $params->dir_res_perm;
+			if (!$misc->isValidResourcePermissions('dir', $dir_res_perm)) {
+				$this->output = OAuth2Error::MSG_ERROR_OAUTH2_CLIENT_INVALID_RESOURCE_PERMISSIONS;
+				$this->error = OAuth2Error::ERROR_OAUTH2_CLIENT_INVALID_RESOURCE_PERMISSIONS;
+				return;
+			}
+			$oauth2_cfg[$params->client_id]['dir_res_perm'] = $dir_res_perm;
 		}
 		if (property_exists($params, 'sd_res_perm')) {
-			$oauth2_cfg[$params->client_id]['sd_res_perm'] = (array) $params->sd_res_perm;
+			$sd_res_perm = (array) $params->sd_res_perm;
+			if (!$misc->isValidResourcePermissions('sd', $sd_res_perm)) {
+				$this->output = OAuth2Error::MSG_ERROR_OAUTH2_CLIENT_INVALID_RESOURCE_PERMISSIONS;
+				$this->error = OAuth2Error::ERROR_OAUTH2_CLIENT_INVALID_RESOURCE_PERMISSIONS;
+				return;
+			}
+			$oauth2_cfg[$params->client_id]['sd_res_perm'] = $sd_res_perm;
 		}
 		if (property_exists($params, 'fd_res_perm')) {
-			$oauth2_cfg[$params->client_id]['fd_res_perm'] = (array) $params->fd_res_perm;
+			$fd_res_perm = (array) $params->fd_res_perm;
+			if (!$misc->isValidResourcePermissions('fd', $fd_res_perm)) {
+				$this->output = OAuth2Error::MSG_ERROR_OAUTH2_CLIENT_INVALID_RESOURCE_PERMISSIONS;
+				$this->error = OAuth2Error::ERROR_OAUTH2_CLIENT_INVALID_RESOURCE_PERMISSIONS;
+				return;
+			}
+			$oauth2_cfg[$params->client_id]['fd_res_perm'] = $fd_res_perm;
 		}
 		if (property_exists($params, 'bcons_res_perm')) {
-			$oauth2_cfg[$params->client_id]['bcons_res_perm'] = (array) $params->bcons_res_perm;
+			$bcons_res_perm = (array) $params->bcons_res_perm;
+			if (!$misc->isValidResourcePermissions('bcons', $bcons_res_perm)) {
+				$this->output = OAuth2Error::MSG_ERROR_OAUTH2_CLIENT_INVALID_RESOURCE_PERMISSIONS;
+				$this->error = OAuth2Error::ERROR_OAUTH2_CLIENT_INVALID_RESOURCE_PERMISSIONS;
+				return;
+			}
+			$oauth2_cfg[$params->client_id]['bcons_res_perm'] = $bcons_res_perm;
 		}
 
 		if (property_exists($params, 'bconsole_cfg_path')) {
@@ -188,7 +217,7 @@ class OAuth2Client extends BaculumAPIServer
 		}
 
 		// save config
-		$result = $oauth2_config->setConfig($oauth2_cfg);
+		$result = $oauth2_config->setConfig($oauth2_cfg, $params->client_id);
 
 		if ($result) {
 			$this->output = $oauth2_cfg;
@@ -230,8 +259,12 @@ class OAuth2Client extends BaculumAPIServer
 			}
 		}
 		if (property_exists($params, 'redirect_uri')) {
-			if ($oauth2->validateRedirectUri($params->redirect_uri)) {
-				$oauth2_cfg[$client_id]['redirect_uri'] = $params->redirect_uri;
+			$redirect_uri = null;
+			if (is_string($params->redirect_uri)) {
+				$redirect_uri = BaculumOAuth2::normalizeRedirectURI($params->redirect_uri);
+			}
+			if ($redirect_uri !== null) {
+				$oauth2_cfg[$client_id]['redirect_uri'] = $redirect_uri;
 			} else {
 				$this->output = OAuth2Error::MSG_ERROR_OAUTH2_CLIENT_INVALID_REDIRECT_URI;
 				$this->error = OAuth2Error::ERROR_OAUTH2_CLIENT_INVALID_REDIRECT_URI;
@@ -249,16 +282,40 @@ class OAuth2Client extends BaculumAPIServer
 		}
 
 		if (property_exists($params, 'dir_res_perm')) {
-			$oauth2_cfg[$params->client_id]['dir_res_perm'] = (array) $params->dir_res_perm;
+			$dir_res_perm = (array) $params->dir_res_perm;
+			if (!$misc->isValidResourcePermissions('dir', $dir_res_perm)) {
+				$this->output = OAuth2Error::MSG_ERROR_OAUTH2_CLIENT_INVALID_RESOURCE_PERMISSIONS;
+				$this->error = OAuth2Error::ERROR_OAUTH2_CLIENT_INVALID_RESOURCE_PERMISSIONS;
+				return;
+			}
+			$oauth2_cfg[$client_id]['dir_res_perm'] = $dir_res_perm;
 		}
 		if (property_exists($params, 'sd_res_perm')) {
-			$oauth2_cfg[$params->client_id]['sd_res_perm'] = (array) $params->sd_res_perm;
+			$sd_res_perm = (array) $params->sd_res_perm;
+			if (!$misc->isValidResourcePermissions('sd', $sd_res_perm)) {
+				$this->output = OAuth2Error::MSG_ERROR_OAUTH2_CLIENT_INVALID_RESOURCE_PERMISSIONS;
+				$this->error = OAuth2Error::ERROR_OAUTH2_CLIENT_INVALID_RESOURCE_PERMISSIONS;
+				return;
+			}
+			$oauth2_cfg[$client_id]['sd_res_perm'] = $sd_res_perm;
 		}
 		if (property_exists($params, 'fd_res_perm')) {
-			$oauth2_cfg[$params->client_id]['fd_res_perm'] = (array) $params->fd_res_perm;
+			$fd_res_perm = (array) $params->fd_res_perm;
+			if (!$misc->isValidResourcePermissions('fd', $fd_res_perm)) {
+				$this->output = OAuth2Error::MSG_ERROR_OAUTH2_CLIENT_INVALID_RESOURCE_PERMISSIONS;
+				$this->error = OAuth2Error::ERROR_OAUTH2_CLIENT_INVALID_RESOURCE_PERMISSIONS;
+				return;
+			}
+			$oauth2_cfg[$client_id]['fd_res_perm'] = $fd_res_perm;
 		}
 		if (property_exists($params, 'bcons_res_perm')) {
-			$oauth2_cfg[$params->client_id]['bcons_res_perm'] = (array) $params->bcons_res_perm;
+			$bcons_res_perm = (array) $params->bcons_res_perm;
+			if (!$misc->isValidResourcePermissions('bcons', $bcons_res_perm)) {
+				$this->output = OAuth2Error::MSG_ERROR_OAUTH2_CLIENT_INVALID_RESOURCE_PERMISSIONS;
+				$this->error = OAuth2Error::ERROR_OAUTH2_CLIENT_INVALID_RESOURCE_PERMISSIONS;
+				return;
+			}
+			$oauth2_cfg[$client_id]['bcons_res_perm'] = $bcons_res_perm;
 		}
 
 		if (property_exists($params, 'bconsole_cfg_path')) {
@@ -329,7 +386,7 @@ class OAuth2Client extends BaculumAPIServer
 			$oauth2_cfg[$params->client_id]['bconsole_cfg_path'] = $file;
 		}
 
-		$result = $oauth2_config->setConfig($oauth2_cfg);
+		$result = $oauth2_config->setConfig($oauth2_cfg, $client_id);
 		if ($result) {
 			$this->output = $oauth2_cfg;
 			$this->error = OAuth2Error::ERROR_NO_ERRORS;
@@ -345,7 +402,7 @@ class OAuth2Client extends BaculumAPIServer
 		$oauth2_cfg = $oauth2->getConfig();
 		if (key_exists($id, $oauth2_cfg)) {
 			unset($oauth2_cfg[$id]);
-			$result = $oauth2->setConfig($oauth2_cfg);
+			$result = $oauth2->setConfig($oauth2_cfg, $id);
 			if ($result) {
 				$this->output = [];
 				$this->error = OAuth2Error::ERROR_NO_ERRORS;

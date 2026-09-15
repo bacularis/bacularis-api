@@ -96,15 +96,83 @@ class OAuth2Config extends ConfigFileModule
 	}
 
 	/**
+	 * Get current valid OAuth2 client configuration.
+	 *
+	 * @param mixed $client_id client identifier
+	 * @return null|array current client configuration or null if invalid
+	 */
+	public function getValidClientConfig($client_id): ?array
+	{
+		$oauth2 = $this->getModule('oauth2');
+		if (!is_string($client_id) || !$oauth2->validateClientId($client_id)) {
+			return null;
+		}
+
+		$client = $this->getConfig($client_id);
+		$required_string_options = [
+			'client_id',
+			'client_secret',
+			'redirect_uri',
+			'scope',
+			'bconsole_cfg_path'
+		];
+		for ($i = 0; $i < count($required_string_options); $i++) {
+			$option = $required_string_options[$i];
+			if (!key_exists($option, $client) || !is_string($client[$option])) {
+				return null;
+			}
+		}
+
+		if ($client['client_id'] !== $client_id || !$oauth2->validateClientSecret($client['client_secret'])) {
+			return null;
+		}
+		$redirect_uri = BaculumOAuth2::normalizeRedirectURI($client['redirect_uri']);
+		if (is_null($redirect_uri) || !$oauth2->validateScopes($client['scope'])) {
+			return null;
+		}
+
+		$misc = $this->getModule('misc');
+		if (!$misc->isValidPath($client['bconsole_cfg_path'])) {
+			return null;
+		}
+		$resource_permissions = [
+			'dir' => 'dir_res_perm',
+			'sd' => 'sd_res_perm',
+			'fd' => 'fd_res_perm',
+			'bcons' => 'bcons_res_perm'
+		];
+		foreach ($resource_permissions as $component => $option) {
+			if (!key_exists($option, $client)) {
+				continue;
+			}
+			if (!is_array($client[$option]) || !$misc->isValidResourcePermissions($component, $client[$option])) {
+				return null;
+			}
+			foreach ($client[$option] as $permission) {
+				if (!is_string($permission) || !in_array($permission, ['ro', 'rw', 'no'], true)) {
+					return null;
+				}
+			}
+		}
+		return $client;
+	}
+
+	/**
 	 * Set (save) OAuth2 client config.
 	 *
 	 * @access public
 	 * @param array $config config
+	 * @param string $client_id identifier of client whose tokens should be revoked
 	 * @return bool true if config saved successfully, otherwise false
 	 */
-	public function setConfig(array $config)
+	public function setConfig(array $config, string $client_id): bool
 	{
-		return $this->writeConfig($config, self::CONFIG_FILE_PATH, self::CONFIG_FILE_FORMAT);
+		$result = $this->writeConfig($config, self::CONFIG_FILE_PATH, self::CONFIG_FILE_FORMAT);
+		if ($result) {
+			$token_manager = $this->getModule('oauth2_token');
+			$result = $token_manager->revokeClientTokens($client_id);
+		}
+		return $result;
 	}
 
 

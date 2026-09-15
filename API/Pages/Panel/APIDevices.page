@@ -110,7 +110,9 @@ var oAutochangerList = {
 						chpwd_btn.appendChild(document.createTextNode(' '));
 						chpwd_btn.appendChild(label);
 						chpwd_btn.setAttribute('data-autochanger', data);
-						chpwd_btn.setAttribute('onclick', 'oAPIAutochangers.edit_autochanger(this.dataset.autochanger)');
+						chpwd_btn.addEventListener('click', function() {
+							oAPIAutochangers.edit_autochanger(this.dataset.autochanger);
+						});
 
 						var del_btn = document.createElement('BUTTON');
 						del_btn.className = 'w3-button w3-red w3-margin-left';
@@ -122,12 +124,14 @@ var oAutochangerList = {
 						del_btn.appendChild(document.createTextNode(' '));
 						del_btn.appendChild(label);
 						del_btn.setAttribute('data-autochanger', data);
-						del_btn.setAttribute('onclick', 'oAPIAutochangers.delete_autochanger(this.dataset.autochanger)');
+						del_btn.addEventListener('click', function() {
+							oAPIAutochangers.delete_autochanger(this.dataset.autochanger);
+						});
 
 						span.appendChild(chpwd_btn);
 						span.appendChild(del_btn);
 
-						return span.outerHTML;
+						return span;
 					}
 				}
 			],
@@ -337,7 +341,7 @@ oSudoConfig.set_bin_ownership(bin_ownership);
 									<span id="changer_command_test_result_err" class="w3-text-red" style="display: none">
 										<i class="fas fa-exclamation-circle"></i> &nbsp;
 									</span>
-									<com:TActiveLabel ID="ChangerCommandTestResultErr" CssClass="w3-text-red" Display="None"><%[ Changer command error ]%></com:TActiveLabel>
+									<com:TActiveLabel ID="ChangerCommandTestResultErr" CssClass="w3-text-red" Display="None" Style="white-space: pre-wrap"><%[ Changer command error ]%></com:TActiveLabel>
 								</td>
 							</tr>
 						</table>
@@ -658,7 +662,9 @@ var oDeviceList = {
 						chpwd_btn.appendChild(document.createTextNode(' '));
 						chpwd_btn.appendChild(label);
 						chpwd_btn.setAttribute('data-device', data);
-						chpwd_btn.setAttribute('onclick', 'oAPIDevices.edit_device(this.dataset.device)');
+						chpwd_btn.addEventListener('click', function() {
+							oAPIDevices.edit_device(this.dataset.device);
+						});
 
 						var del_btn = document.createElement('BUTTON');
 						del_btn.className = 'w3-button w3-red w3-margin-left';
@@ -671,12 +677,14 @@ var oDeviceList = {
 						del_btn.appendChild(label);
 						del_btn.setAttribute('data-device', data);
 						del_btn.setAttribute('data-autochanger', row.autochanger);
-						del_btn.setAttribute('onclick', 'oAPIDevices.delete_device(this.dataset.device, this.dataset.autochanger)');
+						del_btn.addEventListener('click', function() {
+							oAPIDevices.delete_device(this.dataset.device, this.dataset.autochanger);
+						});
 
 						span.appendChild(chpwd_btn);
 						span.appendChild(del_btn);
 
-						return span.outerHTML;
+						return span;
 					}
 				}
 			],
