@@ -45,7 +45,7 @@ class BaculumOAuth2 extends OAuth2
 	 * HTTP and HTTPS redirect URIs are supported for valid absolute hosts.
 	 *
 	 * @param string $redirect_uri redirect URI value
-	 * @return string|null normalized redirect URI or null if invalid
+	 * @return null|string normalized redirect URI or null if invalid
 	 */
 	public static function normalizeRedirectURI(string $redirect_uri): ?string
 	{
