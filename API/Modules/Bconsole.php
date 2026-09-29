@@ -32,6 +32,7 @@ namespace Bacularis\API\Modules;
 use Bacularis\Common\Modules\AsyncOutput;
 use Bacularis\Common\Modules\Errors\BconsoleError;
 use Bacularis\Common\Modules\Logging;
+use Bacularis\Common\Modules\Miscellaneous;
 use Prado\Prado;
 
 /**
@@ -208,7 +209,7 @@ class Bconsole extends APIModule
 			return false;
 		}
 		$value = (string) $value;
-		return preg_match('/[\x00-\x1F\x7F]/', $value) === 0;
+		return !Miscellaneous::isASCIControlChar($value);
 	}
 
 	private function prepareResult(array $output, $exitcode, $bconsole_command)
