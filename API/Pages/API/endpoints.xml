@@ -85,6 +85,7 @@
 	<url ServiceParameter="RestoreCommand" pattern="api/v3/jobs/restore/command/" />
 	<url ServiceParameter="RestoreOutput" pattern="api/v3/jobs/restore/output/" />
 	<url ServiceParameter="RestoreVerifyPlan" pattern="api/v3/jobs/restore/verify/plan/" />
+	<url ServiceParameter="RestoreVerifyResult" pattern="api/v3/jobs/restore/verify/result/{test_id}/" parameters.test_id="rt-[a-zA-Z0-9]{32}" />
 	<!-- bvfs endpoints-->
 	<url ServiceParameter="BVFSUpdate" pattern="api/v3/bvfs/update/" />
 	<url ServiceParameter="BVFSLsDirs" pattern="api/v3/bvfs/lsdirs/" />
