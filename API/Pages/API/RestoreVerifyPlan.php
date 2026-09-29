@@ -27,9 +27,23 @@ class RestoreVerifyPlan extends BaculumAPIServer
 {
 	public function create($params)
 	{
-		$misc = $this->getModule('misc');
-		$test_id = property_exists($params, 'test_id') && $misc->isValidName($params->test_id) ? $params->test_id : null;
-		$plan = property_exists($params, 'plan') && RestoreVerification::validatePlan($test_id, $params->plan) ? $params->plan : null;
+		$test_id = null;
+		if (
+			property_exists($params, 'test_id') &&
+			is_string($params->test_id) &&
+			RestoreVerification::isValidTestId($params->test_id)
+		) {
+			$test_id = $params->test_id;
+		}
+		$plan = null;
+		if (
+			is_string($test_id) &&
+			property_exists($params, 'plan') &&
+			is_string($params->plan) &&
+			RestoreVerification::validatePlan($test_id, $params->plan)
+		) {
+			$plan = $params->plan;
+		}
 		$result = false;
 		if ($test_id && $plan) {
 			$result = RestoreVerification::saveRestoreTestPlan($test_id, $plan);
