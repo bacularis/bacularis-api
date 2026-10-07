@@ -51,9 +51,25 @@ class RestoreVerifyResult extends BaculumAPIServer
 			$this->error = GenericError::ERROR_INTERNAL_ERROR;
 			return;
 		}
-		if ($status['state'] !== RestoreVerificationStatus::STATE_DONE) {
+		if ($status['state'] === RestoreVerificationStatus::STATE_READY) {
 			$this->output = sprintf(
-				'%s Restore verification result is not ready. State: %s.',
+				'%s Restore Verification did not start. The restore job may have ended before the verification step could run. State: %s.',
+				GenericError::MSG_ERROR_NOT_READY,
+				$status['state']
+			);
+			$this->error = GenericError::ERROR_NOT_READY;
+			return;
+		} elseif ($status['state'] === RestoreVerificationStatus::STATE_RUNNING) {
+			$this->output = sprintf(
+				'%s Restore Verification is still running. State: %s.',
+				GenericError::MSG_ERROR_WRONG_EXITCODE,
+				$status['state']
+			);
+			$this->error = GenericError::ERROR_WRONG_EXITCODE;
+			return;
+		} elseif ($status['state'] !== RestoreVerificationStatus::STATE_DONE) {
+			$this->output = sprintf(
+				'%s Restore Verification is in unknown state. State: %s.',
 				GenericError::MSG_ERROR_WRONG_EXITCODE,
 				$status['state']
 			);
