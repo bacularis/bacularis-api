@@ -7,6 +7,13 @@
 	<!-- database endpoints -->
 	<url ServiceParameter="Catalog" pattern="api/v3/catalog/" />
 	<url ServiceParameter="DbSize" pattern="api/v3/dbsize/" />
+	<!-- native Catalog tag endpoints -->
+	<url ServiceParameter="TagJobs" pattern="api/v3/tags/jobs/" />
+	<url ServiceParameter="TagJob" pattern="api/v3/tags/jobs/{id}/" parameters.id="\d+" />
+	<url ServiceParameter="TagClients" pattern="api/v3/tags/clients/" />
+	<url ServiceParameter="TagClient" pattern="api/v3/tags/clients/{id}/" parameters.id="\d+" />
+	<url ServiceParameter="TagVolumes" pattern="api/v3/tags/volumes/" />
+	<url ServiceParameter="TagVolume" pattern="api/v3/tags/volumes/{id}/" parameters.id="\d+" />
 	<!-- director endpoints -->
 	<url ServiceParameter="Directors" pattern="api/v3/directors/" />
 	<!-- clients (file daemons) endpoints -->

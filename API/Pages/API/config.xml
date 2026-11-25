@@ -27,6 +27,9 @@
 		<module id="joblog" class="Bacularis\API\Modules\LogManager" />
 		<module id="pool" class="Bacularis\API\Modules\PoolManager" />
 		<module id="storage" class="Bacularis\API\Modules\StorageManager" />
+		<module id="tag_client" class="Bacularis\API\Modules\TagClientManager" />
+		<module id="tag_job" class="Bacularis\API\Modules\TagJobManager" />
+		<module id="tag_media" class="Bacularis\API\Modules\TagMediaManager" />
 		<module id="version" class="Bacularis\API\Modules\VersionManager" />
 		<module id="volume" class="Bacularis\API\Modules\VolumeManager" />
 		<!-- tools modules -->

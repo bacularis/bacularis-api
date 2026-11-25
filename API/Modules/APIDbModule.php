@@ -29,9 +29,10 @@
 
 namespace Bacularis\API\Modules;
 
-use Prado\Data\TDbConnection;
 use Bacularis\Common\Modules\Errors\DatabaseError;
+use PDOException;
 use Prado\Data\ActiveRecord\TActiveRecord;
+use Prado\Data\TDbConnection;
 
 /**
  * Base API database module.
@@ -135,6 +136,39 @@ class APIDbModule extends TActiveRecord
 			);
 		}
 		return $db_connection;
+	}
+
+	/**
+	 * Convert a PDO Catalog query failure to an API exception.
+	 *
+	 * @param PDOException $exception original query exception
+	 * @return BCatalogException Catalog query exception for the API response
+	 */
+	public static function getCatalogQueryException(PDOException $exception): BCatalogException
+	{
+		$error_info = $exception->errorInfo ?? [];
+		$state = $error_info[0] ?? null; // SQLSTATE error code
+		$code = $error_info[1] ?? null;  // error code spcific for given db driver
+		$message = $error_info[2] ?? ''; // error message from db driver
+
+		/**
+		 * PostgreSQL uses 42P01 and MySQL and MariaDB use 42S02 for a missing table.
+		 * SQLite reports the generic SQLITE_ERROR code and identifies the cause in the message.
+		 */
+		if (
+			$state === '42P01' || $state === '42S02' ||
+			($state === 'HY000' && $code === 1 && strpos($message, 'no such table:') === 0)
+		) {
+			return new BCatalogException(
+				DatabaseError::MSG_ERROR_CATALOG_TABLE_NOT_FOUND,
+				DatabaseError::ERROR_CATALOG_TABLE_NOT_FOUND
+			);
+		}
+
+		return new BCatalogException(
+			DatabaseError::MSG_ERROR_INTERNAL_ERROR,
+			DatabaseError::ERROR_INTERNAL_ERROR
+		);
 	}
 
 	public function getColumnValue($column_name)
