@@ -1197,8 +1197,7 @@
 				"description": "Apply JobDefs in results (this parameter is taken into account only for Job resources)",
 				"required": false,
 				"schema": {
-					"type": "boolean",
-					"default": 0
+					"type": "boolean"
 				}
 			},
 			"JobType": {
@@ -3681,15 +3680,6 @@
 					}
 				},
 				"parameters": [
-					{
-						"name": "where",
-						"in": "header",
-						"description": "Where to restore files",
-						"required":  false,
-						"schema": {
-							"type": "string"
-						}
-					},
 					{
 						"name": "restoreclientid",
 						"in": "header",
@@ -6911,7 +6901,18 @@
 							}
 						}
 					}
-				}
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/ComponentType"
+					},
+					{
+						"$ref": "#/components/parameters/ResourceType"
+					},
+					{
+						"$ref": "#/components/parameters/ResourceName"
+					}
+				]
 			}
 		},
 		"/api/v3/devices/{device_name}": {
