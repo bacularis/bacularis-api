@@ -12,7 +12,7 @@
 			"name": "AGPLv3",
 			"url": "https://www.gnu.org/licenses/agpl-3.0-standalone.html"
 		},
-		"version": "3.2.4"
+		"version": "3.2.5"
 	},
 	"servers": [
 		{
@@ -941,9 +941,76 @@
 						"type": "integer"
 					}
 				}
+			},
+			"TagJob": {
+				"type": "object",
+				"description": "One native Bacula job tag assignment from the Bacula Catalog.",
+				"required": [
+					"jobid",
+					"tag"
+				],
+				"properties": {
+					"jobid": {
+						"description": "Job identifier in the Bacula Catalog",
+						"type": "integer",
+						"minimum": 1
+					},
+					"tag": {
+						"description": "Native Bacula tag value",
+						"type": "string"
+					}
+				}
+			},
+			"TagClient": {
+				"type": "object",
+				"description": "One native Bacula client tag assignment from the Bacula Catalog.",
+				"required": [
+					"clientid",
+					"tag"
+				],
+				"properties": {
+					"clientid": {
+						"description": "Client identifier in the Bacula Catalog",
+						"type": "integer",
+						"minimum": 1
+					},
+					"tag": {
+						"description": "Native Bacula tag value",
+						"type": "string"
+					}
+				}
+			},
+			"TagVolume": {
+				"type": "object",
+				"description": "One native Bacula volume tag assignment from the Bacula Catalog.",
+				"required": [
+					"mediaid",
+					"tag"
+				],
+				"properties": {
+					"mediaid": {
+						"description": "Volume identifier in the Bacula Catalog",
+						"type": "integer",
+						"minimum": 1
+					},
+					"tag": {
+						"description": "Native Bacula tag value",
+						"type": "string"
+					}
+				}
 			}
 		},
 		"parameters": {
+			"NativeTag": {
+				"name": "tag",
+				"in": "query",
+				"description": "Exact tag value. Comparison uses the Catalog database’s equality semantics.",
+				"required": false,
+				"allowEmptyValue": true,
+				"schema": {
+					"type": "string"
+				}
+			},
 			"Offset": {
 				"name": "offset",
 				"in": "query",
@@ -1266,6 +1333,258 @@
 	}
 	],
 	"paths": {
+		"/api/v3/tags/jobs": {
+			"get": {
+				"tags": ["tags"],
+				"summary": "Get Bacula job tags",
+				"description": "Returns native tags stored in the Bacula Catalog. These tags are independent of the Bacularis Web tagging system. OAuth2 clients require the tags scope. Job ACLs on the selected Director restrict results by configured job resource name. Assignments are ordered by resource ID and tag. If no assignments match for an accessible resource, the response is a successful empty array.",
+				"responses": {
+					"200": {
+						"description": "List of native Bacula job tag assignments",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/TagJob"
+											}
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 1, 2, 3, 4, 5, 6, 7, 9, 11, 190, 200, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/NativeTag"
+					}
+				]
+			}
+		},
+		"/api/v3/tags/jobs/{jobid}": {
+			"get": {
+				"tags": ["tags"],
+				"summary": "Get Bacula tags assigned to a specific job",
+				"description": "Returns native tags stored in the Bacula Catalog. These tags are independent of the Bacularis Web tagging system. OAuth2 clients require the tags scope. Job ACLs on the selected Director restrict results by configured job resource name. Assignments are ordered by resource ID and tag. If no assignments match for an accessible resource, the response is a successful empty array.",
+				"responses": {
+					"200": {
+						"description": "List of native Bacula job tag assignments",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/TagJob"
+											}
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 1, 2, 3, 4, 5, 6, 7, 9, 11, 190, 191, 200, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"name": "jobid",
+						"in": "path",
+						"description": "Job identifier in the Bacula Catalog",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"$ref": "#/components/parameters/NativeTag"
+					}
+				]
+			}
+		},
+		"/api/v3/tags/clients": {
+			"get": {
+				"tags": ["tags"],
+				"summary": "Get Bacula client tags",
+				"description": "Returns native tags stored in the Bacula Catalog. These tags are independent of the Bacularis Web tagging system. OAuth2 clients require the tags scope. Client ACLs on the selected Director restrict results by configured client resource name. Assignments are ordered by resource ID and tag. If no assignments match for an accessible resource, the response is a successful empty array.",
+				"responses": {
+					"200": {
+						"description": "List of native Bacula client tag assignments",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/TagClient"
+											}
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 1, 2, 3, 4, 5, 6, 7, 9, 11, 190, 200, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/NativeTag"
+					}
+				]
+			}
+		},
+		"/api/v3/tags/clients/{clientid}": {
+			"get": {
+				"tags": ["tags"],
+				"summary": "Get Bacula tags assigned to a specific client",
+				"description": "Returns native tags stored in the Bacula Catalog. These tags are independent of the Bacularis Web tagging system. OAuth2 clients require the tags scope. Client ACLs on the selected Director restrict results by configured client resource name. Assignments are ordered by resource ID and tag. If no assignments match for an accessible resource, the response is a successful empty array.",
+				"responses": {
+					"200": {
+						"description": "List of native Bacula client tag assignments",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/TagClient"
+											}
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 1, 2, 3, 4, 5, 6, 7, 9, 11, 190, 191, 200, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"name": "clientid",
+						"in": "path",
+						"description": "Client identifier in the Bacula Catalog",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"$ref": "#/components/parameters/NativeTag"
+					}
+				]
+			}
+		},
+		"/api/v3/tags/volumes": {
+			"get": {
+				"tags": ["tags"],
+				"summary": "Get Bacula volume tags",
+				"description": "Returns native tags stored in the Bacula Catalog. These tags are independent of the Bacularis Web tagging system. OAuth2 clients require the tags scope. Assignments are ordered by resource ID and tag. If no assignments match for an accessible resource, the response is a successful empty array.",
+				"responses": {
+					"200": {
+						"description": "List of native Bacula volume tag assignments",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/TagVolume"
+											}
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 2, 3, 6, 7, 190, 200, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/NativeTag"
+					}
+				]
+			}
+		},
+		"/api/v3/tags/volumes/{mediaid}": {
+			"get": {
+				"tags": ["tags"],
+				"summary": "Get Bacula tags assigned to a specific volume",
+				"description": "Returns native tags stored in the Bacula Catalog. These tags are independent of the Bacularis Web tagging system. OAuth2 clients require the tags scope. Assignments are ordered by resource ID and tag. If no assignments match for an accessible resource, the response is a successful empty array.",
+				"responses": {
+					"200": {
+						"description": "List of native Bacula volume tag assignments",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"output": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/TagVolume"
+											}
+										},
+										"error": {
+											"type": "integer",
+											"description": "Error code",
+											"enum": [0, 2, 3, 6, 7, 190, 191, 200, 1000]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"name": "mediaid",
+						"in": "path",
+						"description": "Volume identifier in the Bacula Catalog",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"$ref": "#/components/parameters/NativeTag"
+					}
+				]
+			}
+		},
 		"/api/v3/clients": {
 			"get": {
 				"tags": ["clients"],
