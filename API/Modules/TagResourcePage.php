@@ -92,7 +92,7 @@ abstract class TagResourcePage extends BaculumAPIServer
 			if ($result->exitcode !== 0) {
 				// There was an error while getting allowed ACL resources - END
 				$output = TagError::MSG_ERROR_WRONG_EXITCODE;
-				$output .=  sprintf(' ExitCode: %d, Message: %s', $result->exitcode, $result->output);
+				$output .= sprintf(' ExitCode: %d, Message: %s', $result->exitcode, $result->output);
 				$this->output = $output;
 				$this->error = TagError::ERROR_WRONG_EXITCODE;
 				return;

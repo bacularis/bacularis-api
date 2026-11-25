@@ -55,11 +55,11 @@ abstract class TagAssignmentManager extends APIModule
 	/**
 	 * Get matching tag assignments for all visible resources or one resource.
 	 *
-	 * @param int|null $resource_id catalog resource ID
-	 * @param string|null $tag exact tag value to find
+	 * @param null|int $resource_id catalog resource ID
+	 * @param null|string $tag exact tag value to find
 	 * @param array $allowed_resources resource names as lookup keys for Job or Client ACLs
-	 * @return array|null assignments, or null if the requested resource is missing or inaccessible
 	 * @throws BCatalogException if the tag query fails or the required Catalog tables are unavailable
+	 * @return null|array assignments, or null if the requested resource is missing or inaccessible
 	 */
 	public function getTags(?int $resource_id = null, ?string $tag = null, array $allowed_resources = []): ?array
 	{
@@ -92,7 +92,7 @@ abstract class TagAssignmentManager extends APIModule
 			 * In final API result we have {output: [], error: 0}
 			 * instead of TagError::ERROR_RESOURCE_DOES_NOT_EXIST.
 			 */
-			$join  = 'LEFT JOIN';
+			$join = 'LEFT JOIN';
 		}
 		$sql = "SELECT $columns FROM $resource r $join $table t ON t.$id = r.$id";
 		if ($tag !== null) {
